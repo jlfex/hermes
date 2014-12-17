@@ -6,5 +6,5 @@
 ##使用教程
 
 ##如何贡献
-* [编码规范](wiki/编码规范)
-* [贡献步骤](wiki/如何贡献)
+* [编码规范](https://github.com/jlfex/hermes/wiki/编码规范)
+* [贡献步骤](https://github.com/jlfex/hermes/wiki/如何贡献)
