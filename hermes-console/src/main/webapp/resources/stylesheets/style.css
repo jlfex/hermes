@@ -1,0 +1,59 @@
+@charset "utf-8";
+@import url("bootstrap.css");
+@import url("bootstrap-theme.css");
+@import url("bootstrap-hermes.css");
+@import url("font-awesome.css");
+
+body { font-family:微软雅黑; background-color:#f0f1f6; font-size:14px; color:#333; }
+::-webkit-scrollbar-track-piece { background-color:#fff; -webkit-border-radius:3px;}
+::-webkit-scrollbar { width:12px; height:10px;}
+::-webkit-scrollbar-thumb { height:30px; background-color:#999; -webkit-border-radius:7px; outline:2px solid #fff; outline-offset:-2px; border:2px solid #fff;}
+::-webkit-scrollbar-thumb:hover { height:30px; background-color:#9f9f9f; -webkit-border-radius:8px;}
+
+.align-center { text-align:center; }
+.align-right { text-align:right; }
+
+.header { position:absolute; top:0; right:0; left:0; line-height:64px; background-color:#1fa0e5; background-image:linear-gradient(to bottom, #1fa0e5 0%, #1492d5 100%); border-bottom:1px solid #096495; color:#ffffff; }
+.header .bar { width:90px; border-right:1px solid #096495; text-align:center; font-size:32px; cursor:pointer; }
+.header .bar:hover,
+.header .bar.active { background-color:#1190d2; background-image:linear-gradient(to bottom, #1190d2 0%, #0c7cc3 100%); }
+.header .logo { height:69px; margin-top:-5px; padding-left:20px; border-left:1px solid #21a3e9; }
+.header .user { text-shadow:1px 1px 1px rgba(0,0,0,0.4); padding-right:20px; }
+.header .user a { color:#ffffff; }
+
+.menu { position:absolute; top:65px; left:0; bottom:0; width:200px; background-color:#2a3542; }
+.menu dl { margin:0; padding:0; }
+.menu dl dt,
+.menu dl dd { margin-bottom:1px; }
+.menu dl a { display:block; line-height:30px; padding-left:33px; padding-right:15px; background-color:#313f51; text-decoration:none; font-weight:normal; color:#c5d2e2; }
+.menu dl dt a { line-height:40px; padding-left:10px; }
+.menu dl dd a:hover { background-color:#5f5f5f; }
+.menu dl dt a.active,
+.menu dl dd a.active { background-color:#0d8ccf; text-shadow:0 -1px 1px rgba(0,0,0,0.8); color:#ffffff; }
+.menu dl dt .fa { line-height:40px; }
+.menu dl dd .fa { line-height:30px; }
+
+.main { position:absolute; top:65px; right:0; left:200px; bottom:0; padding:20px; overflow:auto; }
+.main h3 { margin:0 0 30px; padding:0; font-size:18px; font-weight:bold; }
+.main .data { margin-bottom:30px; padding:0 20px; }
+
+.flow { height:100px; padding-top:20px; padding-left:100px; background-color:#ffffff; box-shadow:1px 1px 3px rgba(0,0,0,0.2); border-radius:4px; text-align:center; }
+.flow .icon { width:100px; height:100px; margin-top:-20px; margin-left:-100px; background-image:url("../images/icons.png"); background-repeat:no-repeat; border-radius:4px 0 0 4px; }
+.flow .icon.audit { background-color:#0d8ccf; background-position:0 0; }
+.flow .icon.out { background-color:#9dce63; background-position:-100px 0; }
+.flow .icon.collection { background-color:#41cac0; background-position:-200px 0; }
+.flow .number { font-size:30px; color:#afafaf; }
+.flow .status { font-size:16px; color:#afafaf; }
+
+.show-grid { margin-bottom:10px; }
+.show-grid [class^="col-"] { padding-top:10px; padding-bottom:10px; }
+.top { margin-bottom:10px; padding:15px 10px 5px 20px; border:2px solid #e2e2e2; border-radius:8px; }
+
+
+.modal{overflow-y:hidden;position:fixed;top:10%;left:50%;z-index:1050;width:560px;height:120px;margin-left:-280px;background-color:#fff;border:1px solid #999;border:1px solid rgba(0,0,0,0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;outline:0;-webkit-box-shadow:0 3px 7px rgba(0,0,0,0.3);-moz-box-shadow:0 3px 7px rgba(0,0,0,0.3);box-shadow:0 3px 7px rgba(0,0,0,0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box}
+.modal-body{position:relative;max-height:400px;padding:15px;overflow-y:auto}
+.modal-footer{padding:14px 15px 15px;margin-bottom:0;text-align:center;background-color:#f5f5f5;border-top:1px solid #ddd;-webkit-border-radius:0 0 6px 6px;-moz-border-radius:0 0 6px 6px;border-radius:0 0 6px 6px;*zoom:1;-webkit-box-shadow:inset 0 1px 0 #fff;-moz-box-shadow:inset 0 1px 0 #fff;box-shadow:inset 0 1px 0 #fff}
+.modal.fade.in{top:10%}
+.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
+.modal-backdrop.fade{opacity:0}
+.modal-backdrop,.modal-backdrop.fade.in{opacity:.8;filter:alpha(opacity=80)}

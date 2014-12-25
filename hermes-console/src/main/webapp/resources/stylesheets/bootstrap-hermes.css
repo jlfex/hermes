@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+.hm-row { margin-right:-5px; margin-left:-5px; }
+.hm-col { padding-right:5px; padding-left:5px; }
+
+.table { margin-bottom:10px; background-color:#ffffff; border:1px solid #dddddd; border-radius:4px; }
+.pagination { margin-top:0; margin-bottom:10px; }
+.panel { margin-bottom:10px; }
+.panel.panel-primary { border-color:#dddddd; }
+.panel.panel-primary .panel-heading { background-color:#1fa0e5; background-image:linear-gradient(to bottom, #1fa0e5 0%, #1492d5 100%); border-color:#096495; }
+.panel-tab { border:1px solid #dddddd; border-top:0; border-radius:0 0 4px 4px; }
+
+.form-group { margin-bottom:10px; }
+.form-control[readonly] { background-color:#fafafa; cursor:auto; }
+.row:last-child .form-group { margin-bottom:0; }
