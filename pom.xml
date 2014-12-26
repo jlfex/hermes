@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.jlfex</groupId>
 	<artifactId>hermes-parent</artifactId>
 	<version>0.1</version>
@@ -12,39 +11,15 @@
 
 	<repositories>
 		<repository>
-			<id>nexus</id>
-			<name>Team Nexus Repository</name>
-			<url>http://172.16.200.50:8081/nexus/content/groups/public</url>
+			<id>local</id>
+			<name>local</name>
+			<url>file://repository</url>
 		</repository>
 	</repositories>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>nexus</id>
-			<name>Team Nexus Repository</name>
-			<url>http://172.16.200.50:8081/nexus/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Internal Releases</name>
-			<url>http://172.16.200.50:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>snapshots</id>
-			<name>Internal  Snapshots</name>
-			<url>http://172.16.200.50:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.sourceVersion>1.6</project.build.sourceVersion>
+		<project.build.sourceVersion>1.7</project.build.sourceVersion>
 		<version.spring>3.2.5.RELEASE</version.spring>
 		<version.spring.security>3.1.4.RELEASE</version.spring.security>
 		<version.hibernate>4.2.7.SP1</version.hibernate>
