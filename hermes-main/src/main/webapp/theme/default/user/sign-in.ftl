@@ -27,7 +27,7 @@
 				<p class="error-message"></p>
 				<div class="form-group">
 					<label for="email" class="sr-only">email</label>
-					<input id="email" name="email" type="email" autofocus="autofocus" placeholder="<@messages key="index.sign.in.account.hint" />" class="form-control">
+					<input id="email" name="email" type="email"  placeholder="<@messages key="index.sign.in.account.hint" />" class="form-control">
 					<p class="help-block"></p>
 				</div>
 				<div class="form-group">
@@ -64,6 +64,16 @@ jQuery(function($) {
 	
 	// 绑定表单提交事件
 	$('#signInForm').submit(function() {
+	    var check = false;
+	    if($("#email").val()==''){
+	       $("#email").parent().addClass('has-error').find('.help-block').html('<i class="fa fa-times-circle"></i> <@messages key="sign.in.input" />').fadeIn('fast');
+	       check = true;
+	    }
+	    if($("#signPassword").val()==''){
+	       $("#signPassword").parent().addClass('has-error').find('.help-block').html('<i class="fa fa-times-circle"></i> <@messages key="sign.in.input" />').fadeIn('fast');
+	       check = true;
+	    }
+	    if(check){ return false;}
 		// 初始化
 		var _elem = $(this);
 		
