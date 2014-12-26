@@ -44,7 +44,6 @@
 		</div>
 	</div>
 	<!-- /banner & signin -->
-	
 	<!-- notice -->
 	<div class="notice clearfix">
 		<div class="u-container">
