@@ -286,10 +286,11 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			user.setUpdateTime(new Date());
 			userRepository.save(user);
 			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-			// TODO 用户日志记录
+			result.setData("修改成功");
 		} else {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage(App.message("result.failure.password", null));
+			result.setData("原始密码不正确,修改失败");
 		}
 		return result;
 	}
