@@ -1,10 +1,15 @@
 <div class="panel panel-default">
 	<div class="panel-heading"><@messages key="account.password.modify"/></div>
   <div class="panel-body">
+     <div class="form-group">
+	 	<div class="col-sm-offset-2 col-sm-10">
+			<div id="back-info" class="col-sm-4 control-group" ></div>
+		</div>
+	</div>
     <form class="form-horizontal" role="form" id="passwordForm" name="passwordForm">
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">*<@messages key="account.password.original"/>：</label>
-	  	 <div id="originalDiv" class="col-sm-4 control-group" >
+	  	 <div id="originalDiv" class="col-sm-4 control-group " >
 			<input type="password" class="form-control " id="orginalPwd" name="orginalPwd" placeholder="Password" onBlur="check()"  >
 		</div>
 	  </div>
@@ -36,16 +41,26 @@ jQuery(function($) {
 		 var password=$("#password").val();
 		 var originalPwd = $("#orginalPwd").val();
 		 if(check()&&comparePwd()&&verify(password)){
-		 	alert("b");
 		 	  $.ajax({
 		        data: $("#passwordForm").serialize(),
 		        url: "${app}/account/resetPassword",
 			    type: "POST",
 			    dataType: 'json',
 		        success: function(data) {
+		           $(":input").val("");
+		           if (data.typeName === 'success') {
+		               $("#back-info").html(data.data);
+		           }else{
+		               $("#back-info").html(data.data);
+		           }
+		        },
+		        error: function(data){
+		           $(":input").val("");
+		           $("#back-info").html("error!");
 		        }
 		    });
 		 }else{
+		    
 		 }
 	});
 });

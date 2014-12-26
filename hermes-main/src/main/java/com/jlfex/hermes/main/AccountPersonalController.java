@@ -461,9 +461,9 @@ public class AccountPersonalController {
 	 */
 	@RequestMapping("resetPassword")
 	@ResponseBody
-	public Result resetPassword(String orginalPwd, String newPwd) {
+	public Result resetPassword(String orginalPwd, String confirm) {
 		AppUser curUser = App.current().getUser();
-		return userInfoService.resetPassword(curUser.getId(), orginalPwd, newPwd);
+		return userInfoService.resetPassword(curUser.getId(), orginalPwd, confirm);
 	}
 
 	/**
