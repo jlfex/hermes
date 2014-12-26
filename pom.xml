@@ -12,39 +12,19 @@
 
 	<repositories>
 		<repository>
-			<id>nexus</id>
-			<name>Team Nexus Repository</name>
-			<url>http://172.16.200.50:8081/nexus/content/groups/public</url>
+			<id>local</id>
+			<name>local</name>
+			<url>file://repository</url>
 		</repository>
+
+
 	</repositories>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>nexus</id>
-			<name>Team Nexus Repository</name>
-			<url>http://172.16.200.50:8081/nexus/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Internal Releases</name>
-			<url>http://172.16.200.50:8081/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>snapshots</id>
-			<name>Internal  Snapshots</name>
-			<url>http://172.16.200.50:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+	  
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.sourceVersion>1.6</project.build.sourceVersion>
+		<project.build.sourceVersion>1.7</project.build.sourceVersion>
 		<version.spring>3.2.5.RELEASE</version.spring>
 		<version.spring.security>3.1.4.RELEASE</version.spring.security>
 		<version.hibernate>4.2.7.SP1</version.hibernate>
