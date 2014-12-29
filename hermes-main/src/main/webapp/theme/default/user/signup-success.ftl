@@ -16,7 +16,7 @@ $(document).ready(function(){
 });
 function mailBoxSkp(email){
 	  var url = email.split('@')[1];
-	 window.open("http://"+url);
+	  window.open("http://mail."+url);
 }
 </script>
 </head>

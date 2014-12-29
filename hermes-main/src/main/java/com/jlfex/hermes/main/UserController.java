@@ -1,6 +1,12 @@
 package com.jlfex.hermes.main;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
@@ -23,6 +30,8 @@ import com.jlfex.hermes.service.pojo.UserBasic;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private Producer captchaProducer;
 
 	/**
 	 * 登录界面
@@ -50,9 +59,15 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/signUp")
-	public String signUp(User user, Model model) {
-		boolean flagEmail = userService.isExistentEmail(user.getEmail());
+	public String signUp(User user, Model model, HttpServletRequest request) {
 		Result result = new Result();
+		String verificationCode = (String) request.getSession().getAttribute("capText");  
+		if(!verificationCode.equalsIgnoreCase(user.getVerificationCode())){
+			Logger.info("验证码不匹配:"+verificationCode+"___"+user.getVerificationCode());
+			model.addAttribute("errVerifiedCode", "验证码有误");
+			return "user/signup";
+		}
+		boolean flagEmail = userService.isExistentEmail(user.getEmail());
 		if (!flagEmail) {
 			userService.signUp(user);
 			// user=userService.loadByEmail(user.getEmail());
@@ -216,6 +231,24 @@ public class UserController {
 		}
 		return jsonObj;
 	}
+	/**
+	 * 验证码 输入是否正确
+	 * @param code
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("checkVerifiedCode")
+	@ResponseBody
+	public JSONObject checkVerifiedCode(String captcha,HttpServletRequest request) {
+		JSONObject jsonObj=new JSONObject();
+		String verificationCode = (String) request.getSession().getAttribute("capText");  
+		if(!verificationCode.equalsIgnoreCase(captcha)){
+			jsonObj.put("captcha", false);
+		} else {
+			jsonObj.put("captcha", true);
+		}
+		return jsonObj;
+	}
 
 	/**
 	 * 邮箱是否被激活
@@ -281,4 +314,35 @@ public class UserController {
 		userService.retrievePwd(user.getId(), user.getSignPassword());
 		return "user/retrievePwdStep4";
 	}
+	/**
+	 * 生成验证码图片
+	 * @param request
+	 * @param response
+	 * @time :2014年12月29日10:44:24
+	 */
+	@RequestMapping("generatorCode")
+	@ResponseBody
+	public void getValidatePic(HttpServletRequest request, HttpServletResponse response)  {
+		try {
+			response.setDateHeader("Expires", 0);
+			response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+			response.addHeader("Cache-Control", "post-check=0, pre-check=0");
+			response.setHeader("Pragma", "no-cache");
+		    response.setContentType("image/jpeg");
+			String capText = captchaProducer.createText();
+	        Logger.debug(request.getSession().getId() + ":" + capText);
+		    request.getSession().setAttribute("capText", capText);
+			BufferedImage bi = captchaProducer.createImage(capText);
+			ServletOutputStream out = response.getOutputStream();
+		    ImageIO.write(bi, "jpg", out);
+			try {
+				out.flush();
+			} finally {
+				out.close();
+			}	
+		} catch (Exception e) {
+			Logger.error("生产验证码异常：",e);
+		}
+	}
+	
 }

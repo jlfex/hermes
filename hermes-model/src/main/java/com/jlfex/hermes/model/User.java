@@ -55,6 +55,9 @@ public class User extends Model {
 	/** 角色列表 */
 	@Transient
 	private List<Role> roles = new LinkedList<Role>();
+	/** 验证码 */
+	@Transient
+    private String verificationCode ;
 
 	/**
 	 * 读取帐号
@@ -264,4 +267,14 @@ public class User extends Model {
 		@Element("根")
 		public static final String ROOT		= "99";
 	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+	
+	
 }
