@@ -11,11 +11,21 @@
 
 	<repositories>
 		<repository>
-			<id>local</id>
-			<name>local</name>
+			<id>oschina</id>
+			<url>http://maven.oschina.net/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>self</id>
+			<name>self</name>
 			<url>file://repository</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>plugin-oschina</id>
+			<url>http://maven.oschina.net/content/groups/public</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
