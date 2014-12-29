@@ -55,6 +55,11 @@ function checkPassWrodEqual() {
 	}
 }
 
+var score = 0;
+function changeCode() {
+	score ++;
+    $("#verificationCode").attr("src", "${app}/userIndex/generatorCode?t="+score);
+}
 </script>
 </head>
 
@@ -72,6 +77,9 @@ function checkPassWrodEqual() {
 			<div class="m_item">
 				<h3><@messages key="sign.up.signup" /><span class="m_color2"> > <@messages key="sign.up.supplementary" /></span></h3>
 			</div>
+			<#if errVerifiedCode??>
+			  <div class="m_item"><span class="mv_msg">${errVerifiedCode} </span></div>
+			</#if>
 			<div class="m_item">
 				<input id="email" name="email" type="text" value="<@messages key="sign.up.email" />"  class="mv_email"/>
 				  <span class="mv_msg"></span>
@@ -87,10 +95,10 @@ function checkPassWrodEqual() {
 				  <span class="mv_msg"></span>
 			</div>
 			<div class="m_item">
-				<input type="text" value="<@messages key="sign.up.verify.code" />" class="wd1 mv_captcha" />
-				  <span class="mv_msg"></span>
-				<img src="${app.theme}/public/other/images/m/image1/img2.jpg" class="m_yzm" />
-				<a href="#" class="m_a1 m_yzm_c"><@messages key="sign.up.verify.reload" /></a>
+				<input type="text"name="verificationCode" value="<@messages key="sign.up.verify.code" />" class="wd1 mv_captcha" />
+				<img id="verificationCode" src="${app}/userIndex/generatorCode" onClick="changeCode()"  class="m_yzm" />
+				<a href="javascript:void(0);" onClick="changeCode()" class="m_a1 m_yzm_c"><@messages key="sign.up.verify.reload" /></a>
+				<span class="mv_msg"></span>
 			</div>
 			<div class="m_item">
 				<a href="javascript:document.regForm.submit();"  class="m_btn1 m_bg1 mv_submit"><@messages key="sign.up.agree" /></a> 

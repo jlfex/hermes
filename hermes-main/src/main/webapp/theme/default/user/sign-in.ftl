@@ -91,7 +91,7 @@ jQuery(function($) {
 			timeout: 5000,
 			success: function(data, textStatus, xhr) {
 				if (data.typeName === 'success') {
-					window.location.href = '${app}';
+					window.location.href = '${app}/index';
 				} else if (data.typeName === 'warning') {
 					window.location.href = '${app}/userIndex/resendMail?email=' + $('#email').val();
 				} else {
@@ -104,6 +104,8 @@ jQuery(function($) {
 		return false;
 	});
 });
+
+
 //-->
 </script>
 

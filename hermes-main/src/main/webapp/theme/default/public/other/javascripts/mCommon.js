@@ -51,9 +51,9 @@ $(function(){
             key: 'email'
         },
         captchaAjax: {
-           // url: "",  // 测试验证码 1234
-//            dataType: 'jsonp',
-//            key: 'captcha'
+            url: "checkVerifiedCode",  
+            dataType: 'json',
+            key: 'captcha'
         },
         mobileUniqueAjax: {
             url: "checkCellphone",  // 测试手机唯一性 13659297636
