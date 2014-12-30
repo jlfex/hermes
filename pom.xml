@@ -35,6 +35,7 @@
 		<version.hibernate>4.2.7.SP1</version.hibernate>
 		<tomcat-jdbc.version>7.0.54</tomcat-jdbc.version>
 		<tomcat-embed.version>7.0.52</tomcat-embed.version>
+		<jetty.version>7.6.15.v20140411</jetty.version>
 	</properties>
 
 	<modules>
