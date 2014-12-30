@@ -209,9 +209,11 @@ public class UserController {
 
 	/**
 	 * 重新发送激活邮件
-	 * 
 	 * @param email
+	 * @param model
+	 * @param request
 	 * @return
+	 * @since 2014年12月30日20:24:59
 	 */
 	@RequestMapping("sendActiveMailAgain")
 	public String sendActiveMailAgain(String email, Model model, HttpServletRequest request) {
@@ -224,8 +226,7 @@ public class UserController {
 			commonMessage = "激活邮件发送失败,请重新发送!";
 			Logger.error(commonMessage, e);
 			model.addAttribute("errMsg", commonMessage);
-			return "user/signup-success";
-			}
+		}
 		model.addAttribute("email", email);
 		return "user/signup-success";
 	}
@@ -324,8 +325,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("sendResetPwdEmail")
-	public String sendResetPwdEmail(String email, Model model, HttpServletRequest req) {
-		userService.sendResetPwdEmail(email, req);
+	public String sendResetPwdEmail(String email, Model model, HttpServletRequest request) {
+		try {
+			emailService.sendEmail(email, "密码重置", userService.getResetPwdEmailModel(email, request));
+		} catch (Exception e) {
+			String commonMessage = "激活邮件发送失败,请重新发送!";
+			Logger.error(commonMessage, e);
+			model.addAttribute("errMsg", commonMessage);
+		}
 		model.addAttribute("email", email);
 		return "user/retrievePwdStep2";
 	}

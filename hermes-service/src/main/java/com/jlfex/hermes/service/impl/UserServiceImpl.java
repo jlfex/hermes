@@ -328,19 +328,17 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 * @see com.jlfex.hermes.service.UserService#sendResetPwdEmail(java.lang.String,HttpServletRequest)
 	 */
 	@Override
-	public void sendResetPwdEmail(String email, HttpServletRequest req) {
+	public String getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception {
 		User user = userRepository.findByEmail(email);
 		String validateCode = generateCode(user);
-
 		// 发送重置密码邮件
 		Map<String, Object> root = new HashMap<String, Object>();
-		String ipPath = getPath(req);
+		String ipPath = getPath(request);
 		StringBuffer sb = new StringBuffer("\"http://" + ipPath + "/userIndex/handleRetrive?uuId=");
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
-		root.put("url", sb.toString());
-		String html = StringTemplateLoader.process("hello: ${url}", root);
-		Mailer.sendHtml(user.getEmail(), App.message("password.mail.subject"), html);
-
+		root.put("active_url", sb.toString());
+		root.put("userName", user.getAccount());
+		return StringTemplateLoader.process("mail_pwdForget.ftl", root);
 	}
 
 	/* (non-Javadoc)
