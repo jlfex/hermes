@@ -21,8 +21,12 @@
 	<h3>找回密码</h3>
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
-			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
-			我们给你的邮箱${email} 邮箱发送了一封密码重置邮件，请前往收信。
+			<#if errMsg?? >
+				    ${errMsg!''}，请点击  <a href="${app}/userIndex/resendMail?email=${email}" class="m_a1">重新获取Email激活</a>
+			 <#else>
+			       <img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
+				     我们给你的邮箱${email} 邮箱发送了一封密码重置邮件，请前往收信。
+		     </#if>
 		</div>
 	</div>
 	<a href="forgotPwdStep3.html" class="m_btn1 m_bg1">去邮箱查看</a>

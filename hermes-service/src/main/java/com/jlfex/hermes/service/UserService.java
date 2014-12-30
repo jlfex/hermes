@@ -123,11 +123,11 @@ public interface UserService {
 	public boolean isExistentEmail(String email);
 
 	/**
-	 * 发送重置密码邮件
+	 * 获取 重置密码邮件模板
 	 * 
 	 * @param email
 	 */
-	public void sendResetPwdEmail(String email, HttpServletRequest req);
+	public String getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception;
 
 	/**
 	 * 密码重置邮件处理
