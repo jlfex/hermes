@@ -47,21 +47,25 @@ $(function(){
         confPwdInitText:'',
         emailUniqueAjax: {
             url: "isExistentEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
             dataType: 'json',
             key: 'email'
         },
         captchaAjax: {
             url: "checkVerifiedCode",  
+            cache:false,
             dataType: 'json',
             key: 'captcha'
         },
         mobileUniqueAjax: {
             url: "checkCellphone",  // 测试手机唯一性 13659297636
+            cache:false,
             dataType: 'json',
             key: 'cellphone'
         },
         nameUniqueAjax: {
             url: "checkAccount",  // 测试用户名 momo
+            cache:false,
             dataType: 'json',
             key: 'account'
         }
@@ -93,6 +97,7 @@ $(function(){
     $('#retrieve').mValidator({
          emailExistAjax: {
             url: "isActiveEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
             dataType: 'json',
             key: 'email'
         }
@@ -100,10 +105,12 @@ $(function(){
      $('#sendEmail').mValidator({
         emailExistAjax: {
             url: "isActiveEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
             dataType: 'json',
             key: 'email'
         },emailUniqueAjax: {
             url: "isExistentEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
             dataType: 'json',
             key: 'email'
         }

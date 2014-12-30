@@ -77,8 +77,8 @@ function changeCode() {
 			<div class="m_item">
 				<h3><@messages key="sign.up.signup" /><span class="m_color2"> > <@messages key="sign.up.supplementary" /></span></h3>
 			</div>
-			<#if errVerifiedCode??>
-			  <div class="m_item"><span class="mv_msg">${errVerifiedCode} </span></div>
+			<#if errMsg??>
+			  <div class="m_item"><span class="mv_msg">${errMsg!} </span></div>
 			</#if>
 			<div class="m_item">
 				<input id="email" name="email" type="text" value="<@messages key="sign.up.email" />"  class="mv_email"/>
@@ -87,12 +87,24 @@ function changeCode() {
 			<div class="m_item">
 				<input id="signPwd" type="text" value="<@messages key="sign.up.signpassword" />" />
 				<input id="signPassword" name="signPassword" type="password" style="display:none;"  class="mv_pwd"/>
-				  <span class="mv_msg"></span>
+			    <span class="mv_msg"></span>
 			</div>
 			<div class="m_item">
 				<input id="configPwd" type="text" value="<@messages key="sign.up.configpassword" />" />
 				<input id="configPassword" name="configPassword" type="password" style="display:none;"  class="mv_pwdagain"/>
 				  <span class="mv_msg"></span>
+			</div>
+			<div class="m_item">
+				<input id="account" name="account" type="text" value="<@messages key="sign.up.nickname" />"  class="mv_name"/>
+				 <span class="mv_msg"></span>
+			</div>
+			<div class="m_item">
+	            <input id="realName" name="realName" type="text" value="<@messages key="sign.up.name" />"  class="mv_realname"/>
+	             <span class="mv_msg"></span>
+	        </div>
+			<div class="m_item">
+				<input id="cellphone" name="cellphone" type="text" value="<@messages key="sign.up.cellphone" />"  class="mv_mobile"/>
+				 <span class="mv_msg"></span>
 			</div>
 			<div class="m_item">
 				<input type="text"name="verificationCode" value="<@messages key="sign.up.verify.code" />" class="wd1 mv_captcha" />

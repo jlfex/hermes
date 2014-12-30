@@ -1,5 +1,6 @@
 package com.jlfex.hermes.common.support.freemarker;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -12,8 +13,10 @@ import com.jlfex.hermes.common.utils.Strings;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 /**
  * 字符串模版加载器
@@ -28,9 +31,14 @@ public class StringTemplateLoader implements TemplateLoader {
 	
 	static {
 		configuration = new Configuration();
-		configuration.setTemplateLoader(new StringTemplateLoader());
-		configuration.setLocalizedLookup(false);
-		configuration.setDefaultEncoding("utf-8");
+		try {
+			configuration.setDirectoryForTemplateLoading(new File(StringTemplateLoader.class.getResource("/templates").getPath()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		configuration.setObjectWrapper(new DefaultObjectWrapper());
+		configuration.setDefaultEncoding("UTF-8");
+		configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 	}
 	
 	/* (non-Javadoc)

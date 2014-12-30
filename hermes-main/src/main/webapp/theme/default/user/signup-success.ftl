@@ -29,11 +29,15 @@ function mailBoxSkp(email){
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
-			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
-			我们给你的邮箱${email} 发送了一封验证邮件请按照邮箱里的提示,激活你的帐号
+		         <#if errMsg??>
+		              ${errMsg!'邮箱发送失败，请点击  <a href="${app}/userIndex/resendMail?email=${email}" class="m_a1">重新发送邮件</a>'}
+		         <#else>
+		              <img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
+			                  我们给你的邮箱${email}发送了一封验证邮件请按照邮箱里的提示,激活你的帐号
+		         </#if>
 		</div>
 	</div>
-	<a href="javascript:void(0)" class="m_btn1 m_bg1" onclick="mailBoxSkp('${email}')"  target="_blank" >去邮箱查看</a>
+	<a  class="m_btn1 m_bg1" onclick="mailBoxSkp('${email}')"  target="_blank" >去邮箱查看</a>
 	<div class="tip_text">
 		<p class="tip_text_t">还没有收到确认邮件？</p>
 		<p>1.尝试到广告邮件、垃圾邮件目录里找找看</p>

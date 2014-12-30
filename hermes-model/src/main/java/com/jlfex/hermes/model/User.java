@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 用户模型
@@ -58,6 +59,9 @@ public class User extends Model {
 	/** 验证码 */
 	@Transient
     private String verificationCode ;
+	/**  真实姓名  **/
+	@Transient
+	private String realName;
 
 	/**
 	 * 读取帐号
@@ -275,6 +279,39 @@ public class User extends Model {
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
 	}
+
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
 	
-	
+	/**
+	 * 去除空格
+	 */
+    public void propertyTrim(){
+    	if(!Strings.empty(account)){
+    		account = account.trim();
+    	}
+    	if(!Strings.empty(email)){
+    		email = email.trim();
+    	}
+    	if(!Strings.empty(cellphone)){
+    		cellphone = cellphone.trim();
+    	}
+    	if(!Strings.empty(signPassword)){
+    		signPassword = signPassword.trim();
+    	}
+    	if(!Strings.empty(payPassword)){
+    		payPassword = payPassword.trim();
+    	}
+    	if(!Strings.empty(verificationCode)){
+    		verificationCode = verificationCode.trim();
+    	}
+    	if(!Strings.empty(realName)){
+    		realName = realName.trim();
+    	}
+    }
 }

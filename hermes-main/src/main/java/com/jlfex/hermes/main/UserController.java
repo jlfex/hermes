@@ -21,6 +21,7 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
+import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.UserBasic;
@@ -32,6 +33,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private Producer captchaProducer;
+	@Autowired
+	private EmailService emailService;
 
 	/**
 	 * 登录界面
@@ -61,19 +64,57 @@ public class UserController {
 	@RequestMapping("/signUp")
 	public String signUp(User user, Model model, HttpServletRequest request) {
 		Result result = new Result();
+		if(user != null){
+			user.propertyTrim();
+		}
+		String commonMessage ="";
 		String verificationCode = (String) request.getSession().getAttribute("capText");  
 		if(!verificationCode.equalsIgnoreCase(user.getVerificationCode())){
-			Logger.info("验证码不匹配:"+verificationCode+"___"+user.getVerificationCode());
-			model.addAttribute("errVerifiedCode", "验证码有误");
+			commonMessage = "验证码不匹配";
+			Logger.info(commonMessage+verificationCode+"___"+user.getVerificationCode());
+			model.addAttribute("errMsg", commonMessage);
 			return "user/signup";
 		}
 		boolean flagEmail = userService.isExistentEmail(user.getEmail());
-		if (!flagEmail) {
-			userService.signUp(user);
-			// user=userService.loadByEmail(user.getEmail());
-			model.addAttribute("user", user);
+		if(flagEmail){
+			commonMessage = "邮箱已使用";
+			Logger.info(commonMessage);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup";
 		}
-		return "user/signup-comp";
+		boolean flagPhone = userService.checkPhone(user.getCellphone());
+		if(!flagPhone){
+			commonMessage = "手机已使用";
+			Logger.info(commonMessage);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup";
+		}
+		User existUser = userService.getUserByAccount(user.getAccount());
+		if(existUser != null){
+			commonMessage = "昵称已使用";
+			Logger.info(commonMessage);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup";
+		}
+		try{
+	       userService.signUp(user);
+		}catch(Exception e){
+			commonMessage = "注册失败,数据保存异常";
+			Logger.error(commonMessage, e);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup";
+		}
+	    String activeMailTemplate = userService.getActiveMailModel(user, request);
+	    try {
+			emailService.sendEmail(user.getEmail(), "注册用户激活", activeMailTemplate);
+		} catch (Exception e) {
+			commonMessage = "激活邮件发送失败,请重新发送!";
+			Logger.error(commonMessage, e);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup-success";
+		}
+	    model.addAttribute("email", user.getEmail());
+		return "user/signup-success";
 	}
 
 	/**
@@ -82,20 +123,20 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping("supplement")
-	public String supplement(UserBasic userBasic, Model model, HttpServletRequest req) {
-		User user_acc = userService.getUserByAccount(userBasic.getAccount());
-		boolean acc = false;
-		if (user_acc == null) {
-			acc = true;
-		}
-		boolean cellPhone = userService.checkPhone(userBasic.getCellphone());
-		if (acc && cellPhone) {
-			userService.signSupplement(userBasic, req);
-		}
-		model.addAttribute("email", userBasic.getEmail());
-		return "user/signup-success";
-	}
+//	@RequestMapping("supplement")
+//	public String supplement(UserBasic userBasic, Model model, HttpServletRequest req) {
+//		String message =null;
+//			String mailTemplate = userService.signSupplement(userBasic, req);
+//			try {
+//				emailService.sendEmail(userBasic.getEmail(), "注册用户激活", mailTemplate);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		model.addAttribute("errMsg", message);
+//		model.addAttribute("email", userBasic.getEmail());
+//		return "user/signup-success";
+//	}
 
 	/**
 	 * 查看昵称是否被占用
@@ -173,9 +214,18 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("sendActiveMailAgain")
-	public String sendActiveMailAgain(String email, Model model, HttpServletRequest req) {
+	public String sendActiveMailAgain(String email, Model model, HttpServletRequest request) {
+		String commonMessage = "";
 		User user = userService.loadByEmail(email);
-		userService.sendActiveMail(user, req);
+	    String activeMailTemplate = userService.getActiveMailModel(user, request);
+		try {
+			emailService.sendEmail(user.getEmail(), "注册用户激活", activeMailTemplate);
+		} catch (Exception e) {
+			commonMessage = "激活邮件发送失败,请重新发送!";
+			Logger.error(commonMessage, e);
+			model.addAttribute("errMsg", commonMessage);
+			return "user/signup-success";
+			}
 		model.addAttribute("email", email);
 		return "user/signup-success";
 	}
