@@ -462,7 +462,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		UserAuth userAuth = new UserAuth();
 		userAuth.setUser(user);
 		userAuth.setCode(validateCode);
-		// 邮件失效期限
+		// 邮件失效期限 2d
 		String mailPro = App.config("auth.mail.expire");
 		Date expiere = Calendars.add(createDate, mailPro);
 		userAuth.setExpire(expiere);
