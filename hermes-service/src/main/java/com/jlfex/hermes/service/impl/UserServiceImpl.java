@@ -176,7 +176,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 */
 	@Override
 	@PostPersist
-	public void signUp(User user) {
+	public void signUp(User user) throws Exception {
 		Date createDate = new Date();
 		user.setType(Type.CLIENT);
 		user.setStatus(Status.INACTIVATE);
@@ -184,54 +184,46 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		user.setSignPassword(pwd);// 密码加密
 		user.setCreateTime(createDate);
 		user.setUpdateTime(createDate);
-
 		userRepository.save(user);
-		Logger.info("获取新建用户ID：" + user.getId());
+		Logger.info("用户成功 ID=" + user.getId());
 		saveUser(user);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.UserService#signSupplement(UserBasic,HttpServletRequest)
 	 */
-	@Override
-	public void signSupplement(UserBasic userBasic, HttpServletRequest req) {
-		Date curDate=new Date();
-		User user = userRepository.findOne(userBasic.getId());
-		Logger.info("完善注册信息~~~~~~~~" + user.getId());
-		UserProperties userPro =userPropertiesRepository.findByUser(user);
-		userPro.setRealName(userBasic.getRealName());
-		userPro.setUpdateTime(curDate);
-
-		user.setAccount(userBasic.getAccount());
-		user.setCellphone(userBasic.getCellphone());
-		user.setUpdateTime(curDate);
-
-		userPropertiesRepository.save(userPro);
-		Logger.info("send active email start***********");
-		sendActiveMail(user, req);
-	}
+//	@Override
+//	public String signSupplement(UserBasic userBasic, HttpServletRequest req) {
+//		Date curDate=new Date();
+//		User user = userRepository.findOne(userBasic.getId());
+//		Logger.info("完善注册信息~~~~~~~~" + user.getId());
+//		UserProperties userPro =userPropertiesRepository.findByUser(user);
+//		userPro.setRealName(userBasic.getRealName());
+//		userPro.setUpdateTime(curDate);
+//
+//		user.setAccount(userBasic.getAccount());
+//		user.setCellphone(userBasic.getCellphone());
+//		user.setUpdateTime(curDate);
+//		userPropertiesRepository.save(userPro);
+//		return sendActiveMail(user, req);
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.UserService#sendActiveMail(User,HttpServletRequest)
 	 */
 	@Override
-	public void sendActiveMail(User user, HttpServletRequest req) {
-		Logger.info("user's email " + user.getEmail());
+	public String getActiveMailModel(User user, HttpServletRequest req) {
 		String validateCode = generateCode(user);
-		Logger.info("active code ***********" + validateCode);
-		// 发送激活邮件
 		Map<String, Object> root = new HashMap<String, Object>();
 		String ipPath = getPath(req);
-		Logger.info("send active email ipPath***********" + ipPath);
 		StringBuffer sb = new StringBuffer("\"http://" + ipPath + "/userIndex/activeMail?uuId=");
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
-		root.put("url", sb.toString());
-		Logger.info("send active email url***********" + sb.toString());
-		String html = StringTemplateLoader.process("hello: ${url}", root);
-		Logger.info("send active email now***********");
-		Mailer.sendHtml(user.getEmail(), App.message("password.mail.subject"), html);
-		Logger.info("send active email over***********");
+		root.put("active_url", sb.toString());
+		root.put("userName", user.getAccount());
+		return StringTemplateLoader.process("mail_active.ftl", root);
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.UserService#activeMail(java.lang.String, java.lang.String)
@@ -386,11 +378,12 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.UserService#saveUser(User)
 	 */
-	public void saveUser(User user) {
+	public void saveUser(User user) throws Exception {
 		Date createDate = new Date();
 		// 用户属性信息
 		UserProperties userProperties = new UserProperties();
 		userProperties.setUser(user);
+		userProperties.setRealName(user.getRealName());
 		userProperties.setAuthCellphone(Auth.WAIT);
 		userProperties.setAuthEmail(Auth.WAIT);
 		userProperties.setAuthName(Auth.WAIT);
@@ -422,6 +415,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		accountList.add(cashAccount);
 		accountList.add(freezeAccount);
 		userAccountRepository.save(accountList);
+		Logger.info("用户的 属性信息、 现金账户、冻结账户 保存成功");
 	}
 
 	/* (non-Javadoc)
@@ -470,7 +464,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		UserAuth userAuth = new UserAuth();
 		userAuth.setUser(user);
 		userAuth.setCode(validateCode);
-
 		// 邮件失效期限
 		String mailPro = App.config("auth.mail.expire");
 		Date expiere = Calendars.add(createDate, mailPro);
@@ -480,7 +473,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		userAuth.setCreateTime(createDate);
 		userAuth.setUpdateTime(createDate);
 		userAuthRepository.save(userAuth);
-		Logger.info("gererateCode code*********" + userAuth.getCode());
+		Logger.info("生成邮件激活授权码:" + userAuth.getCode());
 		return validateCode;
 	}
 

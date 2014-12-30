@@ -87,5 +87,15 @@
 			</dependency> <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2-transport-local</artifactId> <version>1.6.2</version> 
 			</dependency> <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2-transport-http</artifactId> <version>1.6.2</version> 
 			</dependency> -->
+		<dependency>
+			<groupId>com.icegreen</groupId>
+			<artifactId>greenmail</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
 	</dependencies>
 </project>

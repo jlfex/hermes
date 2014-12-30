@@ -83,21 +83,21 @@ public interface UserService {
 	 * 
 	 * @param user
 	 */
-	public void signUp(User user);
+	public void signUp(User user)  throws Exception ;
 
 	/**
 	 * 完善注册信息
 	 * 
 	 * @param user
 	 */
-	public void signSupplement(UserBasic userBasic, HttpServletRequest req);
+	//public String signSupplement(UserBasic userBasic, HttpServletRequest req);
 
 	/**
-	 * 发送激活邮件
+	 * 获取发送激活邮件模板
 	 * 
 	 * @param user
 	 */
-	public void sendActiveMail(User user, HttpServletRequest req);
+	public String getActiveMailModel(User user, HttpServletRequest req);
 
 	/**
 	 * 处理激活邮件
@@ -116,7 +116,7 @@ public interface UserService {
 	public Result<?> signIn(User user);
 
 	/**
-	 * 
+	 * 判断邮箱 是否已经使用
 	 * @param email
 	 * @return
 	 */
