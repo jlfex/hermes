@@ -19,27 +19,26 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "hm_rate_log")
 public class RateLog extends Model {
-	
+
 	private static final long serialVersionUID = 331419377631418120L;
 
 	/** 费率 */
 	@ManyToOne
 	@JoinColumn(name = "rate")
 	private Rate rate;
-	
+
 	/** 日期 */
 	@Column(name = "datetime")
 	private Date datetime;
-	
+
 	/** 变更前 */
-	@Column(name = "before")
+	@Column(name = "before_")
 	private BigDecimal before;
-	
+
 	/** 变更后 */
 	@Column(name = "after")
 	private BigDecimal after;
-	
-	
+
 	/**
 	 * 读取费率
 	 * 
@@ -49,7 +48,7 @@ public class RateLog extends Model {
 	public Rate getRate() {
 		return rate;
 	}
-	
+
 	/**
 	 * 设置费率
 	 * 
@@ -59,7 +58,7 @@ public class RateLog extends Model {
 	public void setRate(Rate rate) {
 		this.rate = rate;
 	}
-	
+
 	/**
 	 * 读取日期
 	 * 
@@ -69,7 +68,7 @@ public class RateLog extends Model {
 	public Date getDatetime() {
 		return datetime;
 	}
-	
+
 	/**
 	 * 设置日期
 	 * 
@@ -79,7 +78,7 @@ public class RateLog extends Model {
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
-	
+
 	/**
 	 * 读取变更前
 	 * 
@@ -89,7 +88,7 @@ public class RateLog extends Model {
 	public BigDecimal getBefore() {
 		return before;
 	}
-	
+
 	/**
 	 * 设置变更前
 	 * 
@@ -99,7 +98,7 @@ public class RateLog extends Model {
 	public void setBefore(BigDecimal before) {
 		this.before = before;
 	}
-	
+
 	/**
 	 * 读取变更后
 	 * 
@@ -109,7 +108,7 @@ public class RateLog extends Model {
 	public BigDecimal getAfter() {
 		return after;
 	}
-	
+
 	/**
 	 * 设置变更后
 	 * 
