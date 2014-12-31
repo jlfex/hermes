@@ -21,6 +21,6 @@ cd ..\hermes-console
 mvn clean jetty:run -Djetty.port=8006 &
 
 echo "[INFO] Please wait a moment then access below demo sites:"
-echo "[INFO] http://localhost:8080/quickstart"
-echo "[INFO] http://localhost:8081/showcase"
+echo "[INFO] http://localhost:8005/hermes-main"
+echo "[INFO] http://localhost:8006/hermes-console"
 
