@@ -33,7 +33,7 @@ public class PaymentChannel extends Model {
 	private String code;
 
 	/** 图片 */
-	@Column(name = "logo")
+	@Column(name = "logo", length = 10000)
 	private String logo;
 
 	/** 顺序 */
