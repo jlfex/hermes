@@ -1,6 +1,7 @@
 package com.jlfex.hermes.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -93,11 +94,11 @@ public interface UserService {
 	//public String signSupplement(UserBasic userBasic, HttpServletRequest req);
 
 	/**
-	 * 获取发送激活邮件模板
+	 * 激活邮件 组装 数据模型
 	 * 
 	 * @param user
 	 */
-	public String getActiveMailModel(User user, HttpServletRequest req);
+	public Map<String, Object> getActiveMailModel(User user, HttpServletRequest req);
 
 	/**
 	 * 处理激活邮件
@@ -123,11 +124,11 @@ public interface UserService {
 	public boolean isExistentEmail(String email);
 
 	/**
-	 * 获取 重置密码邮件模板
+	 * 重置密码邮件 组装 数据模型
 	 * 
 	 * @param email
 	 */
-	public String getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception;
+	public Map<String, Object> getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception;
 
 	/**
 	 * 密码重置邮件处理

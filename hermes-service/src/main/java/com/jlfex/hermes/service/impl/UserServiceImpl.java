@@ -44,7 +44,6 @@ import com.jlfex.hermes.repository.UserLogRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.UserService;
-import com.jlfex.hermes.service.pojo.UserBasic;
 import com.jlfex.hermes.service.security.PasswordEncoder;
 
 /**
@@ -212,7 +211,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 * @see com.jlfex.hermes.service.UserService#sendActiveMail(User,HttpServletRequest)
 	 */
 	@Override
-	public String getActiveMailModel(User user, HttpServletRequest req) {
+	public Map<String, Object> getActiveMailModel(User user, HttpServletRequest req) {
 		String validateCode = generateCode(user);
 		Map<String, Object> root = new HashMap<String, Object>();
 		String ipPath = getPath(req);
@@ -220,7 +219,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
 		root.put("active_url", sb.toString());
 		root.put("userName", user.getAccount());
-		return StringTemplateLoader.process("mail_active.ftl", root);
+		return root;
 	}
 	
 	
@@ -324,21 +323,22 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 *  重置密码邮件 组装 数据模型
+	 *  (non-Javadoc)
 	 * @see com.jlfex.hermes.service.UserService#sendResetPwdEmail(java.lang.String,HttpServletRequest)
 	 */
 	@Override
-	public String getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception {
+	public Map<String, Object>  getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception {
 		User user = userRepository.findByEmail(email);
 		String validateCode = generateCode(user);
-		// 发送重置密码邮件
 		Map<String, Object> root = new HashMap<String, Object>();
 		String ipPath = getPath(request);
 		StringBuffer sb = new StringBuffer("\"http://" + ipPath + "/userIndex/handleRetrive?uuId=");
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
 		root.put("active_url", sb.toString());
 		root.put("userName", user.getAccount());
-		return StringTemplateLoader.process("mail_pwdForget.ftl", root);
+		return root ;
 	}
 
 	/* (non-Javadoc)
