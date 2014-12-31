@@ -23,43 +23,43 @@ import com.jlfex.hermes.common.web.WebApp;
 @Table(name = "hm_navigation")
 public class Navigation extends Model {
 
-	private static final long serialVersionUID 	= 842883061234188375L;
-	private static final String PREFIX			= "@";
-	
+	private static final long serialVersionUID = 842883061234188375L;
+	private static final String PREFIX = "@";
+
 	/** 父级 */
 	@ManyToOne
 	@JoinColumn(name = "parent")
 	private Navigation parent;
-	
+
 	/** 类型 */
 	@ManyToOne
 	@JoinColumn(name = "type")
 	private Dictionary type;
-	
+
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 副称 */
 	@Column(name = "subname")
 	private String subname;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 地址 */
 	@Column(name = "path")
 	private String path;
-	
+
 	/** 目标 */
 	@Column(name = "target")
 	private String target;
-	
+
 	/** 顺序 */
-	@Column(name = "`order`")
+	@Column(name = "order_")
 	private Integer order;
-	
+
 	/** 子集 */
 	@OneToMany(mappedBy = "parent")
 	private List<Navigation> children = new LinkedList<Navigation>();
@@ -83,7 +83,7 @@ public class Navigation extends Model {
 	public void setParent(Navigation parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -183,7 +183,7 @@ public class Navigation extends Model {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	/**
 	 * 读取目标
 	 * 
@@ -233,7 +233,7 @@ public class Navigation extends Model {
 	public List<Navigation> getChildren() {
 		return children;
 	}
-	
+
 	/**
 	 * 判断是否应用路径
 	 * 
@@ -242,7 +242,7 @@ public class Navigation extends Model {
 	public boolean isAppPath() {
 		return path.startsWith(PREFIX);
 	}
-	
+
 	/**
 	 * 读取格式化后路径
 	 * 
@@ -251,6 +251,7 @@ public class Navigation extends Model {
 	public String getFormattedPath() {
 		return isAppPath() ? WebApp.getAppPath() + path.substring(PREFIX.length()) : path;
 	}
+
 	/**
 	 * 读取去掉AppPath后的路径
 	 * 

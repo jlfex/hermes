@@ -17,41 +17,41 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_payment_channel")
 public class PaymentChannel extends Model {
-	
+
 	private static final long serialVersionUID = -6578898210640754801L;
 
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 副称 */
 	@Column(name = "subname")
 	private String subname;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 图片 */
 	@Column(name = "logo")
 	private String logo;
-	
+
 	/** 顺序 */
-	@Column(name = "`order`")
+	@Column(name = "order_")
 	private Integer order;
-	
+
 	/** 实现类 */
 	@Column(name = "clazz")
 	private String clazz;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
-	
+
 	/**
 	 * 读取名称
 	 * 
@@ -61,7 +61,7 @@ public class PaymentChannel extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置名称
 	 * 
@@ -71,7 +71,7 @@ public class PaymentChannel extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取副称
 	 * 
@@ -81,7 +81,7 @@ public class PaymentChannel extends Model {
 	public String getSubname() {
 		return subname;
 	}
-	
+
 	/**
 	 * 设置副称
 	 * 
@@ -91,7 +91,7 @@ public class PaymentChannel extends Model {
 	public void setSubname(String subname) {
 		this.subname = subname;
 	}
-	
+
 	/**
 	 * 读取代码
 	 * 
@@ -121,7 +121,7 @@ public class PaymentChannel extends Model {
 	public String getLogo() {
 		return logo;
 	}
-	
+
 	/**
 	 * 设置图片
 	 * 
@@ -131,7 +131,7 @@ public class PaymentChannel extends Model {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	
+
 	/**
 	 * 读取顺序
 	 * 
@@ -141,7 +141,7 @@ public class PaymentChannel extends Model {
 	public Integer getOrder() {
 		return order;
 	}
-	
+
 	/**
 	 * 设置顺序
 	 * 
@@ -151,7 +151,7 @@ public class PaymentChannel extends Model {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
-	
+
 	/**
 	 * 读取实现类
 	 * 
@@ -161,7 +161,7 @@ public class PaymentChannel extends Model {
 	public String getClazz() {
 		return clazz;
 	}
-	
+
 	/**
 	 * 设置实现类
 	 * 
@@ -181,7 +181,7 @@ public class PaymentChannel extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -191,7 +191,7 @@ public class PaymentChannel extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -201,7 +201,7 @@ public class PaymentChannel extends Model {
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
 	 * 设置类型
 	 * 
@@ -211,7 +211,7 @@ public class PaymentChannel extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 读取状态名称
 	 * 
@@ -238,14 +238,14 @@ public class PaymentChannel extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
-		public static final String ENABLED 	= "00";
+		public static final String ENABLED = "00";
 
 		@Element("无效")
 		public static final String DISABLED = "99";
 	}
-	
+
 	/**
 	 * 类型
 	 * 
@@ -254,11 +254,11 @@ public class PaymentChannel extends Model {
 	 * @since 1.0
 	 */
 	public static final class Type {
-		
+
 		@Element("支付平台")
-		public static final String THIRDPP 	= "00";
+		public static final String THIRDPP = "00";
 
 		@Element("支付银行")
-		public static final String DIRECT 	= "01";
+		public static final String DIRECT = "01";
 	}
 }
