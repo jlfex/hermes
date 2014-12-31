@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
@@ -119,17 +118,6 @@ public class SpringWebApp extends WebApp {
 		WebApp.initialize(context);
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		Logger.info("initialize spring application context: %s", applicationContext);
-	}
-
-	/**
-	 * 刷新
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	public static void refresh() {
-		((XmlWebApplicationContext) applicationContext).refresh();
 	}
 
 	/**
