@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.exception.ServiceException;
 
@@ -25,6 +26,7 @@ import com.jlfex.hermes.common.exception.ServiceException;
  * @since 1.0
  */
 @Component
+@Transactional
 public class CommonRepository {
 
 	/** 实体管理器 */
@@ -169,7 +171,11 @@ public class CommonRepository {
 		public static final String countSearchUser 				= "/script/count-search-user.sql";
 		public static final String searchByLoanAudit 			= "/script/search-by-loan-audit.sql";
 		public static final String countSearchByLoanAudit 		= "/script/count-search-by-loan-audit.sql";
+		public static final String initData						= "/sql/h2/data.sql";
 		
-		
+	}
+	
+	public void executeNative(String path){
+		em.createNativeQuery(readScriptFile(path)).executeUpdate();
 	}
 }
