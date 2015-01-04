@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -30,36 +29,31 @@ public class Payment extends Model {
 	@ManyToOne
 	@JoinColumn(name = "user")
 	private User user;
-	
+
 	/** 渠道 */
 	@ManyToOne
 	@JoinColumn(name = "channel")
 	private PaymentChannel channel;
-	
+
 	/** 时间 */
 	@Column(name = "`datetime`")
 	private Date datetime;
-	
+
 	/** 序号 */
 	@Column(name = "sequence")
 	private Long sequence;
-	
+
 	/** 金额 */
 	@Column(name = "amount")
 	private BigDecimal amount;
-	
+
 	/** 手续费 */
 	@Column(name = "fee")
 	private BigDecimal fee;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
-	/** 版本 */
-	@Version
-	@Column(name = "version")
-	private Long version = 0L;
 
 	/**
 	 * 读取用户
@@ -120,7 +114,7 @@ public class Payment extends Model {
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
-	
+
 	/**
 	 * 读取序号
 	 * 
@@ -200,27 +194,7 @@ public class Payment extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	/**
-	 * 读取版本
-	 * 
-	 * @return
-	 * @see #version
-	 */
-	public Long getVersion() {
-		return version;
-	}
 
-	/**
-	 * 设置版本
-	 * 
-	 * @param version
-	 * @see #version
-	 */
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
 	/**
 	 * 读取状态名称
 	 * 
@@ -229,7 +203,7 @@ public class Payment extends Model {
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
 	}
-	
+
 	/**
 	 * 状态
 	 * 
@@ -238,17 +212,17 @@ public class Payment extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("等待支付")
-		public static final String WAIT		= "00";
-		
+		public static final String WAIT = "00";
+
 		@Element("等待反馈")
-		public static final String PAIED	= "01";
-		
+		public static final String PAIED = "01";
+
 		@Element("成功")
-		public static final String SUCCESS	= "10";
-		
+		public static final String SUCCESS = "10";
+
 		@Element("失败")
-		public static final String FAILURE	= "20";
+		public static final String FAILURE = "20";
 	}
 }
