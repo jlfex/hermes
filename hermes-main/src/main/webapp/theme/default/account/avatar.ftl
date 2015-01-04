@@ -17,8 +17,11 @@
 	     						<div>&nbsp;</div>
 	     					<button type="button" id="save" class="btn btn-primary"><@messages key="account.info.save.avatar" /></button>
 	     		</li>
-	     		 <li class="span4" >
+	     		<li class="span4" >
 				       提示:长按鼠标左键可以对头像进行裁剪
+				</li>
+				<li class="span4" >
+				      <div id="cutPhoto" style="color:red"></div>
 				</li>
 	     	</ul>
 	     	<input id="avatar" name="avatar" type="file" multiple="multiple" class="hidden" />
@@ -55,6 +58,10 @@ jQuery(function($) {
 			var startX,startY,width,height;
 			startX=$("#startX").val();
 			startY=$("#startY").val();
+			if(!startX || !startY){
+			  $("#cutPhoto").html("<br/>保存失败：请用选择头像尺寸");
+			  return false;
+			}
 			width=$("#width").val();
 			height=$("#height").val();
 			var imgWidth = $("#original").width();
@@ -84,17 +91,14 @@ function uploadImg(files) {
 	$.each(files, function(i, file) {
 		// 初始化
 		var reader = new FileReader();
-		
 		// 定义加载事件
 		reader.onload = function(e) { $('#original').attr('src',e.target.result);$('#previewImg').attr('src',e.target.result);};
 		reader.readAsDataURL(file);
-		
 	});
 }
 function preview(img, selection) {
 	if(!selection.width || !selection.height){
-	   selection.width = 1;
-	   selection.height = 1;
+	   return ;
 	}
 	var scaleX = 100 / selection.width;
 	var scaleY = 100 / selection.height;

@@ -4,7 +4,7 @@
 <form class="form-horizontal"role="form" id="userBasic" name="userBasic">
   <div class="form-group">
     <label for="account" class="col-sm-2 control-label">*<@messages key="model.basic.account"/></label>
-     <input type="hidden" class="form-control" id="authEmail" name="authEmail" value="<#if userBasic?exists>${userBasic.authEmail!''}</#if>"  >
+    <input type="hidden" class="form-control" id="authEmail" name="authEmail" value="<#if userBasic?exists>${userBasic.authEmail!''}</#if>"  >
     <input type="hidden" class="form-control" id="authName" name="authName" value="<#if userBasic?exists>${userBasic.authName!''}</#if>"  >
     <input type="hidden" class="form-control" id="authCellphone" name="authCellphone" value="<#if userBasic?exists>${userBasic.authCellphone!''}</#if>"  >
     <label for="account" class="form-control-static">${userBasic.account!''}</label>
@@ -174,10 +174,14 @@
 <!--
 jQuery(function($) {
 	$("#userBasic").find('input').each(function() {
-		if ($(this).data().auth == '10') $(this).attr('disabled',true);
+		if ($(this).data().auth == '10') {
+		  $(this).attr("disabled",true);
+		}
 	});
 	$("#userBasic").find('select').each(function() {
-		if ($(this).data().auth == '10') $(this).attr('disabled',true);
+		if ($(this).data().auth == '10') {
+		  $(this).attr("disabled",true);
+		}
 	});
 	$.area({ data: ${area}, bind: [$('#province'), $('#city'), $('#county')] });
 	$("#modifyBasic").on('click', function(){
@@ -202,6 +206,7 @@ function saveBasic(){
 			        url: "${app}/account/saveBasic",
 			        type: "POST",
 			        dataType: 'json',
+			        cache:false,
 			        timeout: 10000,
 			        success: function(data) {
 			            if(data.type=="FAILURE"){

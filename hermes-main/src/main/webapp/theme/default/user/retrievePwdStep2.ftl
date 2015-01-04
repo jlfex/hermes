@@ -10,6 +10,12 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<script type="text/javascript">
+function mailBoxSkp(email){
+	  var url = email.split('@')[1];
+	  window.open("http://mail."+url);
+}
+</script>
 </head>
 
 <body>
@@ -29,7 +35,7 @@
 		     </#if>
 		</div>
 	</div>
-	<a href="forgotPwdStep3.html" class="m_btn1 m_bg1">去邮箱查看</a>
+	<a  class="m_btn1 m_bg1" onclick="mailBoxSkp('${email}')"  target="_blank" >去邮箱查看</a>
 	<div class="tip_text">
 		<p class="tip_text_t">还没有收到确认邮件？</p>
 		<p>1.尝试到广告邮件、垃圾邮件目录里找找看</p>
