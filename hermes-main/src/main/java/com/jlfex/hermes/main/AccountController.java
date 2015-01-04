@@ -53,32 +53,32 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 @RequestMapping("/account")
 public class AccountController {
 
-	private static final String AUTH_TRUE	= "1";
-	
+	private static final String AUTH_TRUE = "1";
+
 	/** 银行账户业务接口 */
 	@Autowired
 	private BankAccountService bankAccountService;
-	
+
 	/** 用户业务接口 */
 	@Autowired
 	private UserService userService;
-	
+
 	/** 用户个人信息接口 */
 	@Autowired
 	private UserInfoService userInfoService;
-	
+
 	/** 交易业务接口 */
 	@Autowired
 	private TransactionService transactionService;
-	
+
 	/** 支付业务接口 */
 	@Autowired
 	private PaymentService paymentService;
-	
+
 	/** 地区业务接口 */
 	@Autowired
 	private AreaService areaService;
-	
+
 	/**
 	 * 索引
 	 * 
@@ -91,7 +91,7 @@ public class AccountController {
 		model.addAttribute("type", Strings.empty(type, null));
 		return "account/index";
 	}
-	
+
 	/**
 	 * 认证中心
 	 * 
@@ -103,7 +103,7 @@ public class AccountController {
 		// 查询用户数据
 		App.checkUser();
 		UserProperties userProperties = userService.loadPropertiesByUserId(App.user().getId());
-		
+
 		// 设置属性并渲染视图
 		model.addAttribute("email", App.user().getAccount());
 		model.addAttribute("userProp", userProperties);
@@ -112,7 +112,7 @@ public class AccountController {
 		model.addAttribute("idSwitch", Strings.equals(AUTH_TRUE, App.config("auth.realname.switch")));
 		return "account/approve-new";
 	}
-	
+
 	/**
 	 * 资金明细
 	 * 
@@ -128,7 +128,7 @@ public class AccountController {
 		UserAccount cash = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
 		UserAccount frozen = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.FREEZE);
 		String avatar = userService.getAvatar(user, UserImage.Type.AVATAR_LG);
-		
+
 		// 设置参数并渲染视图
 		model.addAttribute("beginDate", Calendars.date(Calendars.add(new Date(), Calendar.DATE, -7)));
 		model.addAttribute("endDate", Calendars.date());
@@ -159,7 +159,7 @@ public class AccountController {
 		model.addAttribute("unfreeze", Transaction.Type.REVERSE_UNFREEZE);
 		return "account/detail-table";
 	}
-	
+
 	/**
 	 * 账户充值
 	 * 
@@ -172,7 +172,7 @@ public class AccountController {
 		model.addAttribute("account", userInfoService.loadByUserIdAndType(App.user().getId(), UserAccount.Type.CASH));
 		return "account/charge";
 	}
-	
+
 	/**
 	 * 计算充值手续费
 	 * 
@@ -185,16 +185,16 @@ public class AccountController {
 		// 计算手续费
 		BigDecimal fee = paymentService.calcChargeFee(amount);
 		BigDecimal sum = fee.add(Numbers.currency(amount));
-		
+
 		// 设置结果
 		Result<String> result = new Result<String>(Result.Type.SUCCESS);
 		result.addMessage(Numbers.toCurrency(fee));
 		result.addMessage(Numbers.toCurrency(sum));
-		
+
 		// 返回结果
 		return result;
 	}
-	
+
 	/**
 	 * 添加充值
 	 * 
@@ -205,10 +205,13 @@ public class AccountController {
 	@RequestMapping("/charge/add")
 	public String addCharge(String channel, Double amount, Model model) {
 		App.checkUser();
-		model.addAttribute("payment", paymentService.save(channel, amount));
+		UserAccount account = userInfoService.loadByUserIdAndType(App.user().getId(), UserAccount.Type.CASH);
+		Payment payment = paymentService.save(channel, amount);
+		userInfoService.chargeUserAccount(account, amount);
+		model.addAttribute("payment", payment);
 		return "account/charge-success";
 	}
-	
+
 	/**
 	 * 支付渠道选择
 	 * 
@@ -220,7 +223,7 @@ public class AccountController {
 		model.addAttribute("channels", paymentService.findChannelByGroupAll().entrySet());
 		return "account/channels";
 	}
-	
+
 	/**
 	 * 支付返回
 	 * 
@@ -233,7 +236,7 @@ public class AccountController {
 		model.addAttribute("result", paymentService.callback(id, new RequestParam(request), PaymentService.TYPE_RETURN));
 		return "account/payment-return";
 	}
-	
+
 	/**
 	 * 支付通知
 	 * 
@@ -245,7 +248,7 @@ public class AccountController {
 	public void notifyPayment(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		// 处理并获得结果
 		Result<Payment> result = paymentService.callback(id, new RequestParam(request), PaymentService.TYPE_NOTIFY);
-		
+
 		// 页面输出
 		try {
 			response.getWriter().flush();
@@ -260,7 +263,7 @@ public class AccountController {
 			}
 		}
 	}
-	
+
 	/**
 	 * 提现
 	 * 
@@ -298,7 +301,7 @@ public class AccountController {
 		// 初始化
 		App.checkUser();
 		Result<String> result = new Result<String>();
-		
+
 		// 保存数据
 		try {
 			bankAccountService.addWithdraw(bankAccountId, amount);
@@ -316,12 +319,12 @@ public class AccountController {
 			result.addMessage(App.message(se.getKey()));
 			Logger.error(se.getMessage(), se);
 		}
-		
+
 		// 渲染视图
 		model.addAttribute("result", result);
 		return "result-" + result.getTypeName();
 	}
-	
+
 	/**
 	 * 支付
 	 * 
@@ -366,12 +369,12 @@ public class AccountController {
 		App.checkUser();
 		return bankAccountService.save(bankId, cityId, deposit, account);
 	}
-	
+
 	/**
 	 * 清除缓存
 	 * 
 	 * @param response
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping("/clear")
 	public void clear(HttpServletResponse response) throws IOException {
