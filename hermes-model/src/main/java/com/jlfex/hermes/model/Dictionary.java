@@ -19,30 +19,30 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_dictionary")
 public class Dictionary extends Model {
-	
+
 	private static final long serialVersionUID = 188695956404918637L;
 
 	/** 类型 */
 	@ManyToOne
 	@JoinColumn(name = "type")
 	private DictionaryType type;
-	
+
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 顺序 */
-	@Column(name = "`order`")
+	@Column(name = "order_")
 	private Integer order;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -52,7 +52,7 @@ public class Dictionary extends Model {
 	public DictionaryType getType() {
 		return type;
 	}
-	
+
 	/**
 	 * 设置类型
 	 * 
@@ -62,7 +62,7 @@ public class Dictionary extends Model {
 	public void setType(DictionaryType type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 读取名称
 	 * 
@@ -72,7 +72,7 @@ public class Dictionary extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置名称
 	 * 
@@ -82,7 +82,7 @@ public class Dictionary extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取代码
 	 * 
@@ -92,7 +92,7 @@ public class Dictionary extends Model {
 	public String getCode() {
 		return code;
 	}
-	
+
 	/**
 	 * 设置代码
 	 * 
@@ -102,7 +102,7 @@ public class Dictionary extends Model {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	/**
 	 * 读取顺序
 	 * 
@@ -112,7 +112,7 @@ public class Dictionary extends Model {
 	public Integer getOrder() {
 		return order;
 	}
-	
+
 	/**
 	 * 设置顺序
 	 * 
@@ -122,7 +122,7 @@ public class Dictionary extends Model {
 	public void setOrder(Integer order) {
 		this.order = order;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -132,7 +132,7 @@ public class Dictionary extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -160,11 +160,11 @@ public class Dictionary extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
-		public static final String VALID 	= "00";
+		public static final String VALID = "00";
 
 		@Element("无效")
-		public static final String INVALID 	= "99";
+		public static final String INVALID = "99";
 	}
 }
