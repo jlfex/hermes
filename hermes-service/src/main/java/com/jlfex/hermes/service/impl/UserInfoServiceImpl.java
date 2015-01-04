@@ -200,7 +200,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		UserProperties userPro = userPropertiesRepository.findByUser(user);
 		userBasic.setId(userPro.getId());
 		BeanUtils.copyProperties(userBasic, userPro);
-		userPro.setUpdateTime(curDate);
 
 		UserAddress userAdd = userAddressRepository.findByUserIdAndType(user.getId(), Type.COMMON);
 		if (userAdd == null) {
@@ -302,7 +301,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		if (match) {
 			String pwd = encode(newPwd);
 			user.setSignPassword(pwd);
-			user.setUpdateTime(new Date());
 			userRepository.save(user);
 			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 			result.setData("修改成功");
@@ -330,7 +328,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			if (userImages.size() > 0) {
 				userImage = userImages.get(0);
 				userImage.setImage(imgStr);
-				userImage.setUpdateTime(curDate);
 			} else {
 				userImage.setUser(user);
 				userImage.setType(type);

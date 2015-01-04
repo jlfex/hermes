@@ -147,7 +147,6 @@ public class AuthServiceImpl implements AuthService {
 				if (currentDate.before(expire)) {
 					UserProperties userPro = userPropertiesRepository.findByUser(user);
 					userPro.setAuthCellphone(Auth.PASS);
-					userPro.setUpdateTime(new Date());
 					userPropertiesRepository.save(userPro);
 					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.VERIFY);
@@ -156,7 +155,6 @@ public class AuthServiceImpl implements AuthService {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("result.failure.phone.overdue", null));
 				}
-				userAuth.setUpdateTime(currentDate);
 				userAuthRepository.save(userAuth);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
@@ -193,7 +191,6 @@ public class AuthServiceImpl implements AuthService {
 			userPro_u.setRealName(realName);
 			userPro_u.setIdType(idType);
 			userPro_u.setIdNumber(idNumber);
-			userPro_u.setUpdateTime(new Date());
 			// success
 			if (res == "3") {
 				userPro_u.setAuthName(Auth.PASS);

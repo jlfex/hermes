@@ -264,7 +264,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 					// 验证码是否过期
 					if (currentDate.before(expire)) {
 						user.setStatus(Status.ENABLED);
-						user.setUpdateTime(currentDate);
 						userRepository.save(user);
 						UserProperties userPro = userPropertiesRepository.findByUser(user);
 						userPro.setAuthEmail(Auth.PASS);
@@ -277,7 +276,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 						result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
 
 					}
-					userAuth.setUpdateTime(currentDate);
 					userAuthRepository.save(userAuth);
 				}
 			} else {
@@ -394,7 +392,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.OVERDUE);
 					result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
 				}
-				userAuth.setUpdateTime(currentDate);
 				userAuthRepository.save(userAuth);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
@@ -487,7 +484,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		User user = userRepository.findOne(userId);
 		String pwd = encode(newPwd);
 		user.setSignPassword(pwd);
-		user.setUpdateTime(new Date());
 		userRepository.save(user);
 		saveUserLog(user, LogType.RETRIEVE);
 
