@@ -21,9 +21,9 @@ import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAuth;
-import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserAuth.Status;
 import com.jlfex.hermes.model.UserAuth.Type;
+import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.repository.TextRepository;
@@ -61,11 +61,11 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	private TextRepository textRepository;
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.AuthService#findByUserId(java.lang.String)
+	 * @see com.jlfex.hermes.service.AuthService#findByUserId(java.lang.String)
 	 */
 	@Override
 	public UserProperties findByUserId(String userId) {
@@ -78,47 +78,46 @@ public class AuthServiceImpl implements AuthService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.jlfex.hermes.service.AuthService#sendAuthCodeByPhone(java.lang.String,java.lang.String)
+	 * com.jlfex.hermes.service.AuthService#sendAuthCodeByPhone(java.lang.String
+	 * ,java.lang.String)
 	 */
 	@Override
 	public Result sendAuthCodeByPhone(String userId, String phone) {
 		try {
-		Result result = new Result();
-		UserAuth userAuth = new UserAuth();
-		// check whether the phone is used
-		List<User> users = userRepository.findByCellphone(phone);
-		List<UserProperties> userPros = new ArrayList<UserProperties>();
-		if (users != null && users.size() > 0) {
-			userPros = userPropertiesRepository.findByAuthCellphoneAndUserIn(Auth.PASS, users);
-		}
-		if (userPros != null && userPros.size() > 0) {
-			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage(App.message("result.failure.phone.occupy", null));
-		} else {
-			User user = userRepository.findOne(userId);
-			user.setCellphone(phone);
+			Result result = new Result();
+			UserAuth userAuth = new UserAuth();
+			// check whether the phone is used
+			List<User> users = userRepository.findByCellphone(phone);
+			List<UserProperties> userPros = new ArrayList<UserProperties>();
+			if (users != null && users.size() > 0) {
+				userPros = userPropertiesRepository.findByAuthCellphoneAndUserIn(Auth.PASS, users);
+			}
+			if (userPros != null && userPros.size() > 0) {
+				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+				result.addMessage(App.message("result.failure.phone.occupy", null));
+			} else {
+				User user = userRepository.findOne(userId);
+				user.setCellphone(phone);
 
-			Date curDate = new Date();
-			userAuth.setUser(user);
-			String validateCode = Strings.random(6, StringSet.NUMERIC);
-			userAuth.setCode(validateCode);
-			String smsPro = App.config("auth.sms.expire");
-			Date expire = Calendars.add(curDate, smsPro);
-			userAuth.setStatus(Status.WAITVERIFY);
-			userAuth.setType(Type.SMS);
-			userAuth.setExpire(expire);
-			userAuth.setCreateTime(curDate);
-			userAuth.setUpdateTime(curDate);
+				Date curDate = new Date();
+				userAuth.setUser(user);
+				String validateCode = Strings.random(6, StringSet.NUMERIC);
+				userAuth.setCode(validateCode);
+				String smsPro = App.config("auth.sms.expire");
+				Date expire = Calendars.add(curDate, smsPro);
+				userAuth.setStatus(Status.WAITVERIFY);
+				userAuth.setType(Type.SMS);
+				userAuth.setExpire(expire);
 
-			userRepository.save(user);
-			userAuthRepository.save(userAuth);
+				userRepository.save(user);
+				userAuthRepository.save(userAuth);
 
-			// send verification code of sms
-			sendSms(phone, validateCode);
-			result.addMessage(App.message("result.success.phone", null));
-			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+				// send verification code of sms
+				sendSms(phone, validateCode);
+				result.addMessage(App.message("result.success.phone", null));
+				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 				return result;
-		}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Result result = new Result();
@@ -133,7 +132,8 @@ public class AuthServiceImpl implements AuthService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.jlfex.hermes.service.AuthService#authPhone(java.lang.String,java.lang.String,java.lang.String)
+	 * com.jlfex.hermes.service.AuthService#authPhone(java.lang.String,java.
+	 * lang.String,java.lang.String)
 	 */
 	@Override
 	public Result authPhone(String userId, String phone, String validCode) {
@@ -147,7 +147,6 @@ public class AuthServiceImpl implements AuthService {
 				if (currentDate.before(expire)) {
 					UserProperties userPro = userPropertiesRepository.findByUser(user);
 					userPro.setAuthCellphone(Auth.PASS);
-					userPro.setUpdateTime(new Date());
 					userPropertiesRepository.save(userPro);
 					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.VERIFY);
@@ -156,7 +155,6 @@ public class AuthServiceImpl implements AuthService {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("result.failure.phone.overdue", null));
 				}
-				userAuth.setUpdateTime(currentDate);
 				userAuthRepository.save(userAuth);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
@@ -174,7 +172,8 @@ public class AuthServiceImpl implements AuthService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.jlfex.hermes.service.AuthService#authIdentify(java.lang.String,java.lang.String,java.lang.String)
+	 * com.jlfex.hermes.service.AuthService#authIdentify(java.lang.String,java
+	 * .lang.String,java.lang.String)
 	 */
 	@Override
 	public Result authIdentify(String userId, String realName, String idType, String idNumber) {
@@ -192,7 +191,6 @@ public class AuthServiceImpl implements AuthService {
 			userPro_u.setRealName(realName);
 			userPro_u.setIdType(idType);
 			userPro_u.setIdNumber(idNumber);
-			userPro_u.setUpdateTime(new Date());
 			// success
 			if (res == "3") {
 				userPro_u.setAuthName(Auth.PASS);
@@ -210,8 +208,7 @@ public class AuthServiceImpl implements AuthService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.AuthService#isAuth(java.lang.String)
+	 * @see com.jlfex.hermes.service.AuthService#isAuth(java.lang.String)
 	 */
 	@Override
 	public boolean isAuth(String code) {
@@ -247,7 +244,7 @@ public class AuthServiceImpl implements AuthService {
 	 */
 	private String idInterface(String realName, String idType, String idNumber) {
 		String param = realName + "," + idNumber;
-//		return Identity.verify(param);
+		// return Identity.verify(param);
 		return "3";
 	}
 }

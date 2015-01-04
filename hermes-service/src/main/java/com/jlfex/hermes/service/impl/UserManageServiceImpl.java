@@ -2,7 +2,6 @@ package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,11 @@ import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.BankAccount.Status;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserAddress;
+import com.jlfex.hermes.model.UserAddress.Type;
 import com.jlfex.hermes.model.UserCar;
 import com.jlfex.hermes.model.UserContacter;
 import com.jlfex.hermes.model.UserEducation;
@@ -31,10 +32,9 @@ import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserJob;
 import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.model.BankAccount.Status;
-import com.jlfex.hermes.model.UserAddress.Type;
 import com.jlfex.hermes.repository.BankAccountRepository;
 import com.jlfex.hermes.repository.CommonRepository;
+import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserAddressRepository;
 import com.jlfex.hermes.repository.UserCarRepository;
@@ -45,7 +45,6 @@ import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserJobRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
-import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.service.UserManageService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.pojo.UserBasic;
@@ -102,8 +101,12 @@ public class UserManageServiceImpl implements UserManageService {
 	@Autowired
 	private UserImageRepository userImageRepository;
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findByCondition(java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findByCondition(java.lang.
+	 * Integer, java.lang.Integer)
 	 */
 	@Override
 	public Page<UserInfo> findByCondition(UserInfo userInfo, Integer page, Integer size) {
@@ -151,8 +154,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return pageUser;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findBankByUser(java.lang.String,java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findBankByUser(java.lang.String
+	 * ,java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
 	public Page<BankAccount> findBankByUser(String userId, Integer page, Integer size) {
@@ -164,8 +171,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return pageBank;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findHouseByUser(java.lang.String, java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findHouseByUser(java.lang.
+	 * String, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
 	public List<UserHouse> findHouseByUser(String userId) {
@@ -178,8 +189,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return houses;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findJobByUser(java.lang.String, java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findJobByUser(java.lang.String
+	 * , java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
 	public Page<UserJob> findJobByUser(String userId, Integer page, Integer size) {
@@ -191,8 +206,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return pageJob;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findCarByUser(java.lang.String, java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findCarByUser(java.lang.String
+	 * , java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
 	public Page<UserCar> findCarByUser(String userId, Integer page, Integer size) {
@@ -204,8 +223,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return pageCar;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#findContacterByUser(java.lang.String, java.lang.Integer, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#findContacterByUser(java.lang
+	 * .String, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
 	public Page<UserContacter> findContacterByUser(String userId, Integer page, Integer size) {
@@ -217,8 +240,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return pageContacter;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#loadBasicByUser(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#loadBasicByUser(java.lang.
+	 * String)
 	 */
 	@Override
 	public UserBasic loadBasicByUser(String userId) {
@@ -271,16 +298,23 @@ public class UserManageServiceImpl implements UserManageService {
 		return condition.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#loadImageByUserAndLabelAndType(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#loadImageByUserAndLabelAndType
+	 * (java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<UserImage> loadImageByUserAndLabelAndType(String userId, String label, String type) {
 		return userImageRepository.findByUserIdAndTypeAndLabelIdAndStatus(userId, type, label, com.jlfex.hermes.model.UserImage.Status.ENABLED);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#freezeUser(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#freezeUser(java.lang.String)
 	 */
 	@Override
 	public Result freezeUser(String userId) {
@@ -288,14 +322,15 @@ public class UserManageServiceImpl implements UserManageService {
 		Result result = new Result();
 		User user = userRepository.findOne(userId);
 		user.setStatus(com.jlfex.hermes.model.User.Status.FROZEN);
-		user.setUpdateTime(new Date());
-		user.setUpdater("");
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#unfreezeUser(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#unfreezeUser(java.lang.String)
 	 */
 	@Override
 	public Result unfreezeUser(String userId) {
@@ -303,14 +338,15 @@ public class UserManageServiceImpl implements UserManageService {
 		Result result = new Result();
 		User user = userRepository.findOne(userId);
 		user.setStatus(com.jlfex.hermes.model.User.Status.ENABLED);
-		user.setUpdateTime(new Date());
-		user.setUpdater("");
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserManageService#logOffUser(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserManageService#logOffUser(java.lang.String)
 	 */
 	@Override
 	public Result logOffUser(String userId) {
@@ -326,8 +362,6 @@ public class UserManageServiceImpl implements UserManageService {
 			}
 		}
 		user.setStatus(com.jlfex.hermes.model.User.Status.DISABLED);
-		user.setUpdateTime(new Date());
-		user.setUpdater("");
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		result.addMessage("成功注销");
 		return result;
