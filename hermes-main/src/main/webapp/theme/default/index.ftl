@@ -79,7 +79,7 @@
 				<tbody>
 					<#list loans as l>
 					<tr data-progress="${l.progress}">
-						<td class="right"><img alt="${l.invester!'-'}" src="${l.avatar!''}" class="avatar"></td>
+						<td class="right"><img alt="" src="${l.avatar!''}" class="avatar"></td>
 						<td><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
 						<td class="right">${l.rate}</td>
 						<td class="right">${l.amount} <@messages key="common.unit.cny" /></td>
