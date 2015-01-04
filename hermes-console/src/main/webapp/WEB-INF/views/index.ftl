@@ -16,7 +16,6 @@
 		<span>${today}&nbsp;&nbsp;</span>
 		<span>${username}&nbsp;&nbsp;</span>
 		<span>
-			
 			<a href="${app}/j_spring_security_logout"><i class="fa fa-sign-out fa-fw"></i></a>
 		</span>
 	</div>
