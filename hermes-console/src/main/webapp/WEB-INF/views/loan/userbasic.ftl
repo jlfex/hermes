@@ -10,7 +10,16 @@
 		<div class="form-group">
 			<label class="col-xs-2 control-label"><@messages key="model.basic.realName"/></label>
 			<div class="col-xs-10">
-				<p class="form-control-static">${loanUserBasic.realName!''}</p>
+				<p class="form-control-static">${loanUserBasic.realName!''}
+					<#if loanUserBasic.realName?exists>
+		    		<#if loanUserBasic.authName?exists>
+		    			<#if loanUserBasic.authName=='10'><img src="${app.img}/auth.png"/>
+		    			<#else>
+		    				<img src="${app.img}/unauth.png"/>
+		    			</#if>
+		    		</#if>
+	    		</#if>
+				</p>
 			</div>
 		</div>
 	
@@ -23,16 +32,7 @@
 		<div class="form-group">
 			<label class="col-xs-2 control-label"><@messages key="model.basic.idNumber"/></label>
 			<div class="col-xs-10">
-				<p class="form-control-static">${loanUserBasic.realName!''}
-				<#if loanUserBasic.realName?exists>
-		    		<#if loanUserBasic.authName?exists>
-		    			<#if loanUserBasic.authName=='10'><img src="${app.img}/auth.png"/>
-		    			<#else>
-		    				<img src="${app.img}/unauth.png"/>
-		    			</#if>
-		    		</#if>
-	    		</#if>
-	    		</p>
+				<p class="form-control-static">${loanUserBasic.idNumber!''}</p>
 			</div>
 		</div>
 		<div class="form-group">

@@ -20,25 +20,25 @@ public class Advert extends Model {
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 说明 */
 	@Column(name = "description")
 	private String description;
-	
+
 	/** 图片 */
 	@Column(name = "image")
 	private String image;
-	
+
 	/** 链接 */
 	@Column(name = "link")
 	private String link;
-	
+
 	/** 顺序 */
-	@Column(name = "order")
+	@Column(name = "order_")
 	private Integer order;
 
 	/**

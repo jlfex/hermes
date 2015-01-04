@@ -26,7 +26,7 @@ public class SpringWebApp extends WebApp {
 
 	/** 容器 */
 	private static ApplicationContext applicationContext;
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -36,18 +36,25 @@ public class SpringWebApp extends WebApp {
 	public SpringWebApp(HttpServletRequest request, HttpServletResponse response) {
 		super(request, response);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.common.web.WebApp#getLocale()
 	 */
 	@Override
 	public Locale getLocale() {
-		Locale locale = Locale.class.cast(WebUtils.getSessionAttribute(request, SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME));
-		if (locale == null) locale = request.getLocale();
+		Locale locale = Locale.class.cast(WebUtils.getSessionAttribute(request,
+				SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME));
+		if (locale == null) {
+			locale = request.getLocale();
+		}
 		return locale;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.common.web.WebApp#getMessage(java.lang.String, java.lang.Object[])
 	 */
 	@Override
@@ -59,7 +66,7 @@ public class SpringWebApp extends WebApp {
 			return key;
 		}
 	}
-	
+
 	/**
 	 * 读取实例
 	 * 
@@ -69,7 +76,7 @@ public class SpringWebApp extends WebApp {
 	public static Object getBean(String name) {
 		return applicationContext.getBean(name);
 	}
-	
+
 	/**
 	 * 读取实例
 	 * 
@@ -80,7 +87,7 @@ public class SpringWebApp extends WebApp {
 	public static Object getBean(String name, Object... args) {
 		return applicationContext.getBean(name, args);
 	}
-	
+
 	/**
 	 * 读取实例
 	 * 
@@ -91,7 +98,7 @@ public class SpringWebApp extends WebApp {
 	public static <T> T getBean(String name, Class<T> requiredType) {
 		return applicationContext.getBean(name, requiredType);
 	}
-	
+
 	/**
 	 * 读取实例
 	 * 
@@ -101,7 +108,7 @@ public class SpringWebApp extends WebApp {
 	public static <T> T getBean(Class<T> requiredType) {
 		return applicationContext.getBean(requiredType);
 	}
-	
+
 	/**
 	 * 初始化
 	 * 
@@ -112,7 +119,7 @@ public class SpringWebApp extends WebApp {
 		applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 		Logger.info("initialize spring application context: %s", applicationContext);
 	}
-	
+
 	/**
 	 * 创建
 	 * 
