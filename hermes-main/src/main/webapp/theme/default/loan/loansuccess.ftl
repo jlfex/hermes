@@ -25,7 +25,7 @@
             </ul>
 		</div>
 	</div>
-	<p class="m_im_txt a_pa_lt"><a href="${app}" class="q_btn1 q_bg1">返回首页</a><a href="#" class="ck">完善个人信息</a><a href="${app}/account/index?type=loan"  class="ck">查看我的借款</a></p>
+	<p class="m_im_txt a_pa_lt"><a href="${app}/index" class="q_btn1 q_bg1">返回首页</a><a href="${app}/account/index" class="ck">完善个人信息</a><a href="${app}/account/index?type=loan"  class="ck">查看我的借款</a></p>
 </div>
 
 

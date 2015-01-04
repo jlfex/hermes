@@ -348,7 +348,7 @@ public class InvestController {
 		} else {
 			model.addAttribute("remaintime", 0);
 		}
-		LoanUserInfo loanUserInfo = loanService.loadLoanUserInfoByUserId(loan.getUser().getId());
+		LoanUserInfo loanUserInfo = loanService.loadLoanUserInfoByUserId(App.user().getId());
 		model.addAttribute("loanUserInfo", loanUserInfo);
 
 		List<Invest> investList = investService.findByLoan(loan);
