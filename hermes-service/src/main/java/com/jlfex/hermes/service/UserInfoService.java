@@ -13,7 +13,6 @@ import com.jlfex.hermes.model.UserJob;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.service.pojo.UserBasic;
 
-
 /**
  * 用户个人信息接口
  * 
@@ -25,6 +24,7 @@ import com.jlfex.hermes.service.pojo.UserBasic;
 public interface UserInfoService {
 
 	public User findByUserId(String userId);
+
 	/**
 	 * 显示用户的账户信息
 	 * 
@@ -156,7 +156,7 @@ public interface UserInfoService {
 	 * @return
 	 */
 	public UserAccount loadByUserIdAndType(String userId, String type);
-	
+
 	/**
 	 * 通过用户编号加载用户属性
 	 * 
@@ -164,7 +164,7 @@ public interface UserInfoService {
 	 * @return
 	 */
 	public UserProperties loadPropertiesByUserId(String userId);
-	
+
 	/**
 	 * 通过用户及类型加载用户账户
 	 * 
@@ -214,4 +214,13 @@ public interface UserInfoService {
 	 * @return
 	 */
 	public UserCar loadUserCarById(String id);
+
+	/**
+	 * 重置后更新用户现金账户余额
+	 * 
+	 * @param account
+	 * @param amount
+	 * @return
+	 */
+	public UserAccount chargeUserAccount(UserAccount account, Double amount);
 }

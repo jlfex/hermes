@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import com.jlfex.hermes.model.Label;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserAddress;
+import com.jlfex.hermes.model.UserAddress.Status;
+import com.jlfex.hermes.model.UserAddress.Type;
 import com.jlfex.hermes.model.UserCar;
 import com.jlfex.hermes.model.UserContacter;
 import com.jlfex.hermes.model.UserEducation;
@@ -22,8 +25,6 @@ import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserJob;
 import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.model.UserAddress.Status;
-import com.jlfex.hermes.model.UserAddress.Type;
 import com.jlfex.hermes.repository.LabelRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
@@ -103,16 +104,24 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	/** 标签 */
 	@Autowired
 	private LabelRepository labelRepository;
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#findByUserId(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#findByUserId(java.lang.String)
 	 */
 	@Override
 	public User findByUserId(String userId) {
 		return userRepository.findOne(userId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#findAccountByUserId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#findAccountByUserId(java.lang
+	 * .String)
 	 */
 	@Override
 	public List<UserAccount> findAccountByUserId(String userId) {
@@ -120,22 +129,30 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		return userAccountRepository.findByUserId(userId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#findImageByUserId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#findImageByUserId(java.lang.
+	 * String)
 	 */
 	@Override
 	public UserImage findImageByUserIdAndType(String userId, String type) {
 		return userImageRepository.findByUserIdAndTypeAndStatus(userId, type, UserImage.Status.ENABLED);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#findUserInfoByUserId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#findUserInfoByUserId(java.lang
+	 * .String)
 	 */
 	@Override
 	public UserBasic findUserInfoByUserId(String userId) {
 		User user = userRepository.findOne(userId);
 		UserProperties userProperties = userPropertiesRepository.findByUserId(userId);
-		UserBasic userBasic=new UserBasic();
+		UserBasic userBasic = new UserBasic();
 		BeanUtils.copyProperties(userProperties, userBasic);
 		if (user.getAccount() != null) {
 			userBasic.setAccount(user.getAccount());// TODO
@@ -219,33 +236,39 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserInfoService#saveJobInfo(UserJob)
 	 */
 	@Override
 	public void saveJobInfo(UserJob userJob) {
 		Date curDate = new Date();
-			userJob.setStatus(com.jlfex.hermes.model.UserJob.Status.VALID);
-			userJob.setCreateTime(curDate);
+		userJob.setStatus(com.jlfex.hermes.model.UserJob.Status.VALID);
+		userJob.setCreateTime(curDate);
 		userJob.setUpdateTime(curDate);
 		userJobRepository.save(userJob);
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserInfoService#saveHouseInfo(UserHouse)
 	 */
 	@Override
 	public void saveHouseInfo(UserHouse userHouse) {
 		Date curDate = new Date();
-			userHouse.setStatus(com.jlfex.hermes.model.UserHouse.Status.VALID);
-			userHouse.setCreateTime(curDate);
+		userHouse.setStatus(com.jlfex.hermes.model.UserHouse.Status.VALID);
+		userHouse.setCreateTime(curDate);
 		userHouse.setUpdateTime(curDate);
 		userHouseRepository.save(userHouse);
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserInfoService#saveCarInfo(jUserCar)
 	 */
 	@Override
@@ -258,8 +281,12 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#resetPassword(java.lang.String,java.lang.String,java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#resetPassword(java.lang.String
+	 * ,java.lang.String,java.lang.String)
 	 */
 	@Override
 	public void saveContacterInfo(UserContacter userContacter) {
@@ -271,8 +298,12 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#resetPassword(java.lang.String,java.lang.String,java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#resetPassword(java.lang.String
+	 * ,java.lang.String,java.lang.String)
 	 */
 	@Override
 	public Result resetPassword(String userId, String orginalPwd, String newPwd) {
@@ -340,68 +371,110 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		String[] labelArr = labels.split(",");
 		return labelArr;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadByUserIdAndType(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadByUserIdAndType(java.lang
+	 * .String, java.lang.String)
 	 */
 	@Override
 	public UserAccount loadByUserIdAndType(String userId, String type) {
 		return userAccountRepository.findByUserIdAndType(userId, type);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadPropertiesByUserId(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadPropertiesByUserId(java.
+	 * lang.String)
 	 */
 	@Override
 	public UserProperties loadPropertiesByUserId(String userId) {
 		return userPropertiesRepository.findByUserId(userId);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadAccountByUserAndType(com.jlfex.hermes.model.User, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadAccountByUserAndType(com
+	 * .jlfex.hermes.model.User, java.lang.String)
 	 */
 	@Override
 	public UserAccount loadAccountByUserAndType(User user, String type) {
 		return userAccountRepository.findByUserAndType(user, type);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadImagesByUserAndType(com.jlfex.hermes.model.User, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadImagesByUserAndType(com.
+	 * jlfex.hermes.model.User, java.lang.String)
 	 */
 	@Override
 	public List<UserImage> loadImagesByUserAndType(User user, String type) {
 		return userImageRepository.findByUserAndTypeAndStatus(user, type, com.jlfex.hermes.model.UserImage.Status.ENABLED);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loanUserJobByJobId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loanUserJobByJobId(java.lang
+	 * .String)
 	 */
 	@Override
 	public UserJob loanUserJobByJobId(String jobId) {
 		return userJobRepository.findOne(jobId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loanUserContacterById(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loanUserContacterById(java.lang
+	 * .String)
 	 */
 	@Override
 	public UserContacter loanUserContacterById(String id) {
 		return userContacterRepository.findOne(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadUserCarById(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadUserCarById(java.lang.String
+	 * )
 	 */
 	@Override
 	public UserHouse loadUserHouseById(String id) {
 		return userHouseRepository.findOne(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#loadUserCarById(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#loadUserCarById(java.lang.String
+	 * )
 	 */
 	@Override
 	public UserCar loadUserCarById(String id) {
 		return userCarRepository.findOne(id);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.jlfex.hermes.service.UserInfoService#chargeUserAccount(com.jlfex.hermes.model.UserAccount, java.lang.Double)
+	 */
+	@Override
+	public UserAccount chargeUserAccount(UserAccount account, Double amount) {
+		account.setBalance(account.getBalance().add(new BigDecimal(amount)));
+		account = userAccountRepository.save(account);
+		return account;
 	}
 }
