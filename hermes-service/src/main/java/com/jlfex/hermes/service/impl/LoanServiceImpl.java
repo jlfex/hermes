@@ -1065,7 +1065,9 @@ public class LoanServiceImpl implements LoanService {
 		Page<LoanAuditInfo> pageLoanAuditInfo = new PageImpl<LoanAuditInfo>(loans, pageable, total);
 		return pageLoanAuditInfo;
 	}
-
+   /**
+    * 初审
+    */
 	@Override
 	public Loan firstAudit(Loan loan, Boolean isPass, BigDecimal amount, String remark) {
 		Date now = new Date();
@@ -1105,7 +1107,9 @@ public class LoanServiceImpl implements LoanService {
 		loanAuditReository.save(loanAudit);
 		return loan;
 	}
-
+    /**
+     * 终审
+     */
 	@Override
 	public Loan finalAudit(Loan loan, Boolean isPass, BigDecimal amount, String remark, List<String> labelList) {
 		Date now = new Date();

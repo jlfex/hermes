@@ -17,6 +17,9 @@
 	     						<div>&nbsp;</div>
 	     					<button type="button" id="save" class="btn btn-primary"><@messages key="account.info.save.avatar" /></button>
 	     		</li>
+	     		 <li class="span4" >
+				       提示:长按鼠标左键可以对头像进行裁剪
+				</li>
 	     	</ul>
 	     	<input id="avatar" name="avatar" type="file" multiple="multiple" class="hidden" />
 	     	<input id="startX" name="startX" type="text" class="hidden"/>
@@ -66,11 +69,15 @@ jQuery(function($) {
 				formData.append('imgWidth',imgWidth);
 				formData.append('imgHeight',imgHeight);
 				xhr.open('POST', '${app}/account/saveAvatar');
+				xhr.onreadystatechange = processResponse; 
 				xhr.send(formData);
 			});
 		}
 		
 	});
+	function processResponse(){
+	    window.location.reload();
+	}
 });
 // 异步上传
 function uploadImg(files) {
@@ -85,11 +92,12 @@ function uploadImg(files) {
 	});
 }
 function preview(img, selection) {
-	if (!selection.width || !selection.height)
-		return;
+	if(!selection.width || !selection.height){
+	   selection.width = 1;
+	   selection.height = 1;
+	}
 	var scaleX = 100 / selection.width;
 	var scaleY = 100 / selection.height;
-
 	$('#preview img').css({
 		width : Math.round(scaleX * 300),
 		height : Math.round(scaleY * 300),

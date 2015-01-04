@@ -160,7 +160,7 @@
 			  				errorMsg: '请输入4-20个字符，支持中文,英文,数字, “_”,“-”( 最少2个汉字或4个字符/数字）',
 			  				rule: function(val) {
 			  					var len =  val.replace(/[\u4e00-\u9fa5]/g,"**").length;
-			  					return /^[a-zA-Z0-9\u4e00-\u9fa5_-]+$/.test(val) && len >= 4
+			  					return /^[a-zA-Z0-9\u4e00-\u9fa5_-]+$/.test(val) && len >= 4 && len <= 20 
 			  				}
 			  			},{
 			  				errorMsg: '该昵称已被使用，请重新输入',

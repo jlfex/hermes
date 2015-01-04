@@ -22,6 +22,7 @@ import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Images;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Label;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -512,7 +513,13 @@ public class AccountPersonalController {
 		// 获得文件：
 		MultipartFile file = request.getFile("file");
 		// 图片裁剪并转为Base64
-		Map<String, String> map = Images.crop(file, Integer.valueOf(startX), Integer.valueOf(startY), Integer.valueOf(width), Integer.valueOf(height), Integer.valueOf(imgWidth), Integer.valueOf(imgHeight));
+		Map<String, String> map = Images.crop(file, 
+				Integer.valueOf(Strings.empty(startX, "0")), 
+				Integer.valueOf(Strings.empty(startY, "0")), 
+				Integer.valueOf(Strings.empty(width, "0")), 
+				Integer.valueOf(Strings.empty(height,"0")), 
+				Integer.valueOf(Strings.empty(imgWidth,"0")), 
+				Integer.valueOf(Strings.empty(imgHeight,"0")));
 		String avatar = map.get("avatar");
 		String avatar_lg = map.get("avatar_lg");
 		userInfoService.saveImage(user, avatar, com.jlfex.hermes.model.UserImage.Type.AVATAR, "");

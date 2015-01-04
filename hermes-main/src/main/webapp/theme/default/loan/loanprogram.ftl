@@ -148,7 +148,7 @@ jQuery(function($) {
 		<textarea name="remark" id="remark" maxlength="100" placeholder="可对借款有更详细的描述【限100字以内】"></textarea>
         <p id="jp_text" class="jp_text"><span>还可输入<em>100</em>个字</span></p>
         <br /><br />
-		<p>信息完整有助于提高借款效率 &nbsp;&nbsp;<a href="#" class="m_a1">完善个人信息</a>&nbsp;&nbsp;</p>
+		<p>信息完整有助于提高借款效率 &nbsp;&nbsp;<a href="${app}/account/index" class="m_a1">完善个人信息</a>&nbsp;&nbsp;</p>
 		
 		<p class="mv_checked"><input type="checkbox" />我已阅读并同意&nbsp;&nbsp;
 		<span class="deal">

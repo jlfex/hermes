@@ -350,7 +350,12 @@ public class LoanController {
 		// 返回视图
 		return "loan/loansuccess";
 	}
-
+    /**
+     * 借款：生成借款协议
+     * @param loanId
+     * @param model
+     * @return
+     */
 	@RequestMapping("/deal/{loanId}")
 	public String deal(@PathVariable("loanId") String loanId, Model model) {
 		App.checkUser();
