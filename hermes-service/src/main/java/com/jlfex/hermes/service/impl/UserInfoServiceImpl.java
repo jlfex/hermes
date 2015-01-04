@@ -198,6 +198,11 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveUserBasicInfo(UserBasic userBasic, User user) {
 		Date curDate = new Date();
 		UserProperties userPro = userPropertiesRepository.findByUser(user);
+		if("10".equals(userPro.getAuthName())){ //已认证
+			userBasic.setRealName(userPro.getRealName());
+			userBasic.setIdType((userPro.getIdType()));
+			userBasic.setIdNumber(userPro.getIdNumber());
+		}
 		userBasic.setId(userPro.getId());
 		BeanUtils.copyProperties(userBasic, userPro);
 

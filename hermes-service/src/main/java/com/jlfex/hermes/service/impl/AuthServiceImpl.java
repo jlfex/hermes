@@ -180,8 +180,8 @@ public class AuthServiceImpl implements AuthService {
 		Result result = new Result();
 		User user = userRepository.findOne(userId);
 		UserProperties userPro_c = userPropertiesRepository.findByIdNumberAndIdTypeAndAuthName(idNumber, idType, Auth.PASS);
-		if (userPro_c != null) {
-			if (userPro_c.getUser().getId() != userId) {
+		if (userPro_c != null) { 
+			if (!userPro_c.getUser().getId().equals(userId)) { //证件被占用
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 				result.addMessage(App.message("result.failure.id.occupy", null));
 			}
