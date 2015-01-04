@@ -18,22 +18,20 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
-import com.jlfex.hermes.common.Mailer;
 import com.jlfex.hermes.common.Result;
-import com.jlfex.hermes.common.support.freemarker.StringTemplateLoader;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.Strings.StringSet;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.User.Status;
+import com.jlfex.hermes.model.User.Type;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.model.UserAccount.Minus;
 import com.jlfex.hermes.model.UserAuth;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserLog;
-import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.model.User.Status;
-import com.jlfex.hermes.model.User.Type;
-import com.jlfex.hermes.model.UserAccount.Minus;
 import com.jlfex.hermes.model.UserLog.LogType;
+import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.UserProperties.Mortgagor;
 import com.jlfex.hermes.repository.PropertiesRepository;
@@ -56,11 +54,11 @@ import com.jlfex.hermes.service.security.PasswordEncoder;
 @Service
 @Transactional
 public class UserServiceImpl extends PasswordEncoder implements UserService {
-	
+
 	/** 用户信息仓库 */
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	/** 用户账户仓库 */
 	@Autowired
 	private UserAccountRepository userAccountRepository;
@@ -76,32 +74,38 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	/** 用户图片信息仓库 */
 	@Autowired
 	private UserImageRepository userImageRepository;
-	
+
 	/** 用户日志仓库 */
 	@Autowired
 	private UserLogRepository userLogRepository;
-	
+
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#loadById(java.lang.String)
 	 */
 	@Override
 	public User loadById(String id) {
 		return userRepository.findOne(id);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#loadByEmail(java.lang.String)
 	 */
 	@Override
 	public User loadByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#loadByAccount(java.lang.String)
 	 */
 	@Override
@@ -109,7 +113,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return userRepository.findByAccount(account);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#findByInput(java.lang.String)
 	 */
 	@Override
@@ -118,8 +124,11 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#resetPassword(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.UserService#resetPassword(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public User resetPassword(String userId, String original, String reset) {
@@ -127,7 +136,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#checkEmail(java.lang.String)
 	 */
 	@Override
@@ -142,8 +153,10 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		}
 
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#checkPhone(java.lang.String)
 	 */
 	@Override
@@ -170,7 +183,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#signUp(User)
 	 */
 	@Override
@@ -181,34 +196,40 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		user.setStatus(Status.INACTIVATE);
 		String pwd = encode(user.getSignPassword());
 		user.setSignPassword(pwd);// 密码加密
-		user.setCreateTime(createDate);
-		user.setUpdateTime(createDate);
 		userRepository.save(user);
 		Logger.info("用户成功 ID=" + user.getId());
 		saveUser(user);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#signSupplement(UserBasic,HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.UserService#signSupplement(UserBasic,
+	 * HttpServletRequest)
 	 */
-//	@Override
-//	public String signSupplement(UserBasic userBasic, HttpServletRequest req) {
-//		Date curDate=new Date();
-//		User user = userRepository.findOne(userBasic.getId());
-//		Logger.info("完善注册信息~~~~~~~~" + user.getId());
-//		UserProperties userPro =userPropertiesRepository.findByUser(user);
-//		userPro.setRealName(userBasic.getRealName());
-//		userPro.setUpdateTime(curDate);
-//
-//		user.setAccount(userBasic.getAccount());
-//		user.setCellphone(userBasic.getCellphone());
-//		user.setUpdateTime(curDate);
-//		userPropertiesRepository.save(userPro);
-//		return sendActiveMail(user, req);
-//	}
+	// @Override
+	// public String signSupplement(UserBasic userBasic, HttpServletRequest req)
+	// {
+	// Date curDate=new Date();
+	// User user = userRepository.findOne(userBasic.getId());
+	// Logger.info("完善注册信息~~~~~~~~" + user.getId());
+	// UserProperties userPro =userPropertiesRepository.findByUser(user);
+	// userPro.setRealName(userBasic.getRealName());
+	// userPro.setUpdateTime(curDate);
+	//
+	// user.setAccount(userBasic.getAccount());
+	// user.setCellphone(userBasic.getCellphone());
+	// user.setUpdateTime(curDate);
+	// userPropertiesRepository.save(userPro);
+	// return sendActiveMail(user, req);
+	// }
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#sendActiveMail(User,HttpServletRequest)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#sendActiveMail(User,HttpServletRequest
+	 * )
 	 */
 	@Override
 	public Map<String, Object> getActiveMailModel(User user, HttpServletRequest req) {
@@ -221,11 +242,12 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		root.put("userName", user.getAccount());
 		return root;
 	}
-	
-	
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#activeMail(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.UserService#activeMail(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public Result<?> activeMail(String userId, String validateCode) {
@@ -270,7 +292,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#signIn(User)
 	 */
 	@Override
@@ -311,8 +335,11 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#isExistentEmail(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#isExistentEmail(java.lang.String)
 	 */
 	@Override
 	public boolean isExistentEmail(String email) {
@@ -324,12 +351,14 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	}
 
 	/*
-	 *  重置密码邮件 组装 数据模型
-	 *  (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#sendResetPwdEmail(java.lang.String,HttpServletRequest)
+	 * 重置密码邮件 组装 数据模型 (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#sendResetPwdEmail(java.lang.String
+	 * ,HttpServletRequest)
 	 */
 	@Override
-	public Map<String, Object>  getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception {
+	public Map<String, Object> getResetPwdEmailModel(String email, HttpServletRequest request) throws Exception {
 		User user = userRepository.findByEmail(email);
 		String validateCode = generateCode(user);
 		Map<String, Object> root = new HashMap<String, Object>();
@@ -338,11 +367,15 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
 		root.put("active_url", sb.toString());
 		root.put("userName", user.getAccount());
-		return root ;
+		return root;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#handleRetrieveMail(java.lang.String,java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#handleRetrieveMail(java.lang.String
+	 * ,java.lang.String)
 	 */
 	@Override
 	public Result<?> handleRetrieveMail(String userId, String validCode) {
@@ -373,7 +406,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#saveUser(User)
 	 */
 	public void saveUser(User user) throws Exception {
@@ -386,7 +421,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		userProperties.setAuthEmail(Auth.WAIT);
 		userProperties.setAuthName(Auth.WAIT);
 		userProperties.setIsMortgagor(Mortgagor.ALL);
-		userProperties.setCreateTime(createDate);
 		userPropertiesRepository.save(userProperties);
 
 		// 创建用户的现金账户
@@ -396,8 +430,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		cashAccount.setStatus(com.jlfex.hermes.model.UserAccount.Status.VALID);
 		cashAccount.setType(com.jlfex.hermes.model.UserAccount.Type.CASH);
 		cashAccount.setBalance(BigDecimal.ZERO);
-		cashAccount.setCreateTime(createDate);
-		cashAccount.setUpdateTime(createDate);
 
 		// 创建用户的冻结账户
 		UserAccount freezeAccount = new UserAccount();
@@ -406,8 +438,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		freezeAccount.setStatus(com.jlfex.hermes.model.UserAccount.Status.VALID);
 		freezeAccount.setType(com.jlfex.hermes.model.UserAccount.Type.FREEZE);
 		freezeAccount.setBalance(BigDecimal.ZERO);
-		freezeAccount.setCreateTime(createDate);
-		freezeAccount.setUpdateTime(createDate);
 
 		List<UserAccount> accountList = new ArrayList<UserAccount>();
 		accountList.add(cashAccount);
@@ -416,7 +446,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		Logger.info("用户的 属性信息、 现金账户、冻结账户 保存成功");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#signOut()
 	 */
 	@Override
@@ -426,19 +458,28 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		saveUserLog(user, LogType.LOGOUT);
 		App.current().setUser(null);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#getAvatar(com.jlfex.hermes.model.User, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#getAvatar(com.jlfex.hermes.model
+	 * .User, java.lang.String)
 	 */
 	@Override
 	public String getAvatar(User user, String type) {
 		UserImage userImage = userImageRepository.findByUserAndType(user, type);
-		if (userImage == null) return null;
+		if (userImage == null)
+			return null;
 		return userImage.getImage();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#retrievePwd(java.lang.String,java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#retrievePwd(java.lang.String,java
+	 * .lang.String)
 	 */
 	@Override
 	public void retrievePwd(String userId, String newPwd) {
@@ -452,7 +493,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.UserService#generateCode(User)
 	 */
 	private String generateCode(User user) {
@@ -468,43 +511,49 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		userAuth.setExpire(expiere);
 		userAuth.setType(com.jlfex.hermes.model.UserAuth.Type.EMAIL);
 		userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.WAITVERIFY);
-		userAuth.setCreateTime(createDate);
-		userAuth.setUpdateTime(createDate);
 		userAuthRepository.save(userAuth);
 		Logger.info("生成邮件激活授权码:" + userAuth.getCode());
 		return validateCode;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#saveUserLog(User,java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#saveUserLog(User,java.lang.String)
 	 */
 	private void saveUserLog(User user, String type) {
 		Date curDate = new Date();
 		UserLog userLog = new UserLog();
 		userLog.setDatetime(curDate);
-		userLog.setCreateTime(curDate);
-		userLog.setUpdateTime(curDate);
 		userLog.setType(type);
 		userLog.setUser(user);
 		userLogRepository.save(userLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#getUserByAccount(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#getUserByAccount(java.lang.String)
 	 */
 	@Override
 	public User getUserByAccount(String account) {
 		return userRepository.findByAccount(account);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserService#loadPropertiesByUserId(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserService#loadPropertiesByUserId(java.lang
+	 * .String)
 	 */
 	@Override
 	public UserProperties loadPropertiesByUserId(String userId) {
 		return userPropertiesRepository.findByUserId(userId);
 	}
-	
+
 	private String getPath(HttpServletRequest req) {
 		String ip = req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
 		return ip;

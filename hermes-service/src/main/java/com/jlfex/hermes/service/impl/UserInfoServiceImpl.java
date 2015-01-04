@@ -214,8 +214,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		userAdd.setAddress(userBasic.getAddress());
 		userAdd.setStatus(Status.VALID);
 		userAdd.setZip("");
-		userAdd.setCreateTime(curDate);
-		userAdd.setUpdateTime(curDate);
 
 		UserEducation userEdu = userEducationRepository.findByUserIdAndType(user.getId(), com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
 		if (userEdu == null) {
@@ -227,8 +225,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		userEdu.setYear(userBasic.getYear());
 		userEdu.setDegree(userBasic.getDegree());
 		userEdu.setStatus("00");
-		userEdu.setCreateTime(curDate);
-		userEdu.setUpdateTime(curDate);
 
 		userPropertiesRepository.save(userPro);
 		userEducationRepository.save(userEdu);
@@ -245,8 +241,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveJobInfo(UserJob userJob) {
 		Date curDate = new Date();
 		userJob.setStatus(com.jlfex.hermes.model.UserJob.Status.VALID);
-		userJob.setCreateTime(curDate);
-		userJob.setUpdateTime(curDate);
 		userJobRepository.save(userJob);
 
 	}
@@ -260,8 +254,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveHouseInfo(UserHouse userHouse) {
 		Date curDate = new Date();
 		userHouse.setStatus(com.jlfex.hermes.model.UserHouse.Status.VALID);
-		userHouse.setCreateTime(curDate);
-		userHouse.setUpdateTime(curDate);
 		userHouseRepository.save(userHouse);
 
 	}
@@ -275,8 +267,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveCarInfo(UserCar userCar) {
 		Date curDate = new Date();
 		userCar.setStatus(com.jlfex.hermes.model.UserCar.Status.VALID);
-		userCar.setCreateTime(curDate);
-		userCar.setUpdateTime(curDate);
 		userCarRepository.save(userCar);
 
 	}
@@ -292,8 +282,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveContacterInfo(UserContacter userContacter) {
 		userContacter.setStatus(com.jlfex.hermes.model.UserContacter.Status.VALID);
 		Date curDate = new Date();
-		userContacter.setCreateTime(curDate);
-		userContacter.setUpdateTime(curDate);
 		userContacterRepository.save(userContacter);
 
 	}
@@ -348,8 +336,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 				userImage.setType(type);
 				userImage.setImage(imgStr);
 				userImage.setStatus(UserImage.Status.ENABLED);
-				userImage.setCreateTime(curDate);
-				userImage.setUpdateTime(curDate);
 			}
 		} else {
 			Label label = labelRepository.findOne(labelStr);
@@ -358,8 +344,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			userImage.setLabel(label);
 			userImage.setImage(imgStr);
 			userImage.setStatus(UserImage.Status.ENABLED);
-			userImage.setCreateTime(curDate);
-			userImage.setUpdateTime(curDate);
 		}
 
 		userImageRepository.save(userImage);
@@ -468,8 +452,12 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		return userCarRepository.findOne(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.UserInfoService#chargeUserAccount(com.jlfex.hermes.model.UserAccount, java.lang.Double)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.UserInfoService#chargeUserAccount(com.jlfex.
+	 * hermes.model.UserAccount, java.lang.Double)
 	 */
 	@Override
 	public UserAccount chargeUserAccount(UserAccount account, Double amount) {
