@@ -9,13 +9,8 @@ echo [Step 1] Install all hermes modules to local maven repository.
 call %MVN% clean install
 if errorlevel 1 goto error
 
-::echo [Step 2] Initialize schema and data for all example projects.
-::cd examples
-::call %MVN% antrun:run -Prefresh-db
-::if errorlevel 1 goto error
-::cd ..\
 
-echo [Step 3] Start all projects.
+echo [Step 2] Start all projects.
 cd hermes-main
 start "hermes-main" %MVN% clean jetty:run -Djetty.port=8005
 if errorlevel 1 goto error
