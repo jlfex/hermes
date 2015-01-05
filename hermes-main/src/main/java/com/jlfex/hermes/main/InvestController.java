@@ -135,7 +135,6 @@ public class InvestController {
 		List<Repay> repayList = repayService.findAll();
 		model.addAttribute("repays", repayList);
 		model.addAttribute("nav", "invest");
-		// 返回视图
 		return "invest/display";
 	}
 
