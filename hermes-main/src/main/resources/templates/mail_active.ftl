@@ -1,5 +1,4 @@
-亲爱的用户：${userName} <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;您好<br/>
+亲爱的用户：${userName}， 您好!<br/>
 感谢您注册平台名称，您现在只需点击以下链接，即可完成注册。<br/>
 <a href=${active_url}  target="_blank" > ${active_url}</a>
 <br/>

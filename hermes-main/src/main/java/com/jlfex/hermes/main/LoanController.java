@@ -3,14 +3,12 @@ package com.jlfex.hermes.main;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
@@ -316,29 +314,30 @@ public class LoanController {
 		Result result = new Result();
 		try {
 			App.checkUser();
+			Logger.info("amount:" + amount + "period:" + period + "rate:" + rate + "productId:" + productId + "purposeId:" + purposeId + "repayId:" + repayId + "description:" + remark);
+			Loan loan = new Loan();
+			loan.setAmount(new BigDecimal(amount.replaceAll(",", "")));
+			loan.setPeriod(new Integer(period));
+			loan.setRate(new BigDecimal(rate.replace("%", "")).divide(new BigDecimal(100)));
+			Repay repayInfo = repayService.loadById(repayId);
+			loan.setRepay(repayInfo);
+			Product productInfo = productService.loadById(productId);
+			loan.setProduct(productInfo);
+			loan.setPurpose(purposeId);
+			loan.setDescription(remark);
+			AppUser curUser = App.current().getUser();
+			User user = userInfoService.findByUserId(curUser.getId());
+			loan.setUser(user);
+			Loan loanNew = loanService.save(loan);
+			if (loanNew != null) {
+				result.setType(Type.SUCCESS);
+			} else {
+				result.setType(Type.FAILURE);
+			}
 		} catch (Exception ex) {
-			result.setType(Type.WARNING);
-			return result;
-		}
-		Logger.info("amount:" + amount + "period:" + period + "rate:" + rate + "productId:" + productId + "purposeId:" + purposeId + "repayId:" + repayId + "description:" + remark);
-		Loan loan = new Loan();
-		loan.setAmount(new BigDecimal(amount.replaceAll(",", "")));
-		loan.setPeriod(new Integer(period));
-		loan.setRate(new BigDecimal(rate.replace("%", "")).divide(new BigDecimal(100)));
-		Repay repayInfo = repayService.loadById(repayId);
-		loan.setRepay(repayInfo);
-		Product productInfo = productService.loadById(productId);
-		loan.setProduct(productInfo);
-		loan.setPurpose(purposeId);
-		loan.setDescription(remark);
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
-		loan.setUser(user);
-		Loan loanNew = loanService.save(loan);
-		if (loanNew != null) {
-			result.setType(Type.SUCCESS);
-		} else {
+			Logger.error("借款发布异常:", ex);
 			result.setType(Type.FAILURE);
+			return result;
 		}
 		return result;
 	}
@@ -410,5 +409,18 @@ public class LoanController {
 		}
 		// 返回视图
 		return "loan/deal";
+	}
+	/**
+	 * 理财协议
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/funanceProtocol")
+	public String funanceProtocol(Model model) {
+		String companyName = App.config(COMPANY_NAME);
+		model.addAttribute("date", Calendars.date());
+		model.addAttribute("emial", "hermes");
+		model.addAttribute("companyName", companyName);
+		return "loan/funanceProtocol";
 	}
 }

@@ -13,6 +13,10 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
+    $('#funanceProtocol').click(function(){
+			openwindow("${app}/loan/funanceProtocol","",1000,800);
+			
+	});
 	$('.deal').click(function(){
 			openwindow("${app}/loan/deal/${loan.id}","",1000,800);
 			
@@ -207,7 +211,7 @@ jQuery(function($) {
                 		<tr><td colspan="3" class="td_deal">
                             <div class="commonChecked">
                             <p class="mv_checked">
-                            	<input type="checkbox" id="cr"/>  <label for="cr">我已阅读并同意 <a href="#" class="blue">《理财协议》</a><span class="mv_msg" data-msg='勾选后方可点击确认！'></label>
+                            	<input type="checkbox" id="cr"/>  <label for="cr">我已阅读并同意 <a href="#" id="funanceProtocol" class="blue">《理财协议》</a><span class="mv_msg" data-msg='勾选后方可点击确认！'></label>
                             </p>
                             </div>
                             </td>
