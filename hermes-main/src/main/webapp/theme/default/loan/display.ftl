@@ -64,7 +64,7 @@ jQuery(function($) {
 
 <#include "/header.ftl" />
 
-
+<div id="content" class="content">
 <form id="loanDisplay" name="loanDisplay" action="${app}/loan/loanprogram" method="post">
 <input id="productSize" name="productSize" type="hidden" value="${productSize}"></input>
 <input id="productId" name="productId" type="hidden" ></input>
@@ -202,7 +202,6 @@ jQuery(function($) {
 								 </#if>
 								 <#assign repaymethod = repaymethod + 1 /> 
 						</#list>
-						<span class="mv_msg" data-msg='请选择还款方式！'></span>
 					</tr>
 				</table>
 				</div>
@@ -214,6 +213,7 @@ jQuery(function($) {
 	</div>
 </div>
 </form>
+</div>
 <#include "/footer.ftl" />
 </body>
 </form>
