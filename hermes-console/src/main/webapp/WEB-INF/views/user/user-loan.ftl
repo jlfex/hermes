@@ -81,7 +81,7 @@ jQuery(function($) {
 		    });
  	});
  	$("#freeze").on("click",function(){
- 			var id=$("#id").val();
+ 		var id=$("#id").val();
  		$.ajax({
 		        url: "${app}/user/freezeUser/"+id,
 			    type: "POST",
@@ -89,7 +89,7 @@ jQuery(function($) {
 		        success: function(data) {
 		        	init("${app}/user/loadBasic/loan/","tabContent");
 		        }
-		    });
+	    });
  	});
  	$("#unfreeze").on("click",function(){
  			var id=$("#id").val();

@@ -14,12 +14,12 @@
 $(document).ready(function(){
    function openwindow(url,name,iWidth,iHeight)
 		{
-			var url; //转向网页的地址;
-			var name; //网页名称，可为空;
-			var iWidth; //弹出窗口的宽度;
-			var iHeight; //弹出窗口的高度;
-			var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
-			var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+			var url; 
+			var name; 
+			var iWidth; 
+			var iHeight; 
+			var iTop = (window.screen.availHeight-30-iHeight)/2; 
+			var iLeft = (window.screen.availWidth-10-iWidth)/2; 
 			window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 	$("#protocol").click(function(){
@@ -91,7 +91,7 @@ function changeCode() {
 	<div class="m_rg_r" id="register">
 		<form id="regForm" name="regForm" action="${app}/userIndex/signUp" method="post" >
 			<div class="m_item">
-				<h3><@messages key="sign.up.signup" /><span class="m_color2"> > <@messages key="sign.up.supplementary" /></span></h3>
+				<h3><@messages key="sign.up.signup" /><span class="m_color2"> > </span></h3>
 			</div>
 			<#if errMsg??>
 			  <div class="m_item"><span class="mv_msg">${errMsg!} </span></div>
@@ -114,10 +114,6 @@ function changeCode() {
 				<input id="account" name="account" type="text" value="<@messages key="sign.up.nickname" />"  class="mv_name"/>
 				 <span class="mv_msg"></span>
 			</div>
-			<div class="m_item">
-	            <input id="realName" name="realName" type="text" value="<@messages key="sign.up.name" />"  class="mv_realname"/>
-	             <span class="mv_msg"></span>
-	        </div>
 			<div class="m_item">
 				<input id="cellphone" name="cellphone" type="text" value="<@messages key="sign.up.cellphone" />"  class="mv_mobile"/>
 				 <span class="mv_msg"></span>

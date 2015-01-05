@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>借款协议</title>
+<title>隐私条款 和 使用协议</title>
 
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
