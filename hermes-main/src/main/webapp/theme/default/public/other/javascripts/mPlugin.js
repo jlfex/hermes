@@ -149,9 +149,12 @@
 			  			initText: '姓名',
 			  			initMsg: '',
 			  			methods: [{
-			  				errorMsg: '请输入正确的姓名',
-			  				rule: function(val) { return /^[a-zA-Z0-9\u4e00-\u9fa5 •·]+$/.test(val)}
-			    		}]
+			  				errorMsg: '请输入正确姓名',
+			  				rule: function(val) {
+			  					var len =  val.replace(/[\u4e00-\u9fa5]/g,"**").length;
+			  					return /^[a-zA-Z0-9\u4e00-\u9fa5 •·]+$/.test(val) && len >= 4 && len <= 20 
+			  				}
+			  			}]
 			  		},
 			  		mv_name: {
 			  			initText: '昵称',

@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -45,11 +44,6 @@ public class UserAccount extends Model {
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
-
-	/** 版本号 */
-	@Column(name = "version")
-	@Version
-	private Long version = 0L;
 
 	/**
 	 * 读取用户
@@ -149,26 +143,6 @@ public class UserAccount extends Model {
 	 */
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	/**
-	 * 读取版本号
-	 * 
-	 * @return
-	 * @see #version
-	 */
-	public Long getVersion() {
-		return version;
-	}
-
-	/**
-	 * 设置版本号
-	 * 
-	 * @param version
-	 * @see #version
-	 */
-	public void setVersion(Long version) {
-		this.version = version;
 	}
 
 	/**
