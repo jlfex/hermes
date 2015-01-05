@@ -306,10 +306,13 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		} else {
 			boolean matchRes = matches(signUser.getSignPassword(), user.getSignPassword());
 			if (matchRes) {
-				if (user.getStatus().equals(Status.INACTIVATE)) {
+				if (Status.INACTIVATE.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
 					result.addMessage(App.message("result.warning.email"));
-				} else {
+				}else if(Status.FROZEN.equals(user.getStatus())){
+					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+					result.addMessage(App.message("账户被冻结"));
+				}else {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
 					appUser.setAccount(user.getEmail());
