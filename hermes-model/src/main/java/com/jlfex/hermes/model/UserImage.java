@@ -3,6 +3,7 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -18,35 +19,36 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_user_image")
 public class UserImage extends Model {
-	
+
 	private static final long serialVersionUID = -5532725982276575674L;
 
 	/** 用户 */
 	@ManyToOne
 	@JoinColumn(name = "user")
 	private User user;
-	
+
 	/** 标签 */
 	@ManyToOne
 	@JoinColumn(name = "label")
 	private Label label;
-	
+
 	/** 图片 */
 	@Column(name = "image")
+	@Lob
 	private String image;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
-	
+
 	/** 备注 */
 	@Column(name = "remark")
 	private String remark;
-	
+
 	/**
 	 * 读取用户
 	 * 
@@ -56,7 +58,7 @@ public class UserImage extends Model {
 	public User getUser() {
 		return user;
 	}
-	
+
 	/**
 	 * 设置用户
 	 * 
@@ -66,7 +68,7 @@ public class UserImage extends Model {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	/**
 	 * 读取标签
 	 * 
@@ -76,7 +78,7 @@ public class UserImage extends Model {
 	public Label getLabel() {
 		return label;
 	}
-	
+
 	/**
 	 * 设置关系
 	 * 
@@ -86,7 +88,7 @@ public class UserImage extends Model {
 	public void setLabel(Label label) {
 		this.label = label;
 	}
-	
+
 	/**
 	 * 读取图片
 	 * 
@@ -96,7 +98,7 @@ public class UserImage extends Model {
 	public String getImage() {
 		return image;
 	}
-	
+
 	/**
 	 * 设置图片
 	 * 
@@ -106,7 +108,7 @@ public class UserImage extends Model {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -116,7 +118,7 @@ public class UserImage extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -126,7 +128,7 @@ public class UserImage extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -136,7 +138,7 @@ public class UserImage extends Model {
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
 	 * 设置类型
 	 * 
@@ -146,7 +148,7 @@ public class UserImage extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 读取备注
 	 * 
@@ -156,7 +158,7 @@ public class UserImage extends Model {
 	public String getRemark() {
 		return remark;
 	}
-	
+
 	/**
 	 * 设置备注
 	 * 
@@ -175,12 +177,12 @@ public class UserImage extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("正常")
-		public static final String ENABLED	= "00";
+		public static final String ENABLED = "00";
 
 		@Element("失效")
-		public static final String DISABLED	= "99";
+		public static final String DISABLED = "99";
 	}
 
 	/**
@@ -191,14 +193,14 @@ public class UserImage extends Model {
 	 * @since 1.0
 	 */
 	public static final class Type {
-		
+
 		@Element("认证")
-		public static final String AUTH 		= "00";
+		public static final String AUTH = "00";
 
 		@Element("头像")
-		public static final String AVATAR		= "10";
-		
+		public static final String AVATAR = "10";
+
 		@Element("大头像")
-		public static final String AVATAR_LG	= "11";
+		public static final String AVATAR_LG = "11";
 	}
 }
