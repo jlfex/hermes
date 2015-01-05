@@ -311,7 +311,10 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 					result.addMessage(App.message("result.warning.email"));
 				}else if(Status.FROZEN.equals(user.getStatus())){
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-					result.addMessage(App.message("账户被冻结"));
+					result.addMessage(App.message("账号已被冻结"));
+				}else if(Status.DISABLED.equals(user.getStatus())){
+					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+					result.addMessage(App.message("账号已被注销"));
 				}else {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
