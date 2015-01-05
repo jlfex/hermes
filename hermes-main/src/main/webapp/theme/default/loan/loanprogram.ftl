@@ -55,7 +55,7 @@ jQuery(function($) {
 <body>
 
 <#include "/header.ftl" />
-
+<div id="content" class="content">
 <form id="programconfirm" name="programconfirm">
 <input id="productId" name="productId" type="hidden" value="${productId}"></input>
 <input id="repayId" name="repayId" type="hidden" value="${repayId}"></input>
@@ -70,8 +70,8 @@ jQuery(function($) {
 		<table>
 			<tr>
 				<td class="wd1" width="40%"><a href="#" class="m_a1">${productName}<span class="m_ico1"></span></a></td>
-				<td class="wd2" width="35%"><@messages key="model.loan.period" />：${period}<@messages key="common.unit.month"  /></td>
-				<td width="25%"><@messages key="model.loan.amount" />： ${amount}<@messages key="common.unit.cny"  /></td>
+				<td class="wd2" width="30%"><@messages key="model.loan.period" />：${period}<@messages key="common.unit.month"  /></td>
+				<td width="30%"><@messages key="model.loan.amount" />： ${amount}<@messages key="common.unit.cny"  /></td>
 			</tr>
 			<tr>
 				<td><@messages key="model.loan.purpose" />：${purposeName}</td>
@@ -167,7 +167,7 @@ jQuery(function($) {
 </div>
 </form>
 
-
+</div>
 <#include "/footer.ftl" />
 </body>
 </html>
