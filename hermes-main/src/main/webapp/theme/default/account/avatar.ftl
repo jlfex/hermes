@@ -59,7 +59,7 @@ jQuery(function($) {
 			startX=$("#startX").val();
 			startY=$("#startY").val();
 			if(!startX || !startY){
-			  $("#cutPhoto").html("<br/>保存失败：请用选择头像尺寸");
+			  $("#cutPhoto").html("<br/>提示：请选择头像尺寸");
 			  return false;
 			}
 			width=$("#width").val();

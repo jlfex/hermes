@@ -1,20 +1,16 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
@@ -22,7 +18,7 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.mail.EmailService;
-import com.jlfex.hermes.common.support.freemarker.StringTemplateLoader;
+import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.UserService;
@@ -36,6 +32,8 @@ public class UserController {
 	private Producer captchaProducer;
 	@Autowired
 	private EmailService emailService;
+	
+	private static final String COMPANY_NAME = "app.company.name";
 
 	/**
 	 * 登录界面
@@ -407,6 +405,19 @@ public class UserController {
 		} catch (Exception e) {
 			Logger.error("生产验证码异常：",e);
 		}
+	}
+	/**
+	 * hermes隐私条款 和 使用条款
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/privacyAndUseProtocol")
+	public String privacyAndUseProtocol(Model model) {
+		String companyName = App.config(COMPANY_NAME);
+		model.addAttribute("date", Calendars.date());
+		model.addAttribute("emial", "hermes");
+		model.addAttribute("companyName", companyName);
+		return "user/privacyAndUseProtocol";
 	}
 	
 }

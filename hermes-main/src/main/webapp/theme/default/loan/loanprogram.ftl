@@ -11,25 +11,25 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript">
 jQuery(function($) {
-	$('.confirm').click(function(){
-			$.ajax({
-			data: $("#programconfirm").serialize(),
-		    url: "${app}/loan/programconfirm",
-		    type: "POST",
-		    dataType: 'json',
-			success: function(data){
-				if(data.type=="SUCCESS"){
-					window.location.href="${app}/loan/loansuccess";
-				}
-				else if(data.type=="WARNING"){
-					window.location.href="${app}/userIndex/skipSignIn";
-				}
-				else
-				{
-					alert('借款发布失败');
-				}
-			}
-		});
+	$(".confirm").click(function(){
+		$.ajax({
+				data: $("#programconfirm").serialize(),
+		        url: "${app}/loan/programconfirm",
+		        type: "POST",
+		        dataType: 'json',
+		        cache: false,
+		        timeout: 10000,
+		        success: function(data) {
+		      	   if(data.type=="SUCCESS"){
+	            		window.location.href="${app}/loan/loansuccess";
+					}else if(data.type=="FAILURE"){
+					 	$("#back-info").html("借款发布失败");
+					}
+		        },
+		        error: function(data){
+		                $("#back-info").html("借款发布异常");
+		        }
+		    });
 	});
 	$('.deal').click(function(){
 			openwindow("${app}/loan/deal/0","",1000,800);
@@ -65,6 +65,7 @@ jQuery(function($) {
 <input id="rate" name="rate" type="hidden" value="${rate}"></input>
 <!-- middle start-->
 <div class="m_con m_jkfa">
+   <div id="back-info" class="section"></div>
 	<h2 class="m">我的借款方案</h2>
 	<div class="section">
 		<table>
@@ -154,10 +155,10 @@ jQuery(function($) {
 		<span class="deal">
 			<a href="#" class="m_a1">《借款协议》</a>
 		</span>
-		<span class="mv_msg" data-msg='勾选后方可点击确认！'></span></p>
+		<span class="mv_msg" data-msg='勾选后方可点击确定！'></span></p>
 		<div class="btn_list">
 			<span class="confirm">
-				<a href="#" class="m_btn1 m_bg1 mv_submit">确定</a>
+				<a  class="m_btn1 m_bg1 mv_submit">确定</a>
 			</span>
 			<a href="javascript:history.back()" class="m_btn1 m_bg2">返回</a>
 		</div>
@@ -166,7 +167,6 @@ jQuery(function($) {
 	
 </div>
 </form>
-
 </div>
 <#include "/footer.ftl" />
 </body>
