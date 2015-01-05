@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
@@ -310,34 +311,38 @@ public class UserManageServiceImpl implements UserManageService {
 		return userImageRepository.findByUserIdAndTypeAndLabelIdAndStatus(userId, type, label, com.jlfex.hermes.model.UserImage.Status.ENABLED);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.UserManageService#freezeUser(java.lang.String)
+	/**
+	 * 账号冻结
 	 */
 	@Override
 	public Result freezeUser(String userId) {
-		Assert.notEmpty(userId, "");
-		Result result = new Result();
+		Result<String> result = new Result<String>();
+		if(Strings.empty(userId)){
+			result.setType(Result.Type.FAILURE);
+			Logger.error("账户冻结:userId为空");
+			return result;
+		}
 		User user = userRepository.findOne(userId);
 		user.setStatus(com.jlfex.hermes.model.User.Status.FROZEN);
+		userRepository.save(user);
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.UserManageService#unfreezeUser(java.lang.String)
+	/**
+	 * 账号 解冻
 	 */
 	@Override
 	public Result unfreezeUser(String userId) {
-		Assert.notEmpty(userId, "");
-		Result result = new Result();
+		Result<String> result = new Result<String>();
+		if(Strings.empty(userId)){
+			result.setType(Result.Type.FAILURE);
+			Logger.error("账户解冻:userId为空");
+			return result;
+		}
 		User user = userRepository.findOne(userId);
 		user.setStatus(com.jlfex.hermes.model.User.Status.ENABLED);
+		userRepository.save(user);
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;
 	}
