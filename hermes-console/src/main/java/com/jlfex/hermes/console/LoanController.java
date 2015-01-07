@@ -26,9 +26,9 @@ import com.jlfex.hermes.model.UserCar;
 import com.jlfex.hermes.model.UserContacter;
 import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
+import com.jlfex.hermes.model.UserImage.Type;
 import com.jlfex.hermes.model.UserJob;
 import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.model.UserImage.Type;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
@@ -146,8 +146,7 @@ public class LoanController {
 	 */
 	@RequestMapping("/loanauditdata")
 	public String loanauditdata(String loanNo, String account, BigDecimal startAmount, BigDecimal endAmount, Integer page, Integer size, Model model) {
-		model.addAttribute("loanaudit",
-				loanService.findByLoanNoAndAccountAndAmountBetweenAndStatus(loanNo, account, startAmount, endAmount, page, size, Loan.Status.AUDIT_FIRST, Loan.Status.AUDIT_FINAL));
+		model.addAttribute("loanaudit", loanService.findByLoanNoAndAccountAndAmountBetweenAndStatus(loanNo, account, startAmount, endAmount, page, size, Loan.Status.AUDIT_FIRST, Loan.Status.AUDIT_FINAL));
 		return "loan/loanauditdata";
 	}
 
@@ -379,7 +378,7 @@ public class LoanController {
 		Logger.info("loanId:" + loanId + ",status:" + status + ",remark :" + remark);
 
 		Loan loanResult = null;
-		//满标放款
+		// 满标放款
 		if (Strings.equals(status, "00")) {
 			loanResult = loanService.loanOut(loanId, remark, true);
 			// 满标流标

@@ -41,9 +41,9 @@
 					<div class="form-group">
 						<label class="col-xs-2 control-label">&nbsp;</label>
 						<div class="col-xs-10">
-							<button type="button" data-status="00" class="btn btn-success">通过</button>
-							<button type="button" data-status="01" class="btn btn-danger">驳回</button>
-							<button type="button" class="btn btn-default"><@messages key="common.op.cancel" /></button>
+							<button type="button" data-status="00" class="btn btn-success" id="a1">通过</button>
+							<button type="button" data-status="01" class="btn btn-danger" id="a2">驳回</button>
+							<button type="button" class="btn btn-default" id="a3"><@messages key="common.op.cancel" /></button>
 							<input id="detailStatus" name="status" type="hidden">
 						</div>
 					</div>
@@ -79,7 +79,7 @@ jQuery(function($) {
 	});
 		
 	// 绑定按钮事件
-	_form_data.find('button').on('click', function() {
+	$("#a1,#a2,#a3").on('click', function() {
 		if ($(this).hasClass('btn-default')) {
 			_form_search.trigger('submit');
 		} else if (_area_remark.val() === '' ||_area_fixAmount.val()!='' ) {
@@ -164,11 +164,31 @@ jQuery(function($) {
 			$('#labels').val(labels);  
 	 		if(_hide_status.val()=='00')
 			{
-				confirmPass.show();
+				$.ajax({
+				data: _form_data.serialize(),
+			    url: "${app}/loan/finalaudit",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){
+					if(data.type=="SUCCESS"){
+						_form_search.trigger('submit');
+					}
+				}
+			});	
 			}
 			else if(_hide_status.val()=='01')
 			{
-				confirmReject.show();
+				$.ajax({
+				data: _form_data.serialize(),
+			    url: "${app}/loan/finalaudit",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){
+					if(data.type=="SUCCESS"){
+						_form_search.trigger('submit');
+					}
+				}
+			});	
 			}
 		}
 	});	

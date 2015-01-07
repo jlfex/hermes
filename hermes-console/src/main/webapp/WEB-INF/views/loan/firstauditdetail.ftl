@@ -42,9 +42,9 @@
 					<div class="form-group">
 						<label class="col-xs-2 control-label">&nbsp;</label>
 						<div class="col-xs-10">
-							<button type="button" data-status="00" class="btn btn-success">通过</button>
-							<button type="button" data-status="01" class="btn btn-danger">驳回</button>
-							<button type="button" class="btn btn-default"><@messages key="common.op.cancel" /></button>
+							<button type="button" data-status="00" class="btn btn-success" id="a4">通过</button>
+							<button type="button" data-status="01" class="btn btn-danger" id="a5">驳回</button>
+							<button type="button" class="btn btn-default" id="a6"><@messages key="common.op.cancel" /></button>
 							<input id="detailStatus" name="status" type="hidden">
 						</div>
 					</div>
@@ -66,14 +66,14 @@ jQuery(function($) {
 		flag = true;
 		
 	var confirmPass = $.scojs_confirm({  
-	 content: "确认终审通过操作吗?",
+	 content: "确认初审通过操作吗?",
 	action: function() {
 		doSubmit();
 		this.close(); 
 		}
 	});
 	var confirmReject = $.scojs_confirm({  
-	 content: "确认终审驳回操作吗?",
+	 content: "确认初审驳回操作吗?",
 	action: function() {
 		doSubmit();
 		this.close(); 
@@ -81,7 +81,7 @@ jQuery(function($) {
 	});
 		
 	// 绑定按钮事件
-	_form_data.find('button').on('click', function() {
+	$("#a4,#a5,#a6").on('click', function() {
 		if ($(this).hasClass('btn-default')) {
 			_form_search.trigger('submit');
 		} else if (_area_remark.val() === '' ||_area_fixAmount.val()!='' ) {
@@ -139,11 +139,31 @@ jQuery(function($) {
 			_hide_status.val($(this).data().status);
 			if(_hide_status.val()=='00')
 			{
-				confirmPass.show();
+				$.ajax({
+				data: _form_data.serialize(),
+			    url: "${app}/loan/firstaudit",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){
+					if(data.type=="SUCCESS"){
+						_form_search.trigger('submit');
+					}
+				}
+			});	
 			}
 			else if(_hide_status.val()=='01')
 			{
-				confirmReject.show();
+				$.ajax({
+				data: _form_data.serialize(),
+			    url: "${app}/loan/firstaudit",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){
+					if(data.type=="SUCCESS"){
+						_form_search.trigger('submit');
+					}
+				}
+			});	
 			}
 			
 		}
