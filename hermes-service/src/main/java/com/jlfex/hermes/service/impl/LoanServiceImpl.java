@@ -35,11 +35,14 @@ import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Label;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.LoanAudit;
 import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.LoanLog.Type;
 import com.jlfex.hermes.model.LoanOverdue;
 import com.jlfex.hermes.model.LoanRepay;
+import com.jlfex.hermes.model.LoanRepay.RepayStatus;
 import com.jlfex.hermes.model.Model;
 import com.jlfex.hermes.model.ProductOverdue;
 import com.jlfex.hermes.model.Rate;
@@ -53,10 +56,8 @@ import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserJob;
 import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.model.Loan.Status;
-import com.jlfex.hermes.model.LoanLog.Type;
-import com.jlfex.hermes.model.LoanRepay.RepayStatus;
 import com.jlfex.hermes.repository.CommonRepository;
+import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
@@ -77,7 +78,6 @@ import com.jlfex.hermes.repository.UserHouseRepository;
 import com.jlfex.hermes.repository.UserJobRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
-import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.RepayService;
@@ -271,8 +271,7 @@ public class LoanServiceImpl implements LoanService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.LoanService#findByStatus(java.lang.Integer,
+	 * @see com.jlfex.hermes.service.LoanService#findByStatus(java.lang.Integer,
 	 * java.lang.String[])
 	 */
 	@Override
@@ -905,8 +904,7 @@ public class LoanServiceImpl implements LoanService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.LoanService#loadLoanRecordByUser(java.lang
+	 * @see com.jlfex.hermes.service.LoanService#loadLoanRecordByUser(java.lang
 	 * .String, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
@@ -1046,7 +1044,9 @@ public class LoanServiceImpl implements LoanService {
 			LoanAuditInfo loanAuditInfo = new LoanAuditInfo();
 			Object[] object = (Object[]) list.get(i);
 			loanAuditInfo.setLoanNo(String.valueOf(object[1]));
-			loanAuditInfo.setRealName(String.valueOf(object[5]));
+			if (object[5] != null) {
+				loanAuditInfo.setRealName(String.valueOf(object[5]));
+			}
 			loanAuditInfo.setAmount(Numbers.parseCurrency(String.valueOf(object[2])));
 			loanAuditInfo.setCellphone(String.valueOf(object[6]));
 			loanAuditInfo.setRate(Numbers.toPercent(new Double(String.valueOf(object[8]))));
@@ -1065,9 +1065,10 @@ public class LoanServiceImpl implements LoanService {
 		Page<LoanAuditInfo> pageLoanAuditInfo = new PageImpl<LoanAuditInfo>(loans, pageable, total);
 		return pageLoanAuditInfo;
 	}
-   /**
-    * 初审
-    */
+
+	/**
+	 * 初审
+	 */
 	@Override
 	public Loan firstAudit(Loan loan, Boolean isPass, BigDecimal amount, String remark) {
 		Date now = new Date();
@@ -1107,9 +1108,10 @@ public class LoanServiceImpl implements LoanService {
 		loanAuditReository.save(loanAudit);
 		return loan;
 	}
-    /**
-     * 终审
-     */
+
+	/**
+	 * 终审
+	 */
 	@Override
 	public Loan finalAudit(Loan loan, Boolean isPass, BigDecimal amount, String remark, List<String> labelList) {
 		Date now = new Date();
