@@ -379,4 +379,13 @@ public class UserManageServiceImpl implements UserManageService {
 	public User findById(String userId) {
 		return userRepository.findOne(userId);
 	}
+	
+	/**
+	 * 
+	 * 通过用户编号和用户类型
+	 * 
+	 */
+	public UserAccount findByUserIdAndType(String userId, String type){
+		return userAccountRepository.findByUserIdAndType(userId,type);
+	}
 }
