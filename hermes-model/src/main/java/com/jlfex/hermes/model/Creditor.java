@@ -46,6 +46,13 @@ public class Creditor  extends Model {
 	//担保方式
 	@Column(name = "assoureType")
 	private String assoureType ;
+	//现金账户
+	@Column(name = "cash_account_id")
+	private String cashAccountId ;
+	//冻结账户
+	@Column(name = "freeze_account_id")
+	private String freezeAccountId ;	
+	
 	
 	
 	
@@ -108,6 +115,18 @@ public class Creditor  extends Model {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getCashAccountId() {
+		return cashAccountId;
+	}
+	public void setCashAccountId(String cashAccountId) {
+		this.cashAccountId = cashAccountId;
+	}
+	public String getFreezeAccountId() {
+		return freezeAccountId;
+	}
+	public void setFreezeAccountId(String freezeAccountId) {
+		this.freezeAccountId = freezeAccountId;
 	}
 	
 	
