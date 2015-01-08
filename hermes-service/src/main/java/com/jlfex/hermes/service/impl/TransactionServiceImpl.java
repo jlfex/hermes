@@ -264,4 +264,21 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		return types;
 	}
+	
+	/**
+	 * 风险金流水
+	 * 
+	 * 
+	 */
+	public Page<Transaction> findByUserIdAndDateType(String userId,Integer page, Integer size, List<String> types) {
+		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
+		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "datetime");
+		return transactionRepository.findBySourceUserAccountOrTargetUserAccountAndTypeIn(userAccount,userAccount,types,pageable);
+
+	}
+	
+	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types){
+		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
+		return transactionRepository.findByUserAccountAndTypeIn(userAccount,userAccount, types);
+	}
 }

@@ -1,5 +1,9 @@
 package com.jlfex.hermes.console;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.model.Transaction;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.Withdraw;
+import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserManageService;
 import com.jlfex.hermes.service.WithdrawService;
 
 /**
@@ -31,6 +39,12 @@ public class WithdrawController {
 	/** 用户个人信息接口 */
 	@Autowired
 	private UserInfoService userInfoService;
+	/** 交易流水信息接口 */
+	@Autowired
+	private TransactionService transactionServiceImpl;
+	/** 账户管理接口*/
+	@Autowired
+	private UserManageService userManageServiceImpl;
 	
 	/**
 	 * 索引
@@ -61,6 +75,55 @@ public class WithdrawController {
 	public String table(String name, String beginDate, String endDate, String status, Integer page, Integer size, Model model) {
 		model.addAttribute("withdraw", withdrawService.findByNameAndDateBetweenAndStatus(name, beginDate, endDate, status, page, size));
 		return "withdraw/table";
+	}
+	
+	/**
+	 * 风险金账户
+	 * 
+	 */
+	@RequestMapping("/riskAccount")
+	public String riskAccount(Integer page, Integer size,Model model){
+		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
+		List<String> types = new ArrayList<String>();
+		types.add(Transaction.Type.IN);
+		types.add(Transaction.Type.OUT);
+		BigDecimal riskIn = new BigDecimal(0);
+		BigDecimal riskOut = new BigDecimal(0);
+		try{
+			UserAccount account = userManageServiceImpl.findByUserIdAndType(userId, UserAccount.Type.RISK);
+			List<Transaction> trans = transactionServiceImpl.findByUserAccountAndTypeIn(userId,types);
+			if(trans != null && trans.size()>0){
+				for(Transaction tran:trans){
+					if(Transaction.Type.IN.equals(tran.getType())){
+						riskIn = riskIn.add(tran.getAmount());
+					}else{
+						riskOut = riskOut.add(tran.getAmount());
+					}
+				}
+			}
+			model.addAttribute("riskIn", riskIn);
+			model.addAttribute("riskOut", riskOut);
+			model.addAttribute("riskAmount", account.getBalance());
+		}catch(Exception e){
+			e.printStackTrace();
+			return "home";
+		}
+		return "withdraw/riskAccount";
+	}
+	
+	@RequestMapping("/riskAccountData")
+	public String riskAccountData(Integer page, Integer size, Model model){
+		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
+		List<String> types = new ArrayList<String>();
+		types.add(Transaction.Type.IN);
+		types.add(Transaction.Type.OUT);
+		try{
+			model.addAttribute("transaction", transactionServiceImpl.findByUserIdAndDateType(userId,page,size, types));
+		}catch(Exception e){
+			e.printStackTrace();
+			return "home";
+		}
+		return "withdraw/riskAccountData";
 	}
 	
 	/**
