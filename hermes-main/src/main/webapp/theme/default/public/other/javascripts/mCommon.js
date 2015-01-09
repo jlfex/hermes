@@ -23,20 +23,19 @@ $(function(){
     // allcategory
     $('.allcategory .select_list').find('a').click(function(){
         var that = $(this)
-          , selectResult = that.closest('.allcategory').children('.select_result').find('ul')
-          , selectIndex = that.closest('ul').index()
-          , content = '<li class="' + selectIndex + '"><span>' + that.html() + '</span><a href="#"><img src="images/icon2/closeicon.jpg"/></a></li>';
-
-        that.addClass('active').parent().siblings().find('a').removeClass('active');
-
-        selectResult.find('li').each(function(){
-            $(this).attr('class') == selectIndex && $(this).remove()
-        })
-
-        selectResult.append(content);
+          , result = that.closest('.allcategory').children('.select_result').find('ul').find('li:eq('+that.closest('ul').index()+')');
+        that.addClass('a_lk_after').parent().siblings().find('a').removeClass('a_lk_after');
+        result.show()
+        if(that.parent('li').index() !== 1) {
+            result.show().find('span').html(that.html());
+        }else {
+            result.hide().find('span').html('');
+        }
     })
-    $('.allcategory .select_result').on('click', "li", function(){
-        $(this).closest('li').remove();
+    $('.allcategory .select_result li').click(function(){
+        var that = $(this);
+        that.hide().find('span').html('');
+        that.closest('.allcategory').children('.select_list').find('ul:eq('+that.index()+')').find('a').removeClass('a_lk_after').end().find('li:eq(1)').find('a').addClass('a_lk_after')
     })
 
     // 注册

@@ -55,7 +55,7 @@ public interface InvestService {
 	 * @param size
 	 * @return
 	 */
-	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection);
+	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection,String loanKind);
 
 	/**
 	 * 通过借款编号查询理财
@@ -98,7 +98,7 @@ public interface InvestService {
 	 * 
 	 * @return
 	 */
-	public List<InvestInfo> findByUser(User user);
+	public List<InvestInfo> findByUser(User user,String loanKind);
 
 	/**
 	 * 加载用户投标记录（分页）

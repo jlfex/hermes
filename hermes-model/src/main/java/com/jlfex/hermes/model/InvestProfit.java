@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -24,7 +25,15 @@ import com.jlfex.hermes.common.dict.Element;
 public class InvestProfit extends Model {
 	
 	private static final long serialVersionUID = -1706053977367451550L;
-
+	
+	public InvestProfit(){
+		
+	}
+	public InvestProfit(BigDecimal interestAmount,BigDecimal overdueAmount){
+		 this.interestAmount = interestAmount;
+		 this.overdueAmount = overdueAmount;
+	}
+	
 	/** 用户 */
 	@ManyToOne
 	@JoinColumn(name = "user")
@@ -63,6 +72,16 @@ public class InvestProfit extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
+	
+	// 统计 总收益
+	@Transient
+	private BigDecimal allAmount ;
+	// 统计 利息收益
+	@Transient
+	private BigDecimal interestAmount;
+	// 统计 逾期收益
+	@Transient
+	private BigDecimal overdueAmount;
 	
 	/**
 	 * 读取用户
@@ -254,6 +273,27 @@ public class InvestProfit extends Model {
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
 	}
+	
+	
+	public BigDecimal getAllAmount() {
+		return allAmount;
+	}
+	public void setAllAmount(BigDecimal allAmount) {
+		this.allAmount = allAmount;
+	}
+	public BigDecimal getInterestAmount() {
+		return interestAmount;
+	}
+	public void setInterestAmount(BigDecimal interestAmount) {
+		this.interestAmount = interestAmount;
+	}
+	public BigDecimal getOverdueAmount() {
+		return overdueAmount;
+	}
+	public void setOverdueAmount(BigDecimal overdueAmount) {
+		this.overdueAmount = overdueAmount;
+	}
+	
 
 
 	/**

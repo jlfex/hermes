@@ -170,9 +170,17 @@ jQuery(function($) {
 			<div class="account_right">
 				<div class="my_loan_sub bgnone">
                     <div class="use_type">
-                        <div class="use_type_name"><span class="title">${purpose}</span>&nbsp;<a href="#" class="bg">${product.name}</a></div>
+                        <div class="use_type_name">
+                           <#if loan.loanKind=='00'>
+                              <span class="title">${purpose}</span>&nbsp;<a href="#" class="bg">${product.name}</a>
+                           <#else>
+                              <span class="title">${purpose}</span>&nbsp;<a href="#" class="bg">${product.name}</a>
+                           </#if>
+                         </div>
                         <div class="dash_line"></div>
-                        <div class="use_type_code lightgray"><@messages key="model.loan.loanNo" /><span class="deal">	<a href="#" class="m_a1">：${loan.loanNo}</a></span></div>
+                        <div class="use_type_code lightgray">
+                            <#if loan.loanKind=='00'> 协议编号<#else>债权转让编号 </#if>
+                           <span class="deal">	<a href="#" class="m_a1">：${loan.loanNo}</a></span></div>
                         <div class="clearfix"></div>   
                     </div>
                     <table class="tab_invest_gap" cellpadding="0" cellspacing="0" border="0">

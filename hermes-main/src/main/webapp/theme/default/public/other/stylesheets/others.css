@@ -539,3 +539,20 @@ input.m_checkbox {
 	background: url(../images/m/icon1/right.png) no-repeat;
 	padding-left: 20px;
 }
+.m_fp_lt, .m_fp_rt{ float:left;}
+.m_fp_lt{ width:160px; text-align:right;}
+.m_fp_rt{ margin:20px 0 0 0;}
+.m_fp_rt p{ margin-left:20px;}
+.box_none{ border:none; background:none;}
+
+
+.m_r_tda{ padding-bottom:40px; margin-left:15px;}
+.m_r_tda table{ width:725px; text-align:left;color:#444444;}
+
+.m_r_tda table tr th{ background:#3bafda; border-bottom:1px solid #e2e2e2; color:#FFFFFF; font-size:14px; padding:8px 0;font-weight:500; text-align:center;}
+.m_r_tda table tr th.th_l_radus{-moz-border-top-left-radius: 4px; -webkit-border-top-left-radius: 4px;border-top-left-radius: 4px; }
+.m_r_tda table tr th.th_r_radus{-moz-border-top-right-radius: 5px; -webkit-border-top-right-radius: 5px;border-top-right-radius: 5px;}
+.m_r_tda table tr td{ padding:8px 0;font-size:14px; text-align:center;}
+.bg_f5{ background:#f5f5f5;}
+
+

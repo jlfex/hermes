@@ -85,10 +85,20 @@
 				<input id="repay" name="repay" type="hidden">
 				<input id="orderByField" name="orderByField" type="hidden">
 				<input id="orderByDirection" name="orderByDirection" type="hidden">
+				<input id="loanKind" name="loanKind" type="hidden">
 			</form>
 		</div>
 		
-		<div id="data"></div>
+		<div> 
+		    <li>
+		       <h3>债权标</h3>
+		       <div id="creditData"></div>
+		    </li>
+			<li>
+			 <h3>普通标</h3>
+			 <div id="data"></div>
+			</li>
+		</div>
 	</div>
 </div>
 
@@ -134,7 +144,12 @@ $('#searchForm .form-control-static .label').on('click', function() {
 
 // 绑定表单提交事件
 $('#searchForm').on('submit', function() {
+    $("#loanKind").val("00"); 
 	$('#data').fadeOut('fast').load('${app}/invest/indexsearch', $('#searchForm').serialize(), function(html) {
+		$(this).fadeIn('fast');
+	});
+    $("#loanKind").val("01");
+	$('#creditData').fadeOut('fast').load('${app}/invest/indexsearch', $('#searchForm').serialize(), function(html) {
 		$(this).fadeIn('fast');
 	});
 	return false;

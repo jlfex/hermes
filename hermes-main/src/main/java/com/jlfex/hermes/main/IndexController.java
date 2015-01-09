@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.service.ArticleService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
@@ -42,7 +43,8 @@ public class IndexController {
 		// 设置数据
 		model.addAttribute("nav", HomeNav.HOME);
 		model.addAttribute("notices", articleService.findHomeNotices());
-		model.addAttribute("loans", loanService.findForIndex());
+		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
+		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
 		
 		// 渲染视图
 		return "index";

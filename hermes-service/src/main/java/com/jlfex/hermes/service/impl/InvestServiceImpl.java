@@ -122,7 +122,7 @@ public class InvestServiceImpl implements InvestService {
 	// return invests;
 	// }
 
-	private String getCondition(String purpose, String raterange, String periodrange, String repay, String orderByField, String orderByDirection, Map<String, Object> params) {
+	private String getCondition(String purpose, String raterange, String periodrange, String repay, String orderByField, String orderByDirection,String loanKind, Map<String, Object> params) {
 		StringBuilder condition = new StringBuilder();
 
 		if (!Strings.empty(purpose) && !Strings.equals(purpose, "不限")) {
@@ -138,6 +138,10 @@ public class InvestServiceImpl implements InvestService {
 		if (!Strings.empty(repay) && !Strings.equals(repay, "不限")) {
 			condition.append(" and hr.id = :repay");
 			params.put("repay", repay);
+		}
+		if (!Strings.empty(loanKind)) {
+			condition.append(" and hl.loan_kind = :loanKind");
+			params.put("loanKind", loanKind);
 		}
 		if (!Strings.empty(orderByField)) {
 			if (orderByField.equalsIgnoreCase("rate"))
@@ -212,12 +216,12 @@ public class InvestServiceImpl implements InvestService {
 	 * java.lang.String)
 	 */
 	@Override
-	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repay, String page, String size, String orderByField, String orderByDirection) {
+	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repay, String page, String size, String orderByField, String orderByDirection,String loanKind) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
 
 		String sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
-		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection, params);
+		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection,loanKind, params);
 		sqlSearchByLoan = String.format(sqlSearchByLoan, condition);
 		sqlCountSearchByLoan = String.format(sqlCountSearchByLoan, condition);
 
@@ -410,9 +414,9 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	@Override
-	public List<InvestInfo> findByUser(User user) {
+	public List<InvestInfo> findByUser(User user,String loanKind) {
 		List<InvestInfo> investinfoList = new ArrayList<InvestInfo>();
-		List<Invest> investList = investRepository.findByUser(user);
+		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKind, user);
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();

@@ -99,6 +99,15 @@ public class Loan extends Model {
 	@Column(name = "status")
 	private String status;
 	
+	/** 标 类型 :*/
+	@Column(name = "loan_kind",length=2)
+	private String loanKind;
+	
+	/** 标 对应的债权id: 普通标：该字段可为空 */
+	@Column(name = "creditor_id", length=50)
+	private String creditorId;
+	
+	
 	/** 还款信息列表 */
 	@Transient
 	private List<LoanRepay> repays = new LinkedList<LoanRepay>();
@@ -106,6 +115,8 @@ public class Loan extends Model {
 	/** 业务日期，目前是自动任务跑批的时候设置借款的最后截止日期 */
 	@Transient
 	private Date businessDate;
+	
+	
 	
 	/**
 	 * 读取用户
@@ -444,6 +455,14 @@ public class Loan extends Model {
 	public String getStatusName() {
 		return Dicts.name(status, "-", Status.class);
 	}
+	/**
+	 * 读取标类型名称
+	 * @return
+	 */
+	public String getloanKindName() {
+		return Dicts.name(loanKind, "-", LoanKinds.class);
+	}
+
 
 	/**
 	 * 累加已筹金额
@@ -480,6 +499,27 @@ public class Loan extends Model {
 	public void setBusinessDate(Date businessDate) {
 		this.businessDate = businessDate;
 	}
+	
+	
+	public String getLoanKind() {
+		return loanKind;
+	}
+
+	public void setLoanKind(String loanKind) {
+		this.loanKind = loanKind;
+	}
+
+	public String getCreditorId() {
+		return creditorId;
+	}
+
+	public void setCreditorId(String creditorId) {
+		this.creditorId = creditorId;
+	}
+
+
+
+
 	/**
 	 * 借款状态
 	 * 
@@ -521,5 +561,19 @@ public class Loan extends Model {
 
 		@Element("完成")
 		public static final String COMPLETED 			= "99";
+	}
+	/**
+	 * 标： 类型
+	 * @author Administrator
+	 *
+	 */
+	public static final class LoanKinds {
+		@Element("普通标")
+		public static final String NORML_LOAN 			= "00";
+		@Element("外部债权标")
+		public static final String OUTSIDE_ASSIGN_LOAN 	= "01";
+		@Element("平台内债权标")
+		public static final String PLATFORM_ASSIGN_LOAN = "02";
+
 	}
 }

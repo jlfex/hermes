@@ -89,5 +89,24 @@ public interface InvestProfitRepository extends JpaRepository<InvestProfit, Stri
 	 */
 	@Query("from InvestProfit ip where ip.invest = ?1 order by ip.loanRepay.sequence desc")
 	public List<InvestProfit> findByInvest(Invest invest);
+	
+	/**
+	 * 债权标    统计 所有罚息 , 利息
+	 * @param profitStatusList
+	 * @param loanKind
+	 * @param user
+	 * @return
+	 */
+	@Query("SELECT new InvestProfit(SUM(t.interest) , SUM(t.overdueInterest))  FROM InvestProfit t where  t.status in ?1  and  t.invest.loan.loanKind = ?2 and  t.user =?3  ")
+	public InvestProfit sumAllProfitByAssignLoan(List<String> profitStatusList, String loanKind, User user);
+	
+//	/**
+//	 * 债权表：获取收益
+//	 * @param invest
+//	 * @param loanKind
+//	 * @return
+//	 */
+//	@Query("from InvestProfit ip where ip.invest = ?1 and ip.loanRepay.loan.loanKind=?2 order by ip.loanRepay.sequence desc")
+//	public List<InvestProfit> findByInvest(Invest invest,String loanKind);
 
 }

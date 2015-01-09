@@ -286,6 +286,19 @@ public class LoanServiceImpl implements LoanService {
 		// 返回结果
 		return page.getContent();
 	}
+	
+	@Override
+	public List<Loan> findByKindAndStatus(Integer limit,String loanKind, String... status) {
+		// 验证数据有效性
+		Assert.notNull(status, "status is null.");
+
+		// 分页查询数据
+		Pageable pageable = new PageRequest(0, limit, Direction.DESC, "datetime");
+		Page<Loan> page = loanRepository.findByloanKindAndStatusIn(loanKind, Arrays.asList(status), pageable);
+
+		// 返回结果
+		return page.getContent();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -293,20 +306,19 @@ public class LoanServiceImpl implements LoanService {
 	 * @see com.jlfex.hermes.service.LoanService#findForIndex()
 	 */
 	@Override
-	public List<LoanInfo> findForIndex() {
+	public List<LoanInfo> findForIndex(String loanKind) {
 		// 初始化
 		Integer size = Integer.valueOf(App.config("index.loan.size", "10"));
 		List<LoanInfo> loans = new ArrayList<LoanInfo>(size);
 
 		// 查询招标中记录
-		loans.addAll(toInfos(findByStatus(size, Loan.Status.BID)));
+		loans.addAll(toInfos(findByKindAndStatus(size,loanKind, Loan.Status.BID)));
 		Logger.debug("find %d loans by status bid.", loans.size());
 
 		// 判断是否已经满足记录条数
 		// 当不满足条数要求时查询以已完成记录补充
 		if (loans.size() < size)
-			loans.addAll(toInfos(findByStatus(size - loans.size(), Loan.Status.COMPLETED)));
-
+			loans.addAll(toInfos(findByKindAndStatus(size - loans.size(),loanKind, Loan.Status.COMPLETED)));
 		// 返回结果
 		return loans;
 	}

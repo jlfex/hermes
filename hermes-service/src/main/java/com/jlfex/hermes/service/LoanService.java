@@ -64,13 +64,22 @@ public interface LoanService {
 	 * @return
 	 */
 	public List<Loan> findByStatus(Integer limit, String... status);
+	
+	/**
+	 * 通过 类型 and 状态查询借款
+	 * 
+	 * @param limit
+	 * @param status
+	 * @return
+	 */
+	public List<Loan> findByKindAndStatus(Integer limit,String loanKind, String... status);
 
 	/**
 	 * 为首页查询借款
 	 * 
 	 * @return
 	 */
-	public List<LoanInfo> findForIndex();
+	public List<LoanInfo> findForIndex(String loanKind);
 
 	/**
 	 * 通过多个条件查询借款
@@ -302,9 +311,5 @@ public interface LoanService {
 	 */
 	public boolean updateStatus(String id, String fromStatus, String toStatus);
 	
-	
-	
-
-
 
 }

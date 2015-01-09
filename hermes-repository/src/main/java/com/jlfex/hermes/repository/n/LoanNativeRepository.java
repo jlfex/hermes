@@ -42,5 +42,7 @@ public interface LoanNativeRepository {
 	 * @return
 	 */
 	public int updateProceeds(String id,BigDecimal amount);
+	
+	
 
 }

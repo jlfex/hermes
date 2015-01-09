@@ -39,6 +39,7 @@
 						<ul>
 							<li><a href="#" class="icon loan" data-url="${app}/loan/myloan" data-target="main"><@messages key="account.biz.loan" /></a></li>
 							<li><a href="#" class="icon invest" data-url="${app}/invest/myinvest" data-target="main"><@messages key="account.biz.invest" /></a></li>
+							<li><a href="#" class="icon invest" data-url="${app}/invest/myCredit" data-target="main">我的债权</a></li>
 						</ul>
 					</div>
 					<div class="item">

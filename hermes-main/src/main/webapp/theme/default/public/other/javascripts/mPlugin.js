@@ -7,7 +7,6 @@
 	  	var progress = $(this); // 进度条
 	  	var startNum = parseFloat(progress.find('.m_progress_start').children('span').html()); // 起始值
 	  	var endNum = parseFloat(progress.find('.m_progress_end').children('span').html()); // 结束值
-			var cursor = progress.find('.m_progress_end'); // 游标
 			var range = progress.find('.m_progress_range'); // 进度条范围
 			var cursor = progress.find('.m_progress_cursor'); // 游标
 			var percent = progress.find('.m_progress_percent'); // 百分比
@@ -15,8 +14,8 @@
 			var titleCon = title.find('span'); // 游标标题内容
 			var accuracy = progress.data('accuracy') || 1; // 精确度
 			var isClick = false; // 记录鼠标是否按下
-			var defaultX = cursor.offset().left; // 按下鼠标时候的X坐标
-			var imgLeft = parseFloat(cursor.css("left")); // 游标离起始点的距离
+			var defaultX; // 按下鼠标时候的X坐标
+			var imgLeft; // 游标离起始点的距离
 			var cssPosition = function(value, num) {
 				cursor.css({"left": value});
 				percent.css({"width": value});
@@ -34,9 +33,6 @@
 					cssPosition(500, endNum);
 				}
 			};
-			 
-			// 初始化游标位置
-			cssPosition(500 * (titleCon.html() -startNum) / (endNum - startNum));
 			
 			// 作用于进度条
 			range.mousemove(function(e) { // 鼠标移动
@@ -47,6 +43,8 @@
 			}).mouseleave(function(){ // 鼠标离开
 				isClick = false; 
 			}).click(function(e) { // 鼠标点击
+				!defaultX && (defaultX = cursor.css("left", 0).offset().left + 10);
+				!imgLeft && (imgLeft = 0);
 				move(e.pageX)
 				return false;
 			});
@@ -60,6 +58,10 @@
 			}).mouseup(function(){ // 鼠标松开
 				isClick = false; 
 			})
+
+			// 初始化游标位置
+			cssPosition(500 * (titleCon.html() -startNum) / (endNum - startNum));
+
     });    
   };       
   $.fn.mProgress.defaults = {
