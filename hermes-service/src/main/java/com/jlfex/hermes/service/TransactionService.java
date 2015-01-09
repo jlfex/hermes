@@ -193,4 +193,13 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> transact(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
+	
+	/**
+	 * 风险金交易流水
+	 * 
+	 * 
+	 */
+	public Page<Transaction> findByUserIdAndDateType(String userId,Integer page, Integer size, List<String> types);
+	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types);
+
 }

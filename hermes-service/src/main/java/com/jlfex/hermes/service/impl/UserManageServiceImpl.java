@@ -347,26 +347,29 @@ public class UserManageServiceImpl implements UserManageService {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.UserManageService#logOffUser(java.lang.String)
+	/**
+	 * 注销 账号
 	 */
 	@Override
 	public Result logOffUser(String userId) {
-		Assert.notEmpty(userId, "");
 		Result result = new Result();
+		if(Strings.empty(userId)){
+			Logger.warn("注销用户: 用户id为空!");
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			result.addMessage("注销用户: 用户id为空!");
+			return result;
+		}
 		User user = userRepository.findOne(userId);
 		List<UserAccount> accounts = userAccountRepository.findByUser(user);
 		for (UserAccount acc : accounts) {
 			if (acc.getBalance().compareTo(BigDecimal.ZERO) == 1) {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage("用户不能注销");
+				result.addMessage("账户余额大于0,不能注销");
 				return result;
 			}
 		}
 		user.setStatus(com.jlfex.hermes.model.User.Status.DISABLED);
+		userRepository.save(user);
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		result.addMessage("成功注销");
 		return result;
@@ -375,5 +378,14 @@ public class UserManageServiceImpl implements UserManageService {
 	@Override
 	public User findById(String userId) {
 		return userRepository.findOne(userId);
+	}
+	
+	/**
+	 * 
+	 * 通过用户编号和用户类型
+	 * 
+	 */
+	public UserAccount findByUserIdAndType(String userId, String type){
+		return userAccountRepository.findByUserIdAndType(userId,type);
 	}
 }
