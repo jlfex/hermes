@@ -108,7 +108,7 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 			dictionary.setName(parameterSetInfo.getParameterValue());
 			dictionary.setCode(nextDataCode(dictionaryType.getCode()));
 			dictionary.setStatus(parameterSetInfo.getStatus());
-			dictionary.setOrder(1);//
+			dictionary.setOrder(nextOrder(dictionaryType.getId()));
 			dictionaryRepository.save(dictionary);
 			logger.info("添加字典成功：" + dictionary.getType() + "." + dictionary.getCode() + "=" + dictionary.getName());
 			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "操作成功！");
@@ -136,6 +136,22 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 			logger.info("获取字典编码失败：" + code);
 		}
 		return null;
+	}
+
+	/**
+	 * 获取下一个order排序的编码
+	 * 
+	 */
+	public synchronized int nextOrder(String typeId) {
+		try {
+			Integer mdc = dictionaryRepository.maxOrderByTypeId(typeId);
+			int temp = (mdc != null ? mdc : 0) + 1;
+			logger.info("获取最大order成功：" + temp);
+			return temp;
+		} catch (Exception e) {
+			logger.info("获取最大order失败");
+		}
+		return 0;
 	}
 
 	/**

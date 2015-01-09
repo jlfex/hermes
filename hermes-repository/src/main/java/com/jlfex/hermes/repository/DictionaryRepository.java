@@ -48,6 +48,9 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	 */
 	public Dictionary findByName(String name);
 
+	@Query("SELECT MAX(t.order) FROM Dictionary t WHERE t.type=?1")
+	public Integer maxOrderByTypeId(String typeId);
+
 	@Query("SELECT MAX(t.code) FROM Dictionary t WHERE t.code=?1")
 	public String maxCodeByCode(String code);
 
@@ -55,5 +58,5 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	 * 根据id查找记录
 	 * 
 	 */
-
+	public Dictionary findOne(String id);
 }
