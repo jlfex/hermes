@@ -25,6 +25,7 @@ insert into `hermes`.`hm_dictionary` (`id`, `type`, `name`, `code`, `order`, `st
 update `hm_navigation` SET `id`='9f76614e-7fb7-11e3-ae10-6cae8b21aeaa', `parent`=NULL, `type`='0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa', `name`='系统管理', `subname`=NULL, `code`='cogs', `path`='@/menu', `target`='_menu', `order`='4', `creator`=NULL, `create_time`='2014-01-17 15:37:50', `updater`=NULL, `update_time`='2014-01-17 15:37:50', `version`=NULL, `order_`=NULL WHERE (`id`='9f76614e-7fb7-11e3-ae10-6cae8b21aeaa');
 
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeab','2015-01-06 13:36:25',NULL,'2015-01-06 13:36:30',NULL,NULL,'product','产品管理','1','@/product/index',NULL,'_main',NULL,'0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
-
+insert into `hm_properties` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `value`) values('f955fdfe-70fe-11e3-ae10-6cae8b21aea1',NULL,NULL,NULL,NULL,NULL,'product.rate.loan','借款手续费费率','0.1');
+insert into `hm_properties` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `value`) values('f955fdfe-70fe-11e3-ae10-6cae8b21aea2',NULL,NULL,NULL,NULL,NULL,'product.rate.risk','风险金费率','0.2');
 
 
