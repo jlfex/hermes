@@ -19,6 +19,21 @@ jQuery(function($) {
 		//$('div.m_con.m_jk div.m_progress.progress3 .num:visible').html(startRate);
 		//var startAmount =  $('div.m_con.m_jk div.m_progress.progress1 .m_progress_start:visible').text();
 		//alert(startAmount);
+  	var _twidth = ($("#myTab li").length*189)+4;
+  	$("#myTab").css("width",_twidth+"px") ;
+  	var _tml = 0;
+  	$("#_perv").on("click",function(){
+  		if(_tml<0){
+  			_tml+=189;
+  			$("#myTab").animate({marginLeft:'+=189px'},300);
+  		}
+  	});
+  	$("#_next").on("click",function(){
+  		if(_tml>-(($("#myTab li").length-5)*189)){
+  		_tml-=189;
+  			$("#myTab").animate({marginLeft:'-=189px'},300);
+  		}
+  	});
   
     var size =  $('#productSize').val();
 	for (var i = 1; i <= size; i++) 
@@ -79,7 +94,30 @@ jQuery(function($) {
 <!-- middle start-->
 <div class="m_con m_jk">
 	<div id="tab1"  class="commonChecked">
-		<ul class="m_jk_t clearfix m_tab_t">
+		<span style="position: absolute;
+top: 0px;
+z-index: 999;
+display: block;
+height: 82px;
+line-height: 82px;
+background: #000;
+opacity: 0.5;
+padding: 0 10px;
+color: #fff;
+cursor: pointer;" id="_perv">《</span>
+		<span style="position: absolute;
+top: 0px;
+z-index: 999;
+display: block;
+height: 82px;
+line-height: 82px;
+background: #000;
+opacity: 0.5;
+padding: 0 10px;
+color: #fff;
+cursor: pointer;
+right:0px;" id="_next">》</span>
+		<ul class="m_jk_t clearfix m_tab_t" id="myTab">
 			 <#assign name = 0 />
 			 <#list products as p>  
 			  	 <#if name = 0>
