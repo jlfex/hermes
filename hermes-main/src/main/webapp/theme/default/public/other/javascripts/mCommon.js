@@ -42,25 +42,31 @@ $(function(){
     $('#register').mValidator({
         isInitText: true,  // 输入框初始化内容
         isInitMsg: true,  // 获取焦点时提示信息
+        pwdInitText: '',
+        confPwdInitText:'',
         emailUniqueAjax: {
-            url: "/demo/test?id=1234",  // 测试邮箱 mo@mo.com
+            url: "isExistentEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
             dataType: 'json',
-            key: 'emailUnique'
+            key: 'email'
         },
         captchaAjax: {
-            url: "http://192.16.6.89:18080/demo/test",  // 测试验证码 1234
-            dataType: 'jsonp',
+            url: "checkVerifiedCode",  
+            cache:false,
+            dataType: 'json',
             key: 'captcha'
         },
         mobileUniqueAjax: {
-            url: "http://192.16.6.89:18080/demo/test",  // 测试手机唯一性 13659297636
-            dataType: 'jsonp',
-            key: 'mobileUnique'
+            url: "checkCellphone",  // 测试手机唯一性 13659297636
+            cache:false,
+            dataType: 'json',
+            key: 'cellphone'
         },
         nameUniqueAjax: {
-            url: "http://192.16.6.89:18080/demo/test",  // 测试用户名 momo
-            dataType: 'jsonp',
-            key: 'nameUnique'
+            url: "checkAccount",  // 测试用户名 momo
+            cache:false,
+            dataType: 'json',
+            key: 'account'
         }
     });    
 
@@ -68,7 +74,7 @@ $(function(){
     $('#login').mValidator({
         isInitText: true,
         emailInitText: '账户名',
-        pwdInitText: '登录密码'
+        pwdInitText: ''
     });
 
     // 投标金额验证
@@ -87,11 +93,25 @@ $(function(){
     });
 
     // 邮箱找回密码
-    $('#sendEmail').mValidator({
+    $('#retrieve').mValidator({
+         emailExistAjax: {
+            url: "isActiveEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
+            dataType: 'json',
+            key: 'email'
+        }
+    });
+     $('#sendEmail').mValidator({
         emailExistAjax: {
-            url: "http://192.16.6.89:18080/demo/test",  // 测试邮箱 mo@mo.com
-            dataType: 'jsonp',
-            key: 'emailExist'
+            url: "isActiveEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
+            dataType: 'json',
+            key: 'email'
+        },emailUniqueAjax: {
+            url: "isExistentEmail",  // 测试邮箱 mo@mo.com
+            cache:false,
+            dataType: 'json',
+            key: 'email'
         }
     });
 
