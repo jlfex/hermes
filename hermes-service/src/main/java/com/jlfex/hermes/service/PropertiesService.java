@@ -22,14 +22,14 @@ public interface PropertiesService {
 	 * @return
 	 */
 	public Properties findById(String id);
-	
+
 	/**
 	 * 查询所有记录
 	 * 
 	 * @return
 	 */
 	public List<Properties> findAll();
-	
+
 	/**
 	 * 通过名称和代码分页查询记录<br>
 	 * 查询条件都可能为空
@@ -41,7 +41,7 @@ public interface PropertiesService {
 	 * @return
 	 */
 	public Page<Properties> findByNameAndCode(String name, String code, Integer page, Integer size);
-	
+
 	/**
 	 * 保存
 	 * 
@@ -49,7 +49,7 @@ public interface PropertiesService {
 	 * @return
 	 */
 	public Properties save(Properties properties);
-	
+
 	/**
 	 * 保存
 	 * 
@@ -60,4 +60,12 @@ public interface PropertiesService {
 	 * @return
 	 */
 	public Properties save(String id, String name, String code, String value);
+
+	/**
+	 * 通过Code查询记录
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Properties findByCode(String code);
 }
