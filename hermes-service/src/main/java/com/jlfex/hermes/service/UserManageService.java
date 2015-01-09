@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserCar;
 import com.jlfex.hermes.model.UserContacter;
 import com.jlfex.hermes.model.UserHouse;
@@ -133,4 +134,10 @@ public interface UserManageService {
 	 * @return
 	 */
 	public User findById(String userId);
+	/**
+	 * 
+	 * 通过用户编号和用户类型
+	 * 
+	 */
+	public UserAccount findByUserIdAndType(String userId, String type);
 }

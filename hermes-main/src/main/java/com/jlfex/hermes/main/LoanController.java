@@ -252,12 +252,9 @@ public class LoanController {
 	public String display(Model model) {
 		// App.checkUser();
 		model.addAttribute("nav", "loan");
-
 		List<ProductInfo> productList = productService.findAll();
 		model.addAttribute("products", productList);
 		model.addAttribute("productSize", productList.size());
-
-		// 返回视图
 		return "loan/display";
 	}
 
@@ -270,10 +267,13 @@ public class LoanController {
 	 */
 	@RequestMapping("/loanprogram")
 	public String loanprogram(String amount, String period, String rate, String productId, String productName, String purposeName, String purposeId, String repayName, String repayId, Model model) {
-		// App.checkUser();
+	    try {
+			App.checkUser();
+		} catch (Exception e) {
+			return "redirect:/userIndex/skipSignIn";
+		}
 		Logger.info("amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName + ",purposeId :"
 				+ purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
-
 		model.addAttribute("amount", Numbers.toCurrency(new Double(amount)));
 		model.addAttribute("rate", Numbers.toPercent(new Double(rate) / 100));
 		model.addAttribute("period", period);
@@ -296,8 +296,6 @@ public class LoanController {
 		List<LoanRepay> repayPlanList = loanService.getRepayPlan(loan);
 		model.addAttribute("repayPlans", repayPlanList);
 		model.addAttribute("nav", "loan");
-
-		// 返回视图
 		return "loan/loanprogram";
 	}
 

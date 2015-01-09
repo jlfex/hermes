@@ -45,4 +45,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 	 * @return
 	 */
 	public Page<Transaction> findBySourceUserAccountAndTypeInAndDatetimeBetween(UserAccount userAccount, List<String> types, Date beginDate, Date endDate, Pageable pageable);
+	
+	/**
+	 * 通过账户查询风险金的所有转入转出 
+	 */
+	@Query("from Transaction tx where tx.sourceUserAccount = ?1 or targetUserAccount = ?2 and type in (?3) ")
+	public List<Transaction> findByUserAccountAndTypeIn(UserAccount sourceuserAccount,UserAccount targetuserAccount, List<String> types);
+	
+	public Page<Transaction> findBySourceUserAccountOrTargetUserAccountAndTypeIn(UserAccount sourceuserAccount,UserAccount targetuserAccount,List<String> types, Pageable pageable);
 }

@@ -20,7 +20,7 @@ public interface DictionaryService {
 	 * @return
 	 */
 	public Dictionary loadById(String id);
-	
+
 	/**
 	 * 通过类型代码和字典代码加载字典
 	 * 
@@ -29,7 +29,7 @@ public interface DictionaryService {
 	 * @return
 	 */
 	public Dictionary loadByTypeCodeAndCode(String typeCode, String code);
-	
+
 	/**
 	 * 通过类型代码查询字典
 	 * 
@@ -37,7 +37,7 @@ public interface DictionaryService {
 	 * @return
 	 */
 	public List<Dictionary> findByTypeCode(String typeCode);
-	
+
 	/**
 	 * 通过类型代码读取字典<br>
 	 * 从缓存中读取数据
@@ -46,4 +46,6 @@ public interface DictionaryService {
 	 * @return
 	 */
 	public List<Dictionary> getByTypeCode(String typeCode);
+
+	public String maxCodeByCode(String code);
 }

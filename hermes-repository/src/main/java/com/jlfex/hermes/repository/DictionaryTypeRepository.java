@@ -14,5 +14,13 @@ import com.jlfex.hermes.model.DictionaryType;
  */
 @Repository
 public interface DictionaryTypeRepository extends JpaRepository<DictionaryType, String> {
+	/**
+	 * 通过类型名称查询字典
+	 * 
+	 * @param typeCode
+	 * @param code
+	 * @return
+	 */
+	public DictionaryType findByCode(String code);
 
 }

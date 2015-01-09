@@ -9,7 +9,7 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 字典类型信息模型
- *
+ * 
  * @author ultrafrog
  * @version 1.0, 2013-11-12
  * @since 1.0
@@ -17,21 +17,21 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_dictionary_type")
 public class DictionaryType extends Model {
-	
+
 	private static final long serialVersionUID = -6577472604550820331L;
 
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/**
 	 * 读取名称
 	 * 
@@ -41,7 +41,7 @@ public class DictionaryType extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置名称
 	 * 
@@ -51,7 +51,7 @@ public class DictionaryType extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取代码
 	 * 
@@ -61,7 +61,7 @@ public class DictionaryType extends Model {
 	public String getCode() {
 		return code;
 	}
-	
+
 	/**
 	 * 设置代码
 	 * 
@@ -71,7 +71,7 @@ public class DictionaryType extends Model {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -81,7 +81,7 @@ public class DictionaryType extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -109,11 +109,37 @@ public class DictionaryType extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
-		public static final String VALID 	= "00";
+		public static final String VALID = "00";
 
 		@Element("无效")
-		public static final String INVALID 	= "99";
+		public static final String INVALID = "99";
 	}
+
+	/**
+	 * 读取字典名称
+	 * 
+	 * @return
+	 */
+	public String getNames() {
+		return Dicts.name(name, name, Name.class);
+	}
+
+	/**
+	 * 字典名称
+	 */
+	public static final class Name {
+
+		@Element("还款方式")
+		public static final String REPAY_MODE = "0030";
+
+		@Element("产品用途")
+		public static final String PRODUCT_PURPOSE = "0031";
+
+		@Element("费用类型")
+		public static final String COST_TYPE = "0032";
+
+	}
+
 }
