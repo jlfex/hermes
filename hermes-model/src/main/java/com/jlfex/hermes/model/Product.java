@@ -21,18 +21,18 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_product")
 public class Product extends Model {
-	
+
 	private static final long serialVersionUID = 1059913779334140588L;
 
 	/** 还款方式 */
 	@ManyToOne
 	@JoinColumn(name = "repay")
 	private Repay repay;
-	
+
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
@@ -40,31 +40,31 @@ public class Product extends Model {
 	/** 金额 */
 	@Column(name = "amount")
 	private String amount;
-	
+
 	/** 期限 */
 	@Column(name = "period")
 	private String period;
-	
+
 	/** 利率 */
 	@Column(name = "rate")
 	private String rate;
-	
+
 	/** 招标期限 */
 	@Column(name = "deadline")
 	private Integer deadline;
-	
+
 	/** 图片 */
 	@Column(name = "logo")
 	private String logo;
-	
+
 	/** 描述 */
 	@Column(name = "description")
 	private String description;
-	
+
 	/** 视图 */
 	@Column(name = "view")
 	private String view;
-	
+
 	/** 借款管理费 */
 	@Column(name = "manage_fee")
 	private BigDecimal manageFee;
@@ -76,7 +76,25 @@ public class Product extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
+	/** 期限类型 */
+	@Column(name = "periodType")
+	private String periodType;
+
+	/** 产品用途 */
+	@ManyToOne
+	@JoinColumn(name = "purpose")
+	private Dictionary purpose;
+
+	/** 担保方式 */
+	@ManyToOne
+	@JoinColumn(name = "guarantee")
+	private Dictionary guarantee;
+
+	/** 起投金额 */
+	@Column(name = "starting_amt")
+	private BigDecimal startingAmt;
+
 	/**
 	 * 读取还款方式
 	 * 
@@ -86,7 +104,7 @@ public class Product extends Model {
 	public Repay getRepay() {
 		return repay;
 	}
-	
+
 	/**
 	 * 设置还款方式
 	 * 
@@ -96,7 +114,7 @@ public class Product extends Model {
 	public void setRepay(Repay repay) {
 		this.repay = repay;
 	}
-	
+
 	/**
 	 * 读取名称
 	 * 
@@ -106,7 +124,7 @@ public class Product extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置名称
 	 * 
@@ -116,7 +134,7 @@ public class Product extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取代码
 	 * 
@@ -146,7 +164,7 @@ public class Product extends Model {
 	public String getAmount() {
 		return amount;
 	}
-	
+
 	/**
 	 * 设置金额
 	 * 
@@ -156,7 +174,7 @@ public class Product extends Model {
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
-	
+
 	/**
 	 * 读取期限
 	 * 
@@ -166,7 +184,7 @@ public class Product extends Model {
 	public String getPeriod() {
 		return period;
 	}
-	
+
 	/**
 	 * 设置期限
 	 * 
@@ -176,7 +194,7 @@ public class Product extends Model {
 	public void setPeriod(String period) {
 		this.period = period;
 	}
-	
+
 	/**
 	 * 读取利率
 	 * 
@@ -186,7 +204,7 @@ public class Product extends Model {
 	public String getRate() {
 		return rate;
 	}
-	
+
 	/**
 	 * 设置利率
 	 * 
@@ -196,7 +214,7 @@ public class Product extends Model {
 	public void setRate(String rate) {
 		this.rate = rate;
 	}
-	
+
 	/**
 	 * 读取招标期限
 	 * 
@@ -206,7 +224,7 @@ public class Product extends Model {
 	public Integer getDeadline() {
 		return deadline;
 	}
-	
+
 	/**
 	 * 设置招标期限
 	 * 
@@ -216,7 +234,7 @@ public class Product extends Model {
 	public void setDeadline(Integer deadline) {
 		this.deadline = deadline;
 	}
-	
+
 	/**
 	 * 读取图片
 	 * 
@@ -226,7 +244,7 @@ public class Product extends Model {
 	public String getLogo() {
 		return logo;
 	}
-	
+
 	/**
 	 * 设置图片
 	 * 
@@ -236,7 +254,7 @@ public class Product extends Model {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	
+
 	/**
 	 * 读取描述
 	 * 
@@ -246,7 +264,7 @@ public class Product extends Model {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	/**
 	 * 设置描述
 	 * 
@@ -256,7 +274,7 @@ public class Product extends Model {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * 读取视图
 	 * 
@@ -266,7 +284,7 @@ public class Product extends Model {
 	public String getView() {
 		return view;
 	}
-	
+
 	/**
 	 * 设置视图
 	 * 
@@ -276,7 +294,7 @@ public class Product extends Model {
 	public void setView(String view) {
 		this.view = view;
 	}
-	
+
 	/**
 	 * 读取借款管理费
 	 * 
@@ -326,7 +344,7 @@ public class Product extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -336,7 +354,39 @@ public class Product extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public String getPeriodType() {
+		return periodType;
+	}
+
+	public void setPeriodType(String periodType) {
+		this.periodType = periodType;
+	}
+
+	public Dictionary getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(Dictionary purpose) {
+		this.purpose = purpose;
+	}
+
+	public Dictionary getGuarantee() {
+		return guarantee;
+	}
+
+	public void setGuarantee(Dictionary guarantee) {
+		this.guarantee = guarantee;
+	}
+
+	public BigDecimal getStartingAmt() {
+		return startingAmt;
+	}
+
+	public void setStartingAmt(BigDecimal startingAmt) {
+		this.startingAmt = startingAmt;
+	}
+
 	/**
 	 * 读取状态名称
 	 * 
@@ -354,7 +404,7 @@ public class Product extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
 		public static final String VALID = "00";
 

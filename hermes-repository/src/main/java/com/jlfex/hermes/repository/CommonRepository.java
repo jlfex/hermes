@@ -172,7 +172,9 @@ public class CommonRepository {
 		public static final String searchByLoanAudit 			= "/script/search-by-loan-audit.sql";
 		public static final String countSearchByLoanAudit 		= "/script/count-search-by-loan-audit.sql";
 		public static final String initData						= "/sql/h2/data.sql";
-		
+		public static final String searchByParameterSet 		= "/script/search-by-parameterset.sql";
+		public static final String countSearchByParameterSet 	= "/script/count_search-by-parameterset.sql";
+
 	}
 	
 	public void executeNative(String path){
