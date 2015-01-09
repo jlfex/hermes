@@ -661,7 +661,7 @@ public class LoanServiceImpl implements LoanService {
 	 * 
 	 * @return
 	 */
-	public String generateLoanNo() {
+	public synchronized String generateLoanNo() {
 		// 初始化
 		String date = Calendars.format("yyyyMMdd");
 		// 判断缓存序列是否存在
