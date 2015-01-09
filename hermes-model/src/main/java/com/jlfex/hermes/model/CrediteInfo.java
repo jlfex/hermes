@@ -2,8 +2,14 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.jlfex.hermes.common.dict.Dicts;
+import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.model.User.Status;
 
 /**
  * 外部：债权信息 模型 
@@ -17,12 +23,10 @@ public class CrediteInfo  extends Model {
 	
 	private static final long serialVersionUID = 2519547104206211678L;
 	
-	//债权人编号
-	@Column(name = "aceditor_no")
-	private String creditorNo;
-	//债权人名称
-	@Column(name = "aceditor_name")
-	private String creditorName;
+	/** 债权人 */
+	@ManyToOne
+	@JoinColumn(name = "creditor")
+	private Creditor creditor;
 	//债权编号
 	@Column(name = "acedite_code")
 	private String crediteCode;
@@ -68,6 +72,8 @@ public class CrediteInfo  extends Model {
 	//放款日 (债权对应的原始借款人还款)
 	@Column(name = "loan_begin_time")
 	private String loan_begin_time ;
+	@Column(name = "status")
+	private String status ;
 	//导入结果
 	@Transient
 	private String dealResult;
@@ -75,18 +81,7 @@ public class CrediteInfo  extends Model {
 	@Transient
 	private String remark;
 	
-	public String getCreditorNo() {
-		return creditorNo;
-	}
-	public void setCreditorNo(String creditorNo) {
-		this.creditorNo = creditorNo;
-	}
-	public String getCreditorName() {
-		return creditorName;
-	}
-	public void setCreditorName(String creditorName) {
-		this.creditorName = creditorName;
-	}
+	
 	public String getCrediteCode() {
 		return crediteCode;
 	}
@@ -189,8 +184,35 @@ public class CrediteInfo  extends Model {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	public Creditor getCreditor() {
+		return creditor;
+	}
+	public void setCreditor(Creditor creditor) {
+		this.creditor = creditor;
+	}
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	
+	public String getStatusName() {
+		return Dicts.name(status, status, Status.class);
+	}
+
+	public static final class Status {
+		@Element("等待转让")
+		public static final String WAIT_ASSIGN		= "00";
+		@Element("转让中")
+		public static final String ASSIGNING		= "01";
+		@Element("转让成功")
+		public static final String SUCC_ASSIGN 		= "02";
+		@Element("转让失败")
+		public static final String FAIL_ASSIGN 		= "03";
+
+	 }
 	
 	
 	

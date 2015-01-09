@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.jlfex.hermes.model.ArticleCategoryReference;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
 
@@ -38,6 +39,7 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 * @return
 	 */
 	public Page<Loan> findByStatusIn(List<String> status, Pageable pageable);
+	
 	
 	/**
 	 * 通过用户查找借款
@@ -73,5 +75,11 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 * @return
 	 */
 	public List<Loan> findByUserIdOrderByDatetimeDesc(String userId);
+	
+	/**
+	 * 标的： 类型 和 状态 列表
+	 * @return
+	 */
+	public Page<Loan> findByloanKindAndStatusIn(String loanKind, List<String> status, Pageable pageable);
 	
 }

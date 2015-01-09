@@ -56,5 +56,14 @@ public interface InvestRepository extends JpaRepository<Invest, String> {
 	 * @return
 	 */
 	public List<Invest> findByUserIdOrderByStatusAscDatetimeDesc(String userId);
+	
+	/**
+	 * 债权标 : 用户获取债权标 信息
+	 * @param user
+	 * @param loanKind
+	 * @return
+	 */
+	@Query("SELECT  t  FROM Invest  t  where t.loan.loanKind =?1 and t.user=?2 order by t.status asc")
+	public List<Invest> findByUserAndLoanKind(String loanKind, User user);
 
 }

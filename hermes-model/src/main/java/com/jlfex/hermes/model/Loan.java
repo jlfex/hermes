@@ -100,11 +100,11 @@ public class Loan extends Model {
 	private String status;
 	
 	/** 标 类型 :*/
-	@Column(name = "loan_kind")
+	@Column(name = "loan_kind",length=2)
 	private String loanKind;
 	
 	/** 标 对应的债权id: 普通标：该字段可为空 */
-	@Column(name = "creditor_id")
+	@Column(name = "creditor_id", length=50)
 	private String creditorId;
 	
 	

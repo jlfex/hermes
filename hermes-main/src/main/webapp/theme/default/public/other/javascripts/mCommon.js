@@ -23,51 +23,44 @@ $(function(){
     // allcategory
     $('.allcategory .select_list').find('a').click(function(){
         var that = $(this)
-          , selectResult = that.closest('.allcategory').children('.select_result').find('ul')
-          , selectIndex = that.closest('ul').index()
-          , content = '<li class="' + selectIndex + '"><span>' + that.html() + '</span><a href="#"><img src="images/icon2/closeicon.jpg"/></a></li>';
-
-        that.addClass('active').parent().siblings().find('a').removeClass('active');
-
-        selectResult.find('li').each(function(){
-            $(this).attr('class') == selectIndex && $(this).remove()
-        })
-
-        selectResult.append(content);
+          , result = that.closest('.allcategory').children('.select_result').find('ul').find('li:eq('+that.closest('ul').index()+')');
+        that.addClass('a_lk_after').parent().siblings().find('a').removeClass('a_lk_after');
+        result.show()
+        if(that.parent('li').index() !== 1) {
+            result.show().find('span').html(that.html());
+        }else {
+            result.hide().find('span').html('');
+        }
     })
-    $('.allcategory .select_result').on('click', "li", function(){
-        $(this).closest('li').remove();
+    $('.allcategory .select_result li').click(function(){
+        var that = $(this);
+        that.hide().find('span').html('');
+        that.closest('.allcategory').children('.select_list').find('ul:eq('+that.index()+')').find('a').removeClass('a_lk_after').end().find('li:eq(1)').find('a').addClass('a_lk_after')
     })
 
     // 注册
     $('#register').mValidator({
         isInitText: true,  // 输入框初始化内容
         isInitMsg: true,  // 获取焦点时提示信息
-        pwdInitText: '',
-        confPwdInitText:'',
         emailUniqueAjax: {
-            url: "isExistentEmail",  // 测试邮箱 mo@mo.com
-            cache:false,
+            url: "/demo/test?id=1234",  // 测试邮箱 mo@mo.com
             dataType: 'json',
-            key: 'email'
+            key: 'emailUnique'
         },
         captchaAjax: {
-            url: "checkVerifiedCode",  
-            cache:false,
-            dataType: 'json',
+            url: "http://192.16.6.89:18080/demo/test",  // 测试验证码 1234
+            dataType: 'jsonp',
             key: 'captcha'
         },
         mobileUniqueAjax: {
-            url: "checkCellphone",  // 测试手机唯一性 13659297636
-            cache:false,
-            dataType: 'json',
-            key: 'cellphone'
+            url: "http://192.16.6.89:18080/demo/test",  // 测试手机唯一性 13659297636
+            dataType: 'jsonp',
+            key: 'mobileUnique'
         },
         nameUniqueAjax: {
-            url: "checkAccount",  // 测试用户名 momo
-            cache:false,
-            dataType: 'json',
-            key: 'account'
+            url: "http://192.16.6.89:18080/demo/test",  // 测试用户名 momo
+            dataType: 'jsonp',
+            key: 'nameUnique'
         }
     });    
 
@@ -75,7 +68,7 @@ $(function(){
     $('#login').mValidator({
         isInitText: true,
         emailInitText: '账户名',
-        pwdInitText: ''
+        pwdInitText: '登录密码'
     });
 
     // 投标金额验证
@@ -94,25 +87,11 @@ $(function(){
     });
 
     // 邮箱找回密码
-    $('#retrieve').mValidator({
-         emailExistAjax: {
-            url: "isActiveEmail",  // 测试邮箱 mo@mo.com
-            cache:false,
-            dataType: 'json',
-            key: 'email'
-        }
-    });
-     $('#sendEmail').mValidator({
+    $('#sendEmail').mValidator({
         emailExistAjax: {
-            url: "isActiveEmail",  // 测试邮箱 mo@mo.com
-            cache:false,
-            dataType: 'json',
-            key: 'email'
-        },emailUniqueAjax: {
-            url: "isExistentEmail",  // 测试邮箱 mo@mo.com
-            cache:false,
-            dataType: 'json',
-            key: 'email'
+            url: "http://192.16.6.89:18080/demo/test",  // 测试邮箱 mo@mo.com
+            dataType: 'jsonp',
+            key: 'emailExist'
         }
     });
 

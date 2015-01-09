@@ -149,6 +149,7 @@ public class InvestController {
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);
+		
 		return "invest/index";
 	}
 
@@ -272,11 +273,10 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/indexsearch")
-	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection, Model model) {
-		Logger.info("indexsearch purpose" + getUTFFormat(purpose) + "raterange" + getUTFFormat(raterange) + "periodrange" + getUTFFormat(periodrange) + "repayname" + getUTFFormat(repayname));
+	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection,String loanKind, Model model) {
+		Logger.info("理财列表查询参数: purpose=" + getUTFFormat(purpose) + ",raterange=" + getUTFFormat(raterange) + ",periodrange=" + getUTFFormat(periodrange) + ",repayname=" + getUTFFormat(repayname)+",loanKind="+getUTFFormat(loanKind));
 		model.addAttribute("loans",
-				investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection));
-		Logger.info("indexsearch end");
+				investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection,loanKind));
 		return "invest/loandata";
 	}
 
@@ -313,7 +313,11 @@ public class InvestController {
 	 */
 	@RequestMapping("/info")
 	public String info(Model model, String loanid) {
-		App.checkUser();
+		try {
+			App.checkUser();
+		} catch (Exception e) {
+			return "redirect:/userIndex/skipSignIn";
+		}
 		Logger.info("loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
 		model.addAttribute("loan", loan);
@@ -322,6 +326,9 @@ public class InvestController {
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
+		if(!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
+			 loan.getCreditorId();
+		}
 		// 从借款日志表里取开始投标的起始时间
 
 		if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loanid) == null) {
@@ -386,7 +393,7 @@ public class InvestController {
 		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE,
 				InvestProfit.Status.ADVANCE });
 
-		List<InvestInfo> investInfoList = investService.findByUser(user);
+		List<InvestInfo> investInfoList = investService.findByUser(user,Loan.LoanKinds.NORML_LOAN);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -410,6 +417,8 @@ public class InvestController {
 		// 返回视图
 		return "invest/myinvest";
 	}
+	
+	
 
 	/**
 	 * 我的理财的明细
@@ -435,5 +444,55 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		// 返回视图
 		return "invest/myinvestinfo";
+	}
+	
+	/**
+	 * 我的债权
+	 * @param userid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/myCredit")
+	public String myCredit(Model model) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		// 已获收益
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.NORML_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		BigDecimal allProfitSum = BigDecimal.ZERO;//总收益
+		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
+		BigDecimal overdueInterestSum =BigDecimal.ZERO; //罚息收益总数
+		if(investProfit !=null){
+			if(investProfit.getInterestAmount()!=null){
+				interestSum = investProfit.getInterestAmount();
+			}
+			if(investProfit.getOverdueAmount()!=null){
+				overdueInterestSum = investProfit.getOverdueAmount();
+			}
+			allProfitSum = allProfitSum.add(interestSum).add(overdueInterestSum);
+		}
+		List<InvestInfo> investInfoList = investService.findByUser(user,Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		int investSuccessCount = 0;
+		for (InvestInfo investInfo : investInfoList) {
+			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
+				investSuccessCount = investSuccessCount + 1;
+			}
+
+		}
+		if (allProfitSum == null)
+			allProfitSum = BigDecimal.ZERO;
+		if (interestSum == null)
+			interestSum = BigDecimal.ZERO;
+		if (overdueInterestSum == null)
+			overdueInterestSum = BigDecimal.ZERO;
+		model.addAttribute("allProfitSum", allProfitSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("successCount", investSuccessCount);
+
+		model.addAttribute("invests", investInfoList);
+		model.addAttribute("nav", "invest");
+		// 返回视图
+		return "invest/mycredit";
 	}
 }

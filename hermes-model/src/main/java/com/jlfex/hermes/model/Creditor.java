@@ -2,6 +2,9 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -52,8 +55,16 @@ public class Creditor  extends Model {
 	//冻结账户
 	@Column(name = "freeze_account_id")
 	private String freezeAccountId ;	
+
+	//现金账户
+	@OneToOne
+	@JoinColumn(name = "cash_account")
+	private UserAccount cashAccount;
 	
-	
+	//冻结账户
+	@OneToOne
+	@JoinColumn(name = "freeze_account")
+	private UserAccount freezeAccount;
 	
 	
 	public String getCreditorName() {
@@ -127,6 +138,18 @@ public class Creditor  extends Model {
 	}
 	public void setFreezeAccountId(String freezeAccountId) {
 		this.freezeAccountId = freezeAccountId;
+	}
+	public UserAccount getCashAccount() {
+		return cashAccount;
+	}
+	public void setCashAccount(UserAccount cashAccount) {
+		this.cashAccount = cashAccount;
+	}
+	public UserAccount getFreezeAccount() {
+		return freezeAccount;
+	}
+	public void setFreezeAccount(UserAccount freezeAccount) {
+		this.freezeAccount = freezeAccount;
 	}
 	
 	

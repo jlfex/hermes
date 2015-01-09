@@ -7,7 +7,6 @@
 	  	var progress = $(this); // 进度条
 	  	var startNum = parseFloat(progress.find('.m_progress_start').children('span').html()); // 起始值
 	  	var endNum = parseFloat(progress.find('.m_progress_end').children('span').html()); // 结束值
-			var cursor = progress.find('.m_progress_end'); // 游标
 			var range = progress.find('.m_progress_range'); // 进度条范围
 			var cursor = progress.find('.m_progress_cursor'); // 游标
 			var percent = progress.find('.m_progress_percent'); // 百分比
@@ -15,8 +14,8 @@
 			var titleCon = title.find('span'); // 游标标题内容
 			var accuracy = progress.data('accuracy') || 1; // 精确度
 			var isClick = false; // 记录鼠标是否按下
-			var defaultX = cursor.offset().left; // 按下鼠标时候的X坐标
-			var imgLeft = parseFloat(cursor.css("left")); // 游标离起始点的距离
+			var defaultX; // 按下鼠标时候的X坐标
+			var imgLeft; // 游标离起始点的距离
 			var cssPosition = function(value, num) {
 				cursor.css({"left": value});
 				percent.css({"width": value});
@@ -34,9 +33,6 @@
 					cssPosition(500, endNum);
 				}
 			};
-			 
-			// 初始化游标位置
-			cssPosition(500 * (titleCon.html() -startNum) / (endNum - startNum));
 			
 			// 作用于进度条
 			range.mousemove(function(e) { // 鼠标移动
@@ -47,6 +43,8 @@
 			}).mouseleave(function(){ // 鼠标离开
 				isClick = false; 
 			}).click(function(e) { // 鼠标点击
+				!defaultX && (defaultX = cursor.css("left", 0).offset().left + 10);
+				!imgLeft && (imgLeft = 0);
 				move(e.pageX)
 				return false;
 			});
@@ -60,6 +58,10 @@
 			}).mouseup(function(){ // 鼠标松开
 				isClick = false; 
 			})
+
+			// 初始化游标位置
+			cssPosition(500 * (titleCon.html() -startNum) / (endNum - startNum));
+
     });    
   };       
   $.fn.mProgress.defaults = {
@@ -119,11 +121,11 @@
 			    		}]
 			  		},
 			  		mv_pwdagain: {
-			  			initText: opts.confPwdInitText,
+			  			initText: '确认密码',
 			  			initMsg: '',
 			  			methods: [{
 			  				errorMsg: '密码不一致！',
-			  				rule:  function(val, valPwd) { return (val === valPwd)&&(/^[A-Za-z0-9_!@#$%^&*()]{6,16}$/.test(val))}
+			  				rule:  function(val, valPwd) { return val === valPwd}
 			    		}]
 			  		},
 			  		mv_captcha: {
@@ -149,12 +151,9 @@
 			  			initText: '姓名',
 			  			initMsg: '',
 			  			methods: [{
-			  				errorMsg: '请输入正确姓名',
-			  				rule: function(val) {
-			  					var len =  val.replace(/[\u4e00-\u9fa5]/g,"**").length;
-			  					return /^[a-zA-Z0-9\u4e00-\u9fa5 •·]+$/.test(val) && len >= 4 && len <= 20 
-			  				}
-			  			}]
+			  				errorMsg: '请输入正确的姓名',
+			  				rule: function(val) { return /^[a-zA-Z0-9\u4e00-\u9fa5 •·]+$/.test(val)}
+			    		}]
 			  		},
 			  		mv_name: {
 			  			initText: '昵称',
@@ -163,7 +162,7 @@
 			  				errorMsg: '请输入4-20个字符，支持中文,英文,数字, “_”,“-”( 最少2个汉字或4个字符/数字）',
 			  				rule: function(val) {
 			  					var len =  val.replace(/[\u4e00-\u9fa5]/g,"**").length;
-			  					return /^[a-zA-Z0-9\u4e00-\u9fa5_-]+$/.test(val) && len >= 4 && len <= 20 
+			  					return /^[a-zA-Z0-9\u4e00-\u9fa5_-]+$/.test(val) && len >= 4
 			  				}
 			  			},{
 			  				errorMsg: '该昵称已被使用，请重新输入',
@@ -281,17 +280,16 @@
     });    
   };       
   $.fn.mValidator.defaults = {
-	  	isInitText: false,
-	  	isInitMsg: false,
+  	isInitText: false,
+  	isInitMsg: false,
 		emailUniqueAjax: {},
 		emailExistAjax: {},
-  		captchaAjax: {},
-	    mobileUniqueAjax: {},
-	    nameUniqueAjax: {},
-	    moneyMoreAjax: {},
-	    moneyLessAjax: {},
+    captchaAjax: {},
+    mobileUniqueAjax: {},
+    nameUniqueAjax: {},
+    moneyMoreAjax: {},
+    moneyLessAjax: {},
 		emailInitText: '常用电子邮箱',
-	    pwdInitText: '密码',
-	    confPwdInitText:'确认密码'
+    pwdInitText: '密码'
   };      
 })(jQuery);

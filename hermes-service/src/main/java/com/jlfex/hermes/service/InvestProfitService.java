@@ -71,5 +71,15 @@ public interface InvestProfitService {
 	 * @return
 	 */
 	public List<InvestProfitInfo> getInvestProfitRecords(Invest invest);
+	/**
+	 * 债权标    统计所有收益和
+	 * @param user
+	 * @param loanKind
+	 * @param profitState
+	 * @return
+	 */
+	public InvestProfit sumAllProfitByAssignLoan(User user, String loanKind ,String... profitState);
+
+	
 
 }

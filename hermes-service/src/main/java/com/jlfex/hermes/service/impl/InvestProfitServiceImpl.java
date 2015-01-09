@@ -229,4 +229,10 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 		}
 		return investProfitInfoRecords;
 	}
+	
+	@Override
+	public InvestProfit sumAllProfitByAssignLoan(User user, String loanKind ,String... profitState) {
+		return investProfitRepository.sumAllProfitByAssignLoan( Arrays.asList(profitState),loanKind, user);
+	}
+
 }
