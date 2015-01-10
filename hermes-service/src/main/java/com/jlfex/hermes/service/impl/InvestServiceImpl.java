@@ -506,5 +506,48 @@ public class InvestServiceImpl implements InvestService {
 		}
 
 	}
+    /**
+     * 我的理财： 标列表
+     * 综合查询
+     */
+	@Override
+	public Page<LoanInfo> investIndexLoanList(String page, String size,String loanKind) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		String purpose="", raterange="", periodrange="", repay="", orderByField="", orderByDirection="" ; //页面调整中，过滤条件 后续调整
+		String sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
+		String sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
+		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection,loanKind, params);
+		sqlSearchByLoan = String.format(sqlSearchByLoan, condition);
+		sqlCountSearchByLoan = String.format(sqlCountSearchByLoan, condition);
+		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
+		List<?> listCount = commonRepository.findByNativeSql(sqlCountSearchByLoan, params);
+		Long total = Long.parseLong(String.valueOf(listCount.get(0)));
+		List<?> list = commonRepository.findByNativeSql(sqlSearchByLoan, params, pageable.getOffset(), pageable.getPageSize());
+		List<LoanInfo> loans = new ArrayList<LoanInfo>();
+		for (int i = 0; i < list.size(); i++) {
+			LoanInfo loanInfo = new LoanInfo();
+			Object[] object = (Object[]) list.get(i);
+			User loanUser = userRepository.findOne(String.valueOf(object[0]));
+			UserImage userImage = userImageRepository.findByUserAndType(loanUser, UserImage.Type.AVATAR);
+			if (userImage != null) {
+				loanInfo.setAvatar(userImage.getImage());
+			}
+			loanInfo.setPurpose(String.valueOf(object[1]));
+			loanInfo.setAmount(Numbers.toCurrency(new Double(String.valueOf(object[2]))));
+			loanInfo.setRate(Numbers.toPercent(new Double(String.valueOf(object[3]))));
+			loanInfo.setPeriod(String.valueOf(object[4]));
+			loanInfo.setRemain(Numbers.toCurrency(new Double(String.valueOf(object[6]))));
+			loanInfo.setProgress(String.valueOf(object[7]));
+			loanInfo.setRepayName(String.valueOf(object[8]));
+			loanInfo.setStatus(String.valueOf(object[9]));
+			loanInfo.setId(String.valueOf(object[10]));
+			loans.add(loanInfo);
+		}
+		// 返回结果
+		Page<LoanInfo> pageLoanInfo = new PageImpl<LoanInfo>(loans, pageable, total);
+		return pageLoanInfo;
+	}
+	
+	
 
 }

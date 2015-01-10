@@ -146,10 +146,12 @@ public class InvestController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
+		String page = "0",size = "10";
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);
-		
+		model.addAttribute("loans",investService.investIndexLoanList(page, size, Loan.LoanKinds.NORML_LOAN));
+		model.addAttribute("assignLoans",investService.investIndexLoanList(page, size, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
 		return "invest/index";
 	}
 
@@ -458,7 +460,7 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		// 已获收益
-		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.NORML_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		BigDecimal allProfitSum = BigDecimal.ZERO;//总收益
 		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
 		BigDecimal overdueInterestSum =BigDecimal.ZERO; //罚息收益总数
