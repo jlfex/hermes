@@ -40,13 +40,10 @@ public class IndexController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
-		// 设置数据
 		model.addAttribute("nav", HomeNav.HOME);
 		model.addAttribute("notices", articleService.findHomeNotices());
 		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
 		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
-		
-		// 渲染视图
 		return "index";
 	}
 	

@@ -114,5 +114,15 @@ public interface InvestService {
 	 * @return
 	 */
 	public boolean processAutoBidFailure(Loan loan);
+	
+	/**
+	 * 我要理财 首页列表展示
+	 * @param page
+	 * @param size
+	 * @param loanKind
+	 * @return
+	 */
+	public Page<LoanInfo> investIndexLoanList(String page, String size,  String loanKind);
+
 
 }

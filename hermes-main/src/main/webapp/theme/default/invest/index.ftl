@@ -7,16 +7,22 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-
+<script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
+<script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
+<script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
+<style type="text/css">
+  table th{text-align:center;}
+</style>
 </head>
 <body>
 
 <#include "../header.ftl" />
 
-<div id="content" class="content">
+<div id="content" class="content" style="margin-top:133px;">
 	<div class="u-container">
 		<div class="flow">
 			<h3>流程简图</h3>
@@ -28,77 +34,108 @@
 				<img alt="收款" src="${app.theme}/public/other/images/icon1/invest_money.jpg">
 			</div>
 		</div>
+		<div class="loan_list">
+			<div class="loan_detail">
+				<div id="tab3" class="speciallist">
+					<ul class="all_information m_tab_t">
+						<li class="active">债权信息 <span></span></li>
+						<li class="lastnone">回款记录 <span></span></li>
+					</ul>
+					<div class="m_tab_c ad_border" style="width:100%;margin-top:15px;">
+						<div style="display: block;">
+							<div class="data">
+								<table cellpadding="0" cellspacing="0" border="0" style="border-left:1px solid #e2e2e2;border-right:1px solid #e2e2e2;">
+									<thead>
+										<tr style="background:#e5f9ff;">
+											<th class="th_01">借贷用途</th>
+											<th class="th_02">金额（元）</th>
+											<th class="th_03">年利率</th>
+											<th class="th_04">期限</th>
+											<th class="th_05">进度</th>
+											<th class="th_06">剩余金额（元）</th>
+											<th class="th_07">操作</th>
+										</tr>
+									</thead>
+									<#list loans.content as l>  
+									<tr>
+										<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+										<td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
+										<td class="td_03">${l.rate}</td>
+										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
+										<td class="td_05">
+											 <div class="layer_box">
+				                                <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
+				                                <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
+				                            </div>
+										</td>
+										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
+										<td class="td_07">
+												<#if l.status=='10'>
+												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.bid" /></a> 
+												<#elseif l.status=='11'>
+												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.scale" /></a> 
+												<#elseif l.status=='12'>
+												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.repayment" /></a> 
+												<#elseif l.status=='99'>
+												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">完成</a> 
+												<#else>
+												</#if>
+										</td>
+									</tr>
+									</#list>
+									
+								</table>
+							</div>
+						</div>
+						<div style="display: none;">
+							<div class="data">
+								 <table cellpadding="0" cellspacing="0" border="0" style="border-left:1px solid #e2e2e2;border-right:1px solid #e2e2e2;">
+									<thead>
+										<tr style="background:#fff9f9;">
+											<th class="th_01">债权名称</th>
+											<th class="th_02">剩余本金（元）</th>
+											<th class="th_03">年利率</th>
+											<th class="th_04">期限</th>
+											<th class="th_05">进度</th>
+											<th class="th_06">转让价格（元）</th>
+											<th class="th_07">操作</th>
+										</tr>
+									</thead>
+									<#list assignLoans.content as l>  
+									<tr>
+										<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+										<td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
+										<td class="td_03">${l.rate}</td>
+										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
+										<td class="td_05">
+											 <div class="layer_box">
+				                                <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
+				                                <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
+				                            </div>
+										</td>
+										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
+										<td class="td_07">
+												<#if l.status=='10'>
+												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.bid" /></a> 
+												<#elseif l.status=='11'>
+												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.scale" /></a> 
+												<#elseif l.status=='12'>
+												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.repayment" /></a> 
+												<#elseif l.status=='99'>
+												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">完成</a> 
+												<#else>
+												</#if>
+										</td>
+									</tr>
+									</#list>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>	
 		
-		<div class="rich-form">
-			<h3>所有分类</h3>
-			<form id="searchForm" method="post" action="#" class="form-horizontal">
-				<div class="form-group">
-					<label class="col-xs-1 u-col control-label"><@messages key="model.loan.purpose" /></label>
-					<div class="col-xs-11 u-col">
-						<p class="form-control-static">
-							<a href="#" class="label label-primary" data-id="purpose-不限">不限</a>
-							<#list purposes as p>
-							<a href="#" class="label label-default" data-id="purpose-${p.id}">${p.name}</a>
-							</#list>
-						</p>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-xs-1 u-col control-label"><@messages key="model.loan.rate" /></label>
-					<div class="col-xs-11 u-col">
-						<p class="form-control-static">
-							<a href="#" class="label label-primary" data-id="rate-不限">不限</a>
-							<a href="#" class="label label-default" data-id="rate-10%<@messages key="invest.loan.rate.under" />">10%以下</a>
-							<a href="#" class="label label-default" data-id="rate-10%-12%">10%-12%</a>
-							<a href="#" class="label label-default" data-id="rate-12%-15%">12%-15%</a>
-							<a href="#" class="label label-default" data-id="rate-15%<@messages key="invest.loan.rate.above" />">15%以上</a>
-						</p>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-xs-1 u-col control-label"><@messages key="model.loan.period" /></label>
-					<div class="col-xs-11 u-col">
-						<p class="form-control-static">
-							<a href="#" class="label label-primary" data-id="period-不限">不限</a>
-							<a href="#" class="label label-default" data-id="period-3<@messages key="common.unit.month" /><@messages key="invest.loan.period.within" />">3<@messages key="common.unit.month" /><@messages key="invest.loan.period.within" /></a>
-							<a href="#" class="label label-default" data-id="period-3-6<@messages key="common.unit.month" />">3-6<@messages key="common.unit.month" /></a>
-							<a href="#" class="label label-default" data-id="period-6-12<@messages key="common.unit.month" />">6-12<@messages key="common.unit.month" /></a>
-							<a href="#" class="label label-default" data-id="period-12<@messages key="common.unit.month" /><@messages key="invest.loan.rate.above" />">12<@messages key="common.unit.month" /><@messages key="invest.loan.rate.above" /></a>
-						</p>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-xs-1 u-col control-label"><@messages key="model.repay.name"  /></label>
-					<div class="col-xs-11 u-col">
-						<p class="form-control-static">
-							<a href="#" class="label label-primary" data-id="repay-不限">不限</a>
-							<#list repays as r>
-							<a href="#" class="label label-default" data-id="repay-${r.id}">${r.name}</a>
-							</#list>
-						</p>
-					</div>
-				</div>
-				<input id="page" name="page" type="hidden">
-				<input id="purpose" name="purpose" type="hidden">
-				<input id="raterange" name="raterange" type="hidden">
-				<input id="periodrange"  name="periodrange" type="hidden">
-				<input id="repay" name="repay" type="hidden">
-				<input id="orderByField" name="orderByField" type="hidden">
-				<input id="orderByDirection" name="orderByDirection" type="hidden">
-				<input id="loanKind" name="loanKind" type="hidden">
-			</form>
-		</div>
-		
-		<div> 
-		    <li>
-		       <h3>债权标</h3>
-		       <div id="creditData"></div>
-		    </li>
-			<li>
-			 <h3>普通标</h3>
-			 <div id="data"></div>
-			</li>
-		</div>
 	</div>
 </div>
 
@@ -106,6 +143,9 @@
 
 <script type="text/javascript" charset="utf-8">
 <!--
+
+$('.loan_detail .i_btn1.i_bg1').click(function() { window.location.href = '${app}/invest/info?loanid=' + $(this).data().id; });
+
 // 绑定查询事件
 $('#searchForm .form-control-static .label').on('click', function() {
 	// 初始化
@@ -137,23 +177,8 @@ $('#searchForm .form-control-static .label').on('click', function() {
 		}
 	}
 	
-	// 查询数据
-	$('#page').val(0);
-	$('#searchForm').trigger('submit');
 });
 
-// 绑定表单提交事件
-$('#searchForm').on('submit', function() {
-    $("#loanKind").val("00"); 
-	$('#data').fadeOut('fast').load('${app}/invest/indexsearch', $('#searchForm').serialize(), function(html) {
-		$(this).fadeIn('fast');
-	});
-    $("#loanKind").val("01");
-	$('#creditData').fadeOut('fast').load('${app}/invest/indexsearch', $('#searchForm').serialize(), function(html) {
-		$(this).fadeIn('fast');
-	});
-	return false;
-}).trigger('submit');
 //-->
 </script>
 

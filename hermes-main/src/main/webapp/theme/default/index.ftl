@@ -11,6 +11,9 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<style type="text/css">
+  table th{text-align:center;}
+</style>
 </head>
 <body class="index">
 
@@ -66,7 +69,7 @@
 		<div class="slide">
             <h2 class="tabtitle">普通标</h2>
 			<div class="click_more">
-                <a href="myInvest.html" target="_blank" class="colorblue">查看更多 &gt;&gt;<a>
+               <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;<a>
             </div>
             <div class="data">
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -83,19 +86,18 @@
 					</thead>
 					<#list loans as l>
 					<tr data-progress="${l.progress}">
-						<td><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-                        <td class="right">${l.amount} <@messages key="common.unit.cny" /></td>
-                       <td class="right">${l.rate}</td>
-                        <td class="right">${l.period} <@messages key="common.unit.month" /></td>
-                        
+						<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+                        <td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
+                        <td class="td_03">${l.rate}</td>
+                        <td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
                         <td class="td_05">
                             <div class="layer_box">
                                 <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
                                 <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
                             </div>
                         </td>
-                       <td class="right">${l.remain} <@messages key="common.unit.cny" /></td>
-                      <td class="right"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                        <td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
+                        <td class="td_07"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
 					</tr>
 					</#list>
                 </table>
@@ -104,7 +106,7 @@
 		<div class="slide">
             <h2 class="tabtitle">债权转让区</h2>
 			<div class="click_more">
-                <a href="myInvest.html" target="_blank" class="colorblue">查看更多 &gt;&gt;<a>
+                <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;<a>
             </div>
             <div class="data">
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -121,10 +123,10 @@
 					</thead>
                     <#list assignLoans as l>
 					<tr data-progress="${l.progress}">
-						<td><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-                        <td class="right">${l.amount} <@messages key="common.unit.cny" /></td>
-                       <td class="right">${l.rate}</td>
-                        <td class="right">${l.period} <@messages key="common.unit.month" /></td>
+						<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+                        <td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
+                       <td class="td_03">${l.rate}</td>
+                        <td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
                         
                         <td class="td_05">
                             <div class="layer_box">
@@ -132,8 +134,8 @@
                                 <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
                             </div>
                         </td>
-                       <td class="right">${l.remain} <@messages key="common.unit.cny" /></td>
-                      <td class="right"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                       <td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
+                      <td class="td_07"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
 					</tr>
 					</#list>
                 </table>
