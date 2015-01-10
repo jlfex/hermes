@@ -169,25 +169,28 @@ jQuery(function($) {
 		<div class="account_content_right">
 			<div class="account_right">
 				<div class="my_loan_sub bgnone">
-                    <div class="use_type">
-                        <div class="use_type_name">
+                    <div class="use_type clearfix">
+                        <div class="use_type_name fl">
                            <#if loan.loanKind=='00'>
                               <span class="title">${purpose}</span>&nbsp;<a href="#" class="bg">${product.name}</a>
                            <#else>
                               <span class="title">${purpose}</span>&nbsp;<a href="#" class="bg">${product.name}</a>
                            </#if>
                          </div>
-                        <div class="dash_line"></div>
-                        <div class="use_type_code lightgray">
+                        <div class="use_type_code fr">
                             <#if loan.loanKind=='00'> 协议编号<#else>债权转让编号 </#if>
                            <span class="deal">	<a href="#" class="m_a1">：${loan.loanNo}</a></span></div>
                         <div class="clearfix"></div>   
                     </div>
                     <table class="tab_invest_gap" cellpadding="0" cellspacing="0" border="0">
                         <tr>
-                            <td class="td_height th_06"><@messages key="model.loan.amount" />：<span>${loan.amount}元</span></td>
+                            <td class="td_height th_06">
+                             <#if loan.loanKind=='00'><@messages key="model.loan.amount" /> <#else> 剩余金额 </#if>：
+                            <span>${loan.amount}元</span></td>
                             <td class="th_06"><@messages key="model.loan.rate" />：<span>${loan.rate *100}%</span></td>
-                            <td class="th_06"><@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span></td>
+                            <td class="th_06">
+                             <#if loan.loanKind=='00'><@messages key="model.loan.period" /><#else>剩余期限</#if>
+                                                   ：<span>${loan.period}<@messages key="common.unit.month" /></span></td>
                         </tr>
                         <tr>
                             <td class="td_height th_06"><@messages key="model.repay.name" />：<span>${repay.name}</span></td>
@@ -275,9 +278,9 @@ jQuery(function($) {
                 
 				<div id="tab3" class="account_right_part02 loan_myloan_sub">
 					<ul class="all_information m_tab_t">
-						<li class="active"><@messages key="invest.loanuser.detail" /></li>
-						<li><@messages key="invest.record" /></li>
-						<li class="lastnone" ><@messages key="model.loan.description" /></li>
+						<li class="active"> <#if loan.loanKind=='00'>借款人详情 <#else>债权信息 </#if></li>
+						<li>回款记录</li>
+						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>投标记录 </#if></li>  
 					</ul>
 					<div class="m_tab_c ad_border">
 						<div style="display: block;">
