@@ -14,6 +14,9 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
+<style type="text/css">
+  table th{text-align:center;}
+</style>
 </head>
 <body>
 
