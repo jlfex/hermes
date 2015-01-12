@@ -1,15 +1,15 @@
 package com.jlfex.hermes.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
-import com.jlfex.hermes.model.User.Status;
 
 /**
  * 外部：债权信息 模型 
@@ -36,10 +36,10 @@ public class CrediteInfo  extends Model {
 	//借款人(债权的原始借款人)
 	@Column(name = "borrower")
 	private String borrower;
-	//债权人证件类型
-	@Column(name = "type")
-	private String type;
-	//债权人证件号码
+	//借款人证件类型
+	@Column(name = "cert_type")
+	private String certType;
+	//借款人证件号码
 	@Column(name = "certificate_no")
 	private String certificateNo;
 	//行业
@@ -53,13 +53,13 @@ public class CrediteInfo  extends Model {
 	private String city ;
 	//借款金额 
 	@Column(name = "amount")
-	private String amount ;
+	private BigDecimal amount ;
 	//年利率
 	@Column(name = "rate")
 	private String rate ;
 	//借款期限
-	@Column(name = "deadline")
-	private String deadline ;
+	@Column(name = "period")
+	private String  period ;
 	//资金用途
 	@Column(name = "purpose")
 	private String purpose ;
@@ -70,8 +70,8 @@ public class CrediteInfo  extends Model {
 	@Column(name = "dead_time")
 	private String dead_time ;
 	//放款日 (债权对应的原始借款人还款)
-	@Column(name = "loan_begin_time")
-	private String loan_begin_time ;
+	@Column(name = "business_time")
+	private String businessTime ;
 	@Column(name = "status")
 	private String status ;
 	//导入结果
@@ -100,11 +100,12 @@ public class CrediteInfo  extends Model {
 	public void setBorrower(String borrower) {
 		this.borrower = borrower;
 	}
-	public String getType() {
-		return type;
+	
+	public String getCertType() {
+		return certType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setCertType(String certType) {
+		this.certType = certType;
 	}
 	public String getCertificateNo() {
 		return certificateNo;
@@ -130,10 +131,11 @@ public class CrediteInfo  extends Model {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getAmount() {
+	
+	public BigDecimal getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 	public String getRate() {
@@ -142,11 +144,12 @@ public class CrediteInfo  extends Model {
 	public void setRate(String rate) {
 		this.rate = rate;
 	}
-	public String getDeadline() {
-		return deadline;
+	
+	public String getBusinessTime() {
+		return businessTime;
 	}
-	public void setDeadline(String deadline) {
-		this.deadline = deadline;
+	public void setBusinessTime(String businessTime) {
+		this.businessTime = businessTime;
 	}
 	public String getPurpose() {
 		return purpose;
@@ -166,11 +169,12 @@ public class CrediteInfo  extends Model {
 	public void setDead_time(String dead_time) {
 		this.dead_time = dead_time;
 	}
-	public String getLoan_begin_time() {
-		return loan_begin_time;
+	
+	public String getPeriod() {
+		return period;
 	}
-	public void setLoan_begin_time(String loan_begin_time) {
-		this.loan_begin_time = loan_begin_time;
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 	public String getDealResult() {
 		return dealResult;

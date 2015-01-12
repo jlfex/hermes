@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.exception.ServiceException;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Navigation;
 import com.jlfex.hermes.repository.DictionaryRepository;
@@ -47,7 +49,9 @@ public class NavigationServiceImpl implements NavigationService {
 	 */
 	@Override
 	public List<Navigation> findRootByTypeCode(String typeCode) {
-		Assert.notEmpty(typeCode, "type code is empty.");
+		if(Strings.empty(typeCode)){
+			throw new ServiceException("导航类型码：typeCode为空");
+		}
 		Dictionary type = dictionaryRepository.findByTypeCodeAndCode(CODE_DICTIONARY_NAVIGATION, typeCode);
 		List<Navigation> navigations = navigationRepository.findByRootAndType(type);
 		return navigations;
@@ -58,7 +62,9 @@ public class NavigationServiceImpl implements NavigationService {
 	 */
 	@Override
 	public List<Navigation> findByParent(Navigation parent) {
-		Assert.notNull(parent, "parent is null.");
+		if(parent == null){
+			throw new ServiceException("导航：parent为空");
+		}
 		List<Navigation> navigations = navigationRepository.findByParent(parent);
 		return navigations;
 	}
@@ -68,7 +74,9 @@ public class NavigationServiceImpl implements NavigationService {
 	 */
 	@Override
 	public List<Navigation> findByParentId(String parentId) {
-		Assert.notEmpty(parentId, "parent id is empty.");
+		if(Strings.empty(parentId)){
+			throw new ServiceException("导航：parentId为空");
+		}
 		Navigation parent = navigationRepository.findOne(parentId);
 		return findByParent(parent);
 	}

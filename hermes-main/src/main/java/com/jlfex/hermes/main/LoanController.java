@@ -323,6 +323,7 @@ public class LoanController {
 			loan.setProduct(productInfo);
 			loan.setPurpose(purposeId);
 			loan.setDescription(remark);
+			loan.setLoanKind(Loan.LoanKinds.NORML_LOAN);
 			AppUser curUser = App.current().getUser();
 			User user = userInfoService.findByUserId(curUser.getId());
 			loan.setUser(user);

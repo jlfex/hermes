@@ -1038,16 +1038,12 @@ public class LoanServiceImpl implements LoanService {
 	public Page<LoanAuditInfo> findByLoanNoAndCellphone(String loanNo, String cellphone, String page, String size) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sqlSearchByLoanAudit = commonRepository.readScriptFile(Script.searchByLoanAudit);
-
 		String sqlCountSearchByLoanAudit = commonRepository.readScriptFile(Script.countSearchByLoanAudit);
 		String condition = getCondition(loanNo, cellphone, params);
-
 		sqlSearchByLoanAudit = String.format(sqlSearchByLoanAudit, condition);
 		sqlCountSearchByLoanAudit = String.format(sqlCountSearchByLoanAudit, condition);
-
 		// 初始化
 		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "5")));
-
 		List<?> listCount = commonRepository.findByNativeSql(sqlCountSearchByLoanAudit, params);
 		Long total = Long.parseLong(String.valueOf(listCount.get(0)));
 		List<?> list = commonRepository.findByNativeSql(sqlSearchByLoanAudit, params, pageable.getOffset(), pageable.getPageSize());
