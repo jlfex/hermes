@@ -15,6 +15,10 @@
 				<div class="col-xs-2 hm-col form-group">
 					<label for="name">总支出：<span>${riskOut} 元</span></label>
 				</div>
+				<div class="col-xs-1 hm-col form-group">
+					<label>&nbsp;</label>
+					<input id="page" name="page" type="hidden" value="0">
+				</div>
 			</div>
 		</form>
 	</div>
@@ -22,6 +26,11 @@
 <div id="data"></div>
 
 <script type="text/javascript">
+jQuery(function($) {
+	$.page.withdraw({
+		search: '${app}/withdraw/riskAccountData',
+	});
+});
 jQuery(function($) {
  	init("${app}/withdraw/riskAccountData","data");
 });

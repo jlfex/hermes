@@ -35,17 +35,17 @@ public class WithdrawController {
 	/** 提现业务接口 */
 	@Autowired
 	private WithdrawService withdrawService;
-	
+
 	/** 用户个人信息接口 */
 	@Autowired
 	private UserInfoService userInfoService;
 	/** 交易流水信息接口 */
 	@Autowired
 	private TransactionService transactionServiceImpl;
-	/** 账户管理接口*/
+	/** 账户管理接口 */
 	@Autowired
 	private UserManageService userManageServiceImpl;
-	
+
 	/**
 	 * 索引
 	 * 
@@ -58,7 +58,7 @@ public class WithdrawController {
 		model.addAttribute("today", Calendars.date());
 		return "withdraw/index";
 	}
-	
+
 	/**
 	 * 数据表格
 	 * 
@@ -76,27 +76,27 @@ public class WithdrawController {
 		model.addAttribute("withdraw", withdrawService.findByNameAndDateBetweenAndStatus(name, beginDate, endDate, status, page, size));
 		return "withdraw/table";
 	}
-	
+
 	/**
 	 * 风险金账户
 	 * 
 	 */
 	@RequestMapping("/riskAccount")
-	public String riskAccount(Integer page, Integer size,Model model){
+	public String riskAccount(Integer page, Integer size, Model model) {
 		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
 		BigDecimal riskIn = new BigDecimal(0);
 		BigDecimal riskOut = new BigDecimal(0);
-		try{
+		try {
 			UserAccount account = userManageServiceImpl.findByUserIdAndType(userId, UserAccount.Type.RISK);
-			List<Transaction> trans = transactionServiceImpl.findByUserAccountAndTypeIn(userId,types);
-			if(trans != null && trans.size()>0){
-				for(Transaction tran:trans){
-					if(Transaction.Type.IN.equals(tran.getType())){
+			List<Transaction> trans = transactionServiceImpl.findByUserAccountAndTypeIn(userId, types);
+			if (trans != null && trans.size() > 0) {
+				for (Transaction tran : trans) {
+					if (Transaction.Type.IN.equals(tran.getType())) {
 						riskIn = riskIn.add(tran.getAmount());
-					}else{
+					} else {
 						riskOut = riskOut.add(tran.getAmount());
 					}
 				}
@@ -104,28 +104,28 @@ public class WithdrawController {
 			model.addAttribute("riskIn", riskIn);
 			model.addAttribute("riskOut", riskOut);
 			model.addAttribute("riskAmount", account.getBalance());
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			return "home";
+			return "redirect:/home";
 		}
 		return "withdraw/riskAccount";
 	}
-	
+
 	@RequestMapping("/riskAccountData")
-	public String riskAccountData(Integer page, Integer size, Model model){
+	public String riskAccountData(Integer page, Integer size, Model model) {
 		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
-		try{
-			model.addAttribute("transaction", transactionServiceImpl.findByUserIdAndDateType(userId,page,size, types));
-		}catch(Exception e){
+		try {
+			model.addAttribute("transaction", transactionServiceImpl.findByUserIdAndDateType(userId, page, size, types));
+		} catch (Exception e) {
 			e.printStackTrace();
-			return "home";
+			return "redirect:/home";
 		}
 		return "withdraw/riskAccountData";
 	}
-	
+
 	/**
 	 * 明细
 	 * 
@@ -138,7 +138,7 @@ public class WithdrawController {
 		// 查询数据
 		Withdraw withdraw = withdrawService.loadById(id);
 		UserProperties prop = userInfoService.getProByUser(withdraw.getUser());
-		
+
 		// 渲染视图
 		model.addAttribute("withdraw", withdraw);
 		model.addAttribute("prop", prop);
@@ -147,7 +147,7 @@ public class WithdrawController {
 		model.addAttribute("failure", Withdraw.Status.FAILURE);
 		return "withdraw/detail";
 	}
-	
+
 	/**
 	 * 处理
 	 * 

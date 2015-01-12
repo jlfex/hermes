@@ -11,7 +11,7 @@
     <tbody>
       <#if transaction.numberOfElements == 0>
 		    <tr>
-			    <td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
+			    <td colspan="5" class="align-center"><@messages key="common.table.empty" /></td>
 		    </tr>
 	  <#else>
 		    <#list transaction.content as l>
@@ -31,7 +31,7 @@
 	 </#if>
 	</tbody>
 </table>
-
+<ul class="pagination" data-number="${transaction.number}" data-total-pages="${transaction.totalPages}"></ul>
 
 <script type="text/javascript">
 <!--
@@ -46,9 +46,12 @@ jQuery(function($) {
 });
  $(function(){
          var len = $('#table tr').length;
-         for(var i = 1;i<len;i++){
-             $('#table tr:eq('+i+') td:first').text(i);
-         }          
+         if(len >2){
+            for(var i = 1;i<len;i++){
+               $('#table tr:eq('+i+') td:first').text(i);
+           }
+         }
+                   
     });
 //-->
 
