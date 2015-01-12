@@ -18,9 +18,12 @@ import com.jlfex.hermes.model.LoanAudit;
  * @since 1.0
  */
 @Repository
-public interface LoanAuditReository extends JpaRepository<LoanAudit, String>{
-	
-	
+public interface LoanAuditReository extends JpaRepository<LoanAudit, String> {
+
 	@Query("from LoanAudit where loan = ?1 order by create_time asc")
-	public  List<LoanAudit> findByLoan(Loan loan);
+	public List<LoanAudit> findByLoan(Loan loan);
+
+	@Query("from LoanAudit t where t.loan = ?1 and t.type = ?2 and t.status = ?3 order by create_time asc")
+	public LoanAudit findByLoanAndTypeAndStatus(Loan loan, String type, String status);
+
 }
