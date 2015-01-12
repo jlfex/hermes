@@ -19,37 +19,37 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_article")
 public class Article extends Model {
-	
+
 	private static final long serialVersionUID = -8821546967087076070L;
 
 	/** 标题 */
 	@Column(name = "title")
 	private String title;
-	
+
 	/** 作者 */
 	@Column(name = "author")
 	private String author;
-	
+
 	/** 日期 */
 	@Column(name = "datetime")
 	private Date datetime;
-	
+
 	/** 摘要 */
 	@Column(name = "summary")
 	private String summary;
-	
+
 	/** 标志 */
 	@Column(name = "mark")
 	private String mark;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/** 内容 */
 	@Transient
 	private String text;
-	
+
 	/**
 	 * 读取标题
 	 * 
@@ -59,7 +59,7 @@ public class Article extends Model {
 	public String getTitle() {
 		return title;
 	}
-	
+
 	/**
 	 * 设置标题
 	 * 
@@ -69,7 +69,7 @@ public class Article extends Model {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	/**
 	 * 读取作者
 	 * 
@@ -79,7 +79,7 @@ public class Article extends Model {
 	public String getAuthor() {
 		return author;
 	}
-	
+
 	/**
 	 * 设置作者
 	 * 
@@ -89,7 +89,7 @@ public class Article extends Model {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
+
 	/**
 	 * 读取日期
 	 * 
@@ -99,7 +99,7 @@ public class Article extends Model {
 	public Date getDatetime() {
 		return datetime;
 	}
-	
+
 	/**
 	 * 设置日期
 	 * 
@@ -109,7 +109,7 @@ public class Article extends Model {
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
-	
+
 	/**
 	 * 读取摘要
 	 * 
@@ -119,7 +119,7 @@ public class Article extends Model {
 	public String getSummary() {
 		return summary;
 	}
-	
+
 	/**
 	 * 设置摘要
 	 * 
@@ -129,7 +129,7 @@ public class Article extends Model {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
-	
+
 	/**
 	 * 读取标志
 	 * 
@@ -139,7 +139,7 @@ public class Article extends Model {
 	public String getMark() {
 		return mark;
 	}
-	
+
 	/**
 	 * 设置标志
 	 * 
@@ -149,7 +149,7 @@ public class Article extends Model {
 	public void setMark(String mark) {
 		this.mark = mark;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -159,7 +159,7 @@ public class Article extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -189,7 +189,7 @@ public class Article extends Model {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
 	/**
 	 * 状态
 	 * 
@@ -198,14 +198,14 @@ public class Article extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("正常")
-		public static final String ENABLED	= "00";
-		
+		public static final String ENABLED = "00";
+
 		@Element("置顶")
-		public static final String TOP		= "10";
-		
+		public static final String TOP = "10";
+
 		@Element("失效")
-		public static final String DISABLED	= "99";
+		public static final String DISABLED = "99";
 	}
 }

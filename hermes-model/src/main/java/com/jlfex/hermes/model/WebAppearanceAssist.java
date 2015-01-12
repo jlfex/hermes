@@ -1,37 +1,44 @@
 package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * 友情链接信息模型
+ * 友情链接和banner信息模型
  * 
  * @author ultrafrog
  * @version 1.0, 2013-12-19
  * @since 1.0
  */
-public class FriendLink extends Model {
+@Entity
+@Table(name = "hm_web_appearance_assist")
+public class WebAppearanceAssist extends Model {
 
 	private static final long serialVersionUID = 8426583187024867914L;
 
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 链接 */
 	@Column(name = "link")
 	private String link;
-	
+
 	/** 图片 */
 	@Column(name = "image")
-	private String image;
-	
+	private byte[] image;
+
 	/** 顺序 */
-	@Column(name = "`order`")
+	@Column(name = "order_")
 	private Integer order;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
+	/** 类型 */
+	@Column(name = "type")
+	private String type;// 1,友情链接 2,banner
 
 	/**
 	 * 读取名称
@@ -79,7 +86,7 @@ public class FriendLink extends Model {
 	 * @return
 	 * @see #image
 	 */
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
@@ -89,7 +96,7 @@ public class FriendLink extends Model {
 	 * @param image
 	 * @see #image
 	 */
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 
