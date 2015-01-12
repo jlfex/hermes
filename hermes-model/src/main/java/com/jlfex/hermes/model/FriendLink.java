@@ -2,6 +2,7 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -12,8 +13,8 @@ import javax.persistence.Table;
  * @since 1.0
  */
 @Entity
-@Table(name = "hm_web_appearance_assist")
-public class WebAppearanceAssist extends Model {
+@Table(name = "hm_friend_link")
+public class FriendLink extends Model {
 
 	private static final long serialVersionUID = 8426583187024867914L;
 
@@ -86,6 +87,7 @@ public class WebAppearanceAssist extends Model {
 	 * @return
 	 * @see #image
 	 */
+	@Lob
 	public byte[] getImage() {
 		return image;
 	}
