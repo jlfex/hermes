@@ -146,7 +146,7 @@ public class InvestController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
-		String page = "0",size = "10";
+		String page = "0",size = "8";
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);

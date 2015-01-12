@@ -270,6 +270,9 @@ public class User extends Model {
 		
 		@Element("根")
 		public static final String ROOT		= "99";
+		
+		@Element("债权人")
+		public static final String CREDIT	= "20";
 	}
 
 	public String getVerificationCode() {
