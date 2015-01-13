@@ -37,12 +37,6 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	public List<Dictionary> findByTypeCode(String typeCode);
 
 	/**
-	 * 保存参数配置
-	 * 
-	 */
-	public Dictionary save(Dictionary dictionary);
-
-	/**
 	 * 根据字典名称查找记录
 	 * 
 	 */
@@ -58,5 +52,6 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	 * 根据id查找记录
 	 * 
 	 */
+	@Override
 	public Dictionary findOne(String id);
 }
