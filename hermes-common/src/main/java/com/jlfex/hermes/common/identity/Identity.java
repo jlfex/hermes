@@ -37,15 +37,15 @@ public class Identity {
 	}
 
 	public static String parseXML(Document doc) {
-		List<Element> statusList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/compStatus");
-		if (statusList == null || statusList.size() == 0) {
+		List statusList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/compStatus");
+		if ((statusList == null) || (statusList.size() == 0)) {
 			return "";
 		}
-		List<Element> nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
-		List<Element> identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
-		String name = nameList.get(0).getText();
-		String cardId = identitycardList.get(0).getText();
-		Element e = statusList.get(0);
+		List nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
+		List identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
+		String name = ((Element) nameList.get(0)).getText();
+		String cardId = ((Element) identitycardList.get(0)).getText();
+		Element e = (Element) statusList.get(0);
 		String compStatusCode = e.getText();
 		int status;
 		try {

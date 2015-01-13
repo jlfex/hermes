@@ -1,7 +1,6 @@
 package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -165,7 +164,8 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			userBasic.setCounty(userAdd.getCounty());
 			userBasic.setAddress(userAdd.getAddress());
 		}
-		UserEducation userEdu = userEducationRepository.findByUserIdAndType(userId, com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
+		UserEducation userEdu = userEducationRepository.findByUserIdAndType(userId,
+				com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
 		if (userEdu != null) {
 			userBasic.setSchool(userEdu.getSchool());
 			userBasic.setYear(userEdu.getYear());
@@ -196,9 +196,8 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 
 	@Override
 	public void saveUserBasicInfo(UserBasic userBasic, User user) {
-		Date curDate = new Date();
 		UserProperties userPro = userPropertiesRepository.findByUser(user);
-		if("10".equals(userPro.getAuthName())){ //已认证
+		if ("10".equals(userPro.getAuthName())) { // 已认证
 			userBasic.setRealName(userPro.getRealName());
 			userBasic.setIdType((userPro.getIdType()));
 			userBasic.setIdNumber(userPro.getIdNumber());
@@ -219,7 +218,8 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		userAdd.setStatus(Status.VALID);
 		userAdd.setZip("");
 
-		UserEducation userEdu = userEducationRepository.findByUserIdAndType(user.getId(), com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
+		UserEducation userEdu = userEducationRepository.findByUserIdAndType(user.getId(),
+				com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
 		if (userEdu == null) {
 			userEdu = new UserEducation();
 			userEdu.setUser(user);
@@ -243,7 +243,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public void saveJobInfo(UserJob userJob) {
-		Date curDate = new Date();
 		userJob.setStatus(com.jlfex.hermes.model.UserJob.Status.VALID);
 		userJobRepository.save(userJob);
 
@@ -256,7 +255,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public void saveHouseInfo(UserHouse userHouse) {
-		Date curDate = new Date();
 		userHouse.setStatus(com.jlfex.hermes.model.UserHouse.Status.VALID);
 		userHouseRepository.save(userHouse);
 
@@ -269,7 +267,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public void saveCarInfo(UserCar userCar) {
-		Date curDate = new Date();
 		userCar.setStatus(com.jlfex.hermes.model.UserCar.Status.VALID);
 		userCarRepository.save(userCar);
 
@@ -285,7 +282,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	@Override
 	public void saveContacterInfo(UserContacter userContacter) {
 		userContacter.setStatus(com.jlfex.hermes.model.UserContacter.Status.VALID);
-		Date curDate = new Date();
 		userContacterRepository.save(userContacter);
 
 	}
@@ -299,7 +295,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public Result resetPassword(String userId, String orginalPwd, String newPwd) {
-		Result result = new Result();
+		Result<String> result = new Result<String>();
 		Assert.notEmpty(userId, "user id is empty.");
 		User user = userRepository.findOne(userId);
 		boolean match = matches(orginalPwd, user.getSignPassword());
@@ -311,7 +307,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			result.setData("修改成功");
 		} else {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage(App.message("result.failure.password", null));
+			result.addMessage(App.message("result.failure.password"));
 			result.setData("原始密码不正确,修改失败");
 		}
 		return result;
@@ -326,9 +322,9 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	@Override
 	public void saveImage(User user, String imgStr, String type, String labelStr) {
 		UserImage userImage = new UserImage();
-		Date curDate = new Date();
 		if (type.equals(UserImage.Type.AVATAR) || type.equals(UserImage.Type.AVATAR_LG)) {
-			List<UserImage> userImages = userImageRepository.findByUserAndTypeAndStatus(user, type, UserImage.Status.ENABLED);
+			List<UserImage> userImages = userImageRepository.findByUserAndTypeAndStatus(user, type,
+					UserImage.Status.ENABLED);
 			// 用户的大小头像信息只能各存在一条
 			if (userImages.size() > 0) {
 				userImage = userImages.get(0);
@@ -403,7 +399,8 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public List<UserImage> loadImagesByUserAndType(User user, String type) {
-		return userImageRepository.findByUserAndTypeAndStatus(user, type, com.jlfex.hermes.model.UserImage.Status.ENABLED);
+		return userImageRepository.findByUserAndTypeAndStatus(user, type,
+				com.jlfex.hermes.model.UserImage.Status.ENABLED);
 	}
 
 	/*
@@ -464,7 +461,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	@Override
 	public UserAccount chargeUserAccount(UserAccount account, Double amount) {
 		account.setBalance(account.getBalance().add(new BigDecimal(amount)));
-		account = userAccountRepository.save(account);
-		return account;
+		return userAccountRepository.save(account);
 	}
 }

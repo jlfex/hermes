@@ -20,21 +20,24 @@ public abstract class Objects {
 	 * @return
 	 */
 	public static boolean equals(Object one, Object another) {
-		return (one == another || (one != null && one.equals(another)));
+		return ((one == another) || ((one != null) && one.equals(another)));
 	}
-	
+
 	/**
 	 * 转换成列表
 	 * 
 	 * @param values
 	 * @return
 	 */
+	@SafeVarargs
 	public static <T> List<T> toList(T... values) {
 		List<T> list = new ArrayList<T>(values.length);
-		for (T val: values) list.add(val);
+		for (T val : values) {
+			list.add(val);
+		}
 		return list;
 	}
-	
+
 	/**
 	 * 强制转换
 	 * 
