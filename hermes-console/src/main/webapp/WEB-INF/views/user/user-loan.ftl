@@ -13,7 +13,7 @@
 					  <button type="button" id="unfreeze" class="btn btn-primary" data-auth="${user.status}"><@messages key="common.op.unfreeze"/></button>
 					</div>
 					<div class="btn-group">
-						 <button id="signOut"  type="button" class="btn btn-primary"><@messages key="common.op.sign.out"/></button>
+						 <button id="signOut"  type="button" class="btn btn-primary">注销</button>
 					</div>
 				</div>
  			 </div>
