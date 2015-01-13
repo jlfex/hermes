@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -49,6 +50,14 @@ public class Article extends Model {
 	/** 内容 */
 	@Transient
 	private String text;
+
+	/** 页面内容 */
+	@Column(name = "content")
+	private byte[] content;
+
+	/** 文章顺序 */
+	@Column(name = "order_")
+	private Integer order;
 
 	/**
 	 * 读取标题
@@ -188,6 +197,23 @@ public class Article extends Model {
 	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	@Lob
+	public byte[] getContent() {
+		return content;
+	}
+
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 
 	/**
