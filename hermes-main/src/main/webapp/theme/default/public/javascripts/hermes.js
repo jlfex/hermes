@@ -136,6 +136,7 @@
 						$('#' + _data.target).fadeOut('fast', function() {
 							$(this).html(data).fadeIn('fast');
 						});
+				$('a').link().on('click', function() {});
 					}
 				});
 			});

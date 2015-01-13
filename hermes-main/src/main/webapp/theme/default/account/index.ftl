@@ -66,8 +66,9 @@
 <!--
 jQuery(function($) {
 	// 绑定链接点击事件
-	$('a').link().on('click', function() {
-	});
+$('#accountMenu a').link().on('click', function() {
+		$(this).parent().singleClass('active', {container: $('#accountMenu')});
+	}).filter('.${type!'user'}').trigger('click');
 });
 //-->
 </script>
