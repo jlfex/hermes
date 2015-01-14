@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.App;
-import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -129,20 +128,20 @@ public class UserManageServiceImpl implements UserManageService {
 		List<?> users = commonRepository.findByNativeSql(sqlSearchUser, params, pageable.getOffset(), pageable.getPageSize());
 		List<UserInfo> userInfos = new ArrayList<UserInfo>();
 		for (int i = 0; i < users.size(); i++) {
+			Object[] object = (Object[]) users.get(i);
 			UserInfo userinfo = new UserInfo();
-			List<UserAccount> accts = userAccountRepository.findByUserId("");
+			List<UserAccount> accts = userAccountRepository.findByUserId(String.valueOf(object[0]));
 			BigDecimal allBalance = BigDecimal.ZERO;// 总金额
 			userinfo.setFree(Numbers.toCurrency(BigDecimal.ZERO));
 			userinfo.setFreeze(Numbers.toCurrency(BigDecimal.ZERO));
 			for (UserAccount acct : accts) {
+				allBalance = allBalance.add(acct.getBalance());
 				if (acct.getType().equals(com.jlfex.hermes.model.UserAccount.Type.CASH)) {
 					userinfo.setFree(Numbers.toCurrency(acct.getBalance()));
 				} else {
 					userinfo.setFreeze(Numbers.toCurrency(acct.getBalance()));
 				}
-				allBalance.add(acct.getBalance());
 			}
-			Object[] object = (Object[]) users.get(i);
 			userinfo.setId(String.valueOf(object[0]));
 			userinfo.setAccount(String.valueOf(object[1] == null ? App.message("anonymous", null) : object[1]));
 			userinfo.setCellphone(String.valueOf(object[2] == null ? "" : object[2]));
@@ -317,7 +316,7 @@ public class UserManageServiceImpl implements UserManageService {
 	@Override
 	public Result freezeUser(String userId) {
 		Result<String> result = new Result<String>();
-		if(Strings.empty(userId)){
+		if (Strings.empty(userId)) {
 			result.setType(Result.Type.FAILURE);
 			Logger.error("账户冻结:userId为空");
 			return result;
@@ -335,7 +334,7 @@ public class UserManageServiceImpl implements UserManageService {
 	@Override
 	public Result unfreezeUser(String userId) {
 		Result<String> result = new Result<String>();
-		if(Strings.empty(userId)){
+		if (Strings.empty(userId)) {
 			result.setType(Result.Type.FAILURE);
 			Logger.error("账户解冻:userId为空");
 			return result;
@@ -353,7 +352,7 @@ public class UserManageServiceImpl implements UserManageService {
 	@Override
 	public Result logOffUser(String userId) {
 		Result result = new Result();
-		if(Strings.empty(userId)){
+		if (Strings.empty(userId)) {
 			Logger.warn("注销用户: 用户id为空!");
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage("注销用户: 用户id为空!");
@@ -379,13 +378,14 @@ public class UserManageServiceImpl implements UserManageService {
 	public User findById(String userId) {
 		return userRepository.findOne(userId);
 	}
-	
+
 	/**
 	 * 
 	 * 通过用户编号和用户类型
 	 * 
 	 */
-	public UserAccount findByUserIdAndType(String userId, String type){
-		return userAccountRepository.findByUserIdAndType(userId,type);
+	@Override
+	public UserAccount findByUserIdAndType(String userId, String type) {
+		return userAccountRepository.findByUserIdAndType(userId, type);
 	}
 }
