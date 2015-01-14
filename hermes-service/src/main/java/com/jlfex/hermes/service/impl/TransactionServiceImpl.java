@@ -36,23 +36,27 @@ import com.jlfex.hermes.service.common.Pageables;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-	private static final Integer TYPE_SPAN 		= 50;
-	private static final String CROP_USER_ID	= "crop";
-	
+	private static final Integer TYPE_SPAN = 50;
+	private static final String CROP_USER_ID = "crop";
+
 	/** 用户信息仓库 */
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	/** 用户账户信息仓库 */
 	@Autowired
 	private UserAccountRepository userAccountRepository;
-	
+
 	/** 交易流水信息仓库 */
 	@Autowired
 	private TransactionRepository transactionRepository;
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#findByUserIdAndDateBetweenAndTypes(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.TransactionService#
+	 * findByUserIdAndDateBetweenAndTypes(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public List<Transaction> findByUserIdAndDateBetweenAndTypes(String userId, String beginDate, String endDate, String... types) {
@@ -61,13 +65,18 @@ public class TransactionServiceImpl implements TransactionService {
 		Date end = Calendars.parseEndDateTime(endDate);
 		List<String> typeList = (types.length > 0) ? Arrays.asList(types) : getDefaultTypes();
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.CASH);
-		
+
 		// 查询数据并返回结果
 		return transactionRepository.findBySourceUserAccountAndTypeInAndDatetimeBetween(userAccount, typeList, begin, end);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#findByUserIdAndDateBetweenAndTypes(java.lang.String, java.lang.String, java.lang.String, java.lang.Integer, java.lang.Integer, java.lang.String[])
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.TransactionService#
+	 * findByUserIdAndDateBetweenAndTypes(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.Integer, java.lang.Integer,
+	 * java.lang.String[])
 	 */
 	@Override
 	public Page<Transaction> findByUserIdAndDateBetweenAndTypes(String userId, String beginDate, String endDate, Integer page, Integer size, String... types) {
@@ -77,22 +86,30 @@ public class TransactionServiceImpl implements TransactionService {
 		List<String> typeList = (types.length > 0) ? Arrays.asList(types) : getDefaultTypes();
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.CASH);
 		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "datetime");
-		
+
 		// 查询数据并返回结果
 		return transactionRepository.findBySourceUserAccountAndTypeInAndDatetimeBetween(userAccount, typeList, begin, end, pageable);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#freeze(java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.TransactionService#freeze(java.lang.String,
+	 * java.lang.String, java.math.BigDecimal, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public List<Transaction> freeze(String type, String userId, BigDecimal amount, String reference, String remark) {
 		User user = userRepository.findOne(userId);
 		return freeze(type, user, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#freeze(java.lang.String, com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.TransactionService#freeze(java.lang.String,
+	 * com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public List<Transaction> freeze(String type, User user, BigDecimal amount, String reference, String remark) {
@@ -100,18 +117,28 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount frozenAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.FREEZE);
 		return transact(type, cashAccount, frozenAccount, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#unfreeze(java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#unfreeze(java.lang.String,
+	 * java.lang.String, java.math.BigDecimal, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public List<Transaction> unfreeze(String type, String userId, BigDecimal amount, String reference, String remark) {
 		User user = userRepository.findOne(userId);
 		return unfreeze(type, user, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#unfreeze(java.lang.String, com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#unfreeze(java.lang.String,
+	 * com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public List<Transaction> unfreeze(String type, User user, BigDecimal amount, String reference, String remark) {
@@ -119,9 +146,14 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount frozenAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.FREEZE);
 		return transact(type, frozenAccount, cashAccount, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#toCropAccount(java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#toCropAccount(java.lang.String
+	 * , java.lang.String, java.lang.String, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> toCropAccount(String type, String userId, String cropAccountType, BigDecimal amount, String reference, String remark) {
@@ -130,8 +162,13 @@ public class TransactionServiceImpl implements TransactionService {
 		return transact(type, userAccount, cropAccount, amount, reference, remark);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#toCropAccount(java.lang.String, com.jlfex.hermes.model.User, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#toCropAccount(java.lang.String
+	 * , com.jlfex.hermes.model.User, java.lang.String, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> toCropAccount(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
@@ -140,8 +177,13 @@ public class TransactionServiceImpl implements TransactionService {
 		return transact(type, userAccount, cropAccount, amount, reference, remark);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#fromCropAccount(java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#fromCropAccount(java.lang
+	 * .String, java.lang.String, java.lang.String, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> fromCropAccount(String type, String userId, String cropAccountType, BigDecimal amount, String reference, String remark) {
@@ -150,8 +192,13 @@ public class TransactionServiceImpl implements TransactionService {
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#fromCropAccount(java.lang.String, com.jlfex.hermes.model.User, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#fromCropAccount(java.lang
+	 * .String, com.jlfex.hermes.model.User, java.lang.String,
+	 * java.math.BigDecimal, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> fromCropAccount(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
@@ -159,9 +206,14 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#betweenCropAccount(java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#betweenCropAccount(java.lang
+	 * .String, java.lang.String, java.lang.String, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> betweenCropAccount(String type, String sourceType, String targetType, BigDecimal amount, String reference, String remark) {
@@ -170,8 +222,13 @@ public class TransactionServiceImpl implements TransactionService {
 		return transact(type, sourceUserAccount, targetUserAccount, amount, reference, remark);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#transact(java.lang.String, java.lang.String, java.lang.String, java.math.BigDecimal, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#transact(java.lang.String,
+	 * java.lang.String, java.lang.String, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> transact(String type, String sourceUserId, String targetUserId, BigDecimal amount, String reference, String remark) {
@@ -179,9 +236,14 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount targetUserAccount = userAccountRepository.findByUserIdAndType(targetUserId, UserAccount.Type.CASH);
 		return transact(type, sourceUserAccount, targetUserAccount, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#transact(java.lang.String, com.jlfex.hermes.model.User, com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#transact(java.lang.String,
+	 * com.jlfex.hermes.model.User, com.jlfex.hermes.model.User,
+	 * java.math.BigDecimal, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public List<Transaction> transact(String type, User sourceUser, User targetUser, BigDecimal amount, String reference, String remark) {
@@ -189,10 +251,16 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount targetUserAccount = userAccountRepository.findByUserAndType(targetUser, UserAccount.Type.CASH);
 		return transact(type, sourceUserAccount, targetUserAccount, amount, reference, remark);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.TransactionService#transact(java.lang.String, com.jlfex.hermes.model.UserAccount, com.jlfex.hermes.model.UserAccount, java.math.BigDecimal, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#transact(java.lang.String,
+	 * com.jlfex.hermes.model.UserAccount, com.jlfex.hermes.model.UserAccount,
+	 * java.math.BigDecimal, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public List<Transaction> transact(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
 		// 验证参数
 		Assert.notEmpty(type, "type is empty.", "exception.transaction.type.empty");
@@ -203,13 +271,13 @@ public class TransactionServiceImpl implements TransactionService {
 		Assert.equals(User.Status.ENABLED, targetUserAccount.getUser().getStatus(), "target user is not enabled.", "exception.transaction.user.status");
 		Assert.equals(UserAccount.Status.VALID, targetUserAccount.getStatus(), "target user account is not enabled.", "exception.transaction.user.account.status");
 		Assert.notNull(amount, "amount is null", "exception.transaction.amount.null");
-		
+
 		// 判断账户余额是否可用
 		// 当交易金额大于账户余额且账户不允许为负时异常处理
 		if (amount.compareTo(sourceUserAccount.getBalance()) > 0 && UserAccount.Minus.INMINUS.equals(sourceUserAccount.getMinus())) {
 			throw new ServiceException(String.format("user '%s' account balance is %s, less than %s", sourceUserAccount.getId(), sourceUserAccount.getBalance(), amount), "exception.transaction.balance");
 		}
-		
+
 		// 交易流水
 		Transaction source = new Transaction();
 		source.setSourceUserAccount(sourceUserAccount);
@@ -221,7 +289,7 @@ public class TransactionServiceImpl implements TransactionService {
 		source.setSourceBeforeBalance(sourceUserAccount.getBalance());
 		source.setTargetBeforeBalance(targetUserAccount.getBalance());
 		source.setRemark(remark);
-		
+
 		Transaction target = new Transaction();
 		target.setSourceUserAccount(targetUserAccount);
 		target.setTargetUserAccount(sourceUserAccount);
@@ -232,7 +300,7 @@ public class TransactionServiceImpl implements TransactionService {
 		target.setSourceBeforeBalance(targetUserAccount.getBalance());
 		target.setTargetBeforeBalance(sourceUserAccount.getBalance());
 		target.setRemark(remark);
-		
+
 		// 计算金额
 		sourceUserAccount.setBalance(sourceUserAccount.getBalance().subtract(amount));
 		targetUserAccount.setBalance(targetUserAccount.getBalance().add(amount));
@@ -240,17 +308,17 @@ public class TransactionServiceImpl implements TransactionService {
 		source.setTargetAfterBalance(targetUserAccount.getBalance());
 		target.setSourceAfterBalance(targetUserAccount.getBalance());
 		target.setTargetAfterBalance(sourceUserAccount.getBalance());
-		
+
 		// 保存数据
 		userAccountRepository.save(sourceUserAccount);
 		userAccountRepository.save(targetUserAccount);
 		transactionRepository.save(source);
 		transactionRepository.save(target);
-		
+
 		// 返回结果
 		return Arrays.asList(source, target);
 	}
-	
+
 	/**
 	 * 读取默认类型
 	 * 
@@ -259,26 +327,48 @@ public class TransactionServiceImpl implements TransactionService {
 	protected List<String> getDefaultTypes() {
 		Set<Object> keys = Dicts.elements(Transaction.Type.class, Transaction.Type.REVERSE_FREEZE, Transaction.Type.UNFREEZE).keySet();
 		List<String> types = new ArrayList<String>(keys.size());
-		for (Object key: keys) {
+		for (Object key : keys) {
 			types.add(String.class.cast(key));
 		}
 		return types;
 	}
-	
+
 	/**
 	 * 风险金流水
 	 * 
 	 * 
 	 */
-	public Page<Transaction> findByUserIdAndDateType(String userId,Integer page, Integer size, List<String> types) {
+	@Override
+	public Page<Transaction> findByUserIdAndDateType(String userId, Integer page, Integer size, List<String> types) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
 		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "datetime");
-		return transactionRepository.findBySourceUserAccountOrTargetUserAccountAndTypeIn(userAccount,userAccount,types,pageable);
+		return transactionRepository.findBySourceUserAccountOrTargetUserAccountAndTypeIn(userAccount, userAccount, types, pageable);
 
 	}
-	
-	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types){
+
+	@Override
+	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
-		return transactionRepository.findByUserAccountAndTypeIn(userAccount,userAccount, types);
+		return transactionRepository.findByUserAccountAndTypeIn(userAccount, userAccount, types);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.TransactionService#AddCashAccount(java.lang.
+	 * String, com.jlfex.hermes.model.UserAccount, java.math.BigDecimal,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark) {
+		Transaction transaction = new Transaction();
+		transaction.setType(type);
+		transaction.setSourceUserAccount(sourceUserAccount);
+		transaction.setAmount(amount);
+		transaction.setReference(reference);
+		transaction.setRemark(remark);
+		transaction.setDatetime(new Date());
+		transactionRepository.save(transaction);
 	}
 }
