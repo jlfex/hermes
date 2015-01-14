@@ -18,8 +18,6 @@ insert into `hm_dictionary_type` (`id`, `name`, `code`, `status`, `creator`, `cr
 insert into `hm_dictionary_type` (`id`, `name`, `code`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('c5a9c0de-956c-11e4-90ca-b87932903a74', '费用类型', 'cost_type', '00', NULL, '2015-01-06 14:30:12', NULL, '2015-01-06 14:30:18', NULL);
 insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('e6acad61-956f-11e4-90ca-b87932903a74', 'b6f885cb-956c-11e4-90ca-b87932903a74', '等额本息', 'repaymode_1', '1', '00', NULL, '2015-01-06 14:50:52', NULL, '2015-01-06 14:50:56', NULL);
 insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('f07a4d87-956f-11e4-90ca-b87932903a74', 'b6f885cb-956c-11e4-90ca-b87932903a74', '等额本金', 'repaymode_2', '2', '00', NULL, '2015-01-06 14:52:04', NULL, '2015-01-06 14:52:09', NULL);
-insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('f69c7dcc-956f-11e4-90ca-b87932903a74', 'bee5ccd0-956c-11e4-90ca-b87932903a74', '资金周转', 'productpurpose_1', '1', '00', NULL, '2015-01-06 14:53:17', NULL, '2015-01-06 14:53:22', NULL);
-insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('fc552c35-956f-11e4-90ca-b87932903a74', 'bee5ccd0-956c-11e4-90ca-b87932903a74', '出国旅游', 'productpurpose_2', '1', '00', NULL, '2015-01-06 14:54:09', NULL, '2015-01-06 14:54:13', NULL);
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeab','2015-01-06 13:36:25',NULL,'2015-01-06 13:36:30',NULL,NULL,'barcode','产品管理','1','@/product/index',NULL,'_main',NULL,'0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_properties` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `value`) values('f955fdfe-70fe-11e3-ae10-6cae8b21aea1',NULL,NULL,NULL,NULL,NULL,'product.rate.loan','借款手续费费率','0.1');
 insert into `hm_properties` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `value`) values('f955fdfe-70fe-11e3-ae10-6cae8b21aea2',NULL,NULL,NULL,NULL,NULL,'product.rate.risk','风险金费率','0.2');
@@ -36,16 +34,12 @@ insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time
 insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time`, `updater`, `update_time`) values('b417568c-979d-11e3-8035-e41f13befebc','e4a83c6f-cf4c-4bb4-bb34-2cf0e6c883dd','0.03000000','04',NULL,'2014-02-17 00:00:00',NULL,'2014-02-17 00:00:00');
 insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time`, `updater`, `update_time`) values('d9baf1fa-979d-11e3-8035-e41f13befebc','e4a83c6f-cf4c-4bb4-bb34-2cf0e6c883ec','0.02000000','03',NULL,'2014-02-18 00:00:00',NULL,'2014-02-18 00:00:00');
 insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time`, `updater`, `update_time`) values('e7d56ba8-979d-11e3-8035-e41f13befebc','e4a83c6f-cf4c-4bb4-bb34-2cf0e6c883ec','0.03000000','04',NULL,'2014-02-17 00:00:00',NULL,'2014-02-17 00:00:00');
-insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time`, `updater`, `update_time`) values('f984837a-979d-11e3-8035-e41f13befebc','e4a83c6f-cf4c-4bb4-bb34-2cf0e6c883ee','0.02000000','03',NULL,'2014-02-18 00:00:00',NULL,'2014-02-18 00:00:00');
-insert  into `hm_rate` (`id`, `product`, `rate`, `type`, `creator`, `create_time`, `updater`, `update_time`) values('0261838a-979e-11e3-8035-e41f13befebc','e4a83c6f-cf4c-4bb4-bb34-2cf0e6c883ee','0.03000000','04',NULL,'2014-02-17 00:00:00',NULL,'2014-02-17 00:00:00');
-
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeac','2015-01-11 13:36:25',NULL,'2015-01-11 13:36:30',NULL,NULL,'road','内容管理','1','@/menu',NULL,'_menu',NULL,'0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aead','2015-01-11 13:36:26',NULL,'2015-01-11 13:36:31',NULL,NULL,'classification','分类管理','0','@/content/categoryIndex',NULL,'_main','9f893350-820f-11e3-ae10-6cae8b21aeac','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeae','2015-01-11 13:36:27',NULL,'2015-01-11 13:36:32',NULL,NULL,'publish','发布内容','2','@/content/publish',NULL,'_main','9f893350-820f-11e3-ae10-6cae8b21aeac','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeaf','2015-01-11 13:36:28',NULL,'2015-01-11 13:36:33',NULL,NULL,'friendlink','友情链接','3','@/content/friendLink',NULL,'_main','9f893350-820f-11e3-ae10-6cae8b21aeac','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeag','2015-01-11 13:36:29',NULL,'2015-01-11 13:36:34',NULL,NULL,'picture','图片管理','4','@/content/banner',NULL,'_main','9f893350-820f-11e3-ae10-6cae8b21aeac','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('9f893350-820f-11e3-ae10-6cae8b21aeah','2015-01-11 13:36:30',NULL,'2015-01-11 13:36:35',NULL,NULL,'childcontent','内容管理','1','@/content/management',NULL,'_main','9f893350-820f-11e3-ae10-6cae8b21aeac','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
-
 insert into `hm_dictionary_type` (`id`, `name`, `code`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('176c9150-7103-11e3-ae10-6cae8b21aeab', '产品担保方式', 'product.guarantee', '00', NULL, '2013-12-29 22:33:04', NULL, '2013-12-29 22:33:04', 0);
 insert into `hm_dictionary_type` (`id`, `name`, `code`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('176c9150-7103-11e3-ae10-6cae8b21aeac', '产品用途', 'product.purpose', '00', NULL, '2013-12-29 22:33:04', NULL, '2013-12-29 22:33:04', 0);
 insert into `hm_dictionary_type` (`id`, `name`, `code`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('176c9150-7103-11e3-ae10-6cae8b21aead', '产品招标期限', 'product.deadline', '00', NULL, '2013-12-29 22:33:04', NULL, '2013-12-29 22:33:04', 0);
@@ -53,41 +47,8 @@ insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `
 insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('f15df3f6-9230-11e3-8035-e41f13befebe', '176c9150-7103-11e3-ae10-6cae8b21aead', '3', 'a2', '1', '00', NULL, '2015-01-06 14:50:52', NULL, '2015-01-06 14:50:56', 0);
 insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('f15df3f6-9230-11e3-8035-e41f13befebf', '176c9150-7103-11e3-ae10-6cae8b21aeac', '资金周转', 'b1', '0', '00', NULL, '2015-01-06 14:50:52', NULL, '2015-01-06 14:50:56', 0);
 insert into `hm_dictionary` (`id`, `type`, `name`, `code`, `order_`, `status`, `creator`, `create_time`, `updater`, `update_time`, `version`) VALUES ('f15df3f6-9230-11e3-8035-e41f13befebg', '176c9150-7103-11e3-ae10-6cae8b21aeab', '担保公司担保', 'c1', '0', '00', NULL, '2015-01-06 14:50:52', NULL, '2015-01-06 14:50:56', 0);
-
-
 insert  into hm_navigation(id,parent,type,name,subname,code,path,target,order_,creator,create_time,updater,update_time) values ('9dde88a6-8215-11e3-ae10-6cae8b21aeaaee','8290abe8-7fb7-11e3-ae10-6cae8b21aeaa','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa','风险金账户',NULL,'withdraw','@/withdraw/riskAccount','_main',1,NULL,'2014-01-17 15:37:50',NULL,'2014-01-17 15:37:50');
 insert  into `hm_user_account` (`id`, `user`, `balance`, `status`, `type`, `creator`, `create_time`, `updater`, `update_time`,  `minus_`, `version`) VALUES('6bad933e-73ee-11e3-ae10-6cae8b21aeaa','e74428d8-7fb4-11e3-ae10-6cae8b21aeaa','10000.0000','00','15',NULL,'2014-01-10 12:43:20',NULL,'2014-03-17 00:00:00','0',0);
-insert into hm_transaction
-  (
-   id,
-   create_time,
-   creator,
-   update_time,
-   updater,
-   amount,
-   datetime,
-   source_after_balance,
-   source_before_balance,
-   target_after_balance,
-   target_before_balance,
-   type,
-   source_user_account,
-   target_user_account)
-values
-  ('6bad933e-73ee-11e3-ae10-6cae8b23aeaa',
-  '2014-01-17 15:37:50',
-  'admin',
-   '2014-01-17 15:37:50',
-   'admin',
-   2000,
-   '2014-01-17 15:37:50',
-   1000,
-   1000,
-   1000,
-   1000,
-   '60',
-   '6bad933e-73ee-11e3-ae10-6cae8b21aeaa',
-   '6bad933e-73ee-11e3-ae10-6cae8b21aeaa' 
-  );
-  
-  insert into `hm_text` (`id`, `reference`, `text`, `type`, `creator`, `create_time`, `updater`, `update_time`, `version`) values('afa431f4-9a65-11e3-85fa-6cae8b21aeaa',NULL,'${validateCode}(短信校验码，请勿泄露)，需要你进行手机校验。如非本人操作请致电123-1234-123','10',NULL,'2014-02-26 00:00:00',NULL,'2014-02-26 00:00:00',0);
+insert into hm_transaction(id,create_time,creator,update_time, updater, amount,datetime,source_after_balance,source_before_balance,target_after_balance,target_before_balance,type,source_user_account,target_user_account)values('6bad933e-73ee-11e3-ae10-6cae8b23aeaa','2014-01-17 15:37:50','admin','2014-01-17 15:37:50','admin',2000,'2014-01-17 15:37:50',1000,1000,1000,1000,'60','6bad933e-73ee-11e3-ae10-6cae8b21aeaa','6bad933e-73ee-11e3-ae10-6cae8b21aeaa'   );
+insert into `hm_text` (`id`, `reference`, `text`, `type`, `creator`, `create_time`, `updater`, `update_time`, `version`) values('afa431f4-9a65-11e3-85fa-6cae8b21aeaa',NULL,'${validateCode}(短信校验码，请勿泄露)，需要你进行手机校验。如非本人操作请致电123-1234-123','10',NULL,'2014-02-26 00:00:00',NULL,'2014-02-26 00:00:00',NULL);
+
