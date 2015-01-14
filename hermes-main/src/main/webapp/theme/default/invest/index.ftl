@@ -47,7 +47,7 @@
 								<table cellpadding="0" cellspacing="0" border="0" style="border-left:1px solid #e2e2e2;border-right:1px solid #e2e2e2;">
 									<thead>
 										<tr style="background:#e5f9ff;">
-											<th class="th_01">借贷用途</th>
+											<th class="th_01">借款用途</th>
 											<th class="th_02">金额（元）</th>
 											<th class="th_03">年利率</th>
 											<th class="th_04">期限</th>

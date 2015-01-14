@@ -118,10 +118,12 @@
 		// 链接处理
 		// 对元素绑定点击事件并异步加载内容
 		link: function() {
+			var $this = $(this);
 			return this.on('click', function() {
 				// 初始化
 				var _elem = $(this),
 					_data = _elem.data();
+				
 				
 				// 加载数据
 				$.ajax(_data.url, {
@@ -130,9 +132,11 @@
 					dataType: 'html',
 					timeout: 10000,
 					success: function(data, textStatus, xhr) {
+						$this.unbind();
 						$('#' + _data.target).fadeOut('fast', function() {
 							$(this).html(data).fadeIn('fast');
 						});
+				$('a').link().on('click', function() {});
 					}
 				});
 			});

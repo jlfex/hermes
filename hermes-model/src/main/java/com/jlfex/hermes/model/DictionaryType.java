@@ -131,14 +131,29 @@ public class DictionaryType extends Model {
 	 */
 	public static final class Name {
 
-		@Element("还款方式")
-		public static final String REPAY_MODE = "0030";
+		@Element("借款用途")
+		public static final String LOAN_PURPOSE = "loan_purpose";
 
-		@Element("产品用途")
-		public static final String PRODUCT_PURPOSE = "0031";
+		@Element("证件类型")
+		public static final String ID_TYPE = "id_type";
+
+		@Element("导航类型")
+		public static final String NAV = "nav";
+
+		@Element("还款方式")
+		public static final String REPAY_MODE = "repay_mode";
 
 		@Element("费用类型")
-		public static final String COST_TYPE = "0032";
+		public static final String COST_TYPE = "cost_type";
+
+		@Element("产品担保方式")
+		public static final String PRODUCT_GUARANTEE = "product.guarantee";
+
+		@Element("产品用途")
+		public static final String PRODUCT_PURPOSE = "product.purpose";
+
+		@Element("产品招标期限")
+		public static final String PRODUCT_DEADLINE = "product.deadline";
 
 	}
 
