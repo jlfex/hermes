@@ -207,7 +207,6 @@ jQuery(function($) {
 	$("#retreat").on("click",function(){
 		$.link.html(null, {
 			url: '${app}/product/index',
-			data: '',
 			target: 'main'
 		});
 	});

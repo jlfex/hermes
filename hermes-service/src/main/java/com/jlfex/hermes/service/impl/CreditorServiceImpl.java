@@ -83,7 +83,6 @@ public class CreditorServiceImpl  implements CreditorService {
 
 	
 	@Override
-	@Transactional(rollbackFor=Exception.class) 
 	public void save(Creditor creditor) throws Exception{
 		if(creditor !=null && Strings.empty(creditor.getId())){
 			creditor.setUser(buildAccount());
@@ -124,11 +123,23 @@ public class CreditorServiceImpl  implements CreditorService {
 	}
 
 	/**
-	 * 债权人编号列表
+	 * 债权人 最大编号
 	 */
 	@Override
-	public List<Creditor> findAllByCredtorNo() throws Exception {
-		return creditorRepository.findAllByCredtorNo() ;
+	public Creditor findMaxCredtorNo() throws Exception {
+		return creditorRepository.findMaxCredtorNo() ;
+	}
+
+    /**
+     * 根据 债权人编号 获取债权人信息
+     */
+	@Override
+	public Creditor findByCredtorNo(String creditorNo) {
+		try{
+			return creditorRepository.findByCredtorNo(creditorNo);
+		}catch(Exception e){
+			return null;
+		}
 	}
 	
 	
