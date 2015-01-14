@@ -6,7 +6,7 @@
 				<label for="creditorNo" class="col-xs-1 control-label">债权人编号</label>
 				<div class="col-xs-2">
 					<input  disabled="true" type="text" class="form-control" value=" <#if creditor??>${(creditor.creditorNo)!''}<#else>${creditorNo!''}</#if>"> 
-					<input id="creditorNo" name="creditorNo" type="hidden" class="form-control" value=" <#if creditor??>${(creditor.creditorNo)!''}<#else>${creditorNo!''}</#if>">
+					<input id="creditorNo" name="creditorNo" type="hidden" class="form-control" value="<#if creditor??>${(creditor.creditorNo)!''}<#else>${creditorNo!''}</#if>">
 					<#if creditor??>
 					 <input  name="id" type="hidden" class="form-control" value="${(creditor.id)}">
 					</#if>
@@ -166,16 +166,9 @@ jQuery(function($) {
 	$("#retreat").on("click",function(){
 		$.link.html(null, {
 			url: '${app}/credit/index',
-			data: '',
 			target: 'main'
 		});
-	});
-	
-	
-	
-	
-	
-	
+	});	
 });
 //-->
 </script>

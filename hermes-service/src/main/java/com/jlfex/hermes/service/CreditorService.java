@@ -42,11 +42,18 @@ public interface CreditorService {
 	public void save(Creditor creditor) throws Exception ;
 	
 	/**
-	 * 获取 债权人编号
+	 * 获取 最大 债权人编号
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Creditor> findAllByCredtorNo() throws Exception ;
+	public Creditor findMaxCredtorNo() throws Exception ;
+	
+	/**
+	 * 获取 最大 债权人编号
+	 * @return
+	 * @throws Exception
+	 */
+	public Creditor findByCredtorNo(String creditorNo)   ;
 	
 	
 }
