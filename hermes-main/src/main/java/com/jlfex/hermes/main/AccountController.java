@@ -208,6 +208,7 @@ public class AccountController {
 		UserAccount account = userInfoService.loadByUserIdAndType(App.user().getId(), UserAccount.Type.CASH);
 		Payment payment = paymentService.save(channel, amount);
 		userInfoService.chargeUserAccount(account, amount);
+		transactionService.AddCashAccount(Transaction.Type.CHARGE, account, new BigDecimal(amount), payment.getId(), "现金账户充值");
 		model.addAttribute("payment", payment);
 		return "account/charge-success";
 	}
@@ -319,7 +320,6 @@ public class AccountController {
 			result.addMessage(App.message(se.getKey()));
 			Logger.error(se.getMessage(), se);
 		}
-
 		// 渲染视图
 		model.addAttribute("result", result);
 		return "result-" + result.getTypeName();

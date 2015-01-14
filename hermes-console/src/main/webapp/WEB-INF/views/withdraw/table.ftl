@@ -17,7 +17,7 @@
 		<#else>
 		<#list withdraw.content as wd>
 		<tr>
-			<td>${wd.bankAccount.name}</td>
+			<td>${wd.bankAccount.name!''}</td>
 			<td class="align-right">${wd.formatAmount}</td>
 			<td class="align-right">${wd.formatFee}</td>
 			<td>${wd.formatDatetime}</td>
