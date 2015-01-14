@@ -7,6 +7,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 外部：债权人信息 模型
@@ -44,7 +45,7 @@ public class Creditor  extends Model {
 	//银行 所属 市
 	@Column(name = "bank_city")
 	private String bankCity;
-	//银行 所属 市
+	//开户行
 	@Column(name = "bank_brantch")
 	private String bankBrantch;	
 	//联系人
@@ -63,7 +64,6 @@ public class Creditor  extends Model {
 	@OneToOne
 	@JoinColumn(name = "user")
 	private User user;
-	
 	//状态
 	@Column(name = "status")
 	private String status ;
@@ -184,5 +184,31 @@ public class Creditor  extends Model {
 		public static final String INVALID 			= "01";
 	}
 	
+	public  void propTrim(){
+		if(!Strings.empty(creditorNo)){
+			creditorNo.trim();
+		}
+		if(!Strings.empty(creditorName)){
+			creditorName.trim();
+		}
+		if(!Strings.empty(bankAccount)){
+			bankAccount.trim();
+		}
+		if(!Strings.empty(bankName)){
+			bankName.trim();
+		}
+		if(!Strings.empty(contacter)){
+			contacter.trim();
+		}
+		if(!Strings.empty(creditorName)){
+			creditorName.trim();
+		}
+		if(!Strings.empty(cellphone)){
+			cellphone.trim();
+		}
+		if(!Strings.empty(creditorName)){
+			creditorName.trim();
+		}
+	}
 	
 }

@@ -29,11 +29,11 @@ public class CrediteInfo extends Model {
 	@ManyToOne
 	@JoinColumn(name = "creditor")
 	private Creditor creditor;
-	// 债权编号
-	@Column(name = "acedite_code")
+	//债权编号
+	@Column(name = "credit_code")
 	private String crediteCode;
-	// 债权类型
-	@Column(name = "acedite_type")
+	//债权类型
+	@Column(name = "credite_type")
 	private String crediteType;
 	// 借款人(债权的原始借款人)
 	@Column(name = "borrower")
@@ -58,11 +58,11 @@ public class CrediteInfo extends Model {
 	private BigDecimal amount;
 	// 年利率
 	@Column(name = "rate")
-	private String rate;
-	// 借款期限
+	private BigDecimal rate ;
+	//借款期限
 	@Column(name = "period")
-	private String period;
-	// 资金用途
+	private String  period ;
+	//借款用途
 	@Column(name = "purpose")
 	private String purpose;
 	// 还款方式
@@ -70,21 +70,37 @@ public class CrediteInfo extends Model {
 	private String payType;
 	// 债权到期日
 	@Column(name = "dead_time")
-	private String dead_time;
-	// 放款日 (债权对应的原始借款人还款)
+	private Date deadTime ;
+	//放款日 (债权对应的原始借款人还款)
 	@Column(name = "business_time")
-	private String businessTime;
+	private Date businessTime ;
 	@Column(name = "status")
-	private String status;
+	private String status ;
+	//资金用途
+	@Column(name = "amount_aim")
+	private String  amountAim;
+	//产品介绍
+	@Column(name = "product_desc")
+	private String produnctDesc;
+	//担保方式
+	@Column(name = "assure_type")
+	private String  assureType;
 	// 招标结束日期
 	@Column(name = "bid_end_time")
 	private Date bidEndTime;
-	// 导入结果
-	@Transient
-	private String dealResult;
 	// 备注
-	@Transient
+	@Column(name = "remark")
 	private String remark;
+
+    
+	
+	public Creditor getCreditor() {
+		return creditor;
+	}
+
+	public void setCreditor(Creditor creditor) {
+		this.creditor = creditor;
+	}
 
 	public String getCrediteCode() {
 		return crediteCode;
@@ -158,20 +174,20 @@ public class CrediteInfo extends Model {
 		this.amount = amount;
 	}
 
-	public String getRate() {
+	public BigDecimal getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(BigDecimal rate) {
 		this.rate = rate;
 	}
 
-	public String getBusinessTime() {
-		return businessTime;
+	public String getPeriod() {
+		return period;
 	}
 
-	public void setBusinessTime(String businessTime) {
-		this.businessTime = businessTime;
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 
 	public String getPurpose() {
@@ -190,44 +206,20 @@ public class CrediteInfo extends Model {
 		this.payType = payType;
 	}
 
-	public String getDead_time() {
-		return dead_time;
+	public Date getDeadTime() {
+		return deadTime;
 	}
 
-	public void setDead_time(String dead_time) {
-		this.dead_time = dead_time;
+	public void setDeadTime(Date deadTime) {
+		this.deadTime = deadTime;
 	}
 
-	public String getPeriod() {
-		return period;
+	public Date getBusinessTime() {
+		return businessTime;
 	}
 
-	public void setPeriod(String period) {
-		this.period = period;
-	}
-
-	public String getDealResult() {
-		return dealResult;
-	}
-
-	public void setDealResult(String dealResult) {
-		this.dealResult = dealResult;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Creditor getCreditor() {
-		return creditor;
-	}
-
-	public void setCreditor(Creditor creditor) {
-		this.creditor = creditor;
+	public void setBusinessTime(Date businessTime) {
+		this.businessTime = businessTime;
 	}
 
 	public String getStatus() {
@@ -238,12 +230,44 @@ public class CrediteInfo extends Model {
 		this.status = status;
 	}
 
+	public String getAmountAim() {
+		return amountAim;
+	}
+
+	public void setAmountAim(String amountAim) {
+		this.amountAim = amountAim;
+	}
+
+	public String getProdunctDesc() {
+		return produnctDesc;
+	}
+
+	public void setProdunctDesc(String produnctDesc) {
+		this.produnctDesc = produnctDesc;
+	}
+
+	public String getAssureType() {
+		return assureType;
+	}
+
+	public void setAssureType(String assureType) {
+		this.assureType = assureType;
+	}
+
 	public Date getBidEndTime() {
 		return bidEndTime;
 	}
 
 	public void setBidEndTime(Date bidEndTime) {
 		this.bidEndTime = bidEndTime;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	public String getStatusName() {
