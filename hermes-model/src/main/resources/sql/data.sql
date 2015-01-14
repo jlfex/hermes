@@ -89,3 +89,5 @@ values
    '6bad933e-73ee-11e3-ae10-6cae8b21aeaa',
    '6bad933e-73ee-11e3-ae10-6cae8b21aeaa' 
   );
+  
+  insert into `hm_text` (`id`, `reference`, `text`, `type`, `creator`, `create_time`, `updater`, `update_time`, `version`) values('afa431f4-9a65-11e3-85fa-6cae8b21aeaa',NULL,'${validateCode}(短信校验码，请勿泄露)，需要你进行手机校验。如非本人操作请致电123-1234-123','10',NULL,'2014-02-26 00:00:00',NULL,'2014-02-26 00:00:00',0);
