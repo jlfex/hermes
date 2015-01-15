@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.service.pojo.ProductInfo;
+import com.jlfex.hermes.service.pojo.SimpleProduct;
 
 /**
  * 产品业务接口
@@ -57,4 +58,5 @@ public interface ProductService {
 	 */
 	public Product save(Product product);
 
+	public Product editProduct(Product p, SimpleProduct product);
 }
