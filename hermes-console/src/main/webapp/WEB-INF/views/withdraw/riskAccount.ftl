@@ -3,9 +3,6 @@
 	<div class="panel-body">
 		<form id="searchForm" method="post" action="#">
 			<div class="row hm-row">
-				<div class="col-xs-2 hm-col form-group">
-					<button id="chargeBtn" type="button" class="btn btn-primary btn-block" style="height: 30px;width: 70px;" onclick="chargeAccount();" >充 值</button>
-				</div>
 			    <div class="col-xs-2 hm-col form-group">
 					<label for="name">风险金账户余额：<span>${riskAmount}元</span></label>
 				</div>
@@ -42,5 +39,4 @@ function init(_url,_content){
 			 }
 	   })
 }
-
 </script>
