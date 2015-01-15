@@ -1,4 +1,4 @@
-package com.jlfex.hermes.console.pojo;
+package com.jlfex.hermes.service.pojo;
 
 public class SimpleProduct {
 	private String code;

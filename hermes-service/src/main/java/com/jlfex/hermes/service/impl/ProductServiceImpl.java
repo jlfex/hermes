@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +19,20 @@ import org.springframework.stereotype.Service;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Product;
+import com.jlfex.hermes.model.Properties;
+import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.ProductRepository;
+import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.repository.RepayRepository;
+import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.ProductService;
+import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.pojo.ProductInfo;
+import com.jlfex.hermes.service.pojo.SimpleProduct;
 
 /**
  * 
@@ -50,6 +58,14 @@ public class ProductServiceImpl implements ProductService {
 	/** 字典仓库 */
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
+	@Autowired
+	private DictionaryService dictionaryService;
+	@Autowired
+	private RateRepository rateRepository;
+	@Autowired
+	private PropertiesService propertiesService;
+	@Autowired
+	private RepayService repayService;
 
 	/*
 	 * (non-Javadoc)
@@ -161,6 +177,55 @@ public class ProductServiceImpl implements ProductService {
 				return cb.equal(root.get("code"), code);
 			}
 		});
+	}
+
+	@Override
+	public Product editProduct(Product p, SimpleProduct product) {
+		p.setCode(product.getCode());
+		p.setName(product.getName());
+		p.setAmount(product.getAmount());
+		p.setPeriod(product.getPeriod());
+		p.setRate(product.getRate());
+		p.setDeadline(new Integer(product.getDeadline()));
+		if (StringUtils.isNotEmpty(product.getGuaranteeId())) {
+			p.setGuarantee(dictionaryService.loadById(product.getGuaranteeId()));
+		}
+		p.setRepay(repayService.loadById(product.getRepayId()));
+		p.setPurpose(dictionaryService.loadById(product.getPurposeId()));
+		p.setStartingAmt(new BigDecimal(product.getStartingAmt()));
+		p.setDescription(product.getDescription());
+		p.setPeriodType(product.getPeriodType());
+		p = save(p);
+
+		// 为产品添加 “借款手续费费率”，“风险金费率”
+		Properties ploan = propertiesService.findByCode("product.rate.loan");
+		Properties prisk = propertiesService.findByCode("product.rate.risk");
+
+		// 获取借款利率对象
+		Rate rateLoan = rateRepository.findByProductAndType(p, Rate.RateType.LOAN);
+		if (rateLoan == null) {
+			Rate r1 = new Rate();
+			r1.setType(Rate.RateType.LOAN);
+			r1.setProduct(p);
+			r1.setRate(new BigDecimal(ploan.getValue()));
+			rateRepository.save(r1);
+		} else {
+			rateLoan.setRate(new BigDecimal(ploan.getValue()));
+			rateRepository.save(rateLoan);
+		}
+		// 获取风险金 利率对象
+		Rate rateRisk = rateRepository.findByProductAndType(p, Rate.RateType.RISK);
+		if (rateRisk == null) {
+			Rate r2 = new Rate();
+			r2.setType(Rate.RateType.RISK);
+			r2.setProduct(p);
+			r2.setRate(new BigDecimal(prisk.getValue()));
+			rateRepository.save(r2);
+		} else {
+			rateRisk.setRate(new BigDecimal(prisk.getValue()));
+			rateRepository.save(rateRisk);
+		}
+		return p;
 	}
 
 }
