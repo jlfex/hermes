@@ -23,7 +23,7 @@ public class SystemController {
 	/** 系统属性业务接口 */
 	@Autowired
 	private PropertiesService propertiesService;
-	
+
 	/**
 	 * 系统属性
 	 * 
@@ -33,7 +33,7 @@ public class SystemController {
 	public String properties() {
 		return "system/properties";
 	}
-	
+
 	/**
 	 * 查询系统属性
 	 * 
@@ -47,7 +47,7 @@ public class SystemController {
 	public Page<Properties> searchProperties(String name, String code, Integer page) {
 		return propertiesService.findByNameAndCode(name, code, page, null);
 	}
-	
+
 	/**
 	 * 保存系统属性
 	 * 
@@ -62,7 +62,7 @@ public class SystemController {
 	public Properties saveProperties(String id, String name, String code, String value) {
 		return propertiesService.save(id, name, code, value);
 	}
-	
+
 	/**
 	 * 读取系统属性
 	 * 
