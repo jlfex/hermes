@@ -9,6 +9,9 @@
 		<version>0.1</version>
 	</parent>
 	<artifactId>hermes-model</artifactId>
+	<properties>
+	<jackson.version>2.3.1</jackson.version>
+	</properties>
 	
 	<dependencies>
 		<dependency>
@@ -21,5 +24,22 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${version.hibernate}</version>
 		</dependency>
+		<!-- JSON begin -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.module</groupId>
+				<artifactId>jackson-module-jaxb-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- JSON end -->
 	</dependencies>
 </project>
