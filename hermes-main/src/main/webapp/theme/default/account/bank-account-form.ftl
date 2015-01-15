@@ -3,7 +3,7 @@
 		<div class="form-group">
 			<label for="name" class="col-xs-2 u-col control-label"><@messages key="model.bank.account.name" /></label>
 			<div class="col-xs-3 u-col">
-				<p id="fee" class="form-control-static">${properties.realName}</p>
+				<p id="fee" class="form-control-static">${properties.realName!''}</p>
 			</div>
 		</div>
 		<div class="form-group">
@@ -50,7 +50,7 @@
 	<script type="text/javascript" charset="utf-8">
 	<!--
 	jQuery(function($) {
-		// °ó¶¨È¡Ïû°´Å¥ÊÂ¼þ
+		// ï¿½ï¿½È¡ï¿½ï¿½Å¥ï¿½Â¼ï¿½
 		$('#cancelBankAccountBtn').on('click', function() {
 			$('#bankAccountForm').hide('fast', function() {
 				$(this).remove();
@@ -58,7 +58,7 @@
 			});
 		});
 		
-		// °ó¶¨Ìí¼Ó°´Å¥ÊÂ¼þ
+		// ï¿½ï¿½ï¿½ï¿½Ó°ï¿½Å¥ï¿½Â¼ï¿½
 		$('#addBankAccountBtn').on('click', function() {
 			$.ajax('${app}/account/bank-account/save', {
 				data: { bankId: $('#bankId').val(), cityId: $('#cityId').val(), deposit: $('#deposit').val(), account: $('#account').val() },
@@ -73,10 +73,10 @@
 			});
 		});
 		
-		// µØÇøÐÅÏ¢´¦Àí
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 		$.area({ data: ${area}, bind: [$('#provinceId'), $('#cityId')] });
 		
-		// ¿¨ºÅÊäÈëÌáÊ¾
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
 		$('#account').on('keypress', function(event) {
 			if (event.charCode < 48 || event.charCode > 57) return false;
 			if ($(this).val().length === 19) return false;
