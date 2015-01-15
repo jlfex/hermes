@@ -20,4 +20,17 @@ public interface ArticleCategoryRepository extends PagingAndSortingRepository<Ar
 	ArticleCategory findOneByNameAndLevel(String name, String level);
 
 	List<ArticleCategory> findByLevelNotNull();
+
+	ArticleCategory findOneByName(String name);
+
+	List<ArticleCategory> findByLevel(String level);
+
+	List<ArticleCategory> findByParent(ArticleCategory parent);
+
+	ArticleCategory findByCode(String code);
+
+	List<ArticleCategory> findByParentId(String parentId);
+
+	int countByNameAndParentId(String inputName, String parentId);
+
 }
