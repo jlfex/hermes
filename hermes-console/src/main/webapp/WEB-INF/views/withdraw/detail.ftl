@@ -53,7 +53,7 @@
 			<div class="form-group">
 				<label class="col-xs-2 control-label"><@messages key="withdraw.label.bank.name" /></label>
 				<div class="col-xs-10">
-					<p class="form-control-static">${withdraw.bankAccount.name}</p>
+					<p class="form-control-static">${withdraw.bankAccount.name!''}</p>
 				</div>
 			</div>
 			<div class="form-group">

@@ -83,7 +83,7 @@ public class WithdrawController {
 	 */
 	@RequestMapping("/riskAccount")
 	public String riskAccount(Integer page, Integer size, Model model) {
-		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
+		String userId = "crop";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
@@ -113,7 +113,7 @@ public class WithdrawController {
 
 	@RequestMapping("/riskAccountData")
 	public String riskAccountData(Integer page, Integer size, Model model) {
-		String userId = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
+		String userId = "crop";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
