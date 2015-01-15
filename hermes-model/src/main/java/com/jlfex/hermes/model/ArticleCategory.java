@@ -5,11 +5,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 文章分类信息模型
@@ -20,10 +23,11 @@ import javax.persistence.Transient;
  */
 /**
  * @author admin
- *
+ * 
  */
 @Entity
 @Table(name = "hm_article_category")
+@JsonIgnoreProperties({ "parent" })
 public class ArticleCategory extends Model {
 
 	private static final long serialVersionUID = -2372084266057798310L;
@@ -46,12 +50,16 @@ public class ArticleCategory extends Model {
 	private String status;
 
 	/** 子集 */
-	@OneToMany(mappedBy = "parent")
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
 	private List<ArticleCategory> children = new LinkedList<ArticleCategory>();
 
 	/** 关系集合 */
-	@OneToMany(mappedBy = "category")
-	private List<ArticleCategoryReference> references = new LinkedList<ArticleCategoryReference>();
+	/*
+	 * @OneToMany(mappedBy = "category")
+	 * 
+	 * @JsonIgnore private List<ArticleCategoryReference> references = new
+	 * LinkedList<ArticleCategoryReference>();
+	 */
 	/** 分类级别 */
 	@Column(name = "level")
 	private String level;
@@ -160,9 +168,10 @@ public class ArticleCategory extends Model {
 	 * @return
 	 * @see #references
 	 */
-	public List<ArticleCategoryReference> getReferences() {
-		return references;
-	}
+	/*
+	 * public List<ArticleCategoryReference> getReferences() { return
+	 * references; }
+	 */
 
 	public String getLevel() {
 		return level;
