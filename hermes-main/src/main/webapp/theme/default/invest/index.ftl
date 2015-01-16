@@ -63,9 +63,9 @@
 										<td class="td_03">${l.rate}</td>
 										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
 										<td class="td_05">
-											 <div class="layer_box">
-				                                <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
-				                                <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
+				                            <div class="layer_box">
+				                                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
+				                                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
 				                            </div>
 										</td>
 										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
@@ -86,6 +86,7 @@
 									
 								</table>
 							</div>
+							
 						</div>
 						<div style="display: none;">
 							<div class="data">
@@ -135,14 +136,14 @@
 				</div>	
 			</div>
 		</div>	
-		
+
+
 	</div>
 </div>
 
 <#include "../footer.ftl" />
 
 <script type="text/javascript" charset="utf-8">
-<!--
 
 $('.loan_detail .i_btn1.i_bg1').click(function() { window.location.href = '${app}/invest/info?loanid=' + $(this).data().id; });
 
@@ -179,7 +180,40 @@ $('#searchForm .form-control-static .label').on('click', function() {
 	
 });
 
-//-->
+$('.pagination').each(function() {
+		var _elem = $(this).empty(),
+			_opts = $.extend({}, _elem.data()),
+			_number = _opts.number,
+			_pages = _opts.totalPages - 1,
+			_begin = ((_number - 3) < 0) ? 0 : (_number - 3),
+			_end = ((_number + 3) > _pages) ? _pages : (_number + 3),
+			_tag = $('<li />').append($('<a />').attr('href', '#'));
+			
+		if (_begin > 0) {
+			_tag.clone().appendTo(_elem).find('a').attr('data-page', 0).text(1);
+			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
+		}
+		
+		for (var _idx = _begin; _idx <= _end; _idx++) {
+			if (_idx === _number) {
+				_tag.clone().appendTo(_elem).addClass('active').find('a').text(_idx + 1);
+			} else {
+				_tag.clone().appendTo(_elem).find('a').attr('data-page', _idx).text(_idx + 1);
+			}
+		}
+		
+		if (_end < _pages) {
+			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
+			_tag.clone().appendTo(_elem).find('a').attr('data-page', _pages).text(_pages + 1);
+		}
+		
+		_elem.find('a').on('click', function() {
+			$('#page').val($(this).data().page);
+			$('#searchForm').trigger('submit');
+		});
+	});
+});
+
 </script>
 
 </body>
