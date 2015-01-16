@@ -636,7 +636,7 @@ public class LoanServiceImpl implements LoanService {
 	 * @param user
 	 */
 	@Override
-	public List<LoanInfo> findByUser(User user) {
+	public List<LoanInfo> findByUser(User user){
 		List<LoanInfo> loaninfoList = new ArrayList<LoanInfo>();
 		List<Loan> loanList = loanRepository.findByUser(user);
 		LoanInfo loanInfo = null;

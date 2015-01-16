@@ -27,7 +27,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> findByUserIdAndDateBetweenAndTypes(String userId, String beginDate, String endDate, String... types);
-	
+
 	/**
 	 * 通过用户编号/时间范围以及类型分页查询<br>
 	 * 不填类型默认认为是所有可用类型
@@ -41,7 +41,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public Page<Transaction> findByUserIdAndDateBetweenAndTypes(String userId, String beginDate, String endDate, Integer page, Integer size, String... types);
-	
+
 	/**
 	 * 冻结资金
 	 * 
@@ -53,7 +53,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> freeze(String type, User user, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 冻结资金
 	 * 
@@ -65,7 +65,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> freeze(String type, String userId, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 解冻资金
 	 * 
@@ -77,7 +77,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> unfreeze(String type, User user, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 解冻资金
 	 * 
@@ -89,7 +89,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> unfreeze(String type, String userId, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 转账至公司账户
 	 * 
@@ -154,7 +154,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> betweenCropAccount(String type, String sourceType, String targetType, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 交易
 	 * 
@@ -167,7 +167,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> transact(String type, User sourceUser, User targetUser, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 交易
 	 * 
@@ -180,7 +180,7 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> transact(String type, String sourceUserId, String targetUserId, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 交易
 	 * 
@@ -193,13 +193,25 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> transact(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
-	
+
 	/**
 	 * 风险金交易流水
 	 * 
 	 * 
 	 */
-	public Page<Transaction> findByUserIdAndDateType(String userId,Integer page, Integer size, List<String> types);
+	public Page<Transaction> findByUserIdAndDateType(String userId, Integer page, Integer size, List<String> types);
+
 	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types);
+
+	/**
+	 * 现金账户充值流水
+	 * 
+	 * @param type
+	 * @param targetUserAccount
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 */
+	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
 
 }

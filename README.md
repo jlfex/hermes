@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/jlfex/hermes.svg)](https://travis-ci.org/jlfex/hermes)
 ## 项目介绍
-[再小的品牌，也有自己的交易平台](https://github.com/jlfex/hermes)
+[**hermes**是快速搭建专业的网络投融资平台工具](https://github.com/jlfex/hermes)
 
 ##系统要求
 - Java6+

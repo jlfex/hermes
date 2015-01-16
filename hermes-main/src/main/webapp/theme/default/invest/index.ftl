@@ -63,9 +63,9 @@
 										<td class="td_03">${l.rate}</td>
 										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
 										<td class="td_05">
-											 <div class="layer_box">
-				                                <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
-				                                <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
+				                            <div class="layer_box">
+				                                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
+				                                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
 				                            </div>
 										</td>
 										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
@@ -86,6 +86,7 @@
 									
 								</table>
 							</div>
+							
 						</div>
 						<div style="display: none;">
 							<div class="data">
@@ -135,14 +136,14 @@
 				</div>	
 			</div>
 		</div>	
-		
+
+
 	</div>
 </div>
 
 <#include "../footer.ftl" />
 
 <script type="text/javascript" charset="utf-8">
-<!--
 
 $('.loan_detail .i_btn1.i_bg1').click(function() { window.location.href = '${app}/invest/info?loanid=' + $(this).data().id; });
 
@@ -179,7 +180,6 @@ $('#searchForm .form-control-static .label').on('click', function() {
 	
 });
 
-//-->
 </script>
 
 </body>
