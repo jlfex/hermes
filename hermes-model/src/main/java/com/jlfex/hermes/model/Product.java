@@ -407,6 +407,9 @@ public class Product extends Model {
 
 		@Element("有效")
 		public static final String VALID = "00";
+		
+		@Element("债权标虚拟产品状态")
+		public static final String  VIRTUAL_CREDIT_PROCD= "01";
 
 		@Element("无效")
 		public static final String INVALID = "99";

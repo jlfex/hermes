@@ -39,7 +39,7 @@
 				<div id="tab3" class="speciallist">
 					<ul class="all_information m_tab_t">
 						<li class="active">普通标 <span></span></li>
-						<li class="lastnone">债权表 <span></span></li>
+						<li class="lastnone">债权标 <span></span></li>
 					</ul>
 					<div class="m_tab_c ad_border" style="width:100%;margin-top:15px;">
 						<div style="display: block;">
@@ -109,9 +109,9 @@
 										<td class="td_03">${l.rate}</td>
 										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
 										<td class="td_05">
-											 <div class="layer_box">
-				                                <div class="layer1">${ (l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}</div>
-				                                <div class="layer2" style="height: ${(l.remain?replace(',','')?number/l.amount?replace(',','')?number)?string.percent}"></div>
+											<div class="layer_box">
+				                                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
+				                                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
 				                            </div>
 										</td>
 										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>

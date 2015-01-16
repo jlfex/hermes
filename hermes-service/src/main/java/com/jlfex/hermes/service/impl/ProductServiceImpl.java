@@ -2,6 +2,7 @@ package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -75,7 +76,9 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductInfo> findAll() {
 		List<ProductInfo> productInfoList = new ArrayList<ProductInfo>();
-		Iterable<Product> productList = productRepository.findAll();
+		List validState = new ArrayList();
+		validState.add(Product.Status.VALID);
+		Iterable<Product> productList = productRepository.findByStatusIn(validState);
 		List<Repay> repayList = repayRepository.findAll();
 		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCode("loan_purpose");
 		ProductInfo productInfo = null;
@@ -177,6 +180,13 @@ public class ProductServiceImpl implements ProductService {
 				return cb.equal(root.get("code"), code);
 			}
 		});
+	}
+    /**
+     * 根据 状态 获取产品信息
+     */
+	@Override
+	public List<Product> findByStatusIn(String... status) throws Exception {
+		return productRepository.findByStatusIn(Arrays.asList(status));
 	}
 
 	@Override

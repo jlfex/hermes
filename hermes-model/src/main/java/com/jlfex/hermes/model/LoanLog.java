@@ -231,5 +231,8 @@ public class LoanLog extends Model {
 
 		@Element("满标")
 		public static final String FULL = "08";
+		
+		@Element("债权发售")
+		public static final String  SELL_CREDIT= "30";
 	}
 }

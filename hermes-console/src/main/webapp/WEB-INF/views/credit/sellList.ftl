@@ -2,15 +2,15 @@
         <div class="panel-heading">债权发售列表</div>
  </div>
   <div class="panel-body">
-            <form id="searchForm" method="post" action="#">
+            <form id="creditSellForm" method="post" action="#">
                 <div class="row">
                     <div class="col-xs-2 hm-col form-group">
                         <label for="account">债权人名称</label>
-                        <input id="cellphone" name="" value="" class="form-control" type="text">
+                        <input id="creditorName" name="creditorName" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
                         <label for="cellphone">债权编号</label>
-                        <input id="cellphone" name="" value="" class="form-control" type="text">
+                        <input id="crediteCode" name="crediteCode" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
                         <label for="realname">借款类型</label>
@@ -64,7 +64,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <#if sellList.numberOfElements == 0>
+                    <#if sellList??>
+                        <#if sellList.numberOfElements == 0>
 					<tr>
 						<td colspan="14" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
@@ -82,15 +83,22 @@
 	                        <td class="align-center">${(l.payType)!''}</td>
 	                        <td class="align-center">${(l.deadTime)!''}</td>
 	                        <td class="align-center">${(l.createTime)!''}</td> 
-	                        <td class="align-center">??????</td> 
+	                        <td class="align-center">${(l.currentUserName!'')}</td> 
 	                        <td class="align-center">${(l.statusName)!''}</td> 
 	                        <td class="align-center">
 	                            <button type="button" class="btn btn-link">查看详情见</button>
+	                            <#if l.status == '00'>
 	                            <a href="#" data-url="${app}/credit/goSell/${l.id}" >发售</a>
+	                            </#if>
 	                        </td>    
 	                    </tr>
 						</#list>
 					</#if>
+                    <#else>
+                      <tr>
+						<td colspan="14" class="align-center"><@messages key="common.table.empty" /></td>
+					  </tr>
+                    </#if>
                 </tbody>
             </table>
             <div class="pull-right">
@@ -107,6 +115,14 @@
    $("#sellListTable a").on("click",function(){
 		$.link.html(null, {
 			url: $(this).attr("data-url"),
+			target: 'main'
+		});
+   }); 
+   
+   $("#searchBtn").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/credit/sellIndex',
+			data: $("#creditSellForm").serialize(),
 			target: 'main'
 		});
    }); 

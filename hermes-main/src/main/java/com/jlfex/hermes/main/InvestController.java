@@ -323,13 +323,18 @@ public class InvestController {
 		Logger.info("loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
 		model.addAttribute("loan", loan);
-		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
-		model.addAttribute("purpose", dictionary.getName());
+		String loanPurpose = ""; 
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			loanPurpose = loan.getPurpose();
+		}else{
+			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
+		}
+		model.addAttribute("purpose", loanPurpose);
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
 		if(!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
-			 loan.getCreditorId();
+			 loan.getCreditInfoId();
 		}
 		// 从借款日志表里取开始投标的起始时间
 
