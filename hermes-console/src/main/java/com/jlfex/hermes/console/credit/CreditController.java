@@ -1,15 +1,11 @@
 package com.jlfex.hermes.console.credit;
 
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,11 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.console.pojo.CreditInfoVo;
 import com.jlfex.hermes.console.pojo.RepayPlanVo;
 import com.jlfex.hermes.model.CreditRepayPlan;
@@ -137,8 +134,7 @@ public class CreditController {
 			today = date;
 			Caches.set(CACHE_CREDITOR_SEQUENCE, 0);
 		}
-		// 递增缓存数据
-		Long seq = Caches.incr(CACHE_CREDITOR_SEQUENCE, 1);
+		Long seq = Caches.incr(CACHE_CREDITOR_SEQUENCE, 1);// 递增缓存数据
 		return String.format("ZQ%s%04d", today, seq);
 	}
 	/**
@@ -149,7 +145,7 @@ public class CreditController {
 	@RequestMapping("/assign")
 	public String assign(String page,String size, Model model ) {
 		try {
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(page,size) ;
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null,page,size) ;
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -162,14 +158,15 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/import")
-	public String creditImport(@RequestParam MultipartFile file, Model model) {
-		 long  startTime=System.currentTimeMillis();
-		 String errorMsg = "",code ="";
+	@ResponseBody
+	public Map<String,String> creditImport(@RequestParam MultipartFile file, Model model) {
+		 String msg = "", code="";
+		 Map<String,String>  resultMap = new HashMap<String,String>();
 		 String fileName = file.getOriginalFilename(); 
 		 Map<String,Object> sheetMap= null;
 		 try {
 			 FileInputStream fileInputStream= (FileInputStream) file.getInputStream(); 
-			 sheetMap = ExcelUtil.entranceExcelTemplate(fileName, fileInputStream);
+			 sheetMap = ExcelUtil.analysisExcel(fileName, fileInputStream);
 			 List<CreditInfoVo>  creditList = (List<CreditInfoVo>) sheetMap.get("creditList");
 			 List<RepayPlanVo>   repayList = (List<RepayPlanVo>) sheetMap.get("repayList");
 			 //
@@ -193,13 +190,17 @@ public class CreditController {
 			 if(creditRepayPlanList == null || creditRepayPlanList.size() == 0){
 				 Logger.info("还款计划表保存失败");
 			 }
+			 code = "00";
+			 msg = "成功";
 		} catch (Exception e) {
-			String var = "债权导入 文件解析异常";
-			Logger.error(var, e);
-			errorMsg =var; 
-			code = "99";
+			 String var = "债权导入 文件解析异常";
+			 Logger.error(var, e);
+			 code = "99";
+			 msg = e.getMessage();
 		}
-		return code;
+	    resultMap.put("code", code);
+		resultMap.put("msg",  msg);
+		return resultMap;
 	}
 	/**
 	 * 债权信息 实体 初始化
@@ -220,7 +221,7 @@ public class CreditController {
 			entity.setCity(vo.getCity());
 			entity.setAmount(vo.getAmount());
 			entity.setRate(vo.getRate());
-			entity.setPeriod(vo.getPeriod());
+			entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
 			entity.setPurpose(vo.getPurpose());
 			entity.setPayType(vo.getPayType());
 			entity.setDeadTime(vo.getDeadTime());
@@ -300,9 +301,9 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/sellIndex")
-	public String sellIndex(String page, String size, Model model){
+	public String sellIndex(CrediteInfo creditInfo, String page,String size, Model model){
 		try {
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(page,size) ;
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo,page,size) ;
 			model.addAttribute("sellList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -317,8 +318,40 @@ public class CreditController {
 	 */
 	@RequestMapping("/sell")
 	public String sellCredit(CrediteInfo creditInfo, Model model){
-
-		return "redirect:credit/sellList";
+		try {
+			if(creditInfo == null || Strings.empty(creditInfo.getId())){
+				model.addAttribute("creditInfo", creditInfo);
+				model.addAttribute("errMsg", "债权信息为空");
+			}else{
+				CrediteInfo entity = creditInfoService.findById(creditInfo.getId());
+				if(!Strings.empty(creditInfo.getPurpose())){
+					entity.setPurpose(creditInfo.getPurpose());
+				}
+				if(!Strings.empty(creditInfo.getBidEndTimeStr())){
+					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
+				}
+				if(creditInfo.getPeriod() > 0){
+					entity.setPeriod(creditInfo.getPeriod());
+				}
+				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
+					 throw new Exception("发售金额必须大于0");
+				}else{
+					entity.setAmount(creditInfo.getAmount());
+				}
+				if(!Strings.empty(creditInfo.getAssureType())){
+					entity.setAssureType(creditInfo.getAssureType());
+				}
+				if(!Strings.empty(creditInfo.getAmountAim())){
+					entity.setAmountAim(creditInfo.getAmountAim());
+				}
+				if(creditInfoService.sellCredit(entity)){
+					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
+				}
+			}
+		} catch (Exception e) {
+			Logger.error("发售债权异常:", e);
+		}
+		return "redirect:/credit/sellIndex";
 	}
 	
 	

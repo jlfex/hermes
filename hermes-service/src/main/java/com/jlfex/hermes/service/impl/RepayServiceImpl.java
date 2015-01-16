@@ -2,6 +2,7 @@ package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -528,5 +529,12 @@ public class RepayServiceImpl implements RepayService {
 		// 插入借款日志
 		saveLoanLog(loan.getUser().getId(), loanRepay.getLoan(), Type.REPAY, loanRepay.getAmount(), "借款自动还款");
 		return true;
+	}
+    /**
+     * 根据名称 和 状态   获取还款方式
+     */
+	@Override
+	public List<Repay> findByNameAndStatusIn(String name, String... status) throws Exception {
+		return repayRepository.findByNameAndStatusIn(name, Arrays.asList(status));
 	}
 }

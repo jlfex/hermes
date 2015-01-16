@@ -2,14 +2,15 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
+import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -61,7 +62,7 @@ public class CrediteInfo extends Model {
 	private BigDecimal rate ;
 	//借款期限
 	@Column(name = "period")
-	private String  period ;
+	private Integer  period ;
 	//借款用途
 	@Column(name = "purpose")
 	private String purpose;
@@ -91,6 +92,18 @@ public class CrediteInfo extends Model {
 	// 备注
 	@Column(name = "remark")
 	private String remark;
+	// 债权 借款管理费
+	@Column(name = "manage_fee")
+	private BigDecimal manageFee;
+	
+	@Transient
+	private String  bidEndTimeStr;
+	@Transient
+	private String  creditorName;
+	@Transient
+	private String  ratePercent;
+	
+	
 
     
 	
@@ -181,12 +194,11 @@ public class CrediteInfo extends Model {
 	public void setRate(BigDecimal rate) {
 		this.rate = rate;
 	}
-
-	public String getPeriod() {
+	public Integer getPeriod() {
 		return period;
 	}
 
-	public void setPeriod(String period) {
+	public void setPeriod(Integer period) {
 		this.period = period;
 	}
 
@@ -269,21 +281,70 @@ public class CrediteInfo extends Model {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+    
+	public String getBidEndTimeStr() {
+		return bidEndTimeStr;
+	}
+
+	public void setBidEndTimeStr(String bidEndTimeStr) {
+		this.bidEndTimeStr = bidEndTimeStr;
+	}
+    
+	public BigDecimal getManageFee() {
+		return manageFee;
+	}
+
+	public void setManageFee(BigDecimal manageFee) {
+		this.manageFee = manageFee;
+	}
 
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
 	}
+	
+	public String getCreditorName() {
+		return creditorName;
+	}
+
+	public void setCreditorName(String creditorName) {
+		this.creditorName = creditorName;
+	}
+	
+
+	public String getRatePercent() {
+		if(rate !=null){
+			rate = rate.multiply(new BigDecimal(100));
+		}
+		return rate.toString();
+	}
+
+	/**
+	 * 读取当前用户名称
+	 * 
+	 * @return
+	 */
+	public String getCurrentUserName() {
+		try {
+			AppUser user = App.user();
+			String name = App.user().getName();
+			return name;
+		} catch (Exception e) {
+			Logger.warn("can not get current user id for reason: " + e.getMessage());
+			return null;
+		}
+	}
 
 	public static final class Status {
-		@Element("等待转让")
+		@Element("待发售")
 		public static final String WAIT_ASSIGN = "00";
-		@Element("转让中")
+		@Element("已发售")
 		public static final String ASSIGNING = "01";
 		@Element("转让成功")
 		public static final String SUCC_ASSIGN = "02";
 		@Element("转让失败")
 		public static final String FAIL_ASSIGN = "03";
-
+		@Element("导入失败")
+		public static final String IMP_FAIL = "04";
 	}
 
 }

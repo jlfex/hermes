@@ -541,6 +541,10 @@ public class InvestServiceImpl implements InvestService {
 			loanInfo.setRepayName(String.valueOf(object[8]));
 			loanInfo.setStatus(String.valueOf(object[9]));
 			loanInfo.setId(String.valueOf(object[10]));
+			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)){
+				String purposeStr = String.valueOf(object[11]);
+				loanInfo.setPurpose((purposeStr!=null && purposeStr.length() >4)?(purposeStr.substring(0, 4)+"..."):purposeStr);
+			}
 			loans.add(loanInfo);
 		}
 		// 返回结果

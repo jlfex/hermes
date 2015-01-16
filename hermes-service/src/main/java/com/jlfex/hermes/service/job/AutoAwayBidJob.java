@@ -63,7 +63,7 @@ public class AutoAwayBidJob extends Job {
 					Loan loan = loans.get(i);
 					LoanAudit loanAudit = loanAuditService.findByLoanAndTypeAndStatus(loan, Type.FINALL_AUDIT, Status.PASS);// 根据loan，审核类型，审核结果查找借款审核记录
 					Product product = loan.getProduct();// 根据loan获取产品信息
-					CrediteInfo crediteInfo = creditorInfoService.findById(loan.getCreditorId());// 根据loan中的creditorId获取债权信息
+					CrediteInfo crediteInfo = creditorInfoService.findById(loan.getCreditInfoId());// 根据loan中的creditorId获取债权信息
 					// 判断普通标还是外部债权标，然后往loan中添加业务日期，也就是招标截至日期
 					if (loan.getLoanKind().equals(LoanKinds.NORML_LOAN) && loanAudit != null && product != null) {
 						Date businessDate = DateUtils.addDays(loanAudit.getDatetime(), product.getDeadline());

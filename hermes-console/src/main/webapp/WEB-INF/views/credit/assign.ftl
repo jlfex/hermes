@@ -61,6 +61,7 @@
                 </div>
             </form>
         </div>
+        <div id="importResult"></div>
         <div id="data" style="display:block">
             <table class="table table-striped table-hover">
                 <thead>
@@ -141,7 +142,20 @@ function upload(files) {
 		// 异步上传
 		formData.append('file', file);
 		xhr.open('POST', '${app}/credit/import');
-	    xhr.onreadystatechange = processResponse; 
+	    xhr.onreadystatechange = function(){
+	       if(xhr.readyState == 4) {
+	          var data = jQuery.parseJSON(xhr.responseText);
+              if(xhr.status == 200 ) {
+                   if(data.code == "00"){
+                        $("#importResult").html(xhr.responseText);
+                   }else{
+                        $("#importResult").html(xhr.responseText);
+                   }
+              }else{
+                   $("#importResult").html("服务器响应异常,请重试。");
+              }     
+           }   
+	    }; 
 		xhr.send(formData);
 	});
 }
@@ -158,5 +172,6 @@ $("table a").on("click",function(){
 		});
 });
 	
+
 //-->
 </script>

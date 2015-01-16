@@ -29,7 +29,7 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
-		$.page.withdraw({
+	$.page.withdraw({
 		search: '${app}/credit/list'
 	});
 	

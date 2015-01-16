@@ -1,5 +1,7 @@
 package com.jlfex.hermes.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +19,5 @@ import com.jlfex.hermes.model.Repay;
 @Repository
 public interface RepayRepository  extends JpaRepository<Repay, String> {
 
-	
+	public List<Repay> findByNameAndStatusIn(String name, List<String> articleStatus) ;
 }

@@ -79,6 +79,6 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 * 标的： 类型 和 状态 列表
 	 * @return
 	 */
-	public Page<Loan> findByloanKindAndStatusIn(String loanKind, List<String> status, Pageable pageable);
 	
+	public Page<Loan> findByloanKindAndStatusIn(String loanKind, List<String> status, Pageable pageable);
 }

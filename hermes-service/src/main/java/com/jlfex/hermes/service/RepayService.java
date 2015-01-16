@@ -115,4 +115,13 @@ public interface RepayService {
 	 */
 	public boolean autoRepayment(String id);
 	
+	/**
+	 * 根据名称 和 状态   获取还款方式
+	 * @param name
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Repay> findByNameAndStatusIn(String name,String... status)  throws Exception;
+	
 }

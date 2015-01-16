@@ -46,7 +46,7 @@ public interface CreditInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<CrediteInfo>  queryByCondition(String page, String size) throws Exception ;
+	public Page<CrediteInfo>  queryByCondition(CrediteInfo creditInfo,String page, String size) throws Exception ;
 	/**
 	 * 根据：id 查询一条债权信息
 	 * @param page
@@ -55,5 +55,11 @@ public interface CreditInfoService {
 	 * @throws Exception
 	 */
 	public CrediteInfo  findById(String id) throws Exception ;
+	/**
+	 * 发售债权
+	 * @param crediteInfo
+	 * @return
+	 */
+	public boolean  sellCredit(CrediteInfo crediteInfo) throws Exception;
 	
 }

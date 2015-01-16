@@ -104,8 +104,8 @@ public class Loan extends Model {
 	private String loanKind;
 	
 	/** 标 对应的债权id: 普通标：该字段可为空 */
-	@Column(name = "creditor_id", length=50)
-	private String creditorId;
+	@Column(name = "credit_info_id", length=50)
+	private String creditInfoId;
 	
 	
 	/** 还款信息列表 */
@@ -118,6 +118,18 @@ public class Loan extends Model {
 	
 	
 	
+	public String getCreditInfoId() {
+		return creditInfoId;
+	}
+
+	public void setCreditInfoId(String creditInfoId) {
+		this.creditInfoId = creditInfoId;
+	}
+
+	public void setRepays(List<LoanRepay> repays) {
+		this.repays = repays;
+	}
+
 	/**
 	 * 读取用户
 	 * 
@@ -509,13 +521,7 @@ public class Loan extends Model {
 		this.loanKind = loanKind;
 	}
 
-	public String getCreditorId() {
-		return creditorId;
-	}
-
-	public void setCreditorId(String creditorId) {
-		this.creditorId = creditorId;
-	}
+	
 
 
 

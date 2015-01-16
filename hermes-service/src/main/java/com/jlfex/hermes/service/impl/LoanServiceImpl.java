@@ -290,8 +290,9 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public List<Loan> findByKindAndStatus(Integer limit,String loanKind, String... status) {
 		// 验证数据有效性
-		Assert.notNull(status, "status is null.");
-
+        if(status == null || status.length == 0){
+        	throw new ServiceException("状态为空"); 
+        }
 		// 分页查询数据
 		Pageable pageable = new PageRequest(0, limit, Direction.DESC, "datetime");
 		Page<Loan> page = loanRepository.findByloanKindAndStatusIn(loanKind, Arrays.asList(status), pageable);
@@ -317,8 +318,9 @@ public class LoanServiceImpl implements LoanService {
 
 		// 判断是否已经满足记录条数
 		// 当不满足条数要求时查询以已完成记录补充
-		if (loans.size() < size)
+		if (loans.size() < size){
 			loans.addAll(toInfos(findByKindAndStatus(size - loans.size(),loanKind, Loan.Status.COMPLETED)));
+		}
 		// 返回结果
 		return loans;
 	}
@@ -521,44 +523,54 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public Loan save(Loan loan) {
 		Date now = new Date();
-
 		// 借款编号生成策略
-		loan.setLoanNo(generateLoanNo());
-		loan.setStatus(Loan.Status.AUDIT_FIRST);
-		loan.setProceeds(BigDecimal.ZERO);
-		loan.setDeadline(loan.getProduct().getDeadline());
-		loan.setManageFee(loan.getProduct().getManageFee());
-		loan.setManageFeeType(loan.getProduct().getManageFeeType());
-		loan.setDatetime(now);
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			//债权标
+			loan.setLoanNo(generateLoanNo());
+		}else{
+			//普通标
+			loan.setLoanNo(generateLoanNo());
+			loan.setStatus(Loan.Status.AUDIT_FIRST);
+			loan.setProceeds(BigDecimal.ZERO);
+			loan.setDeadline(loan.getProduct().getDeadline());
+			loan.setManageFee(loan.getProduct().getManageFee());
+			loan.setManageFeeType(loan.getProduct().getManageFeeType());
+		}
 		// 借款保存
+		loan.setDatetime(now);
 		Loan reloan = loanRepository.save(loan);
 
-		// 通过借款获取产品逾期等级信息
-		List<ProductOverdue> productOverdueList = productOverdueRepository.findByProduct(loan.getProduct());
-		List<LoanOverdue> loanOverdueList = new ArrayList<LoanOverdue>(productOverdueList.size());
-		LoanOverdue loanOverdue = null;
-		for (ProductOverdue productOverdue : productOverdueList) {
-			loanOverdue = new LoanOverdue();
-			loanOverdue.setLoan(reloan);
-			loanOverdue.setRank(productOverdue.getRank());
-			loanOverdue.setInterest(productOverdue.getInterest());
-			loanOverdue.setPenalty(productOverdue.getPenalty());
-			loanOverdueList.add(loanOverdue);
+		// 普通标： 通过借款获取产品逾期等级信息
+		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
+			List<ProductOverdue> productOverdueList = productOverdueRepository.findByProduct(loan.getProduct());
+			List<LoanOverdue> loanOverdueList = new ArrayList<LoanOverdue>(productOverdueList.size());
+			LoanOverdue loanOverdue = null;
+			for (ProductOverdue productOverdue : productOverdueList) {
+				loanOverdue = new LoanOverdue();
+				loanOverdue.setLoan(reloan);
+				loanOverdue.setRank(productOverdue.getRank());
+				loanOverdue.setInterest(productOverdue.getInterest());
+				loanOverdue.setPenalty(productOverdue.getPenalty());
+				loanOverdueList.add(loanOverdue);
+			}
+			// 将产品逾期信息转换后绑定到借款逾期信息上
+			loanOverdueRepository.save(loanOverdueList);
 		}
-		// 将产品逾期信息转换后绑定到借款逾期信息上
-		loanOverdueRepository.save(loanOverdueList);
 
 		// 记录借款日志
 		LoanLog loanLog = new LoanLog();
 		loanLog.setUser(loan.getUser().getId());
 		loanLog.setLoan(reloan);
 		loanLog.setDatetime(now);
-		loanLog.setType(Type.RELEASE);
+		loanLog.setType(Type.SELL_CREDIT);
 		loanLog.setAmount(loan.getAmount());
 		// 由于已经生成借款，故将理财人变更为借款人
 		UserProperties up = userPropertiesRepository.findByUser(loan.getUser());
-		up.setIsMortgagor(Bool.TRUE);
-		userPropertiesRepository.save(up);
+		if(!Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){ 
+			//普通标更新 用户属性为 借款人
+			up.setIsMortgagor(Bool.TRUE);
+			userPropertiesRepository.save(up);
+		}
 		// 记录借款日志
 		loanLogRepository.save(loanLog);
 		return reloan;
@@ -576,7 +588,12 @@ public class LoanServiceImpl implements LoanService {
 		info.setId(loan.getId());
 		info.setInvester(loan.getUser().getAccount());
 		info.setAvatar(userService.getAvatar(loan.getUser(), UserImage.Type.AVATAR));
-		info.setPurpose(getDictionaryName(loan.getPurpose()));
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			String purpose = loan.getPurpose();
+			info.setPurpose((purpose!=null && purpose.length() >4)?(purpose.substring(0, 4)+"..."):purpose);
+		}else{
+			info.setPurpose(getDictionaryName(loan.getPurpose()));
+		}
 		info.setRate(Numbers.toPercent(loan.getRate().doubleValue()));
 		info.setAmount(Numbers.toCurrency(loan.getAmount().doubleValue()));
 		info.setPeriod(String.valueOf(loan.getPeriod()));

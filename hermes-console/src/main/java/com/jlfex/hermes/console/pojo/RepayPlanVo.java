@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.jlfex.hermes.common.dict.Element;
+
 
 /**
  * 外部债权导入：还款计划  vo
@@ -18,14 +20,15 @@ public class RepayPlanVo implements Serializable    {
 	
 	private String  creditorNo; 	   //债权人编号
 	private String  creditCode; 	   //债权编号
-	private long    period; 	       //期数
+	private int    period; 	           //期数
 	private Date    repayTime;  	   //应还日期
 	private BigDecimal  repayPrincipal;    //应还本金
 	private BigDecimal  repayInterest; 	   //应还利息
 	private BigDecimal  repayAllmount;     //应还总额
 	private BigDecimal  remainPrincipal;   //剩余本金
-	private String  dealResult;        //处理结果
-	private String  remark;            //备注
+	private String  status;                //处理结果
+	private String  remark;                //备注
+	private String  fileName;              //文件名称
 	
 	
 	public String getCreditorNo() {
@@ -40,13 +43,13 @@ public class RepayPlanVo implements Serializable    {
 	public void setCreditCode(String creditCode) {
 		this.creditCode = creditCode;
 	}
-	public long getPeriod() {
+	
+	public int getPeriod() {
 		return period;
 	}
-	public void setPeriod(long period) {
+	public void setPeriod(int period) {
 		this.period = period;
 	}
-	
 	public Date getRepayTime() {
 		return repayTime;
 	}
@@ -79,11 +82,18 @@ public class RepayPlanVo implements Serializable    {
 	public void setRemainPrincipal(BigDecimal remainPrincipal) {
 		this.remainPrincipal = remainPrincipal;
 	}
-	public String getDealResult() {
-		return dealResult;
+	
+	public String getStatus() {
+		return status;
 	}
-	public void setDealResult(String dealResult) {
-		this.dealResult = dealResult;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public String getRemark() {
 		return remark;
@@ -92,6 +102,13 @@ public class RepayPlanVo implements Serializable    {
 		this.remark = remark;
 	}
 	
+	
+	public static final class  Status{
+		@Element("格式正常")
+		public static final String VALID = "00";
+		@Element("格式异常")
+		public static final String INVALID = "01";
+	}
 	
 
 	

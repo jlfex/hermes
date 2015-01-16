@@ -39,7 +39,7 @@
 				<div id="tab3" class="speciallist">
 					<ul class="all_information m_tab_t">
 						<li class="active">普通标 <span></span></li>
-						<li class="lastnone">债权表 <span></span></li>
+						<li class="lastnone">债权标 <span></span></li>
 					</ul>
 					<div class="m_tab_c ad_border" style="width:100%;margin-top:15px;">
 						<div style="display: block;">

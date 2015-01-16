@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.jlfex.hermes.common.dict.Element;
+
 
 /**
  * 外部债权导入：债权信息 vo
@@ -30,9 +32,11 @@ public class CreditInfoVo implements Serializable    {
 	private String  purpose ;        //借款用途
 	private String  payType;         //还款方式
 	private Date    deadTime;        //债权到期日
-	private Date  businessTime;    //放款日
-	private String  dealResult;      //导入结果
+	private Date    businessTime;    //放款日
+	private String  status;      //导入结果
 	private String  remark;          //备注
+	private String  fileName;        //文件名称
+	
 	
 	
 	public String getCreditorNo() {
@@ -135,11 +139,17 @@ public class CreditInfoVo implements Serializable    {
 	public void setBusinessTime(Date businessTime) {
 		this.businessTime = businessTime;
 	}
-	public String getDealResult() {
-		return dealResult;
+	public String getStatus() {
+		return status;
 	}
-	public void setDealResult(String dealResult) {
-		this.dealResult = dealResult;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 	public String getRemark() {
 		return remark;
@@ -147,7 +157,12 @@ public class CreditInfoVo implements Serializable    {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	
+
+	public static final class  Status{
+		@Element("格式正常")
+		public static final String VALID = "00";
+		@Element("格式异常")
+		public static final String INVALID = "01";
+	}
 	
 }
