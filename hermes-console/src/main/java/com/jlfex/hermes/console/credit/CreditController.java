@@ -54,7 +54,13 @@ public class CreditController {
 	
 	@RequestMapping("/goAdd")
 	public String addCredit(Model model) {
-		model.addAttribute("creditorNo", generateLoanNo());
+		String uniqueueCode ="";
+		try {
+			uniqueueCode = generateLoanNo();
+		} catch (Exception e) {
+			Logger.error("生成债权人唯一编号异常：", e);
+		}
+		model.addAttribute("creditorNo",uniqueueCode );
 		return "credit/add";
 	}
 	
@@ -74,10 +80,10 @@ public class CreditController {
 		try{
 			if(creditor !=null){
 			   creditor.propTrim();
-			   creditorService.save(creditor);
-			   if(Caches.get(CACHE_CREDITOR_SEQUENCE) != null ){
-				   Caches.set(CACHE_CREDITOR_SEQUENCE, null);
+			   if(Strings.empty(creditor.getCreditorNo())){
+				   return "credit/goAdd";
 			   }
+			   creditorService.save(creditor);
 			}
 		}catch(Exception e){
 			Logger.error("债权人 新增异常：",e);
@@ -107,32 +113,35 @@ public class CreditController {
 	 * 生成债权人编号
 	 * @return
 	 */
-	public synchronized String generateLoanNo() {
+	public synchronized String generateLoanNo() throws Exception{
 		String date = Calendars.format("yyyyMMdd");
-		// 判断缓存序列是否存在 若不存在则初始化
-		if (Caches.get(CACHE_CREDITOR_SEQUENCE) == null || today == null) {
-			Creditor creditor;
-			try {
-				creditor = creditorService.findMaxCredtorNo();
-			} catch (Exception e) {
-				Logger.error("生成债权人编号异常:", e);
-				creditor = null;
-			}
-			String maxCreditNo = null;
-			if (creditor != null) {
-				maxCreditNo = creditor.getCreditorNo();
-			}
-			if (maxCreditNo != null && maxCreditNo.length() == 14) {
-				today = maxCreditNo.substring(2, 10);
-				maxCreditNo = maxCreditNo.substring(10);
-				Caches.set(CACHE_CREDITOR_SEQUENCE, Long.valueOf(maxCreditNo));
-				Logger.info("设置最大债权人编号："+Long.valueOf(maxCreditNo));
+		Creditor creditor = null;
+		List<Creditor> creditList = creditorService.findMaxCredtorNo();
+		if(creditList !=null && creditList.size()>0){
+			creditor = creditList.get(0);
+			if(creditor!=null && !Strings.empty(creditor.getCreditorNo())){
+			    String currMaxCreditNo = creditor.getCreditorNo();
+				if(!Strings.empty(currMaxCreditNo) && currMaxCreditNo.length() == 14){
+					today = currMaxCreditNo.substring(2, 10);
+					currMaxCreditNo = currMaxCreditNo.substring(10);
+					Caches.set(CACHE_CREDITOR_SEQUENCE, Long.valueOf(currMaxCreditNo));
+					Logger.info("数据库总：最大的债权人编号是："+currMaxCreditNo);
+				}
 			}
 		}
-		// 若未匹配则重置序列编号  判断日期是否与当前日期匹配
-		if (!date.equals(today)) {
-			today = date;
+		// 判断缓存序列是否存在 若不存在则初始化
+		if(Caches.get(CACHE_CREDITOR_SEQUENCE) == null ) {
 			Caches.set(CACHE_CREDITOR_SEQUENCE, 0);
+		}
+		// 若未匹配则重置序列编号  判断日期是否与当前日期匹配
+		if(Strings.empty(today)) {
+			today = date;
+		}else{
+			int num_nowDate = Integer.parseInt(date);
+			int num_today = Integer.parseInt(Strings.empty(today, "0"));
+			if(num_today < num_nowDate){
+				today = date;
+			}
 		}
 		Long seq = Caches.incr(CACHE_CREDITOR_SEQUENCE, 1);// 递增缓存数据
 		return String.format("ZQ%s%04d", today, seq);

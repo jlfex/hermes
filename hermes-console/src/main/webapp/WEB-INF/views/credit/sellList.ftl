@@ -66,10 +66,8 @@
                 <tbody>
                     <#if sellList??>
                         <#if sellList.numberOfElements == 0>
-					<tr>
-						<td colspan="14" class="align-center"><@messages key="common.table.empty" /></td>
-					</tr>
-					<#else>
+					      <tr><td colspan="14" class="align-center"><@messages key="common.table.empty" /></td></tr>
+				    	<#else>
 						<#list sellList.content as l>
 							<tr>
 	                        <td class="align-center">${(l.creditor.creditorNo)!''}</td> 
@@ -102,7 +100,9 @@
                 </tbody>
             </table>
             <div class="pull-right">
-                <ul class="pagination" data-number="0" data-total-pages="4"><li class="active"><a href="#">1</a></li><li><a href="#" data-page="1">2</a></li><li><a href="#" data-page="2">3</a></li><li><a href="#" data-page="3">4</a></li></ul>
+             <#if sellList??>
+                   11111111 <ul class="pagination" data-number="${sellList.number}" data-total-pages="${sellList.totalPages}"></ul>
+			 </#if>
             </div>
         </div>
     </div>

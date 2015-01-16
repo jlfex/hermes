@@ -19,8 +19,8 @@ import com.jlfex.hermes.model.Creditor;
 public interface CreditorRepository extends JpaRepository<Creditor, String>, JpaSpecificationExecutor<Creditor> {
 
 
-	@Query("select t from Creditor t  where t.creditorNo = (select max(t1.creditorNo) from Creditor t1 where t1.creditorNo is not null)")
-	public Creditor findMaxCredtorNo();
+	@Query("select t from Creditor t  where t.creditorNo = (select max(t1.creditorNo) from Creditor t1 where t1.creditorNo is not null) ")
+	public List<Creditor> findMaxCredtorNo();
 	
 	@Query("select t from Creditor t where t.id = ?1")
 	public Creditor findAllById(String id );
