@@ -126,7 +126,7 @@ public class CreditorServiceImpl  implements CreditorService {
 	 * 债权人 最大编号
 	 */
 	@Override
-	public Creditor findMaxCredtorNo() throws Exception {
+	public List<Creditor> findMaxCredtorNo() throws Exception {
 		return creditorRepository.findMaxCredtorNo() ;
 	}
 

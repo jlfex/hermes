@@ -46,7 +46,7 @@ public interface CreditorService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Creditor findMaxCredtorNo() throws Exception ;
+	public List<Creditor> findMaxCredtorNo() throws Exception ;
 	
 	/**
 	 * 获取 最大 债权人编号

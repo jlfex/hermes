@@ -40,8 +40,6 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/hermes-page.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.modal.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.confirm.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.js}/ueditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.js}/editor_api.js"></script>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
