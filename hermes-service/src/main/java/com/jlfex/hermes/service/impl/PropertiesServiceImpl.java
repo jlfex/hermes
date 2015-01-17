@@ -1,19 +1,26 @@
 package com.jlfex.hermes.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
+import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.CommonRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
+import com.jlfex.hermes.repository.TextRepository;
 import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.common.Query;
 import com.jlfex.hermes.service.web.PropertiesFilter;
@@ -26,8 +33,9 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
  * @since 1.0
  */
 @Service
+@Transactional
 public class PropertiesServiceImpl implements PropertiesService {
-
+	public static final String KEY_DATABASE = "com.jlfex.properties.database";
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
@@ -35,6 +43,10 @@ public class PropertiesServiceImpl implements PropertiesService {
 	/** 公共仓库 */
 	@Autowired
 	private CommonRepository commonRepository;
+	@Autowired
+	private TextService textService;
+	@Autowired
+	private TextRepository textRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -76,7 +88,8 @@ public class PropertiesServiceImpl implements PropertiesService {
 		query.and("code like :code", "code", "%" + code + "%", !Strings.empty(code));
 		query.order("code asc");
 		Long total = commonRepository.count(query.getCount(), query.getParams());
-		List<Properties> properties = commonRepository.pageByJpql(query.getJpql(), query.getParams(), pageable.getOffset(), pageable.getPageSize(), Properties.class);
+		List<Properties> properties = commonRepository.pageByJpql(query.getJpql(), query.getParams(),
+				pageable.getOffset(), pageable.getPageSize(), Properties.class);
 
 		// 返回结果
 		Page<Properties> pageProp = new PageImpl<Properties>(properties, pageable, total);
@@ -104,7 +117,8 @@ public class PropertiesServiceImpl implements PropertiesService {
 		} else {
 			Properties byId = propertiesRepository.findOne(properties.getId());
 			Assert.notNull(byId, "properties id is not correct. id is " + properties.getId(), "exception.properties");
-			Assert.equals(byId.getCode(), properties.getCode(), "cannot edit code " + byId.getCode() + " to " + properties.getCode(), "exception.properties.code.edit");
+			Assert.equals(byId.getCode(), properties.getCode(), "cannot edit code " + byId.getCode() + " to "
+					+ properties.getCode(), "exception.properties.code.edit");
 		}
 
 		// 清除缓存并保存数据返回
@@ -138,5 +152,93 @@ public class PropertiesServiceImpl implements PropertiesService {
 	@Override
 	public Properties findByCode(String code) {
 		return propertiesRepository.findByCode(code);
+	}
+
+	@Override
+	public void saveConfigurableProperties(String logo, String companyName, String nickname, String operationName,
+			String operationAddress, String operationContact, String website, String copyright, String icp,
+			String serviceTel, String serviceEmail) {
+		Properties properties = findByCode("app.logo");
+		Text text = textService.loadById(properties.getValue());
+		String sourceLogo = text.getText();
+		if (!sourceLogo.equals(logo) && !logo.contains("data:null")) {
+			text.setText(logo);
+		}
+		properties = findByCode("app.company.name");
+		String source = properties.getValue();
+		if (!source.equals(companyName)) {
+			properties.setValue(companyName);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.company.nickname");
+		source = properties.getValue();
+		if (!source.equals(nickname)) {
+			properties.setValue(nickname);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.operation.name");
+		source = properties.getValue();
+		if (!source.equals(operationName)) {
+			properties.setValue(operationName);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.operation.address");
+		source = properties.getValue();
+		if (!source.equals(operationAddress)) {
+			properties.setValue(operationAddress);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.operation.contact");
+		source = properties.getValue();
+		if (!source.equals(operationContact)) {
+			properties.setValue(operationContact);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.website");
+		source = properties.getValue();
+		if (!source.equals(website)) {
+			properties.setValue(website);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.copyright");
+		source = properties.getValue();
+		if (!source.equals(copyright)) {
+			properties.setValue(copyright);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.icp");
+		source = properties.getValue();
+		if (!source.equals(icp)) {
+			properties.setValue(icp);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("site.service.tel");
+		source = properties.getValue();
+		if (!source.equals(serviceTel)) {
+			properties.setValue(serviceTel);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.customer.service.email");
+		source = properties.getValue();
+		if (!source.equals(serviceEmail)) {
+			properties.setValue(serviceEmail);
+			propertiesRepository.save(properties);
+		}
+		App.config(loadFromDatabase());
+	}
+
+	@Override
+	public Map<String, String> loadFromDatabase() {
+		// 初始化
+		List<Properties> properties = findAll();
+		Map<String, String> values = new HashMap<String, String>();
+
+		// 遍历读取数据并设置
+		for (Properties prop : properties) {
+			values.put(prop.getCode(), prop.getValue());
+		}
+		// 返回结果
+		values.put(KEY_DATABASE, "true");
+		return values;
 	}
 }

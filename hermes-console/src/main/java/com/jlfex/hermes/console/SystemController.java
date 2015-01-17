@@ -1,12 +1,19 @@
 package com.jlfex.hermes.console;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.utils.Files;
+import com.jlfex.hermes.common.utils.Images;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.service.PropertiesService;
@@ -66,8 +73,25 @@ public class SystemController {
 	 */
 	@RequestMapping("/properties/save")
 	@ResponseBody
-	public Properties saveProperties(String id, String name, String code, String value) {
-		return propertiesService.save(id, name, code, value);
+	public Result saveProperties(MultipartHttpServletRequest request) {
+
+		MultipartFile file = request.getFile("logo");
+		Result<String> result = new Result<String>();
+		try {
+			propertiesService.saveConfigurableProperties(
+					Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes()),
+					request.getParameter("companyName"), request.getParameter("nickname"),
+					request.getParameter("operationName"), request.getParameter("operationAddress"),
+					request.getParameter("operationContact"), request.getParameter("website"),
+					request.getParameter("copyright"), request.getParameter("icp"), request.getParameter("serviceTel"),
+					request.getParameter("serviceEmail"));
+		} catch (IOException e) {
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			result.addMessage(e.getMessage());
+		}
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+		result.addMessage("保存成功");
+		return result;
 	}
 
 	/**

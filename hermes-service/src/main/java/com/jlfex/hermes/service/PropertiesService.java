@@ -1,6 +1,7 @@
 package com.jlfex.hermes.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
@@ -68,4 +69,10 @@ public interface PropertiesService {
 	 * @return
 	 */
 	public Properties findByCode(String code);
+
+	public void saveConfigurableProperties(String logo, String companyName, String nickname, String operationName,
+			String operationAddress, String operationContact, String website, String copyright, String icp,
+			String serviceTel, String serviceEmail);
+
+	public Map<String, String> loadFromDatabase();
 }
