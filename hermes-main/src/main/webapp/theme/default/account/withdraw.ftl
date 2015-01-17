@@ -49,7 +49,6 @@
 		</form>
 	</div>
 </div>
-
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

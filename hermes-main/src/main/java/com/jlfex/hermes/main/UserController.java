@@ -1,16 +1,19 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
@@ -32,11 +35,15 @@ public class UserController {
 	private Producer captchaProducer;
 	@Autowired
 	private EmailService emailService;
-	
+
 	private static final String COMPANY_NAME = "app.company.name";
+	private static final String WEBSITE = "app.website";
+	private static final String COMPANY_PNAME = "app.company.pname";
+	private static final String COMPANY_NICK_NAME = "app.company.nickname";
 
 	/**
 	 * 登录界面
+	 * 
 	 * @return
 	 */
 	@RequestMapping("skipSignIn")
@@ -56,6 +63,7 @@ public class UserController {
 
 	/**
 	 * 注册
+	 * 
 	 * @param user
 	 * @param model
 	 * @param request
@@ -63,11 +71,11 @@ public class UserController {
 	 */
 	@RequestMapping("/signUp")
 	public String signUp(User user, Model model, HttpServletRequest request) {
-		String commonMessage ="";
-		if(user != null){
+		String commonMessage = "";
+		if (user != null) {
 			user.propertyTrim();
 		}
-		String verificationCode = (String) request.getSession().getAttribute("capText");  
+		String verificationCode = (String) request.getSession().getAttribute("capText");
 		try {
 			checkMatterData(verificationCode, user);
 		} catch (Exception e) {
@@ -75,16 +83,16 @@ public class UserController {
 			model.addAttribute("errMsg", e.getMessage());
 			return "user/signup";
 		}
-		try{
-	       userService.signUp(user);
-		}catch(Exception e){
+		try {
+			userService.signUp(user);
+		} catch (Exception e) {
 			commonMessage = "注册失败,数据保存异常";
 			Logger.error(commonMessage, e);
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup";
 		}
-	    try {
-	        String generateMail  = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
+		try {
+			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
 			emailService.sendEmail(user.getEmail(), "注册用户激活", generateMail);
 		} catch (Exception e) {
 			commonMessage = "激活邮件发送失败,请重新发送!";
@@ -92,31 +100,33 @@ public class UserController {
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup-success";
 		}
-	    model.addAttribute("email", user.getEmail());
+		model.addAttribute("email", user.getEmail());
 		return "user/signup-success";
 	}
+
 	/**
 	 * 重要 信息 校验
+	 * 
 	 * @param verificationCode
 	 * @param user
 	 * @throws Exception
 	 */
-	private  void  checkMatterData(String verificationCode, User user) throws Exception{
-		if(!verificationCode.equalsIgnoreCase(user.getVerificationCode())){
+	private void checkMatterData(String verificationCode, User user) throws Exception {
+		if (!verificationCode.equalsIgnoreCase(user.getVerificationCode())) {
 			String var = "验证码不匹配";
-			Logger.info(var+": 系统："+verificationCode+"___用户:"+user.getVerificationCode());
+			Logger.info(var + ": 系统：" + verificationCode + "___用户:" + user.getVerificationCode());
 			throw new Exception(var);
 		}
 		boolean flagEmail = userService.isExistentEmail(user.getEmail());
-		if(flagEmail){
+		if (flagEmail) {
 			throw new Exception("邮箱已使用");
 		}
 		boolean flagPhone = userService.checkPhone(user.getCellphone());
-		if(!flagPhone){
+		if (!flagPhone) {
 			throw new Exception("手机已使用");
 		}
 		User existUser = userService.getUserByAccount(user.getAccount());
-		if(existUser != null){
+		if (existUser != null) {
 			throw new Exception("昵称已使用");
 		}
 	}
@@ -127,20 +137,21 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
-//	@RequestMapping("supplement")
-//	public String supplement(UserBasic userBasic, Model model, HttpServletRequest req) {
-//		String message =null;
-//			String mailTemplate = userService.signSupplement(userBasic, req);
-//			try {
-//				emailService.sendEmail(userBasic.getEmail(), "注册用户激活", mailTemplate);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		model.addAttribute("errMsg", message);
-//		model.addAttribute("email", userBasic.getEmail());
-//		return "user/signup-success";
-//	}
+	// @RequestMapping("supplement")
+	// public String supplement(UserBasic userBasic, Model model,
+	// HttpServletRequest req) {
+	// String message =null;
+	// String mailTemplate = userService.signSupplement(userBasic, req);
+	// try {
+	// emailService.sendEmail(userBasic.getEmail(), "注册用户激活", mailTemplate);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// model.addAttribute("errMsg", message);
+	// model.addAttribute("email", userBasic.getEmail());
+	// return "user/signup-success";
+	// }
 
 	/**
 	 * 查看昵称是否被占用
@@ -177,7 +188,7 @@ public class UserController {
 		} else {
 			jsonObj.put("cellphone", false);
 		}
-	
+
 		return jsonObj;
 	}
 
@@ -213,6 +224,7 @@ public class UserController {
 
 	/**
 	 * 重新发送激活邮件
+	 * 
 	 * @param email
 	 * @param model
 	 * @param request
@@ -224,7 +236,7 @@ public class UserController {
 		String commonMessage = "";
 		User user = userService.loadByEmail(email);
 		try {
-			String generateMail  = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
+			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
 			emailService.sendEmail(user.getEmail(), "注册用户激活", generateMail);
 		} catch (Exception e) {
 			commonMessage = "激活邮件发送失败,请重新发送!";
@@ -234,6 +246,7 @@ public class UserController {
 		model.addAttribute("email", email);
 		return "user/signup-success";
 	}
+
 	/**
 	 * 激活邮件
 	 * 
@@ -278,7 +291,7 @@ public class UserController {
 	@RequestMapping("isExistentEmail")
 	@ResponseBody
 	public JSONObject isExistentEmail(String email) {
-		JSONObject jsonObj=new JSONObject();
+		JSONObject jsonObj = new JSONObject();
 		if (userService.isExistentEmail(email)) {
 			jsonObj.put("email", false);
 		} else {
@@ -286,18 +299,20 @@ public class UserController {
 		}
 		return jsonObj;
 	}
+
 	/**
 	 * 验证码 输入是否正确
+	 * 
 	 * @param code
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("checkVerifiedCode")
 	@ResponseBody
-	public JSONObject checkVerifiedCode(String captcha,HttpServletRequest request) {
-		JSONObject jsonObj=new JSONObject();
-		String verificationCode = (String) request.getSession().getAttribute("capText");  
-		if(!verificationCode.equalsIgnoreCase(captcha)){
+	public JSONObject checkVerifiedCode(String captcha, HttpServletRequest request) {
+		JSONObject jsonObj = new JSONObject();
+		String verificationCode = (String) request.getSession().getAttribute("capText");
+		if (!verificationCode.equalsIgnoreCase(captcha)) {
 			jsonObj.put("captcha", false);
 		} else {
 			jsonObj.put("captcha", true);
@@ -322,6 +337,7 @@ public class UserController {
 		}
 		return jsonObj;
 	}
+
 	/**
 	 * 发送重置密码的邮件
 	 * 
@@ -376,48 +392,59 @@ public class UserController {
 		userService.retrievePwd(user.getId(), user.getSignPassword());
 		return "user/retrievePwdStep4";
 	}
+
 	/**
 	 * 生成验证码图片
+	 * 
 	 * @param request
 	 * @param response
 	 * @time :2014年12月29日10:44:24
 	 */
 	@RequestMapping("generatorCode")
 	@ResponseBody
-	public void getValidatePic(HttpServletRequest request, HttpServletResponse response)  {
+	public void getValidatePic(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			response.setDateHeader("Expires", 0);
 			response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
 			response.addHeader("Cache-Control", "post-check=0, pre-check=0");
 			response.setHeader("Pragma", "no-cache");
-		    response.setContentType("image/jpeg");
+			response.setContentType("image/jpeg");
 			String capText = captchaProducer.createText();
-	        Logger.debug(request.getSession().getId() + ":" + capText);
-		    request.getSession().setAttribute("capText", capText);
+			Logger.debug(request.getSession().getId() + ":" + capText);
+			request.getSession().setAttribute("capText", capText);
 			BufferedImage bi = captchaProducer.createImage(capText);
 			ServletOutputStream out = response.getOutputStream();
-		    ImageIO.write(bi, "jpg", out);
+			ImageIO.write(bi, "jpg", out);
 			try {
 				out.flush();
 			} finally {
 				out.close();
-			}	
+			}
 		} catch (Exception e) {
-			Logger.error("生产验证码异常：",e);
+			Logger.error("生产验证码异常：", e);
 		}
 	}
+
 	/**
 	 * hermes隐私条款 和 使用条款
+	 * 
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/privacyAndUseProtocol")
 	public String privacyAndUseProtocol(Model model) {
 		String companyName = App.config(COMPANY_NAME);
+		String website = App.config(WEBSITE);
+		String pname = App.config(COMPANY_PNAME);
+		String nikename = App.config(COMPANY_NICK_NAME);
 		model.addAttribute("date", Calendars.date());
 		model.addAttribute("emial", "hermes");
 		model.addAttribute("companyName", companyName);
-		return "user/privacyAndUseProtocol";
+		model.addAttribute("website", website);
+		model.addAttribute("nikename", nikename);
+		model.addAttribute("pname", pname);
+
+		return "agree/register";
 	}
-	
+
 }
