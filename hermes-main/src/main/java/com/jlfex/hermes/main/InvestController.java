@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
@@ -146,13 +147,24 @@ public class InvestController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
-		String page = "0",size = "8";
+		String page = "0", size = "8";
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);
-		model.addAttribute("loans",investService.investIndexLoanList(page, size, Loan.LoanKinds.NORML_LOAN));
-		model.addAttribute("assignLoans",investService.investIndexLoanList(page, size, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
+		model.addAttribute("loans", investService.investIndexLoanList(page, size, Loan.LoanKinds.NORML_LOAN));
 		return "invest/index";
+	}
+
+	@RequestMapping("/indexnormalloanfgt")
+	public String indexNormalLoanFgt(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, Model model) {
+		model.addAttribute("normalloan", investService.investIndexLoanList(page, size, Loan.LoanKinds.NORML_LOAN));
+		return "invest/indexNormalLoanFgt";
+	}
+
+	@RequestMapping("/indexassignloanfgt")
+	public String indexAssignLoanFgt(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, Model model) {
+		model.addAttribute("assignLoan", investService.investIndexLoanList(page, size, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
+		return "invest/indexAssignLoanFgt";
 	}
 
 	//
@@ -275,10 +287,12 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/indexsearch")
-	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection,String loanKind, Model model) {
-		Logger.info("理财列表查询参数: purpose=" + getUTFFormat(purpose) + ",raterange=" + getUTFFormat(raterange) + ",periodrange=" + getUTFFormat(periodrange) + ",repayname=" + getUTFFormat(repayname)+",loanKind="+getUTFFormat(loanKind));
+	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection, String loanKind,
+			Model model) {
+		Logger.info("理财列表查询参数: purpose=" + getUTFFormat(purpose) + ",raterange=" + getUTFFormat(raterange) + ",periodrange=" + getUTFFormat(periodrange) + ",repayname=" + getUTFFormat(repayname)
+				+ ",loanKind=" + getUTFFormat(loanKind));
 		model.addAttribute("loans",
-				investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection,loanKind));
+				investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection, loanKind));
 		return "invest/loandata";
 	}
 
@@ -323,18 +337,18 @@ public class InvestController {
 		Logger.info("loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
 		model.addAttribute("loan", loan);
-		String loanPurpose = ""; 
-		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		String loanPurpose = "";
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			loanPurpose = loan.getPurpose();
-		}else{
+		} else {
 			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
 		}
 		model.addAttribute("purpose", loanPurpose);
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
-		if(!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
-			 loan.getCreditInfoId();
+		if (!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+			loan.getCreditInfoId();
 		}
 		// 从借款日志表里取开始投标的起始时间
 
@@ -372,7 +386,7 @@ public class InvestController {
 		model.addAttribute("loanauths", loanAuthlist);
 
 		model.addAttribute("nav", "invest");
-		//读取投标金额倍数设置
+		// 读取投标金额倍数设置
 		String investBidMultiple = App.config(INVEST_BID_MULTIPLE);
 		model.addAttribute("investBidMultiple", investBidMultiple);
 		// 返回视图
@@ -400,7 +414,7 @@ public class InvestController {
 		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE,
 				InvestProfit.Status.ADVANCE });
 
-		List<InvestInfo> investInfoList = investService.findByUser(user,Loan.LoanKinds.NORML_LOAN);
+		List<InvestInfo> investInfoList = investService.findByUser(user, Loan.LoanKinds.NORML_LOAN);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -424,8 +438,6 @@ public class InvestController {
 		// 返回视图
 		return "invest/myinvest";
 	}
-	
-	
 
 	/**
 	 * 我的理财的明细
@@ -452,9 +464,10 @@ public class InvestController {
 		// 返回视图
 		return "invest/myinvestinfo";
 	}
-	
+
 	/**
 	 * 我的债权
+	 * 
 	 * @param userid
 	 * @param model
 	 * @return
@@ -465,20 +478,21 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		// 已获收益
-		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
-		BigDecimal allProfitSum = BigDecimal.ZERO;//总收益
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE,
+				InvestProfit.Status.ADVANCE });
+		BigDecimal allProfitSum = BigDecimal.ZERO;// 总收益
 		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
-		BigDecimal overdueInterestSum =BigDecimal.ZERO; //罚息收益总数
-		if(investProfit !=null){
-			if(investProfit.getInterestAmount()!=null){
+		BigDecimal overdueInterestSum = BigDecimal.ZERO; // 罚息收益总数
+		if (investProfit != null) {
+			if (investProfit.getInterestAmount() != null) {
 				interestSum = investProfit.getInterestAmount();
 			}
-			if(investProfit.getOverdueAmount()!=null){
+			if (investProfit.getOverdueAmount() != null) {
 				overdueInterestSum = investProfit.getOverdueAmount();
 			}
 			allProfitSum = allProfitSum.add(interestSum).add(overdueInterestSum);
 		}
-		List<InvestInfo> investInfoList = investService.findByUser(user,Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		List<InvestInfo> investInfoList = investService.findByUser(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -501,5 +515,20 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		// 返回视图
 		return "invest/mycredit";
+	}
+
+	@RequestMapping("/registeragree")
+	public String registerAgree() {
+		return "agree/register";
+	}
+
+	@RequestMapping("/financeagree")
+	public String financeAgree() {
+		return "agree/finance";
+	}
+
+	@RequestMapping("/assdebtagree")
+	public String assdebtAgree() {
+		return "agree/assdebt";
 	}
 }

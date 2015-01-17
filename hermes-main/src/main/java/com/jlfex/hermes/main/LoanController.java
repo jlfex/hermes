@@ -3,12 +3,14 @@ package com.jlfex.hermes.main;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
@@ -27,6 +29,7 @@ import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
@@ -64,10 +67,13 @@ public class LoanController {
 	@Autowired
 	private UserInfoService userInfoService;
 	@Autowired
+	private UserPropertiesRepository userPropertiesRepository;
+	@Autowired
 	private InvestService investService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String COMPANY_ADDRESS = "app.company.address";
+	private static final String COMPANY_PNAME = "app.company.pname";
 
 	/**
 	 * 索引
@@ -82,7 +88,7 @@ public class LoanController {
 		model.addAttribute("purposes", dictionaryService.getByTypeCode("loan_purpose"));
 		return "loan/index";
 	}
-	
+
 	@RequestMapping("/test")
 	public String test(Model model) {
 
@@ -267,13 +273,13 @@ public class LoanController {
 	 */
 	@RequestMapping("/loanprogram")
 	public String loanprogram(String amount, String period, String rate, String productId, String productName, String purposeName, String purposeId, String repayName, String repayId, Model model) {
-	    try {
+		try {
 			App.checkUser();
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
-		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName + ",purposeId :"
-				+ purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
+		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName
+				+ ",purposeId :" + purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
 		model.addAttribute("amount", Numbers.toCurrency(new Double(amount)));
 		model.addAttribute("rate", Numbers.toPercent(new Double(rate) / 100));
 		model.addAttribute("period", period);
@@ -348,12 +354,14 @@ public class LoanController {
 		// 返回视图
 		return "loan/loansuccess";
 	}
-    /**
-     * 借款：生成借款协议
-     * @param loanId
-     * @param model
-     * @return
-     */
+
+	/**
+	 * 借款：生成借款协议
+	 * 
+	 * @param loanId
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/deal/{loanId}")
 	public String deal(@PathVariable("loanId") String loanId, Model model) {
 		App.checkUser();
@@ -407,19 +415,40 @@ public class LoanController {
 
 		}
 		// 返回视图
-		return "loan/deal";
+		return "agree/loan";
 	}
+
 	/**
 	 * 理财协议
+	 * 
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/funanceProtocol")
 	public String funanceProtocol(Model model) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		model.addAttribute("curUser", userPropertiesRepository.findByUserId(curUser.getId()));
+		model.addAttribute("now", Calendars.date());
 		String companyName = App.config(COMPANY_NAME);
-		model.addAttribute("date", Calendars.date());
-		model.addAttribute("emial", "hermes");
+		String companyAddress = App.config(COMPANY_ADDRESS);
+		String pname = App.config(COMPANY_PNAME);
 		model.addAttribute("companyName", companyName);
-		return "loan/funanceProtocol";
+		model.addAttribute("companyAddress", companyAddress);
+		model.addAttribute("pname", pname);
+		return "agree/finance";
+	}
+
+	@RequestMapping("/loanagree")
+	public String loanAgree(Model model) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		model.addAttribute("curUser", userPropertiesRepository.findByUserId(curUser.getId()));
+		model.addAttribute("now", Calendars.date());
+		String companyName = App.config(COMPANY_NAME);
+		String companyAddress = App.config(COMPANY_ADDRESS);
+		model.addAttribute("companyName", companyName);
+		model.addAttribute("companyAddress", companyAddress);
+		return "agree/loan";
 	}
 }

@@ -10,6 +10,15 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript">
+function getLoanInfo(){
+	var info = {
+			purpose:"${purposeName}",
+			amount:"${amount}",
+			rate:"${rate}",
+			period:"${period}<@messages key="common.unit.month"  />"
+		};
+		return info;
+}
 jQuery(function($) {
 	$(".confirm").click(function(){
 		$.ajax({
@@ -32,8 +41,9 @@ jQuery(function($) {
 		    });
 	});
 	$('.deal').click(function(){
-			openwindow("${app}/loan/deal/0","",1000,800);
-			
+		
+		
+		var win = openwindow("${app}/loan/loanagree","",1000,800);
 	});
 	function openwindow(url,name,iWidth,iHeight)
 	{
@@ -43,7 +53,7 @@ jQuery(function($) {
 		var iHeight; //弹出窗口的高度;
 		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
 		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
-		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 
 	
