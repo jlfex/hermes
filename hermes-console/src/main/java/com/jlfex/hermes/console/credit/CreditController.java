@@ -24,9 +24,13 @@ import com.jlfex.hermes.console.pojo.RepayPlanVo;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
+import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.CreditorService;
+import com.jlfex.hermes.service.UserInfoService;
 
 @Controller
 @RequestMapping("/credit")
@@ -39,6 +43,8 @@ public class CreditController {
 	private CreditorService creditorService;
 	@Autowired
 	private CreditInfoService creditInfoService;
+	@Autowired
+	private UserInfoService userInfoService;
 	@Autowired
 	private CreditRepayPlanService creditRepayPlanService;
 
@@ -139,8 +145,11 @@ public class CreditController {
 		}else{
 			int num_nowDate = Integer.parseInt(date);
 			int num_today = Integer.parseInt(Strings.empty(today, "0"));
-			if(num_today < num_nowDate){
-				today = date;
+			if(!date.equals(today)){
+				if(num_today < num_nowDate){
+					today = date;
+					Caches.set(CACHE_CREDITOR_SEQUENCE, 0);
+				}
 			}
 		}
 		Long seq = Caches.incr(CACHE_CREDITOR_SEQUENCE, 1);// 递增缓存数据
@@ -174,11 +183,12 @@ public class CreditController {
 		 String fileName = file.getOriginalFilename(); 
 		 Map<String,Object> sheetMap= null;
 		 try {
+			 //1: 解析Excel 到 数据模型
 			 FileInputStream fileInputStream= (FileInputStream) file.getInputStream(); 
 			 sheetMap = ExcelUtil.analysisExcel(fileName, fileInputStream);
 			 List<CreditInfoVo>  creditList = (List<CreditInfoVo>) sheetMap.get("creditList");
 			 List<RepayPlanVo>   repayList = (List<RepayPlanVo>) sheetMap.get("repayList");
-			 //
+			 //2:持久化:债权信息
 			 List<CrediteInfo>   entityCreditList= new ArrayList<CrediteInfo>();
 			 List<CreditRepayPlan>     entitLoanPayList = new ArrayList<CreditRepayPlan>();
 			 for(CreditInfoVo vo : creditList){
@@ -189,6 +199,7 @@ public class CreditController {
 			 if(savedCreditInfolist == null || savedCreditInfolist.size() == 0){
 				 throw new Exception("债权信息保存失败");
 			 }
+			 //3:持久化:债权还款明细
 			 CrediteInfo load_crediteInfo = savedCreditInfolist.get(0);
 			 Creditor    load_creditor = savedCreditInfolist.get(0).getCreditor();
 			 for(RepayPlanVo vo : repayList){
@@ -199,13 +210,11 @@ public class CreditController {
 			 if(creditRepayPlanList == null || creditRepayPlanList.size() == 0){
 				 Logger.info("还款计划表保存失败");
 			 }
-			 code = "00";
-			 msg = "成功";
+			 code = "00";msg = "成功";
 		} catch (Exception e) {
 			 String var = "债权导入 文件解析异常";
 			 Logger.error(var, e);
-			 code = "99";
-			 msg = e.getMessage();
+			 code = "99";msg = e.getMessage();
 		}
 	    resultMap.put("code", code);
 		resultMap.put("msg",  msg);
@@ -251,12 +260,12 @@ public class CreditController {
 			entity.setCreditor(creditor);
 			entity.setCrediteInfo(creditInfo); 
 			entity.setPeriod(vo.getPeriod());
-			entity.setRepayTime(vo.getRepayTime());
+			entity.setRepayPlanTime(vo.getRepayTime());
 			entity.setRepayPrincipal(vo.getRepayPrincipal());
 			entity.setRepayInterest(vo.getRepayInterest());
 			entity.setRepayAllmount(vo.getRepayAllmount());
 			entity.setRemainPrincipal(vo.getRemainPrincipal());
-			entity.setStatus(CreditRepayPlan.Status.WAIT_PAY);
+			entity.setStatus(CreditRepayPlan.Status.WAIT_SELL);
 			entity.setRemark(vo.getRemark());
 		}
 	    return entity;
@@ -272,6 +281,7 @@ public class CreditController {
 	@RequestMapping("/repayPlanDetail/{id}")
 	public String repayPlanDetail( @PathVariable("id") String id, Model model){
 		try {
+			BigDecimal reMainCash = BigDecimal.ZERO;
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
 			Map<String, Object> calculatedMap =  creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
@@ -279,6 +289,14 @@ public class CreditController {
 			model.addAttribute("repayPlanDetailList",planList); //还款明细
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); //剩余本金
 			model.addAttribute("remainPeriod", calculatedMap.get("remainPeriod")); //剩余期数
+			User user = creditInfo.getCreditor().getUser();
+			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
+			if(userAccount!=null){
+				if(userAccount.getBalance()!=null){
+					reMainCash = userAccount.getBalance();
+				}
+			}
+			model.addAttribute("reMainCash", reMainCash); //账户可用余额
 		} catch (Exception e) {
 			Logger.error("债权还款计划明细异常：", e);
 		}
@@ -339,9 +357,7 @@ public class CreditController {
 				if(!Strings.empty(creditInfo.getBidEndTimeStr())){
 					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
 				}
-				if(creditInfo.getPeriod() > 0){
-					entity.setPeriod(creditInfo.getPeriod());
-				}
+				
 				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
 					 throw new Exception("发售金额必须大于0");
 				}else{

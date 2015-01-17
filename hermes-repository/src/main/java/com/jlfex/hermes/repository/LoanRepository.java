@@ -81,4 +81,13 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 */
 	
 	public Page<Loan> findByloanKindAndStatusIn(String loanKind, List<String> status, Pageable pageable);
+	/**
+	 * 根据标类型 +状态+ 债权信息 
+	 * @param creditInfoId
+	 * @param loanKind
+	 * @param status
+	 * @return
+	 */
+	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2 and t.status = ?3 ")
+	public List<Loan> findByCreditInfoAndLoanKindAndStatus(String creditInfoId, String loanKind, String status );
 }

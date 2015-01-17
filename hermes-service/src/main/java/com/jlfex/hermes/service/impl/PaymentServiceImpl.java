@@ -172,7 +172,9 @@ public class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	public Payment save(Payment payment) {
-		Assert.notNull(payment, "payment is null.");
+		if(payment == null){
+			throw new ServiceException("支付信息 为空");
+		}
 		return paymentRepository.save(payment);
 	}
 	
@@ -182,9 +184,19 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Payment save(String channel, Double amount) {
 		// 验证参数
-		Assert.notEmpty(channel, "channel is empty.");
-		Assert.notNull(amount, "amount is null.");
-		
+		String  errMsg = "";
+		boolean checkValid  = false;
+		if(Strings.empty(channel)){
+			errMsg = "账户充值：充值渠道为空!";
+			checkValid = true;
+		}
+		if(amount==null || amount == 0){
+			errMsg = "账户充值：充值金额为空!";
+			checkValid = true;
+		}
+		if(checkValid){
+			throw new ServiceException(errMsg);
+		}
 		// 初始化
 		Payment payment = new Payment();
 		BigDecimal fee = calcChargeFee(amount);
