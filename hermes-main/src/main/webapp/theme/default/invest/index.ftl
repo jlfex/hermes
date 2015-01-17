@@ -16,6 +16,13 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <style type="text/css">
   table th{text-align:center;}
+  .loan_list{height:auto;}
+  ul.pagination{
+  	border:none;
+  }
+  ul.pagination li{
+  	float:none;
+  }
 </style>
 </head>
 <body>
@@ -43,94 +50,21 @@
 					</ul>
 					<div class="m_tab_c ad_border" style="width:100%;margin-top:15px;">
 						<div style="display: block;">
-							<div class="data">
-								<table cellpadding="0" cellspacing="0" border="0" style="border-left:1px solid #e2e2e2;border-right:1px solid #e2e2e2;">
-									<thead>
-										<tr style="background:#e5f9ff;">
-											<th class="th_01">借款用途</th>
-											<th class="th_02">金额（元）</th>
-											<th class="th_03">年利率</th>
-											<th class="th_04">期限</th>
-											<th class="th_05">进度</th>
-											<th class="th_06">剩余金额（元）</th>
-											<th class="th_07">操作</th>
-										</tr>
-									</thead>
-									<#list loans.content as l>  
-									<tr>
-										<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-										<td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
-										<td class="td_03">${l.rate}</td>
-										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
-										<td class="td_05">
-				                            <div class="layer_box">
-				                                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
-				                                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
-				                            </div>
-										</td>
-										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
-										<td class="td_07">
-												<#if l.status=='10'>
-												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.bid" /></a> 
-												<#elseif l.status=='11'>
-												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.scale" /></a> 
-												<#elseif l.status=='12'>
-												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.repayment" /></a> 
-												<#elseif l.status=='99'>
-												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">完成</a> 
-												<#else>
-												</#if>
-										</td>
-									</tr>
-									</#list>
-									
-								</table>
+							<form id="normalLoanForm" method="post" action="#" class="form-horizontal">
+							<input id="page" name="page" type="hidden" value="0">
+							<div class="data" id="normalData">
+								
 							</div>
+							</form>
 							
 						</div>
 						<div style="display: none;">
-							<div class="data">
-								 <table cellpadding="0" cellspacing="0" border="0" style="border-left:1px solid #e2e2e2;border-right:1px solid #e2e2e2;">
-									<thead>
-										<tr style="background:#fff9f9;">
-											<th class="th_01">债权名称</th>
-											<th class="th_02">剩余本金（元）</th>
-											<th class="th_03">年利率</th>
-											<th class="th_04">期限</th>
-											<th class="th_05">进度</th>
-											<th class="th_06">转让价格（元）</th>
-											<th class="th_07">操作</th>
-										</tr>
-									</thead>
-									<#list assignLoans.content as l>  
-									<tr>
-										<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-										<td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
-										<td class="td_03">${l.rate}</td>
-										<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
-										<td class="td_05">
-											<div class="layer_box">
-				                                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
-				                                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
-				                            </div>
-										</td>
-										<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
-										<td class="td_07">
-												<#if l.status=='10'>
-												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.bid" /></a> 
-												<#elseif l.status=='11'>
-												    <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.scale" /></a> 
-												<#elseif l.status=='12'>
-												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#"><@messages key="invest.loan.full.repayment" /></a> 
-												<#elseif l.status=='99'>
-												     <a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">完成</a> 
-												<#else>
-												</#if>
-										</td>
-									</tr>
-									</#list>
-								</table>
+							<form id="assignLoanForm" method="post" action="#" class="form-horizontal">
+							<input id="page" name="page" type="hidden" value="0">
+							<div class="assignData">
+								 
 							</div>
+							</form>
 						</div>
 					</div>
 				</div>	
@@ -182,5 +116,45 @@ $('#searchForm .form-control-static .label').on('click', function() {
 
 </script>
 
+
+
+<script type="text/javascript" charset="utf-8">
+<!--
+jQuery(function($) {
+	$('#normalLoanForm').on('submit', function() {
+		$.ajax('${app}/invest/indexnormalloanfgt', {
+			data: $(this).serialize(),
+			type: 'post',
+			dataType: 'html',
+			timeout: 5000,
+			success: function(data, textStatus, xhr) {
+				$('#normalData').fadeOut('fast', function() {
+					$(this).html(data).fadeIn('fast');
+				});
+			}
+		});
+		return false;
+	});
+	
+	$('#assignLoanForm').on('submit', function() {
+		$.ajax('${app}/invest/indexassignloanfgt', {
+			data: $(this).serialize(),
+			type: 'post',
+			dataType: 'html',
+			timeout: 5000,
+			success: function(data, textStatus, xhr) {
+				$('#assignData').fadeOut('fast', function() {
+					$(this).html(data).fadeIn('fast');
+				});
+			}
+		});
+		return false;
+	});
+	
+	
+	$('#normalLoanForm,#assignLoanForm').submit();
+});
+//-->
+</script>
 </body>
 </html>
