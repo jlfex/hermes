@@ -10,6 +10,12 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<style type="text/css">
+	 .ml_180{ margin-left:185px;}
+     .mr_10{margin-right:10px;}
+     .low,.middle,.high{ width:60px; height:10px; display:inline-block; border:1px solid #e4e4e4;}
+     .rank_bg{ background:#e68f07;}
+</style>
 <script type="text/javascript">
 $(document).ready(function(){
    function openwindow(url,name,iWidth,iHeight)
@@ -76,6 +82,65 @@ function changeCode() {
     $("#verificationCode").attr("src", "${app}/userIndex/generatorCode?t="+score);
 }
 
+
+var securityLevel;
+$(function(){
+	$(".ml_180").hide();
+	$("#signPassword").bind('input propertychange', function() {
+		$(".ml_180").show();
+		if($("#signPassword").val()==""){
+			$(".ml_180").hide();
+		}
+		calLevel();
+	});
+ });
+ 	
+ function calLevel() {
+		var value = $.trim($("#signPassword").val());
+		$(".low").css("background-color", "#C8C8C8");
+		$(".middle").css("background-color", "#C8C8C8");
+		$(".high").css("background-color", "#C8C8C8");
+		if (value.length < 8 || countRepeat(value) >= 3) {
+			securityLevel = 1;
+		} else if (value.length >= 8 && value.length < 12) {
+			securityLevel = 2;
+		} else if (value.length >= 12) {
+			securityLevel = 3;
+		}
+		switch (securityLevel) {
+		case 1:
+			$(".low").css("background-color", "#E68F07");
+			break;
+		case 2:
+			$(".low").css("background-color", "#E68F07");
+			$(".middle").css("background-color", "#E68F07");
+			break;
+		case 3:
+			$(".low").css("background-color", "#E68F07");
+			$(".middle").css("background-color", "#E68F07");
+			$(".high").css("background-color", "#E68F07");
+			break;
+		}
+	}
+	
+	function countRepeat(value) {
+		var map = {};
+		for ( var i = 0; i < value.length; i++) {
+			var c = value.charAt(i);
+			if (map[c]) {
+				map[c]++;
+			} else {
+				map[c] = 1;
+			}
+		}
+		var max = 0;
+		for ( var v in map) {
+			if (max < map[v]) {
+				max = map[v];
+			}
+		}
+		return max;
+	}
 </script>
 </head>
 
@@ -105,6 +170,11 @@ function changeCode() {
 				<input id="signPassword" name="signPassword" type="password" style="display:none;"  class="mv_pwd"/>
 			    <span class="mv_msg"></span>
 			</div>
+			 <div class="ml_180" style="margin-top:-0px;margin-left:12px">
+             <span class="low  mr_10" style="background:#C8C8C8;"></span>
+             <span class="middle  mr_10" style="background:#C8C8C8;"></span>
+             <span class="high" style="background:#C8C8C8;"></span>
+             </div>
 			<div class="m_item">
 				<input id="configPwd" type="text" value="<@messages key="sign.up.configpassword" />" />
 				<input id="configPassword" name="configPassword" type="password" style="display:none;"  class="mv_pwdagain"/>

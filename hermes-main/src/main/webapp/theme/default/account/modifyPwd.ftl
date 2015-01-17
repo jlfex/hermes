@@ -21,6 +21,11 @@
 		</div>
 		<span class="col-sm-6 error_tip" style="display:none;padding:7px 0 0 0;color:#ff451f;">请输入原密码</span>
 	  </div>
+	  <div class="ml_180" style="margin-top:-10px;margin-left:122px">
+             <span class="low  mr_10" style="background:#C8C8C8;"></span>
+             <span class="middle  mr_10" style="background:#C8C8C8;"></span>
+             <span class="high" style="background:#C8C8C8;"></span>
+      </div>
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">*<@messages key="account.password.confirm"/>：</label>
 	  	 <div id="confirmDiv" class="col-sm-4 control-group" >
@@ -36,7 +41,12 @@
     </form>
   </div>
 </div>
-
+<style type="text/css">
+	 .ml_180{ margin-left:185px;}
+     .mr_10{margin-right:10px;}
+     .low,.middle,.high{ width:60px; height:10px; display:inline-block; border:1px solid #e4e4e4;}
+     .rank_bg{ background:#e68f07;}
+</style>
 <script type="text/javascript">
 <!--
 jQuery(function($) {
@@ -129,6 +139,66 @@ function comparePwd(){
   }
 }
 //-->
+
+var securityLevel;
+$(function(){
+	$(".ml_180").hide();
+	$("#password").bind('input propertychange', function() {
+		$(".ml_180").show();
+		if($("#password").val()==""){
+			$(".ml_180").hide();
+		}
+		calLevel();
+	});
+ });
+ 	
+ function calLevel() {
+		var value = $.trim($("#password").val());
+		$(".low").css("background-color", "#C8C8C8");
+		$(".middle").css("background-color", "#C8C8C8");
+		$(".high").css("background-color", "#C8C8C8");
+		if (value.length < 8 || countRepeat(value) >= 3) {
+			securityLevel = 1;
+		} else if (value.length >= 8 && value.length < 12) {
+			securityLevel = 2;
+		} else if (value.length >= 12) {
+			securityLevel = 3;
+		}
+		switch (securityLevel) {
+		case 1:
+			$(".low").css("background-color", "#E68F07");
+			break;
+		case 2:
+			$(".low").css("background-color", "#E68F07");
+			$(".middle").css("background-color", "#E68F07");
+			break;
+		case 3:
+			$(".low").css("background-color", "#E68F07");
+			$(".middle").css("background-color", "#E68F07");
+			$(".high").css("background-color", "#E68F07");
+			break;
+		}
+	}
+	
+	function countRepeat(value) {
+		var map = {};
+		for ( var i = 0; i < value.length; i++) {
+			var c = value.charAt(i);
+			if (map[c]) {
+				map[c]++;
+			} else {
+				map[c] = 1;
+			}
+		}
+		var max = 0;
+		for ( var v in map) {
+			if (max < map[v]) {
+				max = map[v];
+			}
+		}
+		return max;
+	}
+	
 </script>
 
 </body>
