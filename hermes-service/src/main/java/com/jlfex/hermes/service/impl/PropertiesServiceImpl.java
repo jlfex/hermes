@@ -155,26 +155,16 @@ public class PropertiesServiceImpl implements PropertiesService {
 	}
 
 	@Override
-	public void saveConfigurableProperties(String logo, String companyName, String nickname, String operationName,
-			String operationAddress, String operationContact, String website, String copyright, String icp,
-			String serviceTel, String serviceEmail) {
+	public void saveConfigurableProperties(String logo, String operationName, String operationNickname, String website,
+			String copyright, String icp, String serviceTel, String serviceTime, String companyName,
+			String companyAddress, String companyCity, String smtpHost, String smtpPort, String smtpUsername,
+			String smtpPassword, String mailFrom, String serviceEmail, String jobNoticeEmail, String indexLoanSize,
+			String emailExpire, String smsExpire, String realnameSwitch, String cellphoneSwitch) {
 		Properties properties = findByCode("app.logo");
 		Text text = textService.loadById(properties.getValue());
-		String sourceLogo = text.getText();
-		if (!sourceLogo.equals(logo) && !logo.contains("data:null")) {
+		String source = text.getText();
+		if (!source.equals(logo) && !logo.contains("data:null")) {
 			text.setText(logo);
-		}
-		properties = findByCode("app.company.name");
-		String source = properties.getValue();
-		if (!source.equals(companyName)) {
-			properties.setValue(companyName);
-			propertiesRepository.save(properties);
-		}
-		properties = findByCode("app.company.nickname");
-		source = properties.getValue();
-		if (!source.equals(nickname)) {
-			properties.setValue(nickname);
-			propertiesRepository.save(properties);
 		}
 		properties = findByCode("app.operation.name");
 		source = properties.getValue();
@@ -182,16 +172,10 @@ public class PropertiesServiceImpl implements PropertiesService {
 			properties.setValue(operationName);
 			propertiesRepository.save(properties);
 		}
-		properties = findByCode("app.operation.address");
+		properties = findByCode("app.operation.nickname");
 		source = properties.getValue();
-		if (!source.equals(operationAddress)) {
-			properties.setValue(operationAddress);
-			propertiesRepository.save(properties);
-		}
-		properties = findByCode("app.operation.contact");
-		source = properties.getValue();
-		if (!source.equals(operationContact)) {
-			properties.setValue(operationContact);
+		if (!source.equals(operationNickname)) {
+			properties.setValue(operationNickname);
 			propertiesRepository.save(properties);
 		}
 		properties = findByCode("app.website");
@@ -218,12 +202,103 @@ public class PropertiesServiceImpl implements PropertiesService {
 			properties.setValue(serviceTel);
 			propertiesRepository.save(properties);
 		}
+		properties = findByCode("site.service.time");
+		source = properties.getValue();
+		if (!source.equals(serviceTime)) {
+			properties.setValue(serviceTime);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.company.name");
+		source = properties.getValue();
+		if (!source.equals(companyName)) {
+			properties.setValue(companyName);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.company.address");
+		source = properties.getValue();
+		if (!source.equals(companyAddress)) {
+			properties.setValue(companyAddress);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("app.company.city");
+		source = properties.getValue();
+		if (!source.equals(companyCity)) {
+			properties.setValue(companyCity);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("mail.smtp.host");
+		source = properties.getValue();
+		if (!source.equals(smtpHost)) {
+			properties.setValue(smtpHost);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("mail.smtp.port");
+		source = properties.getValue();
+		if (!source.equals(smtpPort)) {
+			properties.setValue(smtpPort);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("mail.smtp.username");
+		source = properties.getValue();
+		if (!source.equals(smtpUsername)) {
+			properties.setValue(smtpUsername);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("mail.smtp.password");
+		source = properties.getValue();
+		if (!source.equals(smtpPassword)) {
+			properties.setValue(smtpPassword);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("mail.from");
+		source = properties.getValue();
+		if (!source.equals(mailFrom)) {
+			properties.setValue(mailFrom);
+			propertiesRepository.save(properties);
+		}
 		properties = findByCode("app.customer.service.email");
 		source = properties.getValue();
 		if (!source.equals(serviceEmail)) {
 			properties.setValue(serviceEmail);
 			propertiesRepository.save(properties);
 		}
+		properties = findByCode("address.job.notice");
+		source = properties.getValue();
+		if (!source.equals(jobNoticeEmail)) {
+			properties.setValue(jobNoticeEmail);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("index.loan.size");
+		source = properties.getValue();
+		if (!source.equals(indexLoanSize)) {
+			properties.setValue(indexLoanSize);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("auth.email.expire");
+		source = properties.getValue();
+		if (!source.equals(emailExpire)) {
+			properties.setValue(emailExpire);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("auth.sms.expire");
+		source = properties.getValue();
+		if (!source.equals(smsExpire)) {
+			properties.setValue(smsExpire);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("auth.realname.switch");
+		source = properties.getValue();
+		if (!source.equals(realnameSwitch)) {
+			properties.setValue(realnameSwitch);
+			propertiesRepository.save(properties);
+		}
+		properties = findByCode("auth.cellphone.switch");
+		source = properties.getValue();
+		if (!source.equals(cellphoneSwitch)) {
+			properties.setValue(cellphoneSwitch);
+			propertiesRepository.save(properties);
+		}
+
 		App.config(loadFromDatabase());
 	}
 

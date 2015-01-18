@@ -70,9 +70,11 @@ public interface PropertiesService {
 	 */
 	public Properties findByCode(String code);
 
-	public void saveConfigurableProperties(String logo, String companyName, String nickname, String operationName,
-			String operationAddress, String operationContact, String website, String copyright, String icp,
-			String serviceTel, String serviceEmail);
+	public void saveConfigurableProperties(String logo, String operationName, String operationNickname, String website,
+			String copyright, String icp, String serviceTel, String serviceTime, String companyName,
+			String companyAddress, String companyCity, String smtpHost, String smtpPort, String smtpUsername,
+			String smtpPassword, String mailFrom, String serviceEmail, String jobNoticeEmail, String indexLoanSize,
+			String emailExpire, String smsExpire, String realnameSwitch, String cellphoneSwitch);
 
 	public Map<String, String> loadFromDatabase();
 }

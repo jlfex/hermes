@@ -32,7 +32,7 @@
 <div id="main" class="main"></div>
 
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.js}/jquery-validation/1.12.0/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap3-validation.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery.ui.datepicker-zh-CN.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>

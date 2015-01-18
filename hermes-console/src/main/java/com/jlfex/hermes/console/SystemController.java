@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Images;
@@ -80,17 +81,23 @@ public class SystemController {
 		try {
 			propertiesService.saveConfigurableProperties(
 					Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes()),
-					request.getParameter("companyName"), request.getParameter("nickname"),
-					request.getParameter("operationName"), request.getParameter("operationAddress"),
-					request.getParameter("operationContact"), request.getParameter("website"),
-					request.getParameter("copyright"), request.getParameter("icp"), request.getParameter("serviceTel"),
-					request.getParameter("serviceEmail"));
+					request.getParameter("operationName"), request.getParameter("operationNickname"),
+					request.getParameter("website"), request.getParameter("copyright"), request.getParameter("icp"),
+					request.getParameter("serviceTel"), request.getParameter("serviceTel"),
+					request.getParameter("companyName"), request.getParameter("companyAddress"),
+					request.getParameter("companyCity"), request.getParameter("smtpHost"),
+					request.getParameter("smtpPort"), request.getParameter("smtpUsername"),
+					request.getParameter("smtpPassword"), request.getParameter("mailFrom"),
+					request.getParameter("serviceEmail"), request.getParameter("jobNoticeEmail"),
+					request.getParameter("indexLoanSize"), request.getParameter("emailExpire"),
+					request.getParameter("smsExpire"), request.getParameter("realnameSwitch"),
+					request.getParameter("cellphoneSwitch"));
 		} catch (IOException e) {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage(e.getMessage());
 		}
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-		result.addMessage("保存成功");
+		result.addMessage(App.message("app.config.save.ok"));
 		return result;
 	}
 
