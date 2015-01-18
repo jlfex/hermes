@@ -132,15 +132,15 @@
         </div>
         <!--业务规则配置-->
         <div class="form-group">
-          <label for="" class="col-sm-2 control-label">首页展示标的数量</label>
+          <label for="indexLoanSize" class="col-sm-2 control-label">首页标的数量</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="serviceEmail" name="serviceEmail" placeholder="" value="<@config key="app.customer.service.email"/>">
+            <input type="text" class="form-control" id="indexLoanSize" name="indexLoanSize" placeholder="" value="<@config key="index.loan.size"/>">
           </div>
         </div>
         <div class="form-group">
-          <label for="" class="col-sm-2 control-label">邮件认证失效时间</label>
+          <label for="emailExpire" class="col-sm-2 control-label">邮件认证失效时间</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="serviceEmail" name="serviceEmail" placeholder="" value="<@config key="app.customer.service.email"/>">
+            <input type="text" class="form-control" id="emailExpire" name="emailExpire" placeholder="" value="<@config key="auth.email.expire"/>">
           </div>
         </div>
         <div class="form-group">
@@ -165,7 +165,7 @@
         <div class="form-group">
           <div class="row">
             <div class="col-sm-offset-2 col-xs-5">
-              <div class="col-xs-3"><button id="submit" type="submit" class="btn btn-primary btn-block">保存</button></div>
+              <div class="col-xs-3"><button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
             </div>
           </div>
         </div>
