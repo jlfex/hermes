@@ -213,5 +213,17 @@ public interface TransactionService {
 	 * @param remark
 	 */
 	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
+    
+	/**
+	 * 债权人 账户线下充值
+	 * @param type
+	 * @param user
+	 * @param cropAccountType
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 * @return
+	 */
+	List<Transaction> cropAccountToCreditorOutline(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
 
 }

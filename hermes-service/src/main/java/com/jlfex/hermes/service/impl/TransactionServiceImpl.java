@@ -275,7 +275,7 @@ public class TransactionServiceImpl implements TransactionService {
 		// 判断账户余额是否可用
 		// 当交易金额大于账户余额且账户不允许为负时异常处理
 		if (amount.compareTo(sourceUserAccount.getBalance()) > 0 && UserAccount.Minus.INMINUS.equals(sourceUserAccount.getMinus())) {
-			throw new ServiceException(String.format("user '%s' account balance is %s, less than %s", sourceUserAccount.getId(), sourceUserAccount.getBalance(), amount), "exception.transaction.balance");
+			throw new ServiceException(String.format("交易异常：账户ID='%s',账户余额= %s, 小于  %s", sourceUserAccount.getId(), sourceUserAccount.getBalance(), amount), "exception.transaction.balance");
 		}
 
 		// 交易流水
@@ -370,5 +370,11 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setRemark(remark);
 		transaction.setDatetime(new Date());
 		transactionRepository.save(transaction);
+	}
+	@Override
+	public List<Transaction> cropAccountToCreditorOutline(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
+		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 }

@@ -47,7 +47,7 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		List<CreditRepayPlan>  list =creditorRepayPlanRepository.findByCrediteInfo(creditInfo);
 		Collections.sort(list, new Comparator<CreditRepayPlan>() {
             public int compare(CreditRepayPlan obj1, CreditRepayPlan obj2) {
-            	return (String.valueOf(obj1.getPeriod())).compareTo(String.valueOf(obj2.getPeriod()));
+            	return (""+obj1.getPeriod()).compareTo(""+obj2.getPeriod());
             }
         }); 
 		return  list;

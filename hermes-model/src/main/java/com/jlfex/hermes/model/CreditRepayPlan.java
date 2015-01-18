@@ -32,8 +32,9 @@ public class CreditRepayPlan  extends Model {
 	@ManyToOne
 	@JoinColumn(name = "creditInfoId")          //所属债权
 	private CrediteInfo  crediteInfo; 
-	private long         period; 	            //期数
-	private Date         repayTime;  	        //应还日期
+	private int          period; 	            //期数
+	private Date         repayTime;  	        //还款日期
+	private Date         repayPlanTime;          //计划还款日期
 	private BigDecimal   repayPrincipal;        //应还本金
 	private BigDecimal   repayInterest; 	    //应还利息
 	private BigDecimal   repayAllmount;         //应还总额
@@ -53,10 +54,11 @@ public class CreditRepayPlan  extends Model {
 	public void setCrediteInfo(CrediteInfo crediteInfo) {
 		this.crediteInfo = crediteInfo;
 	}
-	public long getPeriod() {
+	
+	public int getPeriod() {
 		return period;
 	}
-	public void setPeriod(long period) {
+	public void setPeriod(int period) {
 		this.period = period;
 	}
 	public Date getRepayTime() {
@@ -64,6 +66,12 @@ public class CreditRepayPlan  extends Model {
 	}
 	public void setRepayTime(Date repayTime) {
 		this.repayTime = repayTime;
+	}
+	public Date getRepayPlanTime() {
+		return repayPlanTime;
+	}
+	public void setRepayPlanTime(Date repayPlanTime) {
+		this.repayPlanTime = repayPlanTime;
 	}
 	public BigDecimal getRepayPrincipal() {
 		return repayPrincipal;
@@ -112,10 +120,15 @@ public class CreditRepayPlan  extends Model {
 	}
 	
 	public static final class Status{
-		@Element("未还")
-		public static final String  WAIT_PAY			= "00";
-		@Element("已换")
-		public static final String  ALREADY_PAY  		= "01";
+		@Element("等待发售")
+		public static final String  WAIT_SELL			= "00";
+		@Element("等待招标")
+		public static final String  WAIT_BID			= "01";
+		@Element("等待还款")
+		public static final String  WAIT_PAY			= "02";
+		@Element("正常还款")
+		public static final String  ALREADY_PAY  		= "03";
+		
 	}
 	
 	

@@ -11,6 +11,7 @@ import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.service.pojo.LoanAuditInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
@@ -310,6 +311,32 @@ public interface LoanService {
 	 * @return
 	 */
 	public boolean updateStatus(String id, String fromStatus, String toStatus);
-	
-
+	/**
+	 * 获取还款计划表id
+	 * @param creditRepayPlanId
+	 * @return
+	 */
+    public String queryLoanRepayId(String creditRepayPlanId);
+    /**
+     * 更新 债权还款计划明细状态
+     * @param repayid
+     * @param status
+     * @return
+     */
+    public boolean  updateCreditRepayPlanStatus(String repayid, String  status) ;
+    /**
+     * 根据：债权人id 获取账户信息
+     * @param creditorId
+     * @return
+     */
+    public UserAccount queryUserAccountByCreditorId(String creditorId) ;
+  
+    /**
+     * 债权账户虚拟线下充值
+     * @param amount
+     * @param accountId
+     * @return
+     */
+	public UserAccount accountCharge(String amount, String accountId);
+    
 }

@@ -67,7 +67,7 @@ public class LoanRepay extends Model {
 	@Column(name = "overdue_penalty")
 	private BigDecimal overduePenalty;
 	
-	/** 其他金额 */
+	/** 月缴管理费  */
 	@Column(name = "other_amount")
 	private BigDecimal otherAmount;
 	

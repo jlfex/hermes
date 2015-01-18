@@ -81,6 +81,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                   <#if infoList??>
                    <#if infoList.numberOfElements == 0>
 					<tr>
 						<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
@@ -104,6 +105,11 @@
 								</td>
 							</tr>
 						</#list>
+					</#if>
+					<#else>
+					    <tr>
+						<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
+					</tr>
 					</#if>
                 </tbody>
         </table>

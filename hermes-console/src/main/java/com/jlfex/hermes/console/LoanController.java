@@ -2,6 +2,7 @@ package com.jlfex.hermes.console;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,14 +15,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Label;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAudit;
 import com.jlfex.hermes.model.LoanRepay;
+import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserCar;
 import com.jlfex.hermes.model.UserContacter;
 import com.jlfex.hermes.model.UserHouse;
@@ -34,6 +39,7 @@ import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.RepayService;
+import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserManageService;
 import com.jlfex.hermes.service.pojo.LoanUserBasic;
@@ -56,6 +62,9 @@ public class LoanController {
 	private InvestService investService;
 	@Autowired
 	private RepayService repayService;
+	@Autowired
+	private TransactionService transactionService;
+	
 
 	/**
 	 * 借款信息查询页面
@@ -233,7 +242,11 @@ public class LoanController {
 		Loan loan = loanService.loadById(id);
 		model.addAttribute("loan", loan);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
-		model.addAttribute("purpose", dictionary.getName());
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			model.addAttribute("purpose", loan.getPurpose());
+		}else{
+			model.addAttribute("purpose", dictionary.getName());
+		}
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
@@ -601,5 +614,72 @@ public class LoanController {
 		}
 		return jsonObj;
 	}
+	/**
+	 * 债权标 :还款
+	 * @param repayid
+	 * @return
+	 */
+	@RequestMapping("/repayment/{repayid}")
+	public String repayment(@PathVariable("repayid") String repayid, Model model ) {
+		Logger.info("还款操作: repayid:" + repayid);
+		String code="", msg = "";
+		try {
+			String loanRepayId = loanService.queryLoanRepayId(repayid);
+			boolean repaymentResult = repayService.repayment(loanRepayId);
+			if (repaymentResult) {
+				//更新债权明细表中状态
+				loanService.updateCreditRepayPlanStatus(repayid, CreditRepayPlan.Status.ALREADY_PAY);
+				Logger.info("债权还款操作 成功：债权还款明细id="+repayid);
+				code = "00";
+				msg = "还款成功";
+			}else {
+				code = "01";
+				msg = "还款失败";
+			}
+		} catch (Exception ex) {
+			code = "01";
+			msg = "还款异常";
+			Logger.error(ex.getMessage(), ex);
+		}
+		model.addAttribute("code", code);
+		model.addAttribute("msg", msg);
+		return "loan/creditRepayResult";
+	}
+	/**
+	 * 债权人账户  线下充值
+	 * @param creditorId
+	 * @param amount
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/goCharge/{creditorId}")
+	public String creditorCharge(@PathVariable("creditorId") String creditorId, Model model) {
+		if(Strings.empty(creditorId)){
+			throw new ServiceException("入参：债权人ID 为空");
+		}
+		UserAccount  userAccount = loanService.queryUserAccountByCreditorId(creditorId);
+		if(userAccount == null){
+			Logger.info("债权人账户线下充值操作: 根据债权人ID="+creditorId+",没有获取账户信息");
+		}
+		model.addAttribute("account", userAccount);
+		return "loan/loanCharge";
+	}
+	
+	@RequestMapping("/charge")
+	public String charge(String amount,String accountId, Model model) {
+		String eL = "^//d*[1-9]//d*$";//正整数
+		if(Strings.empty(amount) || Pattern.compile(eL).matcher(amount).matches()){
+			throw new ServiceException("充值操作:金额="+amount+",不是正整数");
+		}
+		if(Strings.empty(accountId)){
+			throw new ServiceException("充值操作:债权人ID 为空");
+		}
+        UserAccount userAccount = loanService.accountCharge(amount, accountId);
+		model.addAttribute("account", userAccount);
+		return "loan/loanCharge";
+	}
+	
+	
+	
 
 }
