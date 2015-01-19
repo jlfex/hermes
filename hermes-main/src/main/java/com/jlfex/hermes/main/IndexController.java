@@ -10,6 +10,8 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.TmpNotice;
+import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ArticleService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
@@ -27,11 +29,14 @@ public class IndexController {
 	/** 文章业务接口 */
 	@Autowired
 	private ArticleService articleService;
-	
+
 	/** 借款业务接口 */
 	@Autowired
 	private LoanService loanService;
-	
+
+	@Autowired
+	private TmpNoticeRepository tmpNoticeRepository;
+
 	/**
 	 * 索引
 	 * 
@@ -41,12 +46,18 @@ public class IndexController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
-		model.addAttribute("notices", articleService.findHomeNotices());
+		model.addAttribute("notices", tmpNoticeRepository.findByStatus(TmpNotice.Status.ENABLED));
 		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
 		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
 		return "index";
 	}
-	
+
+	@RequestMapping("/n/{id}")
+	public String tmpNotices(@PathVariable String id, Model model) {
+		model.addAttribute("notice", tmpNoticeRepository.findOne(id));
+		return "/system/tmpnotice";
+	}
+
 	/**
 	 * 公告列表
 	 * 
@@ -58,7 +69,7 @@ public class IndexController {
 		model.addAttribute("notices", articleService.findNotices(page, size));
 		return "/system/notices";
 	}
-	
+
 	/**
 	 * 公告内容
 	 * 
@@ -71,7 +82,7 @@ public class IndexController {
 		model.addAttribute("article", articleService.loadByIdWithText(id));
 		return "/system/notice";
 	}
-	
+
 	/**
 	 * 清空缓存
 	 * 
@@ -83,7 +94,7 @@ public class IndexController {
 		Caches.clear();
 		Logger.info("clear all cache.");
 	}
-	
+
 	/**
 	 * 首页导航
 	 * 
@@ -92,20 +103,20 @@ public class IndexController {
 	 * @since 1.0
 	 */
 	public static final class HomeNav {
-		
+
 		@Element("首页")
-		public static final String HOME		= "home";
-		
+		public static final String HOME = "home";
+
 		@Element("我要理财")
-		public static final String INVEST	= "invest";
-		
+		public static final String INVEST = "invest";
+
 		@Element("我要借款")
-		public static final String LOAN		= "loan";
-		
+		public static final String LOAN = "loan";
+
 		@Element("账户中心")
-		public static final String ACCOUNT	= "account";
-		
+		public static final String ACCOUNT = "account";
+
 		@Element("使用帮助")
-		public static final String HELP		= "help";
+		public static final String HELP = "help";
 	}
 }
