@@ -16,7 +16,7 @@
 	</div>
 	<div class="nav">
 		<div class="u-container">
-			<div class="logo"><a href="${app}" title="Hermes"><img alt="Hermes" src="${app.theme}/public/images/logo.png"></a></div>
+			<div class="logo"><a href="${app}/index" title="Hermes"><img alt="Hermes" src="${app.theme}/public/images/logo.png"></a></div>
 			<ul id="homeNav" class="nav-list">
 				<li class="home"><a href="${app}/index"><@messages key="common.home" /></a></li>
 				<li class="invest"><a href="${app}/invest/index"><@messages key="nav.main.invest" /></a></li>

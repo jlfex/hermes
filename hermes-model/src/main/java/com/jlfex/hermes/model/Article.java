@@ -1,18 +1,17 @@
 package com.jlfex.hermes.model;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 文章信息模型
- *
+ * 
  * @author ultrafrog
  * @version 1.0, 2013-11-11
  * @since 1.0
@@ -23,60 +22,71 @@ public class Article extends Model {
 
 	private static final long serialVersionUID = -8821546967087076070L;
 
-	/** 标题 */
-	@Column(name = "title")
-	private String title;
+	/** 文章顺序 */
+	@Column(name = "order_")
+	private Integer order;
 
-	/** 作者 */
-	@Column(name = "author")
-	private String author;
+	/** 文章标题 */
+	@Column(name = "article_title")
+	private String articleTitle;
+	/** 所属分类 */
+	@ManyToOne
+	@JoinColumn(name = "category")
+	private ArticleCategory category;
+	/** 关键字 */
+	@Column(name = "keywords")
+	private String keywords;
 
-	/** 日期 */
-	@Column(name = "datetime")
-	private Date datetime;
+	/** 文章描述 */
+	@Column(name = "description")
+	private String description;
 
-	/** 摘要 */
-	@Column(name = "summary")
-	private String summary;
-
-	/** 标志 */
-	@Column(name = "mark")
-	private String mark;
+	/** 文章内容 */
+	@Column(name = "content")
+	private byte[] content;
 
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
 
-	/** 内容 */
-	@Transient
-	private String text;
+	/** 作者 */
+	@Column(name = "author")
+	private String author;
 
-	/** 页面内容 */
-	@Column(name = "content")
-	private byte[] content;
+	// /** 日期 */
+	// @Column(name = "datetime")
+	// private Date datetime;
+	//
+	// /** 摘要 */
+	// @Column(name = "summary")
+	// private String summary;
+	//
+	// /** 内容 */
+	// @Transient
+	// private String text;
+	//
+	// /** 标志 */
+	// @Column(name = "mark")
+	// private String mark;
 
-	/** 文章顺序 */
-	@Column(name = "order_")
-	private Integer order;
-
-	/**
-	 * 读取标题
-	 * 
-	 * @return
-	 * @see #title
-	 */
-	public String getTitle() {
-		return title;
-	}
+	// /**
+	// * 读取标题
+	// *
+	// * @return
+	// * @see #articleTitle
+	// */
+	// public String getTitle() {
+	// return articleTitle;
+	// }
 
 	/**
 	 * 设置标题
 	 * 
-	 * @param title
-	 * @see #title
+	 * @param articleTitle
+	 * @see #articleTitle
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
 	}
 
 	/**
@@ -105,19 +115,19 @@ public class Article extends Model {
 	 * @return
 	 * @see #datetime
 	 */
-	public Date getDatetime() {
-		return datetime;
-	}
-
-	/**
-	 * 设置日期
-	 * 
-	 * @param datetime
-	 * @see #datetime
-	 */
-	public void setDatetime(Date datetime) {
-		this.datetime = datetime;
-	}
+	// public Date getDatetime() {
+	// return datetime;
+	// }
+	//
+	// /**
+	// * 设置日期
+	// *
+	// * @param datetime
+	// * @see #datetime
+	// */
+	// public void setDatetime(Date datetime) {
+	// this.datetime = datetime;
+	// }
 
 	/**
 	 * 读取摘要
@@ -125,19 +135,19 @@ public class Article extends Model {
 	 * @return
 	 * @see #summary
 	 */
-	public String getSummary() {
-		return summary;
-	}
-
-	/**
-	 * 设置摘要
-	 * 
-	 * @param summary
-	 * @see #summary
-	 */
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
+	// public String getSummary() {
+	// return summary;
+	// }
+	//
+	// /**
+	// * 设置摘要
+	// *
+	// * @param summary
+	// * @see #summary
+	// */
+	// public void setSummary(String summary) {
+	// this.summary = summary;
+	// }
 
 	/**
 	 * 读取标志
@@ -145,19 +155,19 @@ public class Article extends Model {
 	 * @return
 	 * @see #mark
 	 */
-	public String getMark() {
-		return mark;
-	}
-
-	/**
-	 * 设置标志
-	 * 
-	 * @param mark
-	 * @see #mark
-	 */
-	public void setMark(String mark) {
-		this.mark = mark;
-	}
+	// public String getMark() {
+	// return mark;
+	// }
+	//
+	// /**
+	// * 设置标志
+	// *
+	// * @param mark
+	// * @see #mark
+	// */
+	// public void setMark(String mark) {
+	// this.mark = mark;
+	// }
 
 	/**
 	 * 读取状态
@@ -185,23 +195,23 @@ public class Article extends Model {
 	 * @return
 	 * @see #text
 	 */
-	public String getText() {
-		return text;
-	}
-
-	/**
-	 * 设置内容
-	 * 
-	 * @param text
-	 * @see #text
-	 */
-	public void setText(String text) {
-		this.text = text;
-	}
+	// public String getText() {
+	// return text;
+	// }
+	//
+	// /**
+	// * 设置内容
+	// *
+	// * @param text
+	// * @see #text
+	// */
+	// public void setText(String text) {
+	// this.text = text;
+	// }
 
 	@Lob
-	public byte[] getContent() {
-		return content;
+	public String getContent() {
+		return new String(content);
 	}
 
 	public void setContent(byte[] content) {
@@ -214,6 +224,38 @@ public class Article extends Model {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+
+	public String getArticleTitle() {
+		return articleTitle;
+	}
+
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
+	}
+
+	public ArticleCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(ArticleCategory category) {
+		this.category = category;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**
