@@ -22,7 +22,7 @@
 				<li class="invest"><a href="${app}/invest/index"><@messages key="nav.main.invest" /></a></li>
 				<li class="loan"><a href="${app}/loan/display"><@messages key="nav.main.loan" /></a></li>
 				<li class="account"><a href="${app}/account/index"><@messages key="nav.main.user" /></a></li>
-				<li class="help"><a href="#"><@messages key="nav.main.help" /></a></li>
+				<li class="help"><a href="${app}/help-center"><@messages key="nav.main.help" /></a></li>
 			</ul>
 		</div>
 	</div>

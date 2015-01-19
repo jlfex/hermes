@@ -1,12 +1,16 @@
 package com.jlfex.hermes.main;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
@@ -25,27 +29,29 @@ public class CmsController {
 	@RequestMapping("help-center")
 	public String helpCenter(Model model) {
 		ArticleCategory ac = articleCategoryRepository.findByCode(helpCenterCode);
-		String code = ac.getChildren().get(0).getChildren().get(0).getCode();
-		return "redirect:/help-center/" + code;
+		String cid = ac.getChildren().get(0).getChildren().get(0).getId();
+		return "redirect:/help-center/" + cid;
 	}
 
-	@RequestMapping("help-center/{ccode}")
-	public String helpCenterArticleCategory(@PathVariable String ccode, Model model) {
-		List<Article> data = articleService.findByCategoryCodeAndStatus(ccode, Article.Status.ENABLED);
-		if (data.size() == 1) {
-			return "redirect:/help-center/" + ccode + "/" + data.get(0).getId();
+	@RequestMapping("help-center/{cid}")
+	public String helpCenterArticleCategory(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, @PathVariable String cid, Model model) {
+		Pageable pageable = new PageRequest(page, size, new Sort(Direction.DESC, "order", "updateTime"));
+		Page<Article> dataBox = articleService.find(cid, pageable);
+		if (dataBox.getContent().size() == 1) {
+			return "redirect:/help-center/" + cid + "/" + dataBox.getContent().get(0).getId();
 		} else {
 			model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
-			model.addAttribute("sel", articleCategoryRepository.findByCode(ccode));
-			model.addAttribute("aeli", data);
+			model.addAttribute("sel", articleCategoryRepository.findOne(cid));
+			model.addAttribute("aeli", dataBox);
 			return "cms/template_li";
 		}
 	}
 
-	@RequestMapping("help-center/{ccode}/{aid}")
-	public String helpCenterArticle(@PathVariable String aid, Model model) {
+	@RequestMapping("help-center/{cid}/{aid}")
+	public String helpCenterArticle(@PathVariable String cid, @PathVariable String aid, Model model) {
 		model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
 		model.addAttribute("ae", articleService.loadByIdWithText(aid));
+		model.addAttribute("sel", articleCategoryRepository.findOne(cid));
 		return "cms/template_ae";
 	}
 }

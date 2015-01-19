@@ -47,7 +47,7 @@ box-sizing: content-box;
 					<h2>${l.name}</h2>
 					<ul>
 						<#list l.children as m>
-							<li><a href="${app}/help-center/${m.code}" class="a_01">${m.name}</a></li>
+							<li <#if m.id == sel.id >class="liactivebg"</#if> ><a href="${app}/help-center/${m.id}" class="a_01">${m.name}</a></li>
 						</#list>
 					</ul>
 				</div>

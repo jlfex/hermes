@@ -47,7 +47,7 @@ box-sizing: content-box;
 					<h2>${l.name}</h2>
 					<ul>
 						<#list l.children as m>
-							<li><a href="${app}/help-center/${m.code}" class="a_01">${m.name}</a></li>
+							<li <#if m.id == sel.id >class="liactivebg"</#if>><a href="${app}/help-center/${m.id}" class="a_01">${m.name}</a></li>
 						</#list>
 					</ul>
 				</div>
@@ -61,8 +61,16 @@ box-sizing: content-box;
 				<h2 class="title" style="text-align:left;padding-left:20px;">${sel.name}</h2>
 				<div class="content_index">
 					<ul style="min-height:300px;">
-						<#list aeli as l>
-							<li><a href="${app}/help-center/${sel.code}/${l.id}" style="display: block;line-height: 35px;margin-left: 8px;">${(l.articleTitle)!}</a></li>
+						<#list aeli.content as l>
+							<li><a href="${app}/help-center/${sel.id}/${l.id}" style="display: inline-block;
+line-height: 35px;
+margin-left: 8px;
+text-decoration: none;">${(l.articleTitle)!}</a>
+<span style="float: right;
+margin-right: 10px;
+line-height: 35px;
+color: #ccc;">${(l.updateTime)!}</span>
+</li>
 						</#list>
 					</ul>
 				</div>

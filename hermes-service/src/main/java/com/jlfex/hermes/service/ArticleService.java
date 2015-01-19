@@ -3,6 +3,7 @@ package com.jlfex.hermes.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategoryReference;
@@ -48,5 +49,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	public Page<ArticleCategoryReference> findNotices(Integer page, Integer size);
+
+	public Page<Article> find(String categoryId, Pageable page);
 
 }
