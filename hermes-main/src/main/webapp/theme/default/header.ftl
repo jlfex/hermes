@@ -16,7 +16,7 @@
 	</div>
 	<div class="nav">
 		<div class="u-container">
-			<div class="logo"><a href="index.html"><img src="${app.theme}/public/images/logo.png"><span class="logo2">P2P开源软件</span></a></div>
+			<div class="logo"><a href="index.html"><img src="<@config key="app.logo.data"/>"><span class="logo2">P2P开源软件</span></a></div>
 			<ul id="homeNav" class="nav-list">
 				<li class="home"><a href="${app}/index"><@messages key="common.home" /></a></li>
 				<li class="invest"><a href="${app}/invest/index"><@messages key="nav.main.invest" /></a></li>

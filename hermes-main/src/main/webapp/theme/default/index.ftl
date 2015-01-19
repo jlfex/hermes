@@ -54,11 +54,11 @@
 		<div class="u-container">
 			<div class="bullhorn pull-left"><i class="fa fa-bullhorn"></i></div>
 			<ul id="notice" class="notices pull-left" data-speed="5000">
-				<#list notices?sort_by("datetime")?reverse as n>
-				<li data-id="${n.id}"><span>${n.datetime?date}</span>&nbsp;<a href="${app}/notice/${n.id}">${n.title}</a></li>
-				</#list>
+				<li data-id="${(notices.id)!}"><span>${notices.updateTime?date}</span>&nbsp;<a href="${app}/n/${(notices.id)!}">${(notices.title)!}</a></li>
 			</ul>
+			<!--
 			<div class="pull-right"><a href="${app}/notices"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>
+			-->
 		</div>
 	</div>
 	<!-- /notice -->
