@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,5 +111,17 @@ public class ArticleServiceImpl implements ArticleService {
 	public Page<ArticleCategoryReference> findNotices(Integer page, Integer size) {
 		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "article.datetime");
 		return articleCategoryReferenceRepository.findByCategoryCodeAndArticleStatusIn(CATEGORY_NOTICE, Arrays.asList(Article.Status.TOP, Article.Status.ENABLED), pageable);
+	}
+
+	@Override
+	public Page<Article> find(final String categoryId, Pageable page) {
+		// TODO Auto-generated method stub
+		return articleRepository.findAll(new Specification<Article>() {
+			@Override
+			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				// TODO Auto-generated method stub
+				return cb.equal(root.get("category").get("id"), categoryId);
+			}
+		}, page);
 	}
 }
