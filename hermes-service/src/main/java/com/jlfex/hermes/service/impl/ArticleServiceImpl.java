@@ -31,22 +31,26 @@ import com.jlfex.hermes.service.common.Pageables;
 @Transactional
 public class ArticleServiceImpl implements ArticleService {
 
-	private static final String CATEGORY_NOTICE	= "notice";
-	
+	private static final String CATEGORY_NOTICE = "notice";
+
 	/** 文章信息仓库 */
 	@Autowired
 	private ArticleRepository articleRepository;
-	
+
 	/** 文章分类关系仓库 */
 	@Autowired
 	private ArticleCategoryReferenceRepository articleCategoryReferenceRepository;
-	
+
 	/** 文本信息仓库 */
 	@Autowired
 	private TextRepository textRepository;
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.ArticleService#loadByIdWithText(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.ArticleService#loadByIdWithText(java.lang.String
+	 * )
 	 */
 	@Override
 	@Transactional(readOnly = true)
@@ -54,38 +58,48 @@ public class ArticleServiceImpl implements ArticleService {
 		// 查询数据
 		Article article = articleRepository.findOne(id);
 		Text text = textRepository.findByReferenceAndType(id, Text.Type.ARTICLE);
-		
+
 		// 设置文本
-		article.setText((text == null) ? null : text.getText());
-		
+		// article.setText((text == null) ? null : text.getText());
+
 		// 返回结果
 		return article;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.ArticleService#findByCategoryCodeAndStatus(java.lang.String, java.lang.String[])
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.ArticleService#findByCategoryCodeAndStatus(java
+	 * .lang.String, java.lang.String[])
 	 */
 	@Override
 	@Transactional(readOnly = true)
 	public List<Article> findByCategoryCodeAndStatus(String categoryCode, String... status) {
 		List<ArticleCategoryReference> articleCategoryReferences = articleCategoryReferenceRepository.findByCategoryCodeAndArticleStatusIn(categoryCode, Arrays.asList(status));
 		List<Article> articles = new ArrayList<Article>(articleCategoryReferences.size());
-		for (ArticleCategoryReference acr: articleCategoryReferences) {
+		for (ArticleCategoryReference acr : articleCategoryReferences) {
 			articles.add(acr.getArticle());
 		}
 		return articles;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.ArticleService#findHomeNotices()
 	 */
 	@Override
 	public List<Article> findHomeNotices() {
 		return findByCategoryCodeAndStatus(CATEGORY_NOTICE, Article.Status.TOP);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.ArticleService#findNotices(java.lang.Integer, java.lang.Integer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.ArticleService#findNotices(java.lang.Integer,
+	 * java.lang.Integer)
 	 */
 	@Override
 	public Page<ArticleCategoryReference> findNotices(Integer page, Integer size) {
