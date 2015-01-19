@@ -1,6 +1,7 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,6 +64,9 @@ public class CrediteInfo extends Model {
 	//借款期限
 	@Column(name = "period")
 	private Integer  period ;
+	//剩余期数
+	@Column(name = "term_num")
+	private Integer  termNum;
 	//借款用途
 	@Column(name = "purpose")
 	private String purpose;
@@ -96,6 +100,13 @@ public class CrediteInfo extends Model {
 	@Column(name = "manage_fee")
 	private BigDecimal manageFee;
 	
+	public Integer getTermNum() {
+		return termNum;
+	}
+	public void setTermNum(Integer termNum) {
+		this.termNum = termNum;
+	}
+
 	@Transient
 	private String  bidEndTimeStr;
 	@Transient
@@ -317,6 +328,14 @@ public class CrediteInfo extends Model {
 		}
 		return rate.toString();
 	}
+	public String getDeadTimeFormate() {
+		String dateStr = "";
+		if(deadTime !=null ){
+			dateStr = new SimpleDateFormat("yyyy-MM-dd").format(deadTime); 
+		}
+		return dateStr;
+	}
+	
 
 	/**
 	 * 读取当前用户名称
@@ -345,6 +364,8 @@ public class CrediteInfo extends Model {
 		public static final String FAIL_ASSIGN = "03";
 		@Element("验证失败")
 		public static final String IMP_FAIL = "04";
+		@Element("转让中")
+		public static final String FAIL_ASSIGNING = "05";
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.jlfex.hermes.repository;
 
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -29,8 +30,8 @@ public interface CreditorRepayPlanRepository extends JpaRepository<CreditRepayPl
 	 * 获取：还款计划时间 <= 截止当前时间 的还款明细 
 	 * @return
 	 */
-	@Query("select t from CreditRepayPlan t where  t.repayTime <= CURRENT_TIME() and crediteInfo = ?1")
-	public List<CreditRepayPlan>  findByNowTimeAndCreditInfo(CrediteInfo crediteInfo);
+	@Query("select t from CreditRepayPlan t where  t.repayPlanTime < ?1 and crediteInfo = ?2")
+	public List<CreditRepayPlan>  findByNowTimeAndCreditInfo(Date endToday,CrediteInfo crediteInfo);
 	/**
 	 * 根据： 债权ID获取 明细
 	 * @param crediteInfo
