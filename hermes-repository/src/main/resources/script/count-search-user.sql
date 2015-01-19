@@ -1,1 +1,1 @@
-SELECT count(hu.id) FROM hm_user hu INNER JOIN hm_user_properties hp ON hp.user = hu.id GROUP BY hu.id %s 
+SELECT count() FROM hm_user hu INNER JOIN hm_user_properties hp ON hp.user = hu.id %s 
