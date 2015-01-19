@@ -8,10 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
+import com.jlfex.hermes.service.pojo.FriendLinkVo;
+import com.jlfex.hermes.service.pojo.PublishContentVo;
 import com.jlfex.hermes.service.pojo.ResultVo;
 
 /**
@@ -120,22 +123,219 @@ public class ContentController {
 		return "redirect:/content/categoryIndex";
 	}
 
+	/**
+	 * 内容管理首页
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/contentIndex")
+	public String index(String levelOne, String levelTwo, Model model) {
+		model.addAttribute("categoryForLevel1", contentService.findCategoryByLevel("一级"));
+		model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne));
+		model.addAttribute("categoryForLevel3", contentService.findByParentId(levelTwo));
+		return "/content/contentIndex";
+	}
+
+	/**
+	 * 内容管理查询数据结果页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/contentData")
+	public String productData(String levelOne, String levelTwo, String levelThree, String inputName, @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("contentData", contentService.find(levelOne, levelTwo, levelThree, inputName, page, size));
+		return "/content/contentData";
+	}
+
+	/**
+	 * 发布内容页面
+	 * 
+	 * @author lishunfeng
+	 */
 	@RequestMapping("/publish")
-	public String publish(Model model) {
-
-		return "/content/publish";
+	public String publish(String levelOne, String levelTwo, Model model) {
+		model.addAttribute("categoryForLevel1", contentService.findCategoryByLevel("一级"));
+		model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne));
+		model.addAttribute("categoryForLevel3", contentService.findByParentId(levelTwo));
+		return "/content/addPublish";
 	}
 
+	/**
+	 * 点击发布页面提交按钮处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addPublish")
+	public String addPublish(PublishContentVo pcVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.addPublish(pcVo);
+			attr.addFlashAttribute("msg", "发布内容成功");
+			return "redirect:/content/contentIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "发布内容失败");
+			return "redirect:/content/addPublish";
+		}
+	}
+
+	/**
+	 * 提交并继续发布处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addPublishAgain")
+	public String addPublishAgain(PublishContentVo pcVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.addPublish(pcVo);
+			attr.addFlashAttribute("msg", "发布内容成功");
+			return "redirect:/content/addPublish";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "发布内容失败");
+			return "redirect:/content/addPublish";
+		}
+	}
+
+	/**
+	 * 编辑内容页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/editContent")
+	public String editContent(@RequestParam(value = "id", required = true) String id, String levelOne, String levelTwo, Model model) {
+		model.addAttribute("article", contentService.findOneById(id));
+		model.addAttribute("categoryForLevel1", contentService.findCategoryByLevel("一级"));
+		model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne));
+		model.addAttribute("categoryForLevel3", contentService.findByParentId(levelTwo));
+		return "/content/editContent";
+	}
+
+	/**
+	 * 点击编辑内容页面保存按钮处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerEditContent")
+	public String handerEditContent(PublishContentVo pcVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.updateContent(pcVo);
+			attr.addFlashAttribute("msg", "内容修改成功");
+			return "redirect:/content/contentIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "内容修改失败");
+			return "redirect:/content/editContent";
+		}
+	}
+
+	/**
+	 * 删除内容
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/deleteContent")
+	public String deleteContent(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+		try {
+			contentService.deleteContent(id);
+			attr.addFlashAttribute("msg", "删除内容成功");
+			return "redirect:/content/contentIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "删除内容失败");
+			return "redirect:/content/contentIndex";
+		}
+	}
+
+	@RequestMapping("/batchDeleteContent")
+	@ResponseBody
+	public String batchDeleteContent(@RequestParam(value = "ids", required = true) String ids, RedirectAttributes attr, Model model) {
+		try {
+			contentService.batchDeleteContent(ids);
+			attr.addFlashAttribute("msg", "批量删除成功");
+			return "redirect:/content/contentIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "批量删除失败");
+			return "redirect:/content/contentIndex";
+		}
+	}
+
+	/**
+	 * 友情链接结果页面
+	 * 
+	 * @author lishunfeng
+	 */
 	@RequestMapping("/friendLink")
-	public String friendLink(Model model) {
-
-		return "/content/friendLink";
+	public String friendLinkData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("friendLinks", contentService.findAll(page, size));
+		return "/content/friendLinkIndex";
 	}
 
-	@RequestMapping("/management")
-	public String contentManagement(Model model) {
+	/**
+	 * 新增友情链接
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addFriendLink")
+	public String addFriendLink(Model model) {
+		return "/content/addFriendLink";
+	}
 
-		return "/content/management";
+	/**
+	 * 点击添加链接页面保存按钮处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerAddFriendLink")
+	public String handerAddFriendLink(FriendLinkVo flVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.addFriendLink(flVo);
+			attr.addFlashAttribute("msg", "添加链接成功");
+			return "redirect:/content/friendLinkIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加链接失败");
+			return "redirect:/content/addFriendLink";
+		}
+	}
+
+	/**
+	 * 编辑友情链接页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/editFriendLink")
+	public String editFriendLink(@RequestParam(value = "id", required = true) String id, Model model) {
+		model.addAttribute("friendLink", contentService.findOneBy(id));
+		return "/content/editFriendLink";
+	}
+
+	/**
+	 * 点击编辑友情链接页面保存按钮处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerEditFriendLink")
+	public String handerEditFriendLink(FriendLinkVo flVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.updateFriendLink(flVo);
+			attr.addFlashAttribute("msg", "友情链接修改成功");
+			return "redirect:/content/friendLinkIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "友情链接修改失败");
+			return "redirect:/content/editFriendLink";
+		}
+	}
+
+	/**
+	 * 删除友情链接
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/deleteFriendLink")
+	public String deleteFriendLink(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+		try {
+			contentService.deleteFriendLink(id);
+			attr.addFlashAttribute("msg", "删除友情链接成功");
+			return "redirect:/content/friendLinkIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "删除友情链接失败");
+			return "redirect:/content/friendLinkIndex";
+		}
 	}
 
 	@RequestMapping("/banner")

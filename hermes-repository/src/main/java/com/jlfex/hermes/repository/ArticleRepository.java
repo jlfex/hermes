@@ -1,6 +1,7 @@
 package com.jlfex.hermes.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.jlfex.hermes.model.Article;
@@ -13,6 +14,6 @@ import com.jlfex.hermes.model.Article;
  * @since 1.0
  */
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, String> {
+public interface ArticleRepository extends PagingAndSortingRepository<Article, String>, JpaSpecificationExecutor<Article> {
 
 }
