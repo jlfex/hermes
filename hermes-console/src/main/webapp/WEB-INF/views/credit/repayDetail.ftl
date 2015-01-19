@@ -33,7 +33,9 @@
                     <div class="col-xs-4">
                         <div class="spanblock"><span class="wd_100">债权人编号：</span>${(creditInfo.creditor.creditorNo)!''}</div>
                         <div class="spanblock"><span class="wd_100">联系人：</span>${(creditInfo.creditor.contacter)!''}</div>
-                        <div class="spanblock"><span class="wd_100">可用余额：</span>9329932.00 <button class="btn ml_20px">充值</button></div>
+                        <div class="spanblock"><span class="wd_100">可用余额：</span>${reMainCash!'0'} &nbsp;&nbsp;
+                         <button type="button" id="creditorCharge"  class="btn btn-primary" data-id="${(creditInfo.creditor.id)!''}">充值</button>
+                       </div>
                     </div>
                     <div class="col-xs-4">
                         <div class="spanblock"><span class="wd_100">债权人名称：</span>${(creditInfo.creditor.creditorName)!''}</div>
@@ -76,7 +78,6 @@
                                 <th class="align-center">剩余本金</th>
                                 <th class="align-center">剩余期限</th>
                                 <th class="align-center">状态</th>
-                                <th class="align-center">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,9 +89,6 @@
                                 <td class="align-center">${remainAmount!''}</td>
                                 <td class="align-center">${remainPeriod!''}</td> 
                                 <td class="align-center">${(creditInfo.period)!''}</td> 
-                                <td class="align-center">
-                                    <a href="#" data-url="${app}/credit/goSell/${creditInfo.id}" >发售</a>
-                                </td>    
                             </tr>
                             
   
@@ -127,12 +125,13 @@
                     </table>
                 </div>
                 <h3>相关协议</h3>
-                <a href="">《债权转让协议》</a>
+                <span class="protocol">
+			     <a href="#" class="m_a1">《债权转让协议》</a>
+		      </span>
               </div>
               <div role="tabpanel" class="tab-pane" id="planDetail">
-
                     <div id="" style="display:block; margin-top:20px;">
-                    <table class="table table-bordered table-hover">
+                    <table id="creditRepayPlanDetail" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th class="align-center">序号</th>
@@ -152,13 +151,17 @@
                                 <tr> 
                                 <td class="align-center">${l_index +1}</td>
                                 <td class="align-center">${l.period!''}</td>
-                                <td class="align-center">${l.repayTime!''}</td> 
+                                <td class="align-center">${l.repayPlanTime!''}</td> 
                                 <td class="align-center">${l.repayPrincipal!''}</td> 
                                 <td class="align-center">${l.repayInterest!''}</td> 
                                 <td class="align-center">${l.remainPrincipal!''}</td>
                                 <td class="align-center">${l.repayAllmount!''}</td>
                                 <td class="align-center">${l.statusName!''}</td> 
-                                <td class="align-center"><#if l.status?? && l.status == '00' >还款</#if></td>  
+                                <td class="align-center"><#if l.status?? && l.status == '02' >
+                                  <button type="button" class="btn btn-primary" data-id="${l.id}">还款</button>
+                                <#elseif l.status?? && l.status == '03'>已还款
+                                <#else></#if>
+                                </td>  
                             </tr>
                            </#list>
                            <#else>
@@ -170,6 +173,9 @@
                     </table>
                 </div>
               </div>
+                <div role="tabpanel" class="tab-pane" id="planDetail">
+                   <div id="repayResult"></div>
+                </div>
             </div> 
         </div>
     </div>
@@ -184,12 +190,43 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 
+   jQuery(function($) {
+    $('.protocol').click(function(){
+		var win = openwindow("${app}/credit/assignProtocol","",1000,800);
+	});
+    function openwindow(url,name,iWidth,iHeight)
+	{
+		var url; //转向网页的地址;
+		var name; //网页名称，可为空;
+		var iWidth; //弹出窗口的宽度;
+		var iHeight; //弹出窗口的高度;
+		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+	}     
+   });
+
    $("#creditorRight a").on("click",function(){
 		$.link.html(null, {
 			url: $(this).attr("data-url"),
 			target: 'main'
 		});
    }); 
+   
+   	 $('#creditorCharge').click(function() {
+   	    $.link.html(null, {
+			url: '${app}/loan/goCharge/'+$(this).data().id,
+			target: 'main'
+		});
+     });
+   
+   	$('#creditRepayPlanDetail .btn-primary').click(function() {
+   	    $.link.html(null, {
+			url: '${app}/loan/repayment/'+$(this).data().id,
+			target: 'main'
+		});
+     });
+   
   
 //-->
 </script>

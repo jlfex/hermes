@@ -343,7 +343,7 @@ public class CrediteInfo extends Model {
 		public static final String SUCC_ASSIGN = "02";
 		@Element("转让失败")
 		public static final String FAIL_ASSIGN = "03";
-		@Element("导入失败")
+		@Element("验证失败")
 		public static final String IMP_FAIL = "04";
 	}
 

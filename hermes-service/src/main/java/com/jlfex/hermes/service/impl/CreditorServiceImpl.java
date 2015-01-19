@@ -25,11 +25,15 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.User.Status;
 import com.jlfex.hermes.model.User.Type;
 import com.jlfex.hermes.model.UserAccount.Minus;
+import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.model.UserProperties.Mortgagor;
 import com.jlfex.hermes.repository.CreditorRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
+import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.CreditorService;
 import com.jlfex.hermes.service.common.Pageables;
@@ -50,6 +54,8 @@ public class CreditorServiceImpl  implements CreditorService {
 	private UserAccountRepository userAccountRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private UserPropertiesRepository userPropertiesRepository;
 
 	@Override
 	public List<Creditor> findAll() {
@@ -85,7 +91,7 @@ public class CreditorServiceImpl  implements CreditorService {
 	@Override
 	public void save(Creditor creditor) throws Exception{
 		if(creditor !=null && Strings.empty(creditor.getId())){
-			creditor.setUser(buildAccount());
+			creditor.setUser(buildAccount(creditor.getCreditorName()));
 		}
 		creditorRepository.save(creditor);
 	}
@@ -93,13 +99,25 @@ public class CreditorServiceImpl  implements CreditorService {
 	 * 创建  债权人 账户信息
 	 * @return
 	 */
-	public User  buildAccount() throws Exception{
+	public User  buildAccount(String creatorName) throws Exception{
 		User obj = new User();
-		obj.setAccount("CREDITOR");
+		obj.setAccount(creatorName);
 		obj.setType(Type.CREDIT);
-		obj.setStatus(Status.INACTIVATE);
+		obj.setStatus(Status.ENABLED);
 		obj.setSignPassword("");
+		obj.setRealName(creatorName);
 		User user = userRepository.save(obj);
+		
+		// 用户属性信息
+		UserProperties userProperties = new UserProperties();
+		userProperties.setUser(user);
+		userProperties.setRealName(user.getRealName());
+		userProperties.setAuthCellphone(Auth.WAIT);
+		userProperties.setAuthEmail(Auth.WAIT);
+		userProperties.setAuthName(Auth.WAIT);
+		userProperties.setIsMortgagor(Mortgagor.ALL);
+		userPropertiesRepository.save(userProperties);
+		
 		// 创建用户的现金账户
 		UserAccount cashAccount = new UserAccount();
 		cashAccount.setUser(user);

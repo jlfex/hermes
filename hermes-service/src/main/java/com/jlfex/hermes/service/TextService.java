@@ -19,4 +19,6 @@ public interface TextService {
 	 * @return
 	 */
 	public Text loadByReferenceAndType(String reference, String type);
+
+	public Text loadById(String id);
 }

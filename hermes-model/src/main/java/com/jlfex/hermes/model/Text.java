@@ -2,6 +2,7 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import com.jlfex.hermes.common.dict.Element;
@@ -22,11 +23,12 @@ public class Text extends Model {
 	/** 关系 */
 	@Column(name = "reference")
 	private String reference;
-	
+
 	/** 内容 */
+	@Lob
 	@Column(name = "text")
 	private String text;
-	
+
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
@@ -90,7 +92,7 @@ public class Text extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 类型
 	 * 
@@ -99,15 +101,17 @@ public class Text extends Model {
 	 * @since 1.0
 	 */
 	public static final class Type {
-		
-		@Element("文章")
-		public static final String ARTICLE	= "00";
-		
-		@Element("产品")
-		public static final String PRODUCT	= "01";
 
-		
+		@Element("文章")
+		public static final String ARTICLE = "00";
+
+		@Element("产品")
+		public static final String PRODUCT = "01";
+
 		@Element("通知模板")
 		public static final String NOTIFYMODEL = "10";
+
+		@Element("小图片")
+		public static final String SMALL_PIC = "11";
 	}
 }

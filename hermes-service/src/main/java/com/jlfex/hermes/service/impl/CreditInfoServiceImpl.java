@@ -22,13 +22,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Product;
+import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.repository.CreditInfoRepository;
+import com.jlfex.hermes.repository.CreditorRepayPlanRepository;
+import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
@@ -56,8 +60,16 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	private ProductService productService;
 	@Autowired
 	private RepayService repayService;
+	@Autowired
+	private RateRepository rateRepository;
+	@Autowired
+	private CreditorRepayPlanRepository creditorRepayPlanRepository;
 	
-
+	private static final String INIT_CREDIT_LEND_FEE = "0.02000000";  //债权标：借款手续费率
+	private static final String INIT_CREDIT_RISK_FEE = "0.03000000";  //债权标：风险金费率   
+	private static final String INIT_CREDIT_REPAY_WAY = "等额本息";  
+	
+	
 	@Override
 	public List<CrediteInfo> findAll() {
 	  return creditInfoRepository.findAll();
@@ -119,14 +131,21 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
      */
 	@Override
 	public boolean sellCredit(CrediteInfo entity) throws Exception {
-		String defaultCreditRepayWay = "等额本息"; //默认债权标 偿还方式 后续扩展 
-		Repay repay = queryRepayObj(defaultCreditRepayWay);
+		List<CreditRepayPlan> updateRepayList = new ArrayList<CreditRepayPlan>();
+		Repay repay = queryRepayObj(INIT_CREDIT_REPAY_WAY);
 		Loan loan = buildLoan(entity, repay);
 		creditInfoRepository.save(entity);
 		Loan loanNew = loanService.save(loan);
 		if(loanNew != null){
 			entity.setStatus(CrediteInfo.Status.ASSIGNING);
 			creditInfoRepository.save(entity);
+			// 更新债权明细 状态
+			List<CreditRepayPlan> repayList = creditorRepayPlanRepository.findByCrediteInfo(entity);
+			for(CreditRepayPlan item : repayList){
+				item.setStatus(CreditRepayPlan.Status.WAIT_PAY);
+				updateRepayList.add(item);
+			}
+			creditorRepayPlanRepository.save(updateRepayList);
 			return true;
 		}else{
 			return false;
@@ -138,6 +157,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @return
 	 */
 	public Product  generateVirtualProduct(Repay repay) throws Exception{
+		
 		Boolean existsFlag = false;
 		Product virtualProcut = new  Product();
 		try{
@@ -159,8 +179,16 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			virtualProcut.setManageFeeType("");
 			virtualProcut.setStatus(Product.Status.VIRTUAL_CREDIT_PROCD);
 			virtualProcut.setDescription("债权标虚拟产品配置初始化");
+			Product savedProduct=  productService.save(virtualProcut);
+			if(savedProduct !=null){
+				Logger.info("债权标虚拟产品配置初始化成功");
+				virtualProcut = savedProduct;
+				// 设置产品对应的 费率
+				initCreditRate(savedProduct, new BigDecimal(INIT_CREDIT_LEND_FEE), Rate.RateType.LOAN);
+				initCreditRate(savedProduct, new BigDecimal(INIT_CREDIT_RISK_FEE), Rate.RateType.RISK);
+			}
 		}
-		return productService.save(virtualProcut);
+		return virtualProcut;
 	}
 	/**
 	 * 债权表获取 偿还方式
@@ -208,6 +236,23 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		return loan ;
 	}
 	
+	/**
+	 * 外部债权表： 费率初始化
+	 * @param product
+	 * @param rateVal
+	 * @param type
+	 * @throws Exception
+	 */
+	public void initCreditRate(Product product,BigDecimal rateVal, String type) throws Exception{
+		Rate rate = new Rate();
+		rate.setProduct(product);
+		rate.setRate(rateVal);
+		rate.setType(type);
+		rate = rateRepository.save(rate);
+		if(rate!=null){
+		   Logger.info("外部债权标虚拟产品:"+product.getPeriod()+",费率类型="+type+"),初始化成功");
+		}
+	}
 	
     
 }
