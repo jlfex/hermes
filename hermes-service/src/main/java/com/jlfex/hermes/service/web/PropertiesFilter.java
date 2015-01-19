@@ -19,6 +19,7 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
 
 /**
@@ -35,6 +36,9 @@ public class PropertiesFilter implements Filter {
 	@Autowired
 	private PropertiesService propertiesService;
 
+	@Autowired
+	private TextService textService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,18 +47,20 @@ public class PropertiesFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		App.config(propertiesService.loadFromDatabase());
+		Map<String, String> tmp = new HashMap<String, String>();
+		tmp.put("app.logo.data", textService.loadById(App.config("app.logo")).getText());
+		App.config(tmp);
 		Logger.info("properties filter is working...");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-	 * javax.servlet.FilterChain)
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
-			ServletException {
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
 		if (!WebApp.isResource(req) && Strings.empty(App.config(PropertiesServiceImpl.KEY_DATABASE))) {
 			Logger.info("properties from database has changed! rebuild cache now.");
 			App.config(propertiesService.loadFromDatabase());
