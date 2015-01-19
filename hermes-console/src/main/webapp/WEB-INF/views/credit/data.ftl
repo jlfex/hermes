@@ -38,7 +38,7 @@
 	<tbody>
 </table>
 
-<ul class="pagination" data-number="0" data-total-pages="1"></ul>
+<ul class="pagination" data-number="${(lists.number)!''}" data-total-pages="${(lists.totalPages)!''}"></ul>
 
 <script type="text/javascript">
 <!--

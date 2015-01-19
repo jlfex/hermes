@@ -421,7 +421,14 @@ public class InvestServiceImpl implements InvestService {
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
 			investInfo.setId(invest.getId());
-			investInfo.setPurpose(getDictionaryName(invest.getLoan().getPurpose()));
+			String purpose = "";
+			String loanStatus = invest.getLoan().getLoanKind();
+			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanStatus)){
+				purpose = invest.getLoan().getPurpose();
+			}else{
+				purpose = getDictionaryName(invest.getLoan().getPurpose());
+			}
+			investInfo.setPurpose(purpose);
 			investInfo.setRate(Numbers.toPercent(invest.getLoan().getRate().doubleValue()));
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());

@@ -13,6 +13,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
   table th{text-align:center;}
+.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 </style>
 </head>
 <body class="index">

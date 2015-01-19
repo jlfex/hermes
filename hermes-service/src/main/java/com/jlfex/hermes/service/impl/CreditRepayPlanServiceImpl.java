@@ -1,8 +1,11 @@
 package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.repository.CreditorRepayPlanRepository;
@@ -58,7 +63,9 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		int allPeriod = (planList!=null)?planList.size():0;
 	    BigDecimal remainAmount = BigDecimal.ZERO; //剩余本金
 	    int  remainPeriod = 0;                     //剩余期数
-	    List<CreditRepayPlan> expireList = creditorRepayPlanRepository.findByNowTimeAndCreditInfo(creditInfo);
+	    String current_date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	    Date   expiredDate = Calendars.add(Calendars.parseDate(current_date), "1d");
+	    List<CreditRepayPlan> expireList = creditorRepayPlanRepository.findByNowTimeAndCreditInfo(expiredDate, creditInfo);
 	    if(expireList==null || expireList.size() == 0){
 	    	remainPeriod = allPeriod;
 	    	BigDecimal maxAmount = BigDecimal.ZERO;

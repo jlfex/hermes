@@ -3,21 +3,16 @@ package com.jlfex.hermes.console.credit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.rowset.serial.SerialException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -189,7 +184,7 @@ public class CreditController {
 	@RequestMapping("/loandata")
 	public String loandata(String page,String size, Model model ) {
 		try {
-			size = "7";
+			size = "10";
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null,page,size) ;
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
@@ -488,6 +483,7 @@ public class CreditController {
 			Map<String, Object> calculatedMap =  creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); //剩余本金
+			model.addAttribute("remainPeriod", calculatedMap.get("remainPeriod")); //剩余本金
 		} catch (Exception e) {
 			Logger.error("查询债权信息异常：id="+id, e);
 		}
@@ -544,6 +540,11 @@ public class CreditController {
 				}
 				if(!Strings.empty(creditInfo.getAmountAim())){
 					entity.setAmountAim(creditInfo.getAmountAim());
+				}
+				if(creditInfo.getTermNum() <= 0){
+					 throw new Exception("还款期数必须大于0");
+				}else{
+					entity.setTermNum(creditInfo.getTermNum());
 				}
 				if(creditInfoService.sellCredit(entity)){
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
@@ -631,4 +632,34 @@ public class CreditController {
 		}
 		return "credit/assign";
 	}
+	/**
+	 * 已转让 列表 index
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/assigned")
+	public String assigned(Model model){
+		return "credit/assigned";
+	}
+	/**
+	 * 已转让列表 table加载
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/assignedTable")
+	public String assignedTable(String page, String size,Model model){
+		size = "10";
+		CrediteInfo creditInfo = new CrediteInfo();
+		creditInfo.setStatus(CrediteInfo.Status.IMP_FAIL);
+		try {
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo,page,size) ;
+			model.addAttribute("assignedList", obj);
+		} catch (Exception e) {
+			throw new ServiceException(" 已转让列表 table加载异常");
+		}
+		return "credit/assignedTable";
+	}
+	
+	
+	
 }
