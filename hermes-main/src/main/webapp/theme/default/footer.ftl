@@ -15,14 +15,9 @@
         <div class="links clearfix">
             <h4>友情链接</h4>
             <ul>
-                <li><a href="javascript:value(0);">和讯银行</a></li>
-                <li><a href="javascript:value(0);">国美在线</a></li>
-                <li><a href="javascript:value(0);">财经道</a></li>
-                <li><a href="javascript:value(0);">电商服务</a></li>
-				<li><a href="javascript:value(0);">和讯银行</a></li>
-                <li><a href="javascript:value(0);">国美在线</a></li>
-                <li><a href="javascript:value(0);">财经道</a></li>
-                <li><a href="javascript:value(0);">电商服务</a></li>
+            	<#list friendlinkData as m>
+               	 <li><a href="http://${(m.link)!}" target="_blank">${(m.name)!}</a></li>
+                </#list>
             </ul>
         </div>
         <!-- <div class="serves clearfix">
