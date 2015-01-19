@@ -397,7 +397,8 @@ public class CreditExcelUtil {
 						errMsg.append(cellName).append(ERROR_EMPTY);
 						errFlag = true;
 					}else if(cell2.getCellType() == XSSFCell.CELL_TYPE_STRING){
-						vo.setCreditCode(cell1.getStringCellValue().trim());
+						String cellVal = cell2.getStringCellValue().trim();
+						vo.setPeriod(Integer.parseInt(cellVal));
 					}else{
 						errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_NUMBER_OR_TXT);
 						errFlag = true;
