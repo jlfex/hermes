@@ -30,7 +30,7 @@
                   <div class="row">
                         <div class="col-xs-2 hm-col">
                             <label for=""  class="sr-only">选择一级分类</label>
-                            <select id="status" name="levelOne" class="form-control categoryLevelOne">
+                            <select id="levelOne" name="levelOne" class="form-control categoryLevelOne">
   						         <option value="">请选择</option>
 						               <#list categoryForLevel1 as cf1>
 							     <option value="${cf1.id}">${cf1.name}</option>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-xs-2 hm-col">
                             <label for=""  class="sr-only">选择二级分类</label>
-					        <select id="status" name="levelTwo" class="form-control categoryLevelTwo">
+					        <select id="levelTwo" name="levelTwo" class="form-control categoryLevelTwo">
 						         <option value="">请选择</option>
 						               <#list categoryForLevel2 as cf2>
 							     <option value="${cf2.id}">${cf2.name}</option>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-xs-2 hm-col">
                             <label for=""  class="sr-only">选择三级分类</label>
-					        <select id="status" name="levelThree" class="form-control categoryLevelThree">
+					        <select id="levelThree" name="levelThree" class="form-control categoryLevelThree">
 						         <option value="">请选择</option>
 						               <#list categoryForLevel3 as cf3>
 							     <option value="${cf3.id}">${cf3.name}</option>
@@ -100,9 +100,10 @@
               </div>
               
               <div class="form-group">
-                <div class="col-sm-offset-2 col-xs-1">
-                  <button type="button" class="btn btn-primary btn-block" id="publishContent">提交</button>
-                  <button type="button" class="btn btn-primary btn-block" id="submitAgin">继续提交</button>
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="publishContent">提交发布</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="submitAgin">提交并继续发布</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-default btn-block" id="cacelContentButton">取消发布</button></div>                  
                 </div>
               </div>
             </form>     
@@ -111,20 +112,19 @@
       </div>
 <script type="text/javascript">
 jQuery(function($) {
-	$("#articleTitle,#keywords,#description,#content").on("blur",function(){
+	$("#articleTitle,#levelOne,#order,#keywords,#description,#content").on('blur',function(i,item){
 		checkInput(this);
 	});
-
     //对输入元素进行校验
 	function checkInput(e){
 		var $this = $(e);
 		var val = $this.val();
-		if( ($this.val()==''
-		    ||(e.id == 'articleTitle' && val.length > 60)
-		    ||(e.id == 'order' && !/^[0-9]*$/.test(val) )
-		    ||(e.id == 'keywords' && val.length > 60)
-		    ||(e.id == 'description' && val.length > 400)
-		    ||(e.id == 'content' && val.length > 10000) ) 		    
+		if( ( (e.id == 'articleTitle' && !/.{1,30}/.test(val))
+		    ||(e.id == 'order' && !/^[0-9]+$/.test(val))
+		    ||(e.id == 'levelOne' && $this.val()=='')		    
+		    ||(e.id == 'keywords' && !/.{0,30}/.test(val)) //非必填
+		    ||(e.id == 'description' && !/.{0,400}/.test(val)) //非必填
+		    ||(e.id == 'content' && !/.{1,5000}/.test(val)) ) 		    
 		    ){
 			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
 			$this.parent().parent().find(".alert-danger:eq(0)").show();
@@ -140,18 +140,20 @@ jQuery(function($) {
 
     //元素失去焦点时，触发数据校验事件
 	function checkAll(){
-		$("#articleTitle,#keywords,#description,#content").blur();
+		$("#articleTitle,#levelOne,#order,#keywords,#description,#content").each(function(i,item){
+			checkInput(this);
+		});
 		return $("span.alert-danger:visible").length==0;
 	}
 
 	//点击提交按钮
 	$("#publishContent").on("click",function(){
 	   if(checkAll()){
-		$.link.html(null, {
-			url: '${app}/content/addPublish',
-			data: $("#addForm").serialize(),
-			target: 'main'
-		});
+			$.link.html(null, {
+				url: '${app}/content/addPublish',
+				data: $("#addForm").serialize(),
+				target: 'main'
+			});
 		};
 	});
 
@@ -164,6 +166,13 @@ jQuery(function($) {
 			target: 'main'
 		});
 		};
+	});
+    //点击发布页面中取消按钮
+	$("#cacelContentButton").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/content/contentIndex',
+			target: 'main'
+		});
 	});
 	
 	//当一级分类下拉框改变时候，获取二级分类下拉框

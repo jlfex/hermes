@@ -120,7 +120,10 @@ public class UserManageServiceImpl implements UserManageService {
 		String countUser = commonRepository.readScriptFile(Script.countSearchUser);
 		countUser = String.format(countUser, condition);
 		List<?> count = commonRepository.findByNativeSql(countUser, params);
-		Long total = Long.parseLong(String.valueOf(count.get(0)));
+		Long total = 0l;
+		if (count.size() != 0) {
+			total = Long.parseLong(String.valueOf(count.get(0)));
+		}
 
 		// 查询用户
 		String sqlSearchUser = commonRepository.readScriptFile(Script.searchUser);

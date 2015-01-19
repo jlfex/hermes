@@ -184,7 +184,7 @@ public class ContentController {
 		try {
 			contentService.addPublish(pcVo);
 			attr.addFlashAttribute("msg", "发布内容成功");
-			return "redirect:/content/contentIndex";
+			return "redirect:/content/publish";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
 			return "redirect:/content/addPublish";
@@ -256,8 +256,13 @@ public class ContentController {
 		}
 	}
 
+	/**
+	 * 批量删除内容
+	 * 
+	 * @author lishunfeng
+	 */
+
 	@RequestMapping("/batchDeleteContent")
-	@ResponseBody
 	public String batchDeleteContent(@RequestParam(value = "ids", required = true) String ids, RedirectAttributes attr, Model model) {
 		try {
 			contentService.batchDeleteContent(ids);
@@ -300,7 +305,7 @@ public class ContentController {
 		try {
 			contentService.addFriendLink(flVo);
 			attr.addFlashAttribute("msg", "添加链接成功");
-			return "redirect:/content/friendLinkIndex";
+			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "添加链接失败");
 			return "redirect:/content/addFriendLink";
@@ -328,7 +333,7 @@ public class ContentController {
 		try {
 			contentService.updateFriendLink(flVo);
 			attr.addFlashAttribute("msg", "友情链接修改成功");
-			return "redirect:/content/friendLinkIndex";
+			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "友情链接修改失败");
 			return "redirect:/content/editFriendLink";
@@ -345,10 +350,10 @@ public class ContentController {
 		try {
 			contentService.deleteFriendLink(id);
 			attr.addFlashAttribute("msg", "删除友情链接成功");
-			return "redirect:/content/friendLinkIndex";
+			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "删除友情链接失败");
-			return "redirect:/content/friendLinkIndex";
+			return "redirect:/content/friendLink";
 		}
 	}
 
@@ -384,7 +389,7 @@ public class ContentController {
 		try {
 			contentService.updateTmpNotice(tnVo);
 			attr.addFlashAttribute("msg", "临时公告修改成功");
-			return "redirect:/content/tmpNoticeIndex";
+			return "redirect:/content/tmpNotice";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "临时公告修改失败");
 			return "redirect:/content/editTmpNotice";

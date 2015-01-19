@@ -39,9 +39,9 @@
               </div>
               
               <div class="form-group">
-                <div class="col-sm-offset-2 col-xs-1">
-                  <button type="button" class="btn btn-primary btn-block" id="addFreiendLink">添加</button>
-                  <button type="button" class="btn btn-primary btn-block" id="cancelFreiendLink">取消</button>
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="addFreiendLink">添加</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-default btn-block" id="cancelFreiendLink">取消</button></div>
                 </div>
               </div>
             </form>     
@@ -56,6 +56,13 @@ jQuery(function($) {
 		$.link.html(null, {
 			url: '${app}/content/handerAddFriendLink',
 			data: $("#addForm").serialize(),
+			target: 'main'
+		});
+	});
+    //点击取消按钮
+	$("#cancelFreiendLink").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/content/friendLink',
 			target: 'main'
 		});
 	});

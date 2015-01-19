@@ -39,9 +39,9 @@
               </div>
               
               <div class="form-group">
-                <div class="col-sm-offset-2 col-xs-1">
-                  <button type="button" class="btn btn-primary btn-block" id="editTmpNotice">保存</button>
-                  <button type="button" class="btn btn-primary btn-block" id="cancelTmpNotice">取消</button>
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="editTmpNotice">保存</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-default btn-block" id="cancelTmpNotice">取消</button></div>
                 </div>
               </div>
             </form>     
