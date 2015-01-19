@@ -31,8 +31,9 @@ img{ border:0;}
 /* head style */
 .head{width:100%;height:69px;border-top:1px #e6e6e6 solid;background:#f1f1f1;}
 .head .midcenter{width:980px;height:68px;margin:0 auto;}
-.head .midcenter .logo{height:42px;padding:15px 0;float:left;}
-.head .midcenter .logo img{ vertical-align:middle;}
+.head .midcenter .logo{float:left;}
+.head .midcenter .logo span.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+.head .midcenter .logo img{ vertical-align:middle;width: 168px; height: 40px; margin-top: -10px;}
 .head .midcenter .logo span{color:#323232;font-size:16px;font-weight:500; padding-left:10px; vertical-align:middle; color:#4a4a4a;}
 .head .midcenter .nav{float:right;color:#323232;padding:23px 0 0 0;}
 .head .midcenter .nav ul li{width:120px;height:20px;float:left;text-align:right;line-height:25px; text-align:right;}
@@ -108,19 +109,23 @@ img{ border:0;}
 .conditioninfo ul li a{color:#25bbed;float:right; display:block;}
 
 /* foot style */
-.footer{width:100%;height:260px;background:#444444;}
-.footer .footcenter{margin:0 auto;width:980px;height:150px;}
-.footer .footcenter h4{font-size:14px;font-weight:600;margin:10px 0 30px 0;color:#909090;}
-.footer .footcenter .companyinfo, .footer .footcenter .links,.footer .footcenter .serves, .footer .footcenter .telephone{float:left;margin-top:40px; display:inline;}
-.footer .footcenter .companyinfo{width:150px;height:150px;}
-.footer .footcenter .links{width:150px;height:150px;padding-left:20px;background:url(../images/foot_separatorling.png) no-repeat left;}
-.footer .footcenter .serves{width:320px;height:150px;padding-left:20px;background:url(../images/foot_separatorling.png) no-repeat left;}
-.footer .footcenter .telephone{width:auto;height:150px;padding-left:20px;background:url(../images/foot_separatorling.png) no-repeat left;}
-.footer .footcenter .telephone p{background:url(../images/icon1/foot_telephone.png) no-repeat left center;padding:0 0 10px 35px;color:#fe5331;font-weight:500;font-size:28px;}
-.footer .footcenter .companyinfo ul li, .footer .footcenter .links ul li{background:url(../images/icon1/triangle_icon.png) no-repeat left center;line-height:20px;padding:0 10px;color:#909090;}
-.footer .footcenter .companyinfo ul li a, .footer .footcenter .links ul li a{color:#909090;}
-.footer .footcenter .serves ul li{float:left;padding-left:10px;width:80px; text-align:center;}
-.footer .footcenter .serves ul li a, .worktime{color:#909090;}
+.footer{width:100%;background:#444444;}
+.footer .footcenter{margin:0 auto;width:980px;}
+.footer .footcenter a:hover{text-decoration:underline;}
+.footer .companyinfo, .footer .links,.footer .serves,.footer .telephone{width:980px;}
+.footer .companyinfo ul, .footer .links ul,.footer .serves ul,.footer .telephone ul{float:left;}
+.footer .companyinfo li, .footer .links li,.footer .serves li,.footer .telephone li{float:left;line-height:20px;color:#909090;margin-left:18px;}
+.footer .companyinfo h4, .footer .links h4,.footer .serves h4,.footer .telephone h4{float:left;font-size:15px;font-weight:600;color:#909090;margin-right: 15px;}
+.footer .companyinfo,.footer .companyinfo h4,.footer .companyinfo li{height:65px;line-height:65px;}
+.footer .links,.footer .links h4,.footer .links li{height: 65px;line-height:65px;}
+.footer .serves,.footer .serves h4,.footer .serves li{height:35px;line-height:35px;margin-bottom:15px;}
+.footer .serves ul li{width:110px;text-align:center;}
+.footer .serves ul li img{vertical-align: middle;}
+.footer .serves ul li span{margin-left:10px;}
+.footer .telephone,.footer .telephone h4,.footer .telephone li{height:65px;line-height:65px;}
+.footer ul li a,.worktime{color:#909090;}
+.footer .footcenter .telephone p{color:#fe5331;font-weight:500;font-size:15px;}
+.footer .copyright{width:100%;height:52px;line-height:52px;text-align:center;color:#909090;}
 
 
 /* my invest style */
