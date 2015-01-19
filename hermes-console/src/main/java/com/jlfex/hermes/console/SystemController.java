@@ -83,7 +83,7 @@ public class SystemController {
 					Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes()),
 					request.getParameter("operationName"), request.getParameter("operationNickname"),
 					request.getParameter("website"), request.getParameter("copyright"), request.getParameter("icp"),
-					request.getParameter("serviceTel"), request.getParameter("serviceTel"),
+					request.getParameter("serviceTel"), request.getParameter("serviceTime"),
 					request.getParameter("companyName"), request.getParameter("companyAddress"),
 					request.getParameter("companyCity"), request.getParameter("smtpHost"),
 					request.getParameter("smtpPort"), request.getParameter("smtpUsername"),
