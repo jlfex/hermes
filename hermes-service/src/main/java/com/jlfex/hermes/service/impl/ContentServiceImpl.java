@@ -20,15 +20,18 @@ import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.HermesConstants;
+import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.ArticleRepository;
 import com.jlfex.hermes.repository.FriendLinkRepository;
+import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
 import com.jlfex.hermes.service.pojo.PublishContentVo;
 import com.jlfex.hermes.service.pojo.ResultVo;
+import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
 @Service
 public class ContentServiceImpl implements ContentService {
@@ -38,6 +41,8 @@ public class ContentServiceImpl implements ContentService {
 	private ArticleRepository articleRepository;
 	@Autowired
 	private FriendLinkRepository friendLinkRepository;
+	@Autowired
+	private TmpNoticeRepository tmpNoticeRepository;
 
 	@Override
 	public void addCategory(ContentCategory category) {
@@ -371,6 +376,43 @@ public class ContentServiceImpl implements ContentService {
 	public void deleteFriendLink(String id) {
 		FriendLink friendLink = friendLinkRepository.findOne(id);
 		friendLinkRepository.delete(friendLink);
+	}
+
+	/**
+	 * 查询临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public Page<TmpNotice> findAllTmpNotices(int page, int size) {
+		return tmpNoticeRepository.findAll(new PageRequest(page, size));
+	}
+
+	/**
+	 * 根据id找到某条临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@Override
+	public TmpNotice findOneByTmpNoticeId(String id) {
+		return tmpNoticeRepository.findOne(id);
+	}
+
+	/**
+	 * 编辑临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@Override
+	public TmpNotice updateTmpNotice(TmpNoticeVo tnVo) {
+		TmpNotice tmpNotice = tmpNoticeRepository.findOne(tnVo.getId());
+		tmpNotice.setContent(tnVo.getContent());
+		tmpNotice.setStartDate(tnVo.getStartDate());
+		tmpNotice.setEndDate(tnVo.getEndDate());
+		tmpNoticeRepository.save(tmpNotice);
+		return tmpNotice;
 	}
 
 }
