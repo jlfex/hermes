@@ -6,6 +6,8 @@
 <link rel="shortcut icon" type="image/png" href="${app.img}/favicon.png">
 <link rel="stylesheet" href="${app.css}/style.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui.css">
+<script type="text/javascript" charset="utf-8" src="${app.js}/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/editor_api.js"></script>
 </head>
 <body>
 

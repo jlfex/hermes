@@ -30,7 +30,7 @@
                 <td class="align-center">
                     <button type="button" class="btn btn-link previewBtn">预览</button>
                     <button type="button" class="btn btn-link hm-col editBtn" id="editBtn" pid="${l.id}">编辑</button>
-                    <button type="button" class="btn btn-link deleteBtn" id="editBtn" cid="${l.id}">删除</button>
+                    <button type="button" class="btn btn-link deleteBtn" id="deleteBtn" cid="${l.id}">删除</button>
                 </td>
                 <td class="align-right">
                       <input type="checkbox" id="chooseCheckbox" name="deleteBox" value="${l.id}">

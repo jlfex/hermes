@@ -2,9 +2,7 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -39,13 +37,9 @@ public class FriendLink extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	// /** 类型 */
-	// @Column(name = "type")
-	// private String type;// 1,友情链接 2,banner
-	/** 所属分类 */
-	@ManyToOne
-	@JoinColumn(name = "category")
-	private ArticleCategory category;
+	/** 类型 */
+	@Column(name = "type")
+	private String type;// 1,友情链接 2,合作机构
 
 	/**
 	 * 读取名称
@@ -148,11 +142,12 @@ public class FriendLink extends Model {
 		this.status = status;
 	}
 
-	public ArticleCategory getCategory() {
-		return category;
+	public String getType() {
+		return type;
 	}
 
-	public void setCategory(ArticleCategory category) {
-		this.category = category;
+	public void setType(String type) {
+		this.type = type;
 	}
+
 }

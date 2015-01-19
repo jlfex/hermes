@@ -36,10 +36,10 @@
             <td class="align-center">${l.name!}</td>
             <td class="align-center">${l.link!}</td>
             <td class="align-center"></td>
-            <td class="align-center">${(l.category.name)!}</td>
+            <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
-                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal02" id="editBtn" pid="${l.id}">编辑</button>
-                <button type="button" class="btn btn-link hm-col" id="deleteBtn" cid="${l.id}">删除</button>
+                <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
+                <button type="button" class="btn btn-link hm-col deleteBtn"  cid="${l.id}">删除</button>
             </td>
         </tr>
             </#list>
@@ -67,7 +67,7 @@ jQuery(function($) {
 		});
 	});
    //点击编辑按钮
-	$("#editBtn").on("click",function(){
+	$(".editBtn").on("click",function(){
 		var pid = $(this).attr("pid");
 		$.link.html(null, {
 			url: '${app}/content/editFriendLink?id='+pid,
@@ -75,7 +75,7 @@ jQuery(function($) {
 		});
 	});
 	//点击删除按钮
-	$("#deleteBtn").on("click",function(){
+	$(".deleteBtn").on("click",function(){
 		var cid = $(this).attr("cid");
 		$.link.html(null, {
 			url: '${app}/content/deleteFriendLink?id='+cid,

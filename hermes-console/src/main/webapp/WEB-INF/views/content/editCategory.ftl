@@ -1,5 +1,13 @@
+ <#if msg??>
+	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		${msg!}
+	</div>
+</#if>
+
   <div class="modal-body">
    		<form class="form-horizontal" role="form" id="editForm">
+   		  <input type="hidden" value="${(category.id)!}" name="id" />   		
           <div class="form-group">
             <label for="inputName" class="col-sm-2 control-label">分类名称</label>
             <div class="col-sm-10">
@@ -41,10 +49,7 @@ jQuery(function($) {
 		$.link.html(null, {
 			url: '${app}/content/updateCategory',
 			data: $("#editForm").serialize(),
-			target: 'main',
-			success:function(msg) {
-				alert(msg.attachment);				
-			}
+			target: 'main'
 		});
 	});
     //点击编辑页面中取消按钮
