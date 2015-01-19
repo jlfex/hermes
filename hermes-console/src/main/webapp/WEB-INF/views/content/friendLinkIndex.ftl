@@ -1,3 +1,10 @@
+ <#if msg??>
+	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		${msg!}
+	</div>
+</#if>
+
 <div class="row panel-body">
 	<div class="col-xs-1">
 		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal">+ 添加链接</button>
@@ -29,7 +36,7 @@
             <td class="align-center">${l.name!}</td>
             <td class="align-center">${l.link!}</td>
             <td class="align-center"></td>
-            <td class="align-center">${l.category.name!}</td>
+            <td class="align-center">${(l.category.name)!}</td>
             <td class="align-center">
                 <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal02" id="editBtn" pid="${l.id}">编辑</button>
                 <button type="button" class="btn btn-link hm-col" id="deleteBtn" cid="${l.id}">删除</button>
