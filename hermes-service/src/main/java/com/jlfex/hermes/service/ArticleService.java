@@ -3,6 +3,7 @@ package com.jlfex.hermes.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategoryReference;
@@ -23,7 +24,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	public Article loadByIdWithText(String id);
-	
+
 	/**
 	 * 通过分类代码及状态查询文章
 	 * 
@@ -32,14 +33,14 @@ public interface ArticleService {
 	 * @return
 	 */
 	public List<Article> findByCategoryCodeAndStatus(String categoryCode, String... status);
-	
+
 	/**
 	 * 查询首页公告
 	 * 
 	 * @return
 	 */
 	public List<Article> findHomeNotices();
-	
+
 	/**
 	 * 查询公告
 	 * 
@@ -48,4 +49,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	public Page<ArticleCategoryReference> findNotices(Integer page, Integer size);
+
+	public Page<Article> find(String categoryId, Pageable page);
+
 }
