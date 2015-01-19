@@ -1,10 +1,16 @@
 package com.jlfex.hermes.console;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +22,7 @@ import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
 import com.jlfex.hermes.service.pojo.PublishContentVo;
 import com.jlfex.hermes.service.pojo.ResultVo;
+import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
 /**
  * @author admin 内容管理控制器
@@ -25,6 +32,13 @@ import com.jlfex.hermes.service.pojo.ResultVo;
 public class ContentController {
 	@Autowired
 	private ContentService contentService;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setLenient(true);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
 
 	/**
 	 * 分类管理结果页面
@@ -335,6 +349,45 @@ public class ContentController {
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "删除友情链接失败");
 			return "redirect:/content/friendLinkIndex";
+		}
+	}
+
+	/**
+	 * 临时公告结果页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/tmpNotice")
+	public String tmpNoticeData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("tmpNotices", contentService.findAllTmpNotices(page, size));
+		return "/content/tmpNoticeIndex";
+	}
+
+	/**
+	 * 编辑临时公告页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/editTmpNotice")
+	public String editTmpNotice(@RequestParam(value = "id", required = true) String id, Model model) {
+		model.addAttribute("tmpNotice", contentService.findOneByTmpNoticeId(id));
+		return "/content/editTmpNotice";
+	}
+
+	/**
+	 * 编辑临时公告处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerEditTmpNotice")
+	public String handerEditTmpNotice(TmpNoticeVo tnVo, RedirectAttributes attr, Model model) {
+		try {
+			contentService.updateTmpNotice(tnVo);
+			attr.addFlashAttribute("msg", "临时公告修改成功");
+			return "redirect:/content/tmpNoticeIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "临时公告修改失败");
+			return "redirect:/content/editTmpNotice";
 		}
 	}
 

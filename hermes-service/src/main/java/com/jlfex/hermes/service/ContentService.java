@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
+import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
 import com.jlfex.hermes.service.pojo.PublishContentVo;
 import com.jlfex.hermes.service.pojo.ResultVo;
+import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
 public interface ContentService {
 
@@ -56,8 +58,14 @@ public interface ContentService {
 
 	FriendLink updateFriendLink(FriendLinkVo flVo);
 
+	TmpNotice updateTmpNotice(TmpNoticeVo tnVo);
+
 	void deleteFriendLink(String id);
 
 	public void batchDeleteContent(String ids);
+
+	Page<TmpNotice> findAllTmpNotices(int page, int size);
+
+	TmpNotice findOneByTmpNoticeId(String id);
 
 }

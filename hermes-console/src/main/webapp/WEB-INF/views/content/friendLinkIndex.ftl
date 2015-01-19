@@ -25,11 +25,11 @@
             <#list friendLinks.content as l>                            
         <tr>
             <#-- <td class="align-center">00001</td>-->
-            <td class="align-center">${l.order}</td>
-            <td class="align-center">${l.name}</td>
-            <td class="align-center">${l.link}</td>
+            <td class="align-center">${l.order!}</td>
+            <td class="align-center">${l.name!}</td>
+            <td class="align-center">${l.link!}</td>
             <td class="align-center"></td>
-            <td class="align-center">${l.category.name}</td>
+            <td class="align-center">${l.category.name!}</td>
             <td class="align-center">
                 <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal02" id="editBtn" pid="${l.id}">编辑</button>
                 <button type="button" class="btn btn-link hm-col" id="deleteBtn" cid="${l.id}">删除</button>
