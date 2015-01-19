@@ -33,7 +33,7 @@
                     <button type="button" class="btn btn-link deleteBtn" id="editBtn" cid="${l.id}">删除</button>
                 </td>
                 <td class="align-right">
-                      <input type="checkbox" id="chooseCheckbox" name="artchbox" value="${l.id}">
+                      <input type="checkbox" id="chooseCheckbox" name="deleteBox" value="${l.id}">
                 </td>
             </tr>
             </#list>
@@ -61,13 +61,10 @@ $('.pagination').pagination({
 	});
 	
 	
-//批量删除  
-
-
+ //点击批量删除按钮  
 $(".batch").on("click",function(){
-		 var ches=document.getElementsByName("artchbox");
-		 var ids="";
-		 
+		 var ches=document.getElementsByName("deleteBox");
+		 var ids="";		 
 		 for(var i=0;i<ches.length;i++){
 		   if(ches[i].checked){
 		     ids+=ches[i].value+",";
@@ -97,9 +94,6 @@ $(".batch").on("click",function(){
 	
 	
 	});
-
-
-
 
 
 	$(".all").on("click",function(){

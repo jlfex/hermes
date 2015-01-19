@@ -1,3 +1,10 @@
+ <#if msg??>
+	<div class="alert alert-danger alert-dismissible fade in" role="alert">
+		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		${msg!}
+	</div>
+</#if>
+
 <div class="row panel-body">
 	<div class="col-xs-1">
 		<button class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal">临时公告</button>
