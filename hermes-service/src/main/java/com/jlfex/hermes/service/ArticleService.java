@@ -23,7 +23,7 @@ public interface ArticleService {
 	 * @return
 	 */
 	public Article loadByIdWithText(String id);
-	
+
 	/**
 	 * 通过分类代码及状态查询文章
 	 * 
@@ -32,14 +32,14 @@ public interface ArticleService {
 	 * @return
 	 */
 	public List<Article> findByCategoryCodeAndStatus(String categoryCode, String... status);
-	
+
 	/**
 	 * 查询首页公告
 	 * 
 	 * @return
 	 */
 	public List<Article> findHomeNotices();
-	
+
 	/**
 	 * 查询公告
 	 * 
@@ -48,4 +48,5 @@ public interface ArticleService {
 	 * @return
 	 */
 	public Page<ArticleCategoryReference> findNotices(Integer page, Integer size);
+
 }
