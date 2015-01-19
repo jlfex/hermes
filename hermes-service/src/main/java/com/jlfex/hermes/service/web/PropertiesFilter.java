@@ -18,6 +18,7 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
+import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
@@ -39,6 +40,9 @@ public class PropertiesFilter implements Filter {
 	@Autowired
 	private TextService textService;
 
+	@Autowired
+	private FriendLinkService friendLinkService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -47,9 +51,11 @@ public class PropertiesFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		App.config(propertiesService.loadFromDatabase());
-		Map<String, String> tmp = new HashMap<String, String>();
-		tmp.put("app.logo.data", textService.loadById(App.config("app.logo")).getText());
-		App.config(tmp);
+		if (App.config("app.logo") != null) {
+			Map<String, String> tmp = new HashMap<String, String>();
+			tmp.put("app.logo.data", textService.loadById(App.config("app.logo")).getText());
+			App.config(tmp);
+		}
 		Logger.info("properties filter is working...");
 	}
 
@@ -66,6 +72,7 @@ public class PropertiesFilter implements Filter {
 			App.config(propertiesService.loadFromDatabase());
 			Logger.info("properties rebuild completed.");
 		}
+		req.setAttribute("friendlinkData", friendLinkService.findTop10());
 		chain.doFilter(req, resp);
 	}
 
