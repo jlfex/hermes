@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,8 +43,7 @@ public class CommonRepository {
 	 * @param requiredType
 	 * @return
 	 */
-	public <T> List<T> findByJpql(String jpql, Map<String, Object> params,
-			Class<T> requiredType) {
+	public <T> List<T> findByJpql(String jpql, Map<String, Object> params, Class<T> requiredType) {
 		TypedQuery<T> query = em.createQuery(jpql, requiredType);
 		for (Entry<String, Object> entry : params.entrySet())
 			query.setParameter(entry.getKey(), entry.getValue());
@@ -59,8 +60,7 @@ public class CommonRepository {
 	 * @param requiredType
 	 * @return
 	 */
-	public <T> List<T> pageByJpql(String jpql, Map<String, Object> params,
-			Integer startPosition, Integer maxResult, Class<T> requiredType) {
+	public <T> List<T> pageByJpql(String jpql, Map<String, Object> params, Integer startPosition, Integer maxResult, Class<T> requiredType) {
 		TypedQuery<T> query = em.createQuery(jpql, requiredType);
 		query.setFirstResult(startPosition);
 		query.setMaxResults(maxResult);
@@ -91,7 +91,16 @@ public class CommonRepository {
 	 * @return
 	 */
 	public List<?> findByNativeSql(String sql, Map<String, Object> params) {
-		Query query = em.createNativeQuery(sql);
+
+		String finalSql = sql;
+		Pattern pattern = Pattern.compile("^select count*", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(finalSql);
+		if (matcher.matches()) {
+			if (sql.contains("order by")) {
+				finalSql = sql.substring(0, sql.indexOf("order by"));
+			}
+		}
+		Query query = em.createNativeQuery(finalSql);
 		for (Entry<String, Object> entry : params.entrySet())
 			query.setParameter(entry.getKey(), entry.getValue());
 		return query.getResultList();
@@ -104,8 +113,7 @@ public class CommonRepository {
 	 * @param params
 	 * @return
 	 */
-	public List<?> findByNativeSql(String sql, Map<String, Object> params,
-			Integer startPosition, Integer maxResult) {
+	public List<?> findByNativeSql(String sql, Map<String, Object> params, Integer startPosition, Integer maxResult) {
 		Query query = em.createNativeQuery(sql);
 		query.setFirstResult(startPosition);
 		query.setMaxResults(maxResult);
@@ -127,17 +135,14 @@ public class CommonRepository {
 
 		// 读取文件
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					CommonRepository.class.getResourceAsStream(path), "utf-8"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(CommonRepository.class.getResourceAsStream(path), "utf-8"));
 			while ((line = reader.readLine()) != null)
 				script.append(line.trim()).append(" ");
 			return script.toString();
 		} catch (UnsupportedEncodingException e) {
-			throw new ServiceException("cannot read script file '" + path
-					+ "'.", e);
+			throw new ServiceException("cannot read script file '" + path + "'.", e);
 		} catch (IOException e) {
-			throw new ServiceException("cannot read script file '" + path
-					+ "'.", e);
+			throw new ServiceException("cannot read script file '" + path + "'.", e);
 		}
 	}
 
@@ -161,23 +166,23 @@ public class CommonRepository {
 	 */
 	public static final class Script {
 
-		public static final String countByLoanStatus 			= "/script/count-by-loan-status.sql";
-		public static final String countByLoanOverdue			= "/script/count-by-loan-overdue.sql";
-		public static final String searchByLoan 				= "/script/search-by-loan.sql";
-		public static final String countSearchByLoan 			= "/script/count-search-by-loan.sql";
-		public static final String searchByInvestProfit 		= "/script/search-by-invest-profit.sql";
-		public static final String countSearchByInvestProfit 	= "/script/count-search-by-invest-profit.sql";
-		public static final String searchUser 					= "/script/search-user.sql";
-		public static final String countSearchUser 				= "/script/count-search-user.sql";
-		public static final String searchByLoanAudit 			= "/script/search-by-loan-audit.sql";
-		public static final String countSearchByLoanAudit 		= "/script/count-search-by-loan-audit.sql";
-		public static final String initData						= "/sql/h2/data.sql";
-		public static final String searchByParameterSet 		= "/script/search-by-parameterset.sql";
-		public static final String countSearchByParameterSet 	= "/script/count_search-by-parameterset.sql";
+		public static final String countByLoanStatus = "/script/count-by-loan-status.sql";
+		public static final String countByLoanOverdue = "/script/count-by-loan-overdue.sql";
+		public static final String searchByLoan = "/script/search-by-loan.sql";
+		public static final String countSearchByLoan = "/script/count-search-by-loan.sql";
+		public static final String searchByInvestProfit = "/script/search-by-invest-profit.sql";
+		public static final String countSearchByInvestProfit = "/script/count-search-by-invest-profit.sql";
+		public static final String searchUser = "/script/search-user.sql";
+		public static final String countSearchUser = "/script/count-search-user.sql";
+		public static final String searchByLoanAudit = "/script/search-by-loan-audit.sql";
+		public static final String countSearchByLoanAudit = "/script/count-search-by-loan-audit.sql";
+		public static final String initData = "/sql/h2/data.sql";
+		public static final String searchByParameterSet = "/script/search-by-parameterset.sql";
+		public static final String countSearchByParameterSet = "/script/count_search-by-parameterset.sql";
 
 	}
-	
-	public void executeNative(String path){
+
+	public void executeNative(String path) {
 		em.createNativeQuery(readScriptFile(path)).executeUpdate();
 	}
 }

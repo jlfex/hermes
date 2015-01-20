@@ -5,7 +5,7 @@
 			<div class="form-group">
 				<label class="col-xs-2 control-label"><@messages key="withdraw.label.proposer" /></label>
 				<div class="col-xs-10">
-					<p class="form-control-static">${prop.realName}</p>
+					<p class="form-control-static">${prop.realName!}</p>
 				</div>
 			</div>
 			<div class="form-group">
