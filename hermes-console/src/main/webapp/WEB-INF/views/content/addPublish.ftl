@@ -92,7 +92,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>内容编辑</label>
                 <div class="col-sm-8">
-                  <textarea class="form-control" rows="6" id="content" name="content"></textarea>
+                  <textarea rows="13" id="content" name="content"></textarea>
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，限定字符1万个（汉字为5000个）</span>
@@ -110,8 +110,11 @@
         </div> 
         </div>
       </div>
+
+
 <script type="text/javascript">
 jQuery(function($) {
+UE.getEditor('content');
 	$("#articleTitle,#levelOne,#order,#keywords,#description,#content").on('blur',function(i,item){
 		checkInput(this);
 	});

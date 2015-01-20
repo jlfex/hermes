@@ -136,7 +136,7 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	@Override
 	public ResultVo updateCategory(ContentCategory category) {
-		ArticleCategory articleCategory = new ArticleCategory();
+		ArticleCategory articleCategory = articleCategoryRepository.findOne(category.getId());
 		articleCategory.setName(category.getInputName());
 		String level1 = category.getCategoryLevelOne();
 		String level2 = category.getCategoryLevelTwo();

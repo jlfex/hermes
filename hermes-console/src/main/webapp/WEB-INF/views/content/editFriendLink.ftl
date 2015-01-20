@@ -29,6 +29,17 @@
 				</div>                                                        
               </div>
               <div class="form-group">
+                <label for="" class="col-sm-2 control-label">所属分类</label>
+                <div class="col-sm-5">
+                   <select id="type" name="type" class="form-control">
+                      <option value="${friendLink.type}">${friendLink.type}</option>
+                   </select>
+                </div>
+		        <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
+				</div>                                                        
+              </div>        
+              <div class="form-group">
                 <label for="" class="col-sm-2 control-label">排序</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="order" name="order" placeholder="1" value="${friendLink.order}">

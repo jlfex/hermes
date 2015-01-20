@@ -84,7 +84,7 @@
       <div class="form-group">
         <label for="" class="col-sm-2 control-label">文章描述</label>
         <div class="col-sm-8">
-          <textarea class="form-control" rows="3" id="description" name="description" value="${article.description!}"></textarea>
+          <textarea class="form-control" rows="3" id="description" name="description">${article.description!}</textarea>
         </div>
         <div class="col-xs-2">
 			<span class="alert-danger" style="display:none;background:none">非必填项，限定字符400个（汉字为200个）</span>
@@ -92,9 +92,9 @@
       </div>
       <div class="form-group">
         <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>内容编辑</label>
-        <div class="col-sm-8">
-          <textarea class="form-control" rows="6" id="content" name="content" value="${article.content!}"></textarea>
-        </div>
+            <div class="col-sm-8">
+                  <textarea rows="8" id="content" name="content">${article.content!}</textarea>
+            </div>        
         <div class="col-xs-2">
 			<span class="alert-danger" style="display:none;background:none">必填项，限定字符1万个（汉字为5000个）</span>
 		</div>                                                                
@@ -112,6 +112,7 @@
 </div>
 <script type="text/javascript">
 jQuery(function($) {
+    UE.getEditor('content');
 	$("#articleTitle,#keywords,#description,#content").on("blur",function(){
 		checkInput(this);
 	});

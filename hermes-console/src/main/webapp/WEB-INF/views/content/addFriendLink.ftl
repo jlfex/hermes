@@ -28,11 +28,26 @@
 				</div>                                                        
               </div>
               <div class="form-group">
+                <label for="" class="col-sm-2 control-label">所属分类</label>
+                <div class="col-sm-5">
+                   <select id="type" name="type" class="form-control">
+                   	  <option value="友情链接">友情链接</option>
+					  <option value="合作机构">合作机构</option>
+                   </select>
+                </div>
+		        <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
+				</div>                                                        
+              </div>
+              <div class="form-group">
                 <label for="" class="col-sm-2 control-label">排序</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="order" name="order" placeholder="1">
+                  <input type="text" class="form-control" id="order" name="order">
                 </div>
-                <span class="vlight">请以，号隔开</span>
+           		 <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
+				</div>                                                        
+           
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，只能输入数字</span>
 				</div>                                
@@ -51,13 +66,44 @@
 
 <script type="text/javascript">
 jQuery(function($) {
+	$("#order").on('blur',function(i,item){
+		checkInput(this);
+	});
+	    //对输入元素进行校验
+	function checkInput(e){
+		var $this = $(e);
+		var val = $this.val();
+		if( ( $this.val()==''
+		  ||(e.id == 'order' && !/^[0-9]+$/.test(val))) 		    
+		    ){
+			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
+			$this.parent().parent().find(".alert-danger:eq(0)").show();
+			return false;
+		}else{
+			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
+			if(e_id=='' || e_id==e.id){
+				$this.parent().parent().find(".alert-danger:eq(0)").hide();
+			}
+			return true;
+		}
+	}
+	    //元素失去焦点时，触发数据校验事件
+	function checkAll(){
+		$("#order").each(function(i,item){
+			checkInput(this);
+		});
+		return $("span.alert-danger:visible").length==0;
+	}
+	
 	//点击添加按钮
 	$("#addFreiendLink").on("click",function(){
+	 if(checkAll()){
 		$.link.html(null, {
 			url: '${app}/content/handerAddFriendLink',
 			data: $("#addForm").serialize(),
 			target: 'main'
 		});
+	  };
 	});
     //点击取消按钮
 	$("#cancelFreiendLink").on("click",function(){

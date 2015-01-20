@@ -79,9 +79,15 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/updateCategory")
-	@ResponseBody
-	public ResultVo updateCategory(ContentCategory contentCategory) {
-		return contentService.updateCategory(contentCategory);
+	public String updateCategory(ContentCategory contentCategory, RedirectAttributes attr) {
+		try {
+			contentService.updateCategory(contentCategory);
+			attr.addFlashAttribute("msg", "修改分类成功");
+			return "redirect:/content/categoryIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "修改分类失败");
+			return "redirect:/content/updateCategory";
+		}
 	}
 
 	/**
@@ -100,9 +106,15 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/insertCategory")
-	@ResponseBody
-	public ResultVo insertCategory(ContentCategory contentCategory) {
-		return contentService.insertCategory(contentCategory);
+	public String insertCategory(ContentCategory contentCategory, RedirectAttributes attr) {
+		try {
+			contentService.insertCategory(contentCategory);
+			attr.addFlashAttribute("msg", "新增分类成功");
+			return "redirect:/content/categoryIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "新增分类失败");
+			return "redirect:/content/addCategory";
+		}
 	}
 
 	/**
