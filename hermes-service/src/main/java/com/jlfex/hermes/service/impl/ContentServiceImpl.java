@@ -45,29 +45,6 @@ public class ContentServiceImpl implements ContentService {
 	private TmpNoticeRepository tmpNoticeRepository;
 
 	@Override
-	public void addCategory(ContentCategory category) {
-		ArticleCategory articleCategory = new ArticleCategory();
-		articleCategory.setName(category.getInputName());
-		articleCategory.setStatus("00");
-		String level1 = category.getCategoryLevelOne();
-		String level2 = category.getCategoryLevelTwo();
-		if (level1.equals("选择分类") && level2.equals("选择分类")) {
-			articleCategory.setLevel("一级");
-		}
-		if (!level1.equals("选择分类") && level2.equals("选择分类")) {
-			ArticleCategory parent = findCategoryByNameAndLevel(level1, "一级");
-			articleCategory.setLevel("二级");
-			articleCategory.setParent(parent);
-		}
-		if (!level1.equals("选择分类") && !level2.equals("选择分类")) {
-			ArticleCategory parent = findCategoryByNameAndLevel(level2, "二级");
-			articleCategory.setLevel("三级");
-			articleCategory.setParent(parent);
-		}
-		articleCategoryRepository.save(articleCategory);
-	}
-
-	@Override
 	public ArticleCategory findCategoryByNameAndLevel(String name, String level) {
 		return articleCategoryRepository.findOneByNameAndLevel(name, level);
 	}
@@ -106,9 +83,9 @@ public class ContentServiceImpl implements ContentService {
 		articleCategory.setStatus("00");
 		String level1 = category.getCategoryLevelOne();
 		String level2 = category.getCategoryLevelTwo();
-		if (!level1.equals("") && level2.equals("") && category.getInputName().equals("")) {
+		if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2) && StringUtils.isEmpty(category.getInputName())) {
 			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您还未添加任何分类");
-		} else if (!level1.equals("") && level2.equals("")) { // 当一级分类为不空，二级分类为空
+		} else if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2)) { // 当一级分类为不空，二级分类为空
 			ArticleCategory parent = articleCategoryRepository.findOne(level1);
 			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level1);
 			if (count > 0) {
@@ -116,7 +93,7 @@ public class ContentServiceImpl implements ContentService {
 			}
 			articleCategory.setLevel("二级");
 			articleCategory.setParent(parent);
-		} else if (!level1.equals("") && !level2.equals("")) {
+		} else if (!StringUtils.isEmpty(level1) && !StringUtils.isEmpty(level2)) {
 			ArticleCategory parent = articleCategoryRepository.findOne(level2);
 			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level2);
 			if (count > 0) {
@@ -140,14 +117,14 @@ public class ContentServiceImpl implements ContentService {
 		articleCategory.setName(category.getInputName());
 		String level1 = category.getCategoryLevelOne();
 		String level2 = category.getCategoryLevelTwo();
-		if (!level1.equals("") && level2.equals("") && category.getInputName().equals("")) {
+		if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2) && StringUtils.isEmpty(category.getInputName())) {
 			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您还未添加任何分类");
-		} else if (!level1.equals("") && level2.equals("")) { // 当一级分类为不空，二级分类为空
+		} else if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2)) { // 当一级分类为不空，二级分类为空
 			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level1);
 			if (count > 0) {
 				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "二级分类已存在，请重新添加");
 			}
-		} else if (!level1.equals("") && !level2.equals("")) {
+		} else if (!StringUtils.isEmpty(level1) && !StringUtils.isEmpty(level2)) {
 			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level2);
 			if (count > 0) {
 				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "三级分类已存在，请重新添加");
@@ -319,7 +296,7 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	public void batchDeleteContent(String ids) {
 		String[] idss = ids.split(",");
-		for (int i = 0; i <= idss.length; i++) {
+		for (int i = 0; i < idss.length; i++) {
 			this.deleteContent(idss[i]);
 		}
 	}

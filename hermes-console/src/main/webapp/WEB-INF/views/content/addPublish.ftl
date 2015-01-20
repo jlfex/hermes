@@ -191,7 +191,9 @@ UE.getEditor('content');
 				// 清空表格
 				$(".categoryLevelTwo").empty();
 				var option = "<option value=\"\">请选择</option>";
-				$.each(msg, function(k, v)
+				var _data = msg[0].parent.children;
+			    _data[0] = msg[0];				
+				$.each(_data, function(k, v)
 				{
 					option += "<option value=\"" + v['id'] + "\">" + v['name'] + "</option>";
 				});
@@ -221,7 +223,9 @@ UE.getEditor('content');
 				// 清空表格
 				$(".categoryLevelThree").empty();
 				var option = "<option value=\"\">请选择</option>";
-				$.each(msg, function(k, v)
+				var _data = msg[0].parent.children;
+			    _data[0] = msg[0];								
+				$.each(_data, function(k, v)
 				{
 					option += "<option value=\"" + v['id'] + "\">" + v['name'] + "</option>";
 				});

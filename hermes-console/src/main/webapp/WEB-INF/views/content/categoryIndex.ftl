@@ -31,11 +31,11 @@
                 <td class="align-center">${l.createTime?string('yyyy-MM-dd hh:mm:ss')}</td>
                 <td class="align-center">admin</td>
                 <td class="align-center">
-                    <button type="button" class="btn btn-link editBtn" id="editBtn" pid="${l.id}">编辑</button>
                     <#if l.level == "一级" >
                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button>                            
 	                <#else>
-                        <button type="button" class="btn btn-link deleteBtn" id="deleteBtn" pid="${l.id}">删除</button>			  			                
+                        <button type="button" class="btn btn-link editBtn" id="editBtn" pid="${l.id}">编辑</button>   
+                        <button type="button" class="btn btn-link deleteBtn" id="deleteBtn" pid="${l.id}">删除</button>                                             			  			                
 	                </#if>                            
                 </td>
             </tr>

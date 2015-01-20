@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
@@ -69,8 +71,34 @@ public class ContentController {
 	@RequestMapping("/editCategory")
 	public String editCategory(@RequestParam(value = "id", required = true) String id, Model model) {
 		model.addAttribute("category", contentService.findOne(id));
+		ArticleCategory levelThree = null, levelTwo = null, levelOne = null;
+		ArticleCategory temp = contentService.findOne(id);
+		if (temp != null) {
+			if (("三级").equals(temp.getLevel())) {
+				levelThree = temp;
+			}
+			if (("二级").equals(temp.getLevel())) {
+				levelTwo = temp;
+			}
+		}
+		// 如果三级不为空，获得二级分类，并给二级赋值
+		if (levelThree != null) {
+			levelTwo = levelThree.getParent();
+			model.addAttribute("levelTwo", levelTwo.getId());
+		}
+		// 如果二级不为空，获得一级分类，并给一级赋值
+		if (levelTwo != null) {
+			levelOne = levelTwo.getParent();
+			model.addAttribute("levelOne", levelOne.getId());
+		}
+		// 如果一级不为空，查询出二级，并赋值
+		if (levelOne != null) {
+			model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne.getId()));
+		}
 		model.addAttribute("categoryForLevel1", contentService.findCategoryByLevel("一级"));
+
 		return "/content/editCategory";
+
 	}
 
 	/**
@@ -86,6 +114,7 @@ public class ContentController {
 			return "redirect:/content/categoryIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "修改分类失败");
+			Logger.error("修改分类失败：", e);
 			return "redirect:/content/updateCategory";
 		}
 	}
@@ -113,6 +142,7 @@ public class ContentController {
 			return "redirect:/content/categoryIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "新增分类失败");
+			Logger.error("新增分类失败：", e);
 			return "redirect:/content/addCategory";
 		}
 	}
@@ -137,16 +167,6 @@ public class ContentController {
 	@ResponseBody
 	public List<ArticleCategory> findCategoryByParent(@RequestParam("level") String level, @RequestParam("parentCode") String parentCode, @RequestParam(required = true) String parentId) {
 		return contentService.findByParentId(parentId);
-	}
-
-	@RequestMapping("/saveAddedCategory")
-	public String saveAddedCategory(ContentCategory category, Model model) {
-		try {
-			contentService.addCategory(category);
-		} catch (Exception e) {
-
-		}
-		return "redirect:/content/categoryIndex";
 	}
 
 	/**
@@ -199,6 +219,7 @@ public class ContentController {
 			return "redirect:/content/publish";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
+			Logger.error("发布内容失败：", e);
 			return "redirect:/content/addPublish";
 		}
 	}
@@ -216,6 +237,7 @@ public class ContentController {
 			return "redirect:/content/addPublish";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
+			Logger.error("发布内容失败：", e);
 			return "redirect:/content/addPublish";
 		}
 	}
@@ -226,11 +248,40 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/editContent")
-	public String editContent(@RequestParam(value = "id", required = true) String id, String levelOne, String levelTwo, Model model) {
+	public String editContent(@RequestParam(value = "id", required = true) String id, Model model) {
 		model.addAttribute("article", contentService.findOneById(id));
+		Article article = contentService.findOneById(id);
+		ArticleCategory levelThree = null, levelTwo = null, levelOne = null;
+		ArticleCategory temp = article.getCategory();
+		if (temp != null) {
+			if (("三级").equals(temp.getLevel())) {
+				levelThree = temp;
+			}
+			if (("二级").equals(temp.getLevel())) {
+				levelTwo = temp;
+			}
+			if (("一级").equals(temp.getLevel())) {
+				levelOne = temp;
+			}
+		}
+		if (levelThree != null) {
+			model.addAttribute("levelThree", levelThree.getId());
+			levelTwo = levelThree.getParent();
+		}
+		// 三级
+		if (levelTwo != null) {
+			model.addAttribute("categoryForLevel3", contentService.findByParentId(levelTwo.getId()));
+			model.addAttribute("levelTwo", levelTwo.getId());
+			levelOne = levelTwo.getParent();
+		}
+		// 二级
+		if (levelOne != null) {
+			model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne.getId()));
+			model.addAttribute("levelOne", levelOne.getId());
+		}
+		// 一级
 		model.addAttribute("categoryForLevel1", contentService.findCategoryByLevel("一级"));
-		model.addAttribute("categoryForLevel2", contentService.findByParentId(levelOne));
-		model.addAttribute("categoryForLevel3", contentService.findByParentId(levelTwo));
+
 		return "/content/editContent";
 	}
 
@@ -247,6 +298,7 @@ public class ContentController {
 			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "内容修改失败");
+			Logger.error("编辑内容失败：", e);
 			return "redirect:/content/editContent";
 		}
 	}
@@ -264,6 +316,7 @@ public class ContentController {
 			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "删除内容失败");
+			Logger.error("删除内容失败：", e);
 			return "redirect:/content/contentIndex";
 		}
 	}
@@ -282,6 +335,7 @@ public class ContentController {
 			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "批量删除失败");
+			Logger.error("批量删除内容失败：", e);
 			return "redirect:/content/contentIndex";
 		}
 	}
@@ -320,6 +374,7 @@ public class ContentController {
 			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "添加链接失败");
+			Logger.error("添加链接失败：", e);
 			return "redirect:/content/addFriendLink";
 		}
 	}
@@ -348,6 +403,7 @@ public class ContentController {
 			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "友情链接修改失败");
+			Logger.error("友情链接修改失败：", e);
 			return "redirect:/content/editFriendLink";
 		}
 	}
@@ -365,6 +421,7 @@ public class ContentController {
 			return "redirect:/content/friendLink";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "删除友情链接失败");
+			Logger.error("删除友情链接失败：", e);
 			return "redirect:/content/friendLink";
 		}
 	}
@@ -404,6 +461,7 @@ public class ContentController {
 			return "redirect:/content/tmpNotice";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "临时公告修改失败");
+			Logger.error("临时公告修改失败：", e);
 			return "redirect:/content/editTmpNotice";
 		}
 	}
