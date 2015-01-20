@@ -72,11 +72,11 @@
                         <thead>
                             <tr>
                                 <th class="align-center">债权类型</th>
-                                <th class="align-center">项目本金</th>
+                                <th class="align-center">项目本金/元</th>
                                 <th class="align-center">年利率</th>
-                                <th class="align-center">项目期限</th>
-                                <th class="align-center">剩余本金</th>
-                                <th class="align-center">剩余期限</th>
+                                <th class="align-center">项目期限/月</th>
+                                <th class="align-center">剩余本金/元</th>
+                                <th class="align-center">剩余期限/天</th>
                                 <th class="align-center">状态</th>
                             </tr>
                         </thead>
@@ -85,10 +85,10 @@
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
                                 <td class="align-center">${(creditInfo.rate)?string.percent}</td> 
-                                <td class="align-center">${(creditInfo.period)!'0'}个月</td>
-                                <td class="align-center">${remainAmount!''}</td>
-                                <td class="align-center">${remainPeriod!''}</td> 
-                                <td class="align-center">${(creditInfo.period)!''}</td> 
+                                <td class="align-center">${(creditInfo.period)!''}</td>
+                                <td class="align-center">${(creditInfo.amount)!''}</td>
+                                <td class="align-center">${deadLine!''}</td> 
+                                <td class="align-center">${(creditInfo.statusName)!''}</td> 
                             </tr>
                             
   
@@ -151,7 +151,7 @@
                                 <tr> 
                                 <td class="align-center">${l_index +1}</td>
                                 <td class="align-center">${l.period!''}</td>
-                                <td class="align-center">${l.repayPlanTime!''}</td> 
+                                <td class="align-center">${l.repayPlanTime?string('yyyy-MM-dd')}</td> 
                                 <td class="align-center">${l.repayPrincipal!''}</td> 
                                 <td class="align-center">${l.repayInterest!''}</td> 
                                 <td class="align-center">${l.remainPrincipal!''}</td>
