@@ -36,7 +36,7 @@
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>剩余期限</label>
                     <div class="col-xs-2">
-                      <input type="text"  readonly="true"  name="period" class="form-control" id="period" placeholder="系统计算，=债权到期日-招标结束日期">
+                      <input type="text"  readonly="true"  name="deadLine" class="form-control" id="deadLine" placeholder="系统计算，=债权到期日-招标结束日期">
                       <input type="hidden"   name="termNum"  value="${remainPeriod!''}">
                     </div>
                     <div class="col-sm-1"><span class="vlight">天</span></div>
@@ -91,7 +91,7 @@ jQuery(function($) {
      var nowDate = new Date();
      if(inputDate > new Date() && inputDate < deadDate){
          $("#error_msg").html("");
-         $("#period").val(dateDiff(deadTime,inputBidEndTime));
+         $("#deadLine").val(dateDiff(deadTime,inputBidEndTime));
      }else{
          $("#error_msg").html("招标结束日期: 必须大于当天,小于债权到期日："+deadTime);
      }
@@ -99,7 +99,7 @@ jQuery(function($) {
  });
 
 	 $("#commitSell").on("click",function(){
-	        if($("#error_msg").val().length == 0 && $("#period").val().length != '' ){
+	        if($("#error_msg").val().length == 0 && $("#deadLine").val().length != '' ){
 	            $.link.html(null, {
 				url: '${app}/credit/sell',
 				data: $("#creditorSellForm").serialize(),

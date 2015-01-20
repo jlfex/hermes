@@ -458,14 +458,6 @@ public class LoanServiceImpl implements LoanService {
 							investProfitList.add(investProfit);
 						}
 					}
-					// 更新 债权还款明细状态
-					List<CreditRepayPlan> updateRepayList = new ArrayList<CreditRepayPlan>();
-					List<CreditRepayPlan> repayList = creditorRepayPlanRepository.findByCrediteInfo(creditInfo);
-					for (CreditRepayPlan item : repayList) {
-						item.setStatus(CreditRepayPlan.Status.WAIT_PAY);
-						updateRepayList.add(item);
-					}
-					creditorRepayPlanRepository.save(updateRepayList);
 				} else {
 					throw new ServiceException("id=" + loan.getId() + ",无效的标类型：loan_kind=" + loan.getLoanKind());
 				}
@@ -632,7 +624,11 @@ public class LoanServiceImpl implements LoanService {
 		loanLog.setUser(loan.getUser().getId());
 		loanLog.setLoan(reloan);
 		loanLog.setDatetime(now);
-		loanLog.setType(Type.SELL_CREDIT);
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			loanLog.setType(Type.START_INVEST);
+		}else{
+			loanLog.setType(Type.RELEASE);
+		}
 		loanLog.setAmount(loan.getAmount());
 		// 由于已经生成借款，故将理财人变更为借款人
 		UserProperties up = userPropertiesRepository.findByUser(loan.getUser());
@@ -1321,8 +1317,9 @@ public class LoanServiceImpl implements LoanService {
 				throw new ServiceException("根据：债权id=" + creditInfoId + ", 期数=" + sequnce + ",没有查到还款明细");
 			}
 			return loanRepay.getId();
+		}else{
+			throw new ServiceException("还款明细id="+creditRepayPlanId+",没有对应信息。");
 		}
-		return null;
 	}
 
 	/**
