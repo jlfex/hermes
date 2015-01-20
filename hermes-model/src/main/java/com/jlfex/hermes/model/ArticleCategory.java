@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @Entity
 @Table(name = "hm_article_category")
-@JsonIgnoreProperties({ "parent" })
+@JsonIgnoreProperties({ "parent", "children" })
 public class ArticleCategory extends Model {
 
 	private static final long serialVersionUID = -2372084266057798310L;

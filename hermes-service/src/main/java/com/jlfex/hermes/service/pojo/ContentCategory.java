@@ -3,6 +3,7 @@ package com.jlfex.hermes.service.pojo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ContentCategory {
+	private String id;
 	private String inputName;
 	private String categoryLevelOne;
 	private String categoryLevelTwo;
@@ -29,6 +30,14 @@ public class ContentCategory {
 
 	public void setCategoryLevelTwo(String categoryLevelTwo) {
 		this.categoryLevelTwo = categoryLevelTwo;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override
