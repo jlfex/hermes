@@ -93,7 +93,7 @@ public class CommonRepository {
 	public List<?> findByNativeSql(String sql, Map<String, Object> params) {
 
 		String finalSql = sql;
-		Pattern pattern = Pattern.compile("^select count*", Pattern.CASE_INSENSITIVE);
+		Pattern pattern = Pattern.compile("^select count.*$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(finalSql);
 		if (matcher.matches()) {
 			if (sql.contains("order by")) {
