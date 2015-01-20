@@ -107,12 +107,16 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	public Page<CrediteInfo>  queryByCondition(CrediteInfo creditInfo,String page, String size) throws Exception{
 		 Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "15")));
 		 final  String crediteCode = creditInfo!=null?creditInfo.getCrediteCode():"";
+		 final  String status = creditInfo!=null?creditInfo.getStatus():"";
 		 return  creditInfoRepository.findAll(new Specification<CrediteInfo>() {
 			@Override
 			public Predicate toPredicate(Root<CrediteInfo> root, CriteriaQuery<?> query,CriteriaBuilder cb) {
 				List<Predicate> p = new ArrayList<Predicate>();
 				if (StringUtils.isNotEmpty(crediteCode)) {
 					p.add(cb.equal(root.get("crediteCode"), crediteCode));
+				}
+				if(StringUtils.isNotEmpty(status)){
+					p.add(cb.equal(root.get("status"), status));
 				}
 				return cb.and(p.toArray(new Predicate[p.size()]));
 			}
@@ -142,7 +146,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			// 更新债权明细 状态
 			List<CreditRepayPlan> repayList = creditorRepayPlanRepository.findByCrediteInfo(entity);
 			for(CreditRepayPlan item : repayList){
-				item.setStatus(CreditRepayPlan.Status.WAIT_PAY);
+				item.setStatus(CreditRepayPlan.Status.WAIT_BID);
 				updateRepayList.add(item);
 			}
 			creditorRepayPlanRepository.save(updateRepayList);
@@ -220,7 +224,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		loan.setRepay(repay);
 		loan.setAmount(entity.getAmount());
 		loan.setPeriod(entity.getPeriod());
-		loan.setRate(entity.getRate().divide(new BigDecimal(100)));
+		loan.setRate(entity.getRate());
 		loan.setPurpose(entity.getPurpose());
 		loan.setDescription(entity.getRemark());
 		loan.setLoanKind(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);

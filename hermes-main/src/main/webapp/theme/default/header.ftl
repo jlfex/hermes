@@ -16,13 +16,13 @@
 	</div>
 	<div class="nav">
 		<div class="u-container">
-			<div class="logo"><a href="${app}" title="Hermes"><img alt="Hermes" src="${app.theme}/public/images/logo.png"></a></div>
+			<div class="logo"><a href="index.html"><img src="<@config key="app.logo.data"/>"><span class="logo2">P2P开源软件</span></a></div>
 			<ul id="homeNav" class="nav-list">
 				<li class="home"><a href="${app}/index"><@messages key="common.home" /></a></li>
 				<li class="invest"><a href="${app}/invest/index"><@messages key="nav.main.invest" /></a></li>
 				<li class="loan"><a href="${app}/loan/display"><@messages key="nav.main.loan" /></a></li>
 				<li class="account"><a href="${app}/account/index"><@messages key="nav.main.user" /></a></li>
-				<li class="help"><a href="#"><@messages key="nav.main.help" /></a></li>
+				<li class="help"><a href="${app}/help-center"><@messages key="nav.main.help" /></a></li>
 			</ul>
 		</div>
 	</div>

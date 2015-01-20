@@ -52,14 +52,12 @@
 		<property name="contentType" value="text/html; charset=UTF-8" />
 	</bean>
 	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
-        <property name="maxUploadSize" value = "1048576" />  <!-- 设置上传文件的最大尺寸为1MB --> 
+        <property name="maxUploadSize" value = "1048576" />  
         <property name="defaultEncoding" value="UTF-8" />
     </bean>
-    <!-- SpringMVC在超出上传文件限制时，异常处�?-->
 	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
-				<!-- 遇到MaxUploadSizeExceededException异常时，自动跳转�?WEB-INF/error_fileupload.ftl页面 -->
 				<prop
 					key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload</prop>
 			</props>

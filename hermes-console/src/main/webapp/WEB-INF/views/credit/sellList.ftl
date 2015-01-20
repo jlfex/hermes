@@ -22,11 +22,11 @@
                     </div>
                     <div class="col-xs-1 hm-col form-group">
                         <label for="beginDate">导入日期</label>
-                        <input readonly="" id="beginDate" name="beginDate" value="2015-01-06" class="form-control hasDatepicker" type="text">
+                        <input readonly="" id="beginDate" name="beginDate"  class="form-control" type="text">
                     </div>
                     <div class="col-xs-1 hm-col form-group">
                         <label for="endDate">&nbsp;</label>
-                        <input readonly="" id="endDate" name="endDate" value="2015-01-06" class="form-control hasDatepicker" type="text">
+                        <input readonly="" id="endDate" name="endDate"  class="form-control" type="text">
                     </div>
 
                     <div class="col-xs-1 hm-col form-group">
@@ -101,17 +101,33 @@
                     </#if>
                 </tbody>
             </table>
+              <#if sellList??>
             <div class="pull-right">
-                <ul class="pagination" data-number="0" data-total-pages="4"><li class="active"><a href="#">1</a></li><li><a href="#" data-page="1">2</a></li><li><a href="#" data-page="2">3</a></li><li><a href="#" data-page="3">4</a></li></ul>
+                <ul class="pagination" data-number="${sellList.number}" data-total-pages="${sellList.totalPages}"></ul>
             </div>
+            </#if>
         </div>
     </div>
     
+<div id="data"></div> 
     
    
 <script type="text/javascript" charset="utf-8">
 <!--
-
+   jQuery(function($) {
+		$('#table a').link();
+		$('.pagination').pagination({
+			handler: function(elem) {
+				$('#page').val(elem.data().page);
+				$('#searchForm').trigger('submit');
+			}
+		});
+		
+	$("#beginDate").datepicker();  
+	$("#endDate").datepicker();
+	});
+   
+   
    $("#sellListTable a").on("click",function(){
 		$.link.html(null, {
 			url: $(this).attr("data-url"),
@@ -126,6 +142,8 @@
 			target: 'main'
 		});
    }); 
+   
+   
   
 //-->
 </script>

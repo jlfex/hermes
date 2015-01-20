@@ -1,7 +1,7 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-				<th >债权人姓名></th>
+				<th >债权人名称</th>
 				<th >债权人编号</th>
 				<th >手机号</th>
 				<th >邮箱</th>
@@ -30,7 +30,7 @@
 				<td>${l.source!''}</td>
 				<td>${l.remark!''}</td>
 				<td>
-					<a href="#" data-url="${app}/credit/detail/${l.id}" data-target="data">查看</a>
+					<a href="#" data-url="${app}/credit/detail/${l.id}" data-target="main">查看</a>
 				</td>
 			</tr>
 		</#list>
@@ -38,7 +38,7 @@
 	<tbody>
 </table>
 
-<ul class="pagination" data-number="0" data-total-pages="1"></ul>
+<ul class="pagination" data-number="${(lists.number)!''}" data-total-pages="${(lists.totalPages)!''}"></ul>
 
 <script type="text/javascript">
 <!--

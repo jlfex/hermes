@@ -32,11 +32,13 @@
 				<div class="col-xs-1">
 					<input id="amount1" name="amount" type="text" class="form-control" value="<#if (prodtl.amount)??>${prodtl.amount?substring(0,prodtl.amount?index_of(','))}</#if>">
 				</div>
+				<div class="col-xs-1" style="width:2px;margin-left:1px;">-</div>
 				<div class="col-xs-1">
 					<input id="amount2" name="amount" type="text" class="form-control" value="<#if (prodtl.amount)??>${prodtl.amount?substring(prodtl.amount?index_of(',')+1)}</#if>">
 				</div>
 				<div class="col-xs-3">
 					<span class="alert-danger" style="display:none;background:none">必填项，并且为整数</span>
+					<span class="alert-danger" id="my_amount2" style="display:none;background:none">金额输入错误</span>
 				</div>
 			</div>
 			<div class="row hm-row form-group">
@@ -44,6 +46,7 @@
 				<div class="col-xs-1">
 					<input id="period1" name="period" type="text" class="form-control" value="<#if (prodtl.amount)??>${prodtl.period?substring(0,prodtl.period?index_of(','))}</#if>">
 				</div>
+				<div class="col-xs-1" style="width:2px;margin-left:1px;">-</div>
 				<div class="col-xs-1">
 					<input id="period2" name="period" type="text" class="form-control"  value="<#if (prodtl.amount)??>${prodtl.period?substring(prodtl.period?index_of(',')+1)}</#if>">
 				</div>
@@ -55,6 +58,7 @@
 				</div>
 				<div class="col-xs-3">
 					<span class="alert-danger" style="display:none;background:none">必填项，并且为整数</span>
+					<span class="alert-danger" id="my_period2" style="display:none;background:none">期限输入错误</span>
 				</div>
 			</div>
 			<div class="row hm-row form-group">
@@ -62,11 +66,13 @@
 				<div class="col-xs-1">
 					<input id="rate1" name="rate" type="text" class="form-control" value="<#if (prodtl.amount)??>${prodtl.rate?substring(0,prodtl.rate?index_of(','))}</#if>">
 				</div>
+				<div class="col-xs-1" style="width:2px;margin-left:1px;">-</div>
 				<div class="col-xs-1">
 					<input id="rate2" name="rate" type="text" class="form-control" value="<#if (prodtl.amount)??>${prodtl.rate?substring(prodtl.rate?index_of(',')+1)}</#if>">
 				</div>
 				<div class="col-xs-3">
 					<span class="alert-danger" style="display:none;background:none">必填项，最多保留2位小数</span>
+					<span class="alert-danger" id="my_rate2" style="display:none;background:none">年利率输入错误</span>
 				</div>
 			</div>
 			<div class="row hm-row form-group">
@@ -183,7 +189,29 @@ jQuery(function($) {
 			return false;
 		}else{
 			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
-			if(e_id=='' || e_id==e.id){
+			if(e_id=='' || e_id==e.id){			
+			    if($("#amount2").val()<$("#amount1").val()){
+			      $this.parent().parent().find(".alert-danger:eq(0)").hide();
+				  $("#my_amount2").show();
+				  return false;
+			    }else{
+			       $("#my_amount2").hide();
+			     }
+			    if($("#period2").val()<$("#period1").val()){
+			        $this.parent().parent().find(".alert-danger:eq(0)").hide();   
+			   	    $("#my_period2").show();
+				    return false;
+			    }else{
+			    	 $("#my_period2").hide();
+			     }
+			    if($("#rate2").val()<$("#rate1").val()){
+			         $this.parent().parent().find(".alert-danger:eq(0)").hide();
+			         $("#my_rate2").show();
+				     return false;
+			    }else{
+			    	$("#my_rate2").hide();
+			     }
+			   
 				$this.parent().parent().find(".alert-danger:eq(0)").hide();
 			}
 			return true;

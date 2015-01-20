@@ -20,7 +20,7 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.console.pojo.CreditInfoVo;
 import com.jlfex.hermes.console.pojo.RepayPlanVo;
 
-public class ExcelUtil {
+public class CreditExcelUtil {
 	
 	public static final String ERROR_KIND = "单元格格式错误, ";
 	public static final String ERROR_EMPTY = "值为空";
@@ -33,6 +33,11 @@ public class ExcelUtil {
 	public static final String FORMAT_STR_DATE = "请设置为文本格式:如 yyyy-mm-dd 格式的字符串";
 	public static final String SHEET_CREIDT_NAME = "债权信息";
 	public static final String SHEET_REPAY_NAME = "还款计划表";
+	public static final String CREDIT_KIND = "信用,质押,不动产抵押,动产抵押,应收账款,票据";  //债权类型
+	public static final String CREDITOR_CERTIFICATE_KIND = "身份证,组织机构代码";  //借款人证件类型
+	public static final String IDENTITY_CARD =  "身份证";
+	public static final String ORGANIZATION_CODE =  "组织机构代码";
+	public static final String CREDIT_REPAY_WAY = "等额本息";
 	
 	/**
 	 * 债权导入 Excel 文件解析
@@ -392,7 +397,8 @@ public class ExcelUtil {
 						errMsg.append(cellName).append(ERROR_EMPTY);
 						errFlag = true;
 					}else if(cell2.getCellType() == XSSFCell.CELL_TYPE_STRING){
-						vo.setCreditCode(cell1.getStringCellValue().trim());
+						String cellVal = cell2.getStringCellValue().trim();
+						vo.setPeriod(Integer.parseInt(cellVal));
 					}else{
 						errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_NUMBER_OR_TXT);
 						errFlag = true;
@@ -734,6 +740,16 @@ public class ExcelUtil {
 				}
 					 fileInp.close();
 					 return repayList;
-			 }	
+			 }
+	 /**
+	  * 验证 身份证 是否有效		 
+	  * @param identifyId
+	  * @return
+	  */
+     public static  boolean  checkIdentityCode(String identifyId){
+    	 String el = "(\\d{18}|(\\d{17}[\\d|X]))";
+    	 return !el.matches(identifyId) ;
+     }
+    	
 			 
 }

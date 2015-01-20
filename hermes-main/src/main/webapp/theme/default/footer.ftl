@@ -1,33 +1,44 @@
-<!-- footer -->
-<div id="footer" class="footer clearfix">
-	<div class="u-container clearfix">
-		<div class="row">
-			<div class="col-xs-9 footer-left">
-				<p class="footer-nav">
-					<a href="#"><@messages key="index.bottom.crop" /></a><#t>
-					&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<#t>
-					<a href="#"><@messages key="index.bottom.platform" /></a><#t>
-					&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<#t>
-					<a href="#"><@messages key="index.bottom.security" /></a><#t>
-					&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<#t>
-					<a href="#"><@messages key="index.bottom.faq" /></a><#t>
-					&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<#t>
-					<a href="#"><@messages key="index.bottom.contact" /></a><#t>
-					&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<#t>
-					<a href="#"><@messages key="index.bottom.service" /></a><#t>
-				</p>
-				<p><@config key="app.copyright" /></p>
-				<p><@config key="app.icp" /></p>
-			</div>
-			<div class="col-xs-3 footer-right">
-				<div class="wrap clearfix">
-					<h4><@messages key="index.service.tel" /></h4>
-					<p class="phone"><i class="fa fa-phone"></i> <@config key="site.service.tel" /></p>
-					<p><@messages key="index.service.time" /><@config key="site.service.time" /></p>
-				</div>
-			</div>
-		</div>
-	</div>
+<!-- foot start-->
+<div class="footer">
+    <div class="footcenter">
+        <div class="companyinfo clearfix">
+            <h4>公司介绍</h4>
+            <ul>
+                <li><a href="javascript:value(0);">平台原理</a></li>
+                <li><a href="javascript:value(0);">安全保障</a></li>
+                <li><a href="javascript:value(0);">媒体报道</a></li>
+                <li><a href="javascript:value(0);">联系我们</a></li>
+            </ul>
+
+        </div>
+		<img src="${app.theme}/public/images/footerline.png" alt="" />
+        <div class="links clearfix">
+            <h4>友情链接</h4>
+            <ul>
+            	<#list friendlinkData as m>
+               	 <li><a href="http://${(m.link)!}" target="_blank">${(m.name)!}</a></li>
+                </#list>
+            </ul>
+        </div>
+        <!-- <div class="serves clearfix">
+            <h4>客户服务</h4>
+            <ul>
+                <li><a href="javascript:value(0);"><img src="images/icon1/foot_xinlang.png"><span>新浪微博</span></a></li>
+                <li><a href="javascript:value(0);"><img src="images/icon1/foot_tengxun.png">腾讯微博</a></li>
+                <li><a href="javascript:value(0);"><img src="images/icon1/foot_wechat.png">微信</a></li>
+            </ul>
+        </div> -->
+		<img src="${app.theme}/public/images/footerline.png" alt="" />
+        <div class="telephone clearfix">
+            <h4>客服电话</h4>
+			<ul>
+				<li><p><@config key="site.service.tel"/></p></li>
+				<li><span class="worktime">工作时间：<@config key="site.service.time"/></span></li>
+			</ul>
+        </div>
+		<div class="copyright">版权所有 © <@config key="app.company.name"/> <@config key="app.icp"/></div>
+        <div class="clearfix"></div>
+    </div>
 </div>
 
 <script type="text/javascript">

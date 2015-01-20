@@ -108,9 +108,6 @@
 		 		if(!passport.test(idNumber)){
 					$("#mv_idNumber").html("护照号码输入错误");
 					return false;
-				 }else{
-				 	$("#mv_idNumber").html("护照号码输入错误");
-				 	return false;
 				 }
 		 }else{
 		 	$("#mv_idType").html("证件类型错误");

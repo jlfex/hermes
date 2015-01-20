@@ -22,13 +22,14 @@ import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserLog;
-import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.repository.CommonRepository;
+import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
@@ -37,7 +38,6 @@ import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserLogRepository;
 import com.jlfex.hermes.repository.UserRepository;
-import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
@@ -111,8 +111,7 @@ public class InvestServiceImpl implements InvestService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestService#findByUser(java.lang.String)
+	 * @see com.jlfex.hermes.service.InvestService#findByUser(java.lang.String)
 	 */
 
 	// @Override
@@ -122,7 +121,7 @@ public class InvestServiceImpl implements InvestService {
 	// return invests;
 	// }
 
-	private String getCondition(String purpose, String raterange, String periodrange, String repay, String orderByField, String orderByDirection,String loanKind, Map<String, Object> params) {
+	private String getCondition(String purpose, String raterange, String periodrange, String repay, String orderByField, String orderByDirection, String loanKind, Map<String, Object> params) {
 		StringBuilder condition = new StringBuilder();
 
 		if (!Strings.empty(purpose) && !Strings.equals(purpose, "不限")) {
@@ -216,12 +215,12 @@ public class InvestServiceImpl implements InvestService {
 	 * java.lang.String)
 	 */
 	@Override
-	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repay, String page, String size, String orderByField, String orderByDirection,String loanKind) {
+	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repay, String page, String size, String orderByField, String orderByDirection, String loanKind) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
 
 		String sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
-		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection,loanKind, params);
+		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection, loanKind, params);
 		sqlSearchByLoan = String.format(sqlSearchByLoan, condition);
 		sqlCountSearchByLoan = String.format(sqlCountSearchByLoan, condition);
 
@@ -258,8 +257,7 @@ public class InvestServiceImpl implements InvestService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestService#findByLoan(com.jlfex.hermes
+	 * @see com.jlfex.hermes.service.InvestService#findByLoan(com.jlfex.hermes
 	 * .model.Loan)
 	 */
 	@Override
@@ -335,8 +333,7 @@ public class InvestServiceImpl implements InvestService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestService#loadCountByUserAndStatus(com
+	 * @see com.jlfex.hermes.service.InvestService#loadCountByUserAndStatus(com
 	 * .jlfex.hermes.model.User, java.lang.String[])
 	 */
 	@Override
@@ -347,8 +344,7 @@ public class InvestServiceImpl implements InvestService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestService#findSumProfitByUser(com.jlfex
+	 * @see com.jlfex.hermes.service.InvestService#findSumProfitByUser(com.jlfex
 	 * .hermes.model.User)
 	 */
 	// @Override
@@ -414,14 +410,21 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	@Override
-	public List<InvestInfo> findByUser(User user,String loanKind) {
+	public List<InvestInfo> findByUser(User user, String loanKind) {
 		List<InvestInfo> investinfoList = new ArrayList<InvestInfo>();
 		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKind, user);
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
 			investInfo.setId(invest.getId());
-			investInfo.setPurpose(getDictionaryName(invest.getLoan().getPurpose()));
+			String purpose = "";
+			String loanStatus = invest.getLoan().getLoanKind();
+			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanStatus)){
+				purpose = invest.getLoan().getPurpose();
+			}else{
+				purpose = getDictionaryName(invest.getLoan().getPurpose());
+			}
+			investInfo.setPurpose(purpose);
 			investInfo.setRate(Numbers.toPercent(invest.getLoan().getRate().doubleValue()));
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
@@ -450,8 +453,7 @@ public class InvestServiceImpl implements InvestService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestService#loadInvestRecordByUser(java.
+	 * @see com.jlfex.hermes.service.InvestService#loadInvestRecordByUser(java.
 	 * lang.String)
 	 */
 	@Override
@@ -506,22 +508,27 @@ public class InvestServiceImpl implements InvestService {
 		}
 
 	}
-    /**
-     * 我的理财： 标列表
-     * 综合查询
-     */
+
+	/**
+	 * 我的理财： 标列表 综合查询
+	 */
 	@Override
-	public Page<LoanInfo> investIndexLoanList(String page, String size,String loanKind) {
+	public Page<LoanInfo> investIndexLoanList(String page, String size, String loanKind) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		String purpose="", raterange="", periodrange="", repay="", orderByField="", orderByDirection="" ; //页面调整中，过滤条件 后续调整
+		String purpose = "", raterange = "", periodrange = "", repay = "", orderByField = "", orderByDirection = ""; // 页面调整中，过滤条件
+																														// 后续调整
 		String sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
 		String sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
-		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection,loanKind, params);
+		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection, loanKind, params);
 		sqlSearchByLoan = String.format(sqlSearchByLoan, condition);
 		sqlCountSearchByLoan = String.format(sqlCountSearchByLoan, condition);
 		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
 		List<?> listCount = commonRepository.findByNativeSql(sqlCountSearchByLoan, params);
-		Long total = Long.parseLong(String.valueOf(listCount.get(0)));
+		Long total = 0l;
+		if (listCount.size() != 0) {
+			total = Long.parseLong(String.valueOf(listCount.get(0)));
+		}
+
 		List<?> list = commonRepository.findByNativeSql(sqlSearchByLoan, params, pageable.getOffset(), pageable.getPageSize());
 		List<LoanInfo> loans = new ArrayList<LoanInfo>();
 		for (int i = 0; i < list.size(); i++) {
@@ -541,9 +548,9 @@ public class InvestServiceImpl implements InvestService {
 			loanInfo.setRepayName(String.valueOf(object[8]));
 			loanInfo.setStatus(String.valueOf(object[9]));
 			loanInfo.setId(String.valueOf(object[10]));
-			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)){
+			if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)) {
 				String purposeStr = String.valueOf(object[11]);
-				loanInfo.setPurpose((purposeStr!=null && purposeStr.length() >4)?(purposeStr.substring(0, 4)+"..."):purposeStr);
+				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
 			}
 			loans.add(loanInfo);
 		}
@@ -551,7 +558,5 @@ public class InvestServiceImpl implements InvestService {
 		Page<LoanInfo> pageLoanInfo = new PageImpl<LoanInfo>(loans, pageable, total);
 		return pageLoanInfo;
 	}
-	
-	
 
 }
