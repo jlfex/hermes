@@ -15,14 +15,9 @@
         <div class="links clearfix">
             <h4>友情链接</h4>
             <ul>
-                <li><a href="javascript:value(0);">和讯银行</a></li>
-                <li><a href="javascript:value(0);">国美在线</a></li>
-                <li><a href="javascript:value(0);">财经道</a></li>
-                <li><a href="javascript:value(0);">电商服务</a></li>
-				<li><a href="javascript:value(0);">和讯银行</a></li>
-                <li><a href="javascript:value(0);">国美在线</a></li>
-                <li><a href="javascript:value(0);">财经道</a></li>
-                <li><a href="javascript:value(0);">电商服务</a></li>
+            	<#list friendlinkData as m>
+               	 <li><a href="http://${(m.link)!}" target="_blank">${(m.name)!}</a></li>
+                </#list>
             </ul>
         </div>
         <!-- <div class="serves clearfix">
@@ -37,11 +32,11 @@
         <div class="telephone clearfix">
             <h4>客服电话</h4>
 			<ul>
-				<li><p>400-123-4567</p></li>
-				<li><span class="worktime">工作时间：9:00-21:00</span></li>
+				<li><p><@config key="site.service.tel"/></p></li>
+				<li><span class="worktime">工作时间：<@config key="site.service.time"/></span></li>
 			</ul>
         </div>
-		<div class="copyright">版权所有 © 上海金鹿金融信息服务有限公司 沪ICP备14004813号-3</div>
+		<div class="copyright">版权所有 © <@config key="app.company.name"/> <@config key="app.icp"/></div>
         <div class="clearfix"></div>
     </div>
 </div>
