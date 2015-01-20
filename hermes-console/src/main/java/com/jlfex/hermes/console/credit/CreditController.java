@@ -493,7 +493,6 @@ public class CreditController {
 			model.addAttribute("creditInfo", creditInfo); // 债权信息
 			model.addAttribute("repayPlanDetailList", planList); // 还款明细
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
-			model.addAttribute("remainPeriod", calculatedMap.get("remainPeriod")); // 剩余期数
 			User user = creditInfo.getCreditor().getUser();
 			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
 			if (userAccount != null) {
@@ -715,7 +714,7 @@ public class CreditController {
 	public String assignedTable(String page, String size, Model model) {
 		size = "10";
 		CrediteInfo creditInfo = new CrediteInfo();
-		creditInfo.setStatus(CrediteInfo.Status.IMP_FAIL);
+		creditInfo.setStatus(CrediteInfo.Status.REPAYING);
 		try {
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size);
 			model.addAttribute("assignedList", obj);
