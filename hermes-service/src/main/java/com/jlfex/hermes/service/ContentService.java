@@ -16,8 +16,6 @@ import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
 public interface ContentService {
 
-	public void addCategory(ContentCategory category);
-
 	public ArticleCategory findCategoryByNameAndLevel(String name, String level);
 
 	public List<ArticleCategory> findByLevelNotNull();

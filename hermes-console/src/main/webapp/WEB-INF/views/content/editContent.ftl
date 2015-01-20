@@ -30,30 +30,33 @@
         <div class="col-sm-8">
           <div class="row">
                 <div class="col-xs-2 hm-col">
-                    <label for=""  class="sr-only">选择一级分类</label>
-                    <select id="status" name="levelOne" class="form-control categoryLevelOne">
-				         <option value="">请选择</option>
-				               <#list categoryForLevel1 as cf1>
-					     <option value="${cf1.id}">${cf1.name}</option>
-				               </#list>
+                    <select id="categoryLevelOne" name="levelOne" class="form-control">
+ 						<option value="">请选择</option>
+ 						<#if categoryForLevel1??>  
+						     <#list categoryForLevel1 as cf1>
+							     <option value="${cf1.id}">${cf1.name}</option>
+						     </#list>
+						</#if>
                     </select>
                 </div>
                 <div class="col-xs-2 hm-col">
-                    <label for=""  class="sr-only">选择二级分类</label>
-			        <select id="status" name="levelTwo" class="form-control categoryLevelTwo">
-				         <option value="">请选择</option>
-				               <#list categoryForLevel2 as cf2>
-					     <option value="${cf2.id}">${cf2.name}</option>
-				               </#list>
+			        <select id="categoryLevelTwo" name="levelTwo" class="form-control">
+			        	<option value="">请选择</option>
+			        	<#if categoryForLevel2??>  
+						     <#list categoryForLevel2 as cf2>
+							     <option value="${cf2.id}">${cf2.name}</option>
+						     </#list>
+			            </#if>
 			        </select>
                 </div>
                 <div class="col-xs-2 hm-col">
-                    <label for=""  class="sr-only">选择三级分类</label>
-			        <select id="status" name="levelThree" class="form-control categoryLevelThree">
-				         <option value="">请选择</option>
-				               <#list categoryForLevel3 as cf3>
-					     <option value="${cf3.id}">${cf3.name}</option>
-				               </#list>
+			        <select id="categoryLevelThree" name="levelThree" class="form-control">
+						<option value="">请选择</option>
+						<#if categoryForLevel3??>  
+						     <#list categoryForLevel3 as cf3>
+							     <option value="${cf3.id}">${cf3.name}</option>
+						     </#list>
+					    </#if>
 			        </select>
                 </div>
              <div class="col-xs-2">
@@ -173,7 +176,9 @@ jQuery(function($) {
 				// 清空表格
 				$("#categoryLevelTwo").empty();
 				var option = "<option value=\"\">请选择</option>";
-				$.each(msg, function(k, v)
+				var _data = msg[0].parent.children;
+			    _data[0] = msg[0];								
+				$.each(_data, function(k, v)
 				{
 					option += "<option  value=\"" + v['id'] + "\">" + v['name'] + "</option>";
 				});
@@ -181,7 +186,7 @@ jQuery(function($) {
 			},
 			error : function(msg, textStatus, e)
 			{
-				alert("添加分类失败，请重新添加！");
+				alert("编辑内容失败，请重新添加！");
 				$.link.html(null, {
 					url: '${app}/content/categoryIndex',
 					target: 'main'
@@ -189,6 +194,9 @@ jQuery(function($) {
 			}
 		});
 		});
-	$("#categoryLevelOne").change();
+		
+		$("#categoryLevelOne").val("${levelOne!}");
+		$("#categoryLevelTwo").val("${levelTwo!}");
+		$("#categoryLevelThree").val("${levelThree!}");
 });
 </script> 

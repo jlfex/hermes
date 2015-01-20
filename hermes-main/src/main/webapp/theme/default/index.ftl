@@ -68,9 +68,11 @@
 			
 		<!-- loan -->
 		<div class="slide">
+			<div style="clear:both">
             <h2 class="tabtitle">普通标</h2>
 			<div class="click_more">
-               <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;<a>
+               <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;</a>
+            </div>
             </div>
             <div class="data">
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -105,9 +107,11 @@
             </div>
         </div>
 		<div class="slide">
+			<div style="clear:both">
             <h2 class="tabtitle">债权转让区</h2>
 			<div class="click_more">
-                <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;<a>
+                <a href="${app}/invest/index"  class="colorblue">查看更多 &gt;&gt;</a>
+            </div>
             </div>
             <div class="data">
                 <table cellpadding="0" cellspacing="0" border="0">
