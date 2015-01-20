@@ -37,7 +37,7 @@ public abstract class Job {
 			}
 			
 			// 打印结束日志
-			Logger.info("success do job '%s', spend '%s' millisecond.", this.getClass().getSimpleName(), System.currentTimeMillis() - start);
+			Logger.info("成功完成 job '%s', 耗时 '%s' 毫秒.", this.getClass().getSimpleName(), System.currentTimeMillis() - start);
 		} catch (Exception e) {
 			// 处理异常
 			ServiceException se = (e instanceof ServiceException) ? ServiceException.class.cast(e) : new ServiceException(e.getMessage(), e);
