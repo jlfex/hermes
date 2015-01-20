@@ -569,9 +569,10 @@ public class CreditController {
 		try{
 			String fileName = "外部债权导入模板.xlsx";
 			response.reset();
-			response.setContentType("bin");
-			response.setContentType("application/octet-stream");             
-			response.setContentType("application/OCTET-STREAM;charset=UTF-8");
+			//response.setContentType("bin");
+			//response.setContentType("application/octet-stream");
+			//response.setContentType("application/OCTET-STREAM;charset=UTF-8");
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8");
 			response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName,"UTF-8"));
 			byte b[] = new byte[1024*1024*1];//1M
 			int read = 0;
