@@ -157,9 +157,11 @@
                                 <td class="align-center">${l.remainPrincipal!''}</td>
                                 <td class="align-center">${l.repayAllmount!''}</td>
                                 <td class="align-center">${l.statusName!''}</td> 
-                                <td class="align-center"><#if l.status?? && l.status == '02' >
+                                <td class="align-center">
+                                <#if l.status?? && l.status == '00' >
                                   <button type="button" class="btn btn-primary" data-id="${l.id}">还款</button>
-                                <#elseif l.status?? && l.status == '03'>已还款
+                                <#elseif l.status?? && l.status == '01'>
+                                  <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
                                 <#else></#if>
                                 </td>  
                             </tr>

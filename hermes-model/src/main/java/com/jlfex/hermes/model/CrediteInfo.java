@@ -61,9 +61,11 @@ public class CrediteInfo extends Model {
 	// 年利率
 	@Column(name = "rate")
 	private BigDecimal rate ;
-	//借款期限
+	//原始 ： 借款期限
 	@Column(name = "period")
 	private Integer  period ;
+	// 招标期限
+	private Integer deadLine;
 	//剩余期数
 	@Column(name = "term_num")
 	private Integer  termNum;
@@ -322,6 +324,12 @@ public class CrediteInfo extends Model {
 	}
 	
 
+	public Integer getDeadLine() {
+		return deadLine;
+	}
+	public void setDeadLine(Integer deadLine) {
+		this.deadLine = deadLine;
+	}
 	public String getRatePercent() {
 		if(rate !=null){
 			rate = rate.multiply(new BigDecimal(100));
@@ -356,15 +364,15 @@ public class CrediteInfo extends Model {
 	public static final class Status {
 		@Element("待发售")
 		public static final String WAIT_ASSIGN = "00";
-		@Element("已发售")
-		public static final String ASSIGNING = "01";
-		@Element("转让成功")
-		public static final String SUCC_ASSIGN = "02";
-		@Element("转让失败")
-		public static final String FAIL_ASSIGN = "03";
+		@Element("投标中")
+		public static final String BIDING = "01";
+		@Element("还款中")
+		public static final String REPAYING = "02";
+		@Element("已还清")
+		public static final String REPAY_FIINISH= "03";
 		@Element("验证失败")
 		public static final String IMP_FAIL = "04";
-		@Element("转让中")
+		@Element("转让失败")
 		public static final String FAIL_ASSIGNING = "05";
 	}
 

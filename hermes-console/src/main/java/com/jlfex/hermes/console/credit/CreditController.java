@@ -452,11 +452,27 @@ public class CreditController {
 			entity.setRepayInterest(vo.getRepayInterest());
 			entity.setRepayAllmount(vo.getRepayAllmount());
 			entity.setRemainPrincipal(vo.getRemainPrincipal());
-			entity.setStatus(CreditRepayPlan.Status.WAIT_SELL);
-			entity.setRemark(vo.getRemark());
+			if(checkExpireDate(vo.getRepayTime())){
+				entity.setStatus(CreditRepayPlan.Status.ALREADY_PAY); //设置为已还款
+				entity.setRemark("导入时：还款时间小于当天24点,系统设置为已还款");
+			}else{
+				entity.setStatus(CreditRepayPlan.Status.WAIT_PAY);
+				entity.setRemark(vo.getRemark());
+			}
 		}
 		return entity;
 	}
+	/**
+	 * 还款时间 必须小于当天24:00
+	 * 否则 置为已还款 
+	 * true : 已还款
+	 * false: 未失效
+	 */
+	public boolean  checkExpireDate(Date repayPlanDate) {
+		Date endOfToday = Calendars.parseEndDateTime(Calendars.format("yyyy-MM-dd", new Date()));
+		return repayPlanDate.before(endOfToday);
+	}
+	
 
 	/**
 	 * 查询 债权还款计划明细
@@ -554,10 +570,9 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getBidEndTimeStr())) {
 					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
 				}
-
-				if (creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1) {
-					throw new Exception("发售金额必须大于0");
-				} else {
+				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
+					 throw new ServiceException("发售金额必须大于0");
+				}else{
 					entity.setAmount(creditInfo.getAmount());
 				}
 				if (!Strings.empty(creditInfo.getAssureType())) {
@@ -566,13 +581,24 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getAmountAim())) {
 					entity.setAmountAim(creditInfo.getAmountAim());
 				}
-				if (creditInfo.getTermNum() <= 0) {
-					throw new Exception("还款期数必须大于0");
-				} else {
+				if(creditInfo.getTermNum() <= 0){
+					 throw new ServiceException("还款期数必须大于0");
+				}else{
 					entity.setTermNum(creditInfo.getTermNum());
 				}
-				if (creditInfoService.sellCredit(entity)) {
-					Logger.info("发售债权人" + entity.getCreditor().getCreditorNo() + "，债权编号:" + entity.getCertificateNo() + ",发售成功");
+				String bidEndTimeStr = creditInfo.getBidEndTimeStr();
+				if(Strings.empty(bidEndTimeStr)){
+					 throw new ServiceException("招标截止时间不能为空");
+				}else{
+					entity.setBidEndTime(Calendars.parse("yyyy-MM-dd", bidEndTimeStr));
+				}
+				if(creditInfo.getDeadLine() <= 0){
+					 throw new ServiceException("招标期限必须大于0");
+				}else{
+					entity.setDeadLine(creditInfo.getDeadLine());
+				}
+				if(creditInfoService.sellCredit(entity)){
+					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
 				}
 			}
 		} catch (Exception e) {
