@@ -229,9 +229,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		loan.setDescription(entity.getRemark());
 		loan.setLoanKind(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loan.setStatus(Loan.Status.BID);
-		loan.setDeadline(entity.getPeriod());
 		loan.setUser(entity.getCreditor().getUser());
-		loan.setDeadline(entity.getPeriod()); //招标期限
+		loan.setDeadline(entity.getDeadLine()); //招标期限
 		loan.setCreditInfoId(entity.getId()); 
 		loan.setManageFeeType("00"); //00: 百分比  01：具体金额
 		loan.setProceeds(BigDecimal.ZERO);

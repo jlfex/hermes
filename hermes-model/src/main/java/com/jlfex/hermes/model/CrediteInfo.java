@@ -61,9 +61,11 @@ public class CrediteInfo extends Model {
 	// 年利率
 	@Column(name = "rate")
 	private BigDecimal rate ;
-	//借款期限
+	//原始 ： 借款期限
 	@Column(name = "period")
 	private Integer  period ;
+	// 招标期限
+	private Integer deadLine;
 	//剩余期数
 	@Column(name = "term_num")
 	private Integer  termNum;
@@ -322,6 +324,12 @@ public class CrediteInfo extends Model {
 	}
 	
 
+	public Integer getDeadLine() {
+		return deadLine;
+	}
+	public void setDeadLine(Integer deadLine) {
+		this.deadLine = deadLine;
+	}
 	public String getRatePercent() {
 		if(rate !=null){
 			rate = rate.multiply(new BigDecimal(100));

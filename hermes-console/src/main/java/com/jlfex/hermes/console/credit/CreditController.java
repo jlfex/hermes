@@ -529,9 +529,8 @@ public class CreditController {
 				if(!Strings.empty(creditInfo.getBidEndTimeStr())){
 					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
 				}
-				
 				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
-					 throw new Exception("发售金额必须大于0");
+					 throw new ServiceException("发售金额必须大于0");
 				}else{
 					entity.setAmount(creditInfo.getAmount());
 				}
@@ -542,9 +541,20 @@ public class CreditController {
 					entity.setAmountAim(creditInfo.getAmountAim());
 				}
 				if(creditInfo.getTermNum() <= 0){
-					 throw new Exception("还款期数必须大于0");
+					 throw new ServiceException("还款期数必须大于0");
 				}else{
 					entity.setTermNum(creditInfo.getTermNum());
+				}
+				String bidEndTimeStr = creditInfo.getBidEndTimeStr();
+				if(Strings.empty(bidEndTimeStr)){
+					 throw new ServiceException("招标截止时间不能为空");
+				}else{
+					entity.setBidEndTime(Calendars.parse("yyyy-MM-dd", bidEndTimeStr));
+				}
+				if(creditInfo.getDeadLine() <= 0){
+					 throw new ServiceException("招标期限必须大于0");
+				}else{
+					entity.setDeadLine(creditInfo.getDeadLine());
 				}
 				if(creditInfoService.sellCredit(entity)){
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
