@@ -120,14 +120,10 @@ public class CreditRepayPlan  extends Model {
 	}
 	
 	public static final class Status{
-		@Element("等待发售")
-		public static final String  WAIT_SELL			= "00";
-		@Element("等待招标")
-		public static final String  WAIT_BID			= "01";
-		@Element("等待还款")
-		public static final String  WAIT_PAY			= "02";
-		@Element("正常还款")
-		public static final String  ALREADY_PAY  		= "03";
+		@Element("未还款")
+		public static final String  WAIT_PAY			= "00";
+		@Element("已还款")
+		public static final String  ALREADY_PAY  		= "01";
 		
 	}
 	

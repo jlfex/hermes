@@ -135,21 +135,13 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
      */
 	@Override
 	public boolean sellCredit(CrediteInfo entity) throws Exception {
-		List<CreditRepayPlan> updateRepayList = new ArrayList<CreditRepayPlan>();
 		Repay repay = queryRepayObj(INIT_CREDIT_REPAY_WAY);
 		Loan loan = buildLoan(entity, repay);
 		creditInfoRepository.save(entity);
 		Loan loanNew = loanService.save(loan);
 		if(loanNew != null){
-			entity.setStatus(CrediteInfo.Status.ASSIGNING);
+			entity.setStatus(CrediteInfo.Status.BIDING);
 			creditInfoRepository.save(entity);
-			// 更新债权明细 状态
-			List<CreditRepayPlan> repayList = creditorRepayPlanRepository.findByCrediteInfo(entity);
-			for(CreditRepayPlan item : repayList){
-				item.setStatus(CreditRepayPlan.Status.WAIT_BID);
-				updateRepayList.add(item);
-			}
-			creditorRepayPlanRepository.save(updateRepayList);
 			return true;
 		}else{
 			return false;
@@ -229,9 +221,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		loan.setDescription(entity.getRemark());
 		loan.setLoanKind(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loan.setStatus(Loan.Status.BID);
-		loan.setDeadline(entity.getPeriod());
 		loan.setUser(entity.getCreditor().getUser());
-		loan.setDeadline(entity.getPeriod()); //招标期限
+		loan.setDeadline(entity.getDeadLine()); //招标期限
 		loan.setCreditInfoId(entity.getId()); 
 		loan.setManageFeeType("00"); //00: 百分比  01：具体金额
 		loan.setProceeds(BigDecimal.ZERO);

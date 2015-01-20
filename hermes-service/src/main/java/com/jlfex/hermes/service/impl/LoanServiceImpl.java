@@ -632,7 +632,11 @@ public class LoanServiceImpl implements LoanService {
 		loanLog.setUser(loan.getUser().getId());
 		loanLog.setLoan(reloan);
 		loanLog.setDatetime(now);
-		loanLog.setType(Type.SELL_CREDIT);
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			loanLog.setType(Type.START_INVEST);
+		}else{
+			loanLog.setType(Type.RELEASE);
+		}
 		loanLog.setAmount(loan.getAmount());
 		// 由于已经生成借款，故将理财人变更为借款人
 		UserProperties up = userPropertiesRepository.findByUser(loan.getUser());
