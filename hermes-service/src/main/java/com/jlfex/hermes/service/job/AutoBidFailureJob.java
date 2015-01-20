@@ -41,7 +41,7 @@ public class AutoBidFailureJob extends Job {
 	public Result run() {
 		try {
 			long beginTime = System.currentTimeMillis();
-			Logger.info("batch autoBidFailureJob start.");
+			Logger.info("批量自动流标 JOB start.");
 			if (Caches.get(CACHE_LOAN_BID_LIST_NAME) == null) {
 				List<Loan> loans = loanService.findByStatus(Loan.Status.BID);
 				List<Loan> loanStartInvest = new ArrayList<Loan>();
@@ -88,7 +88,7 @@ public class AutoBidFailureJob extends Job {
 					continue;
 				}
 			}
-			Logger.info("batch autoBidFailureJob finished. take %s millisecond.", (System.currentTimeMillis() - beginTime));
+			Logger.info("自动流标JOB 完成. take %s 毫秒.", (System.currentTimeMillis() - beginTime));
 			if (isUpdateData) {
 				Caches.delete(CACHE_LOAN_BID_LIST_NAME);
 				return new Result(true, true, remarks.toString());

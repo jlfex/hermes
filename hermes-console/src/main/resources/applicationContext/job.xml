@@ -15,7 +15,7 @@
 				<ref bean="autoBidFailureJobTrigger" />  
 				<ref bean="autoOverdueCalcJobTrigger" />   
 				 -->
-				 <ref bean="autoAwayBidJobTrigger" />
+				<ref bean="autoBidFailureJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
