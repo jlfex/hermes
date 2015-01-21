@@ -1,5 +1,5 @@
 <div class="panel panel-primary">
-        <div class="panel-heading">投标明细</div>  </div>
+        <div class="panel-heading">投标明细</div>     </div>
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		              <tr>

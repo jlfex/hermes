@@ -55,4 +55,7 @@ jQuery(function($) {
 		search: '${app}/credit/assignedTable'
 	});
 	
+	
 });
+//-->
+</script>

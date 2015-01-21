@@ -27,7 +27,7 @@
 	<div class="tip_text">
 		<p class="tip_text_t">还没有收到确认邮件？</p>
 		<p>1.尝试到广告邮件、垃圾邮件目录里找找看</p>
-		<p>2.超过10分钟仍未收到邮件，请点击  <a href="#" class="m_a1">重新获取Email激活</a></p>
+		<p>2.超过10分钟仍未收到邮件，请点击  <a href="${app}/userIndex/sendActiveMailAgain?email=${email}" class="m_a1">重新获取Email激活</a></p>
 		<p>3.邮件地址写错了？请重新填写</p>
 	</div>
 </div>
