@@ -70,7 +70,7 @@
 						<td colspan="14" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
 					<#else>
-						<#list sellList.content as l>
+						<#list (sellList.content)?sort_by("createTime")?reverse as l>
 							<tr>
 	                        <td class="align-center">${(l.creditor.creditorNo)!''}</td> 
 	                        <td class="align-center">${(l.crediteCode)!''}</td> 
@@ -86,7 +86,7 @@
 	                        <td class="align-center">${(l.currentUserName!'')}</td> 
 	                        <td class="align-center">${(l.statusName)!''}</td> 
 	                        <td class="align-center">
-	                            <button type="button" class="btn btn-link">查看详情见</button>
+	                            <a href="#" id="creditDetailView" data-url="${app}/credit/repayPlanDetail/${l.id}" >查看</a>
 	                            <#if l.status == '00'>
 	                            <a href="#" data-url="${app}/credit/goSell/${l.id}" >发售</a>
 	                            </#if>

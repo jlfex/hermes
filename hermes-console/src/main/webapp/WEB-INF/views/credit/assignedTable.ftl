@@ -21,7 +21,7 @@
 			<td colspan="13" class="align-center"><@messages key="common.table.empty" /></td>
 		</tr>
 		<#else>
-		<#list assignedList.content as l>
+		<#list (assignedList.content)?sort_by("createTime")?reverse as l>  
 			 <tr>
 			   <td class="align-center">${(l.creditor.creditorNo)!''}</td>
                <td class="align-center">${(l.creditor.creditorName)!''}</td>  
@@ -30,15 +30,15 @@
                <td class="align-center">${l.amount!''}</td> 
                <td class="align-center">${l.rate!''}</td> 
                <td class="align-center">${l.period!''}</td>
-               <td class="align-center">????</td>
+               <td class="align-center">${l.updateTime!''}</td>
                <td class="align-center">${l.deadTime!''}</td> 
                <td class="align-center">${l.payType}</td> 
                <td class="align-center">${l.statusName}</td>
                <td class="align-center">
-                         <a href="#" data-url="${app}/credit/detail/${l.id}" data-target="main">投标明细</a>
+                         <a href="#" data-url="${app}/credit/bidDetail/${l.id}" data-target="dataDetail">投标明细</a>
                 </td>
                <td class="align-center">
-                         <a href="#" data-url="${app}/credit/detail/${l.id}" data-target="main">查看回款详情</a>
+                         <a href="#" data-url="${app}/credit/repayDetail/${l.id}" data-target="dataDetail">查看回款详情</a>
                </td>    
              </tr>
 		</#list>
