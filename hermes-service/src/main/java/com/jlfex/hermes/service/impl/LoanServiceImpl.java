@@ -85,6 +85,7 @@ import com.jlfex.hermes.repository.UserJobRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
+import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
@@ -417,6 +418,8 @@ public class LoanServiceImpl implements LoanService {
 					}
 				} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 					CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+					creditInfo.setStatus(CrediteInfo.Status.REPAYING); //更新还款中
+					creditInfo = creditInfoRepository.save(creditInfo);
 					List<CreditRepayPlan> creditRepayPlanList = creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
 					// 生成借款还款计划
 					for (CreditRepayPlan plan : creditRepayPlanList) {
@@ -1366,4 +1369,5 @@ public class LoanServiceImpl implements LoanService {
 		transactionService.cropAccountToCreditorOutline(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT, addAmount, "债权人线下充值", "债权人线下充值");
 		return userAccountRepository.findOne(accountId);
 	}
+	
 }

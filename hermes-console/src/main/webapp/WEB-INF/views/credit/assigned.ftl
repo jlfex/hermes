@@ -42,7 +42,7 @@
     </div>
     
    <div id="data"></div> 
-    
+   <div id="dataDetail"></div> 
 
 <script type="text/javascript" charset="utf-8">
 <!--

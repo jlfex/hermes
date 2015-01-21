@@ -46,7 +46,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 */1 * * * ?" />
+		<property name="cronExpression" value="0 * */1 * * ?" />
 	</bean>
 	
 	<!-- autoBidFailureJob job  -->
@@ -57,7 +57,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 */1 * * * ?" />
+		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
 	<!-- autoOverdueCalcJob job  -->
 	<bean id="autoOverdueCalcJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">

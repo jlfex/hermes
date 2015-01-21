@@ -23,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.support.spring.SpringWebApp;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanLog;
@@ -46,6 +48,7 @@ import com.jlfex.hermes.repository.RepayRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.repository.n.LoanRepayNativeRepository;
+import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.repay.RepayMethod;
@@ -103,6 +106,8 @@ public class RepayServiceImpl implements RepayService {
 	/** 借款信息仓库扩展 */
 	@Autowired
 	private LoanNativeRepository loanNativeRepository;
+	@Autowired
+	private CreditInfoService  creditInfoService;
 
 	private static final String CACHE_LOAN_OVERDUE_PREFIX = "com.jlfex.hermes.cache.loan.overdue.";
 
@@ -327,10 +332,26 @@ public class RepayServiceImpl implements RepayService {
 			}
 			// 插入借款日志
 			saveLoanLog(loan.getUser().getId(), loanRepay.getLoan(), Type.COMPLETE, loanRepay.getAmount(), "借款完成");
+			// 还款完成时 更新 债权
+			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getStatus())){
+				updateCreditInfoFull(loan);
+			}
 		}
 		// 插入借款日志
 		saveLoanLog(loan.getUser().getId(), loanRepay.getLoan(), Type.REPAY, loanRepay.getAmount(), "借款还款");
 		return true;
+	}
+	
+	public void updateCreditInfoFull(Loan loan){
+		if(loan != null && loan.getCreditInfoId() !=null){
+			try {
+				CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
+				creditInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
+				creditInfoService.save(creditInfo);
+			} catch (Exception e) {
+				Logger.error("更新债权状态为："+CrediteInfo.Status.REPAY_FIINISH+"。异常,债权标Id="+loan.getId());
+			}
+		}
 	}
 
 	/**

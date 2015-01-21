@@ -26,13 +26,16 @@ import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.repository.CreditInfoRepository;
 import com.jlfex.hermes.repository.CreditorRepayPlanRepository;
+import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.RateRepository;
+import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
@@ -64,6 +67,10 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	private RateRepository rateRepository;
 	@Autowired
 	private CreditorRepayPlanRepository creditorRepayPlanRepository;
+	@Autowired
+	private LoanRepository loanRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	private static final String INIT_CREDIT_LEND_FEE = "0.02000000";  //债权标：借款手续费率
 	private static final String INIT_CREDIT_RISK_FEE = "0.03000000";  //债权标：风险金费率   
@@ -104,10 +111,10 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @param size
 	 * @return
 	 */
-	public Page<CrediteInfo>  queryByCondition(CrediteInfo creditInfo,String page, String size) throws Exception{
+	@Override
+	public Page<CrediteInfo>  queryByCondition(CrediteInfo creditInfo,String page, String size, final List<String> statusList) throws Exception{
 		 Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "15")));
 		 final  String crediteCode = creditInfo!=null?creditInfo.getCrediteCode():"";
-		 final  String status = creditInfo!=null?creditInfo.getStatus():"";
 		 return  creditInfoRepository.findAll(new Specification<CrediteInfo>() {
 			@Override
 			public Predicate toPredicate(Root<CrediteInfo> root, CriteriaQuery<?> query,CriteriaBuilder cb) {
@@ -115,8 +122,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 				if (StringUtils.isNotEmpty(crediteCode)) {
 					p.add(cb.equal(root.get("crediteCode"), crediteCode));
 				}
-				if(StringUtils.isNotEmpty(status)){
-					p.add(cb.equal(root.get("status"), status));
+				if(statusList!=null && statusList.size() !=0){
+					p.add(root.get("status").in(statusList));
 				}
 				return cb.and(p.toArray(new Predicate[p.size()]));
 			}
@@ -152,6 +159,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @param repay
 	 * @return
 	 */
+	@Override
 	public Product  generateVirtualProduct(Repay repay) throws Exception{
 		
 		Boolean existsFlag = false;
@@ -193,6 +201,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public Repay  queryRepayObj(String repayWay) throws Exception{
 		List<Repay> repayList = repayService.findByNameAndStatusIn(repayWay, Repay.Status.VALID);
 		if(repayList == null || repayList.size() == 0){
@@ -209,6 +218,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public Loan buildLoan( CrediteInfo entity, Repay repay) throws Exception{
 		String loanDesc = "外部债权标";
 		Loan loan = new Loan();
@@ -238,6 +248,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @param type
 	 * @throws Exception
 	 */
+	@Override
 	public void initCreditRate(Product product,BigDecimal rateVal, String type) throws Exception{
 		Rate rate = new Rate();
 		rate.setProduct(product);
@@ -248,6 +259,22 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		   Logger.info("外部债权标虚拟产品:"+product.getPeriod()+",费率类型="+type+"),初始化成功");
 		}
 	}
-	
+	/**
+     * 根据creditId 查找 loan
+	 * @param creditInfoId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<Loan>  queryLoanByCredit(String creditInfoId){
+		return loanRepository.findByCreditInfoAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+	}
     
+    /**
+     *  根据id 获取用户信息
+     */
+	@Override
+	public  User queryUserByID(String userId){
+		return  userRepository.findOne(userId);
+	}
 }

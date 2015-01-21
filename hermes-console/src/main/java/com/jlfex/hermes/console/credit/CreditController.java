@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
+import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.RequestUtils;
@@ -35,12 +36,16 @@ import com.jlfex.hermes.console.pojo.RepayPlanVo;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
+import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.CreditorService;
+import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserService;
 
 @Controller
 @RequestMapping("/credit")
@@ -57,6 +62,11 @@ public class CreditController {
 	private UserInfoService userInfoService;
 	@Autowired
 	private CreditRepayPlanService creditRepayPlanService;
+	@Autowired
+	private LoanService loanService;
+	@Autowired
+	private UserService  userService;
+	
 
 	public static final String FLAG_KIND_NINE = "99";
 	public static final String FLAG_KIND_SUC = "00";
@@ -186,8 +196,7 @@ public class CreditController {
 	}
 
 	/**
-	 * 加载列表
-	 * 
+	 * 债权导入 加载列表
 	 * @param page
 	 * @param size
 	 * @param model
@@ -197,7 +206,9 @@ public class CreditController {
 	public String loandata(String page, String size, Model model) {
 		try {
 			size = "10";
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null, page, size);
+			List<String> statuslist = new ArrayList<String>();
+			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null, page, size, statuslist);
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -540,7 +551,10 @@ public class CreditController {
 	public String sellIndex(CrediteInfo creditInfo, String page, String size, Model model) {
 		try {
 			size = "10";
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size);
+			List<String> statuslist = new ArrayList<String>();
+			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
+			statuslist.add(CrediteInfo.Status.FAIL_ASSIGNING);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
 			model.addAttribute("sellList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -716,12 +730,65 @@ public class CreditController {
 		CrediteInfo creditInfo = new CrediteInfo();
 		creditInfo.setStatus(CrediteInfo.Status.REPAYING);
 		try {
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size);
+			List<String> statuslist = new ArrayList<String>();
+			statuslist.add(CrediteInfo.Status.BIDING);
+			statuslist.add(CrediteInfo.Status.REPAYING);
+			statuslist.add(CrediteInfo.Status.REPAY_FIINISH);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
 			model.addAttribute("assignedList", obj);
 		} catch (Exception e) {
 			throw new ServiceException(" 已转让列表 table加载异常");
 		}
 		return "credit/assignedTable";
+	}
+	
+	/**
+	 * 投标明细
+	 * @param ids
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/bidDetail/{id}")
+	public String bidDetail(@PathVariable("id") String id, Model model) {
+		if (Strings.empty(id)) {
+			Logger.error("查看投标明细 参数:id为空");
+		}
+		List<LoanLog> loanLogList = new  ArrayList<LoanLog>();
+		List<Loan> loanList = creditInfoService.queryLoanByCredit(id);
+		for(Loan loan : loanList){
+			if(loan!=null){ 
+				// 债权标是 全额投标: 状态是满标
+				LoanLog loanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.FULL);
+				if(loanLog != null){
+					User user = creditInfoService.queryUserByID(loanLog.getUser());
+					loanLog.setUser(user.getAccount());
+					loanLogList.add(loanLog); 
+				}
+			}
+		}
+		if(loanLogList ==null || loanLogList.size() == 0){
+			loanLogList = null;
+		}
+		model.addAttribute("bidLogList", loanLogList);
+		return "credit/assignedBidDetail";
+	}
+	/**
+	 * 已转让债权-回款明细查看
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/repayDetail/{id}")
+	public String  repayDetail(@PathVariable("id") String id, Model model){
+		List<CreditRepayPlan> planList = null ;
+		try {
+			CrediteInfo creditInfo = creditInfoService.findById(id);
+			planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
+		} catch (Exception e) {
+			Logger.info("已转让债权-回款明细查看异常 ,债权id="+id);
+		}
+		model.addAttribute("repayPlanDetailList", planList); // 还款明细
+		return "credit/assignedRepayDetail";
 	}
 
 }
