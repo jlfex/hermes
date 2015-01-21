@@ -209,8 +209,12 @@ jQuery(function($) {
                             <span>${loan.amount}元</span></td>
                             <td class="th_06"><@messages key="model.loan.rate" />：<span>${loan.rate *100}%</span></td>
                             <td class="th_06">
-                             <#if loan.loanKind=='00'><@messages key="model.loan.period" /><#else>剩余期限</#if>
-                                                   ：<span>${loan.period}<@messages key="common.unit.month" /></span></td>
+                             <#if loan.loanKind=='00'>
+                             <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
+                             <#else>
+                                                     剩余期限：<span>${loan.period}天</span>
+                             </#if>
+                             </td>
                         </tr>
                         <tr>
                             <td class="td_height th_06"><@messages key="model.repay.name" />：<span>${repay.name}</span></td>
