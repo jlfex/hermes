@@ -96,49 +96,6 @@
             <p class="help-block"></p>
           </div>
         </div>
-      </div>
-    </div>
-    <!--邮箱配置-->
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        邮箱配置
-      </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="smtpHost" class="col-sm-2 control-label">邮件服务器</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="smtpHost" name="smtpHost" placeholder="" value="<@config key="mail.smtp.host"/>" check-type="required" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="smtpPort" class="col-sm-2 control-label">端口</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="smtpPort" name="smtpPort" placeholder="" value="<@config key="mail.smtp.port"/>" check-type="required number" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="smtpUsername" class="col-sm-2 control-label">邮件账号</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="smtpUsername" name="smtpUsername" placeholder="" value="<@config key="mail.smtp.username"/>" check-type="required mail" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="smtpPassword" class="col-sm-2 control-label">邮件密码</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="smtpPassword" name="smtpPassword" placeholder="" value="<@config key="mail.smtp.password"/>" check-type="required" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="mailFrom" class="col-sm-2 control-label">邮件发送地址</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="mailFrom" name="mailFrom" placeholder="" value="<@config key="mail.from"/>" check-type="required mail" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
         <div class="form-group">
           <label for="serviceEmail" class="col-sm-2 control-label">客服邮箱</label>
           <div class="col-sm-5">
@@ -146,10 +103,16 @@
             <p class="help-block"></p>
           </div>
         </div>
+        
         <div class="form-group">
           <div class="row">
             <div class="col-sm-offset-2 col-xs-5">
               <div class="col-xs-3">
+              	<input type="hidden" class="form-control" id="smtpHost" name="smtpHost" placeholder="" value="<@config key="mail.smtp.host"/>" check-type="required" required-message="不能为空">
+               	<input type="hidden" class="form-control" id="smtpPort" name="smtpPort" placeholder="" value="<@config key="mail.smtp.port"/>" check-type="required number" required-message="不能为空">
+               	<input type="hidden" class="form-control" id="smtpUsername" name="smtpUsername" placeholder="" value="<@config key="mail.smtp.username"/>" check-type="required mail" required-message="不能为空">
+                <input type="hidden" class="form-control" id="smtpPassword" name="smtpPassword" placeholder="" value="<@config key="mail.smtp.password"/>" check-type="required" required-message="不能为空">
+                <input type="hidden" class="form-control" id="mailFrom" name="mailFrom" placeholder="" value="<@config key="mail.from"/>" check-type="required mail" required-message="不能为空">
                 <input type="hidden" class="form-control" id="jobNoticeEmail" name="jobNoticeEmail" placeholder="" value="<@config key="address.job.notice"/>" check-type="required mail" required-message="不能为空">
                 <input type="hidden" class="form-control" id="indexLoanSize" name="indexLoanSize" placeholder="" value="<@config key="index.loan.size"/>" check-type="required" required-message="不能为空">
                 <input type="hidden" class="form-control" id="emailExpire" name="emailExpire" placeholder="" value="<@config key="auth.email.expire"/>" check-type="required" required-message="不能为空">
@@ -160,10 +123,9 @@
             </div>
           </div>
         </div>
-         
+        
       </div>
     </div>
-     
     
     <p class="success-message"></p>
   </div>
