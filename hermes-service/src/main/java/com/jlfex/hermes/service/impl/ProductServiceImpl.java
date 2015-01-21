@@ -212,7 +212,6 @@ public class ProductServiceImpl implements ProductService {
 
 		// 为产品添加 “借款手续费费率”，“风险金费率”
 		Properties ploan = propertiesService.findByCode("product.rate.loan");
-		Properties prisk = propertiesService.findByCode("product.rate.risk");
 
 		// 获取借款利率对象
 		Rate rateLoan = rateRepository.findByProductAndType(p, Rate.RateType.LOAN);
@@ -226,6 +225,8 @@ public class ProductServiceImpl implements ProductService {
 			rateLoan.setRate(new BigDecimal(ploan.getValue()));
 			rateRepository.save(rateLoan);
 		}
+
+		Properties prisk = propertiesService.findByCode("product.rate.risk");
 		// 获取风险金 利率对象
 		Rate rateRisk = rateRepository.findByProductAndType(p, Rate.RateType.RISK);
 		if (rateRisk == null) {
