@@ -18,7 +18,7 @@
 			<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
 		</tr>
 		<#else>
-		<#list lists.content as l>
+		<#list (lists.content)?sort_by("createTime")?reverse as l>   
 			<tr>
 			    <td>${l.creditorName!''}</td>
 				<td>${l.creditorNo!''}</td>

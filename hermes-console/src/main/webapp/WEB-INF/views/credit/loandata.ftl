@@ -22,7 +22,7 @@
 						<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
 					<#else>
-						<#list infoList.content as l>
+						<#list (infoList.content)?sort_by("createTime")?reverse as l>  
 							<tr>
 							    <td class="align-left">${(l.creditor.source)!''}</td>
 								<td class="align-center">${(l.creditor.creditorNo)!''}</td>
