@@ -38,8 +38,8 @@ public class UserController {
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
-	private static final String COMPANY_PNAME = "app.company.pname";
-	private static final String COMPANY_NICK_NAME = "app.company.nickname";
+	private static final String COMPANY_PNAME = "app.operation.name";
+	private static final String COMPANY_NICK_NAME = "app.operation.nickname";
 
 	/**
 	 * 登录界面
