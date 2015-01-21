@@ -129,7 +129,7 @@ function update(id){
 					       $(".pv").val(data.attachment.name);
 					      }	
 		                   $("#updateDialog").dialog({
-		                        height:380, 
+		                        height:250, 
 			                    width:500,
 			                     buttons:{  
 					                "确定":function(){  
@@ -142,12 +142,13 @@ function update(id){
 					                        success:function(data){  
 					                                 if(data.code==0){					                                    
 					                                       $("#operateTip2").dialog({
-											                        height:200, 
+											                        height:150, 
 												                    width:300,
 												                     buttons:{ 
 												                      "关闭":function(){
-												                          $("#operateTip2").dialog("close");
-												                          $("#updateDialog").dialog("close"); 
+												                          $(this).dialog("close");
+						                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");
+												                          
 													                          $.link.html(null,{
 																					url:'${app}/parameter/index',
 																					data:'',
@@ -159,24 +160,28 @@ function update(id){
 					                                 }else{
 					                                   $("#errorTip2").html( data.attachment);
 					                                      $("#errorTip2").dialog({
-											                        height:200, 
+											                        height:150, 
 												                    width:300,
 												                     buttons:{ 
 												                      "关闭":function(){
-												                          $("#errorTip2").dialog("close");
-												                          $("#updateDialog").dialog("close");}
-												                      }
-												                     
-												                      })
+												                          $(this).dialog("close");
+						                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");												                          											                          												                          
+												                         }
+												                      }											                     
+												           })
 					                                                                     
 					                       } }, 
 					                        error:function(){  
-					                            $("#updateDialog").dialog("close");                              
+					                            
+					                             $(this).dialog("close");
+						                         $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         
 					                         }  
 					                    })  
 					                },  
 					                "关闭": function() {  
-					                    $("#updateDialog").dialog("close");  
+					                    
+					                    $(this).dialog("close");
+						                $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         					                      
 					                }  
                      }  
 		  }); 
