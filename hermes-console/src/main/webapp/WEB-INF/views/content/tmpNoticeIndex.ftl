@@ -16,6 +16,7 @@
     <table class="table table-striped table-hover">        	
         <thead>
             <tr>
+            <th class="align-center">公告标题</th>            
             <th class="align-center">公告内容</th>
             <th class="align-center">显示开始时间</th>
             <th class="align-center">显示结束时间</th>
@@ -29,6 +30,7 @@
             <#else>
             <#list tmpNotices.content as l>                            
         <tr>
+            <td class="align-center">${l.title!}</td>        
             <td class="align-center">${l.content!}</td>
             <td class="align-center">${l.startDate!}</td>
             <td class="align-center">${l.endDate!}</td>

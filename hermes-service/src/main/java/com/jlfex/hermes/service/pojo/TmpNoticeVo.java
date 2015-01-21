@@ -7,6 +7,7 @@ public class TmpNoticeVo implements Serializable {
 	private static final long serialVersionUID = 7830641634590682351L;
 
 	private String id;
+	private String title;
 	private String content;
 	private Date startDate;
 	private Date endDate;
@@ -17,6 +18,14 @@ public class TmpNoticeVo implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getContent() {

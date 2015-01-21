@@ -216,7 +216,7 @@ public class ContentController {
 		try {
 			contentService.addPublish(pcVo);
 			attr.addFlashAttribute("msg", "发布内容成功");
-			return "redirect:/content/publish";
+			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
 			Logger.error("发布内容失败：", e);
@@ -234,7 +234,7 @@ public class ContentController {
 		try {
 			contentService.addPublish(pcVo);
 			attr.addFlashAttribute("msg", "发布内容成功");
-			return "redirect:/content/addPublish";
+			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
 			Logger.error("发布内容失败：", e);
@@ -464,6 +464,18 @@ public class ContentController {
 			Logger.error("临时公告修改失败：", e);
 			return "redirect:/content/editTmpNotice";
 		}
+	}
+
+	/**
+	 * 内容管理--预览
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@RequestMapping("/preview")
+	public String preview(@RequestParam("id") String id, Model model) {
+		model.addAttribute("context", contentService.findOneById(id));
+		return "/content/preview";
 	}
 
 	@RequestMapping("/banner")

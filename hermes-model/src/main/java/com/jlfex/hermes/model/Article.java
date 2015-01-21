@@ -42,6 +42,7 @@ public class Article extends Model {
 	private String description;
 
 	/** 文章内容 */
+	@Lob
 	@Column(name = "content")
 	private byte[] content;
 

@@ -73,8 +73,7 @@ jQuery(function($) {
 	function checkInput(e){
 		var $this = $(e);
 		var val = $this.val();
-		if( ( $this.val()==''
-		  ||(e.id == 'order' && !/^[0-9]+$/.test(val))) 		    
+		if($this.val()==''||(e.id == 'order' && !/^[0-9]+$/.test(val))		    
 		    ){
 			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
 			$this.parent().parent().find(".alert-danger:eq(0)").show();
