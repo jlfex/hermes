@@ -91,6 +91,7 @@ public class UserController {
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup";
 		}
+		model.addAttribute("email", user.getEmail());
 		try {
 			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
 			emailService.sendEmail(user.getEmail(), "注册用户激活", generateMail);
@@ -100,7 +101,6 @@ public class UserController {
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup-success";
 		}
-		model.addAttribute("email", user.getEmail());
 		return "user/signup-success";
 	}
 

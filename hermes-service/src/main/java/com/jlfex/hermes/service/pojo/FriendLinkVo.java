@@ -9,6 +9,7 @@ public class FriendLinkVo implements Serializable {
 	private String linkName;
 	private String link;
 	private Integer order;
+	private String type;
 
 	public String getId() {
 		return id;
@@ -40,6 +41,14 @@ public class FriendLinkVo implements Serializable {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

@@ -33,9 +33,7 @@
                     <select id="categoryLevelOne" name="levelOne" class="form-control">
  						<option value="">请选择</option>
  						<#if categoryForLevel1??>  
-						     <#list categoryForLevel1 as cf1>
-							     <option value="${cf1.id}">${cf1.name}</option>
-						     </#list>
+							     <option value="d82d503c-9efe-11e4-aae2-1f2b79deec07">帮助中心</option>
 						</#if>
                     </select>
                 </div>

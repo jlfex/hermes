@@ -19,7 +19,6 @@
             <th class="align-center">排序</th>
             <th class="align-center">网站名称</th>
             <th class="align-center">网站地址</th>
-            <th class="align-center">logo</th>
             <th class="align-center">所属分类</th>
             <th class="align-center">操作</th>
         	</tr>
@@ -35,7 +34,6 @@
             <td class="align-center">${l.order!}</td>
             <td class="align-center">${l.name!}</td>
             <td class="align-center">${l.link!}</td>
-            <td class="align-center"></td>
             <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
                 <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>

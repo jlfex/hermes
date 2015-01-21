@@ -323,6 +323,7 @@ public class ContentServiceImpl implements ContentService {
 		friendLink.setName(flVo.getLinkName());
 		friendLink.setLink(flVo.getLink());
 		friendLink.setOrder(flVo.getOrder());
+		friendLink.setType(flVo.getType());
 		friendLink.setStatus("10");
 		friendLinkRepository.save(friendLink);
 		return friendLink;
@@ -339,6 +340,7 @@ public class ContentServiceImpl implements ContentService {
 		friendLink.setName(flVo.getLinkName());
 		friendLink.setLink(flVo.getLink());
 		friendLink.setOrder(flVo.getOrder());
+		friendLink.setType(flVo.getType());
 		friendLink.setStatus("10");
 		friendLinkRepository.save(friendLink);
 		return friendLink;
@@ -385,6 +387,7 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public TmpNotice updateTmpNotice(TmpNoticeVo tnVo) {
 		TmpNotice tmpNotice = tmpNoticeRepository.findOne(tnVo.getId());
+		tmpNotice.setTitle(tnVo.getTitle());
 		tmpNotice.setContent(tnVo.getContent());
 		tmpNotice.setStartDate(tnVo.getStartDate());
 		tmpNotice.setEndDate(tnVo.getEndDate());
