@@ -34,9 +34,9 @@
 				<tr>
 					<td align="right">参数类：</td>
 					<td><select class="textbox" name="parameterType">
-						<#list names as s>
-						<option value="${s.key}">${s.value}</option>
-						</#list>
+                        <option value="176c9150-7103-11e3-ae10-6cae8b21aeab">产品担保方式</option>
+						<option value="176c9150-7103-11e3-ae10-6cae8b21aeac">产品用途</option>
+                        <option value="176c9150-7103-11e3-ae10-6cae8b21aead">产品招标期限</option>
 						</select>
 					</td>
 				</tr>
@@ -69,11 +69,12 @@ jQuery(function($) {
 	$("#addBtn").click(function(){
 	$(".pav").val("");
 		$("#addDialog").dialog({ 
-			height:380, 
+			height:250, 
 			width:500, 
                buttons:{  
                 "确定":function(){  
-                    var form = $("#addForm");  
+                    var form = $(this).find("#addForm");
+                    
                     $.ajax({  
                         url:form.attr('action'),  
                         type:form.attr('method'),  
@@ -82,12 +83,12 @@ jQuery(function($) {
                         success:function(data){ 
                              if(data.code==0){					                                    
                                    $("#operateTip").dialog({
-					                        height:200, 
+					                        height:150, 
 						                    width:300,
 						                     buttons:{ 
 						                      "关闭":function(){
-						                          $("#operateTip").dialog("close");
-						                          $("#addDialog").dialog("close"); 
+						                          	$(this).dialog("close");
+						                         	$(this).parent().prev().find("#addDialog").dialog("close");
 							                          $.link.html(null,{
 															url:'${app}/parameter/index',
 															data:'',
@@ -99,26 +100,25 @@ jQuery(function($) {
 	                             }else{
 	                               $("#errorTip").html( data.attachment);
 	                                  $("#errorTip").dialog({
-						                        height:200, 
+						                        height:150, 
 							                    width:300,
 							                     buttons:{ 
 							                      "关闭":function(){
-							                          $(this).dialog("close");
-							                          $("#addDialog").dialog("close"); 
-								                         		
-							                         }}
-							                     
-							                      })
-	                             }   
-	                                                                 
-	                    },  
+							                       $(this).dialog("close");
+						                           $(this).parent().prev().find("#addDialog").dialog("close");     		
+							                         }
+							                        }							                     
+							           })
+	                             }},  
                         error:function(){  
-                            $("#addDialog").dialog("close");                              
+                            $(this).dialog("close");
+						    $(this).parent().prev().find("#addDialog").dialog("close");                            
                          }  
                     })  
                 },  
-                "关闭": function() {  
-                    $("#addDialog").dialog("close");  
+                "关闭": function() {
+                	$(this).dialog("close");
+					$(this).parent().prev().find("#addDialog").dialog("close");
                 }  
            }  
      });
