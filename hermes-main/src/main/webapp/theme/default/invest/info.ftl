@@ -21,6 +21,20 @@ jQuery(function($) {
 			openwindow("${app}/loan/deal/${loan.id}","",1000,800);
 			
 	});
+	function  checkCredit(){
+	      var investamount =$("#investamount").val();
+	      var loanKind = '${loan.loanKind}';
+		  if( loanKind == '01'){
+		        var loanAmount = ''+'${loan.amount}';
+		        if(loanAmount != investamount ){
+		        $("#investamount").parent().find(".mv_msg").removeClass("mv_right");
+		        $("#investamount").parent().find(".mv_msg").addClass("mv_error")
+		        $("#investamount").parent().find(".mv_msg").html("债权标必须全额投标");
+		        return true;
+		        }
+		   }
+		   return false;  
+	} 
 	function openwindow(url,name,iWidth,iHeight)
 	{
 		var url; //转向网页的地址;
@@ -32,6 +46,9 @@ jQuery(function($) {
 		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 	$('.confirm').click(function(){
+	    if(checkCredit()){
+	      return ;
+	    }
 	 	$.ajax({
 				data: $("#loanDetail").serialize(),
 			     url: "${app}/invest/bid",
@@ -74,6 +91,9 @@ jQuery(function($) {
 		}  
 		$('#investamount').blur(function()
 		{
+		    if(checkCredit()){
+	          return ;
+	        }
 			var investamount =$("#investamount").val();
 			var loanid =$("#loanid").val();
 			var msg =$('#investamount').siblings("span").text();

@@ -240,6 +240,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
 		root.put("active_url", sb.toString());
 		root.put("userName", user.getAccount());
+		root.put("platform_site", App.config("app.website"));
+		root.put("customer_email", App.config("app.customer.service.email"));
+		root.put("service_tel", App.config("site.service.tel"));
 		return root;
 	}
 
@@ -309,13 +312,13 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 				if (Status.INACTIVATE.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
 					result.addMessage(App.message("result.warning.email"));
-				}else if(Status.FROZEN.equals(user.getStatus())){
+				} else if (Status.FROZEN.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("账号已被冻结"));
-				}else if(Status.DISABLED.equals(user.getStatus())){
+				} else if (Status.DISABLED.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("账号已被注销"));
-				}else {
+				} else {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
 					appUser.setAccount(user.getEmail());
@@ -371,6 +374,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		sb.append(user.getId()).append("&validateCode=").append(validateCode).append("\"");
 		root.put("active_url", sb.toString());
 		root.put("userName", user.getAccount());
+		root.put("platform_site", App.config("app.website"));
+		root.put("customer_email", App.config("app.customer.service.email"));
+		root.put("service_tel", App.config("site.service.tel"));
 		return root;
 	}
 

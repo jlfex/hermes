@@ -147,98 +147,30 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="jobNoticeEmail" class="col-sm-2 control-label">任务提醒通知地址</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="jobNoticeEmail" name="jobNoticeEmail" placeholder="" value="<@config key="address.job.notice"/>" check-type="required mail" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--业务规则配置-->
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        业务规则配置
-      </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="indexLoanSize" class="col-sm-2 control-label">首页标的数量</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="indexLoanSize" name="indexLoanSize" placeholder="" value="<@config key="index.loan.size"/>" check-type="required" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="emailExpire" class="col-sm-2 control-label">邮件认证失效时间</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="emailExpire" name="emailExpire" placeholder="" value="<@config key="auth.email.expire"/>" check-type="required" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="smsExpire" class="col-sm-2 control-label">短信验证码失效时间</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="smsExpire" name="smsExpire" placeholder="" value="<@config key="auth.sms.expire"/>" check-type="required" required-message="不能为空">
-            <p class="help-block"></p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--功能开关设置-->
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        功能开关设置
-      </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label for="realnameSwitch" class="col-sm-2 control-label">实名认证开关</label>
-          <div class="col-sm-5">
-            <label class="radio-inline">
-              <input type="radio" name="realnameSwitch" id="realnameSwitch0" value="0"> 关
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="realnameSwitch" id="realnameSwitch1" value="1"> 开
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="cellphoneSwitch" class="col-sm-2 control-label">手机认证开关</label>
-          <div class="col-sm-5">
-            <label class="radio-inline">
-              <input type="radio" name="cellphoneSwitch" id="cellphoneSwitch0" value="0"> 关
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="cellphoneSwitch" id="cellphoneSwitch1" value="1"> 开
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
           <div class="row">
             <div class="col-sm-offset-2 col-xs-5">
-              <div class="col-xs-3"><button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
+              <div class="col-xs-3">
+                <input type="hidden" class="form-control" id="jobNoticeEmail" name="jobNoticeEmail" placeholder="" value="<@config key="address.job.notice"/>" check-type="required mail" required-message="不能为空">
+                <input type="hidden" class="form-control" id="indexLoanSize" name="indexLoanSize" placeholder="" value="<@config key="index.loan.size"/>" check-type="required" required-message="不能为空">
+                <input type="hidden" class="form-control" id="emailExpire" name="emailExpire" placeholder="" value="<@config key="auth.email.expire"/>" check-type="required" required-message="不能为空">
+                <input type="hidden" class="form-control" id="smsExpire" name="smsExpire" placeholder="" value="<@config key="auth.sms.expire"/>" check-type="required" required-message="不能为空">
+                <input type="hidden" name="realnameSwitch" id="realnameSwitch0" value="0"> 
+                <input type="hidden" name="cellphoneSwitch" id="cellphoneSwitch0" value="0">
+                <button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
             </div>
           </div>
         </div>
+         
       </div>
     </div>
+     
+    
     <p class="success-message"></p>
   </div>
 </form>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
-  if(<@config key="auth.realname.switch"/>=='0'){
-    $('#realnameSwitch0').attr("checked", "checked")
-  }
-  else{
-    $('#realnameSwitch1').attr("checked", "checked")
-  }
-  if(<@config key="auth.cellphone.switch"/>=='0'){
-    $('#cellphoneSwitch0').attr("checked", "checked")
-  }
-  else{
-    $('#cellphoneSwitch1').attr("checked", "checked")
-  }
   $("#propertiesForm").validation();
   $("#logo").on("change", function(){
 // Get a reference to the fileList

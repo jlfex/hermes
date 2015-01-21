@@ -36,7 +36,7 @@
 				<li><span class="worktime">工作时间：<@config key="site.service.time"/></span></li>
 			</ul>
         </div>
-		<div class="copyright">版权所有 © <@config key="app.company.name"/> <@config key="app.icp"/></div>
+		<div class="copyright">版权所有<@config key="app.copyright"/></div>
         <div class="clearfix"></div>
     </div>
 </div>
