@@ -19,7 +19,7 @@ public class EmailServiceImpl implements EmailService {
 	private String systemEmail;
 
 	@Override
-	public void sendEmail(String to, String from, String subject, String htmlText) throws Exception {
+	public void sendEmail(String to, String subject, String htmlText) throws Exception {
 		try {
 
 			// 使用javaMailSender创建一个MimeMessage msg，对应了将要发送的邮件
@@ -27,11 +27,7 @@ public class EmailServiceImpl implements EmailService {
 			// 通过MimeMessage创建一个MimeMessageHelper msgHelper
 			MimeMessageHelper msgHelper = new MimeMessageHelper(msg);
 			// 使用MimeMessageHelper设置邮件的发送地址、收件地址、主题以及内容
-			if (from != null) {
-				msgHelper.setFrom(from);
-			} else {
-				msgHelper.setFrom(systemEmail);
-			}
+			msgHelper.setFrom(systemEmail);
 			msgHelper.setTo(to);
 			msgHelper.setSubject(subject);
 			msgHelper.setText(htmlText, true);

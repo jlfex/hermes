@@ -17,6 +17,6 @@ public interface EmailService {
 	 * @param htmlText
 	 * @throws Exception
 	 */
-	void sendEmail(String to, String from, String subject, String htmlText) throws Exception;
+	void sendEmail(String to, String subject, String htmlText) throws Exception;
 
 }
