@@ -91,16 +91,16 @@ public class UserController {
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup";
 		}
+		model.addAttribute("email", user.getEmail());
 		try {
 			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
-			emailService.sendEmail(user.getEmail(), "注册用户激活", generateMail);
+			emailService.sendEmail(user.getEmail(), App.config("mail.from"), "注册用户激活", generateMail);
 		} catch (Exception e) {
 			commonMessage = "激活邮件发送失败,请重新发送!";
 			Logger.error(commonMessage, e);
 			model.addAttribute("errMsg", commonMessage);
 			return "user/signup-success";
 		}
-		model.addAttribute("email", user.getEmail());
 		return "user/signup-success";
 	}
 
@@ -237,7 +237,7 @@ public class UserController {
 		User user = userService.loadByEmail(email);
 		try {
 			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
-			emailService.sendEmail(user.getEmail(), "注册用户激活", generateMail);
+			emailService.sendEmail(user.getEmail(), App.config("mail.from"), "注册用户激活", generateMail);
 		} catch (Exception e) {
 			commonMessage = "激活邮件发送失败,请重新发送!";
 			Logger.error(commonMessage, e);
@@ -348,7 +348,7 @@ public class UserController {
 	public String sendResetPwdEmail(String email, Model model, HttpServletRequest request) {
 		try {
 			String generateMail = ModelLoader.process("mail_pwdForget.ftl", userService.getResetPwdEmailModel(email, request));
-			emailService.sendEmail(email, "密码重置", generateMail);
+			emailService.sendEmail(email, App.config("mail.from"), "密码重置", generateMail);
 		} catch (Exception e) {
 			String commonMessage = "激活邮件发送失败,请重新发送!";
 			Logger.error(commonMessage, e);
