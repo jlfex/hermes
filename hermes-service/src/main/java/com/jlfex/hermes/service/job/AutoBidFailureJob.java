@@ -3,23 +3,26 @@ package com.jlfex.hermes.service.job;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanLog.Type;
+import com.jlfex.hermes.repository.CreditInfoRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
 
 /**
- * @author 陈琪 自动流标，更新借款状态为自动流标
+ * 自动流标，更新借款状态为自动流标
+ * @author Administrator
+ *
  */
 @Component("autoBidFailureJob")
 public class AutoBidFailureJob extends Job {
@@ -35,25 +38,42 @@ public class AutoBidFailureJob extends Job {
 	/** 借款信息仓库扩展 */
 	@Autowired
 	private LoanLogRepository loanLogRepository;
+	@Autowired
+	private  CreditInfoRepository creditInfoRepository;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Result run() {
+		String JobDESC = "批量自动流标 JOB";
 		try {
 			long beginTime = System.currentTimeMillis();
-			Logger.info("批量自动流标 JOB start.");
+			Logger.info(JobDESC+" 开始.");
 			if (Caches.get(CACHE_LOAN_BID_LIST_NAME) == null) {
 				List<Loan> loans = loanService.findByStatus(Loan.Status.BID);
 				List<Loan> loanStartInvest = new ArrayList<Loan>();
 				for (int i = 0; i < loans.size(); i++) {
-					String loanId = loans.get(i).getId();
-					LoanLog LoanLogStartInvest = loanService.loadLogByLoanIdAndType(loanId, LoanLog.Type.START_INVEST);
-					if (LoanLogStartInvest != null) {
-						Loan loan = loans.get(i);
-						String duration = String.valueOf(loan.getPeriod() + "d");
-						//设置投标的截至时间
-						loan.setBusinessDate(Calendars.add(LoanLogStartInvest.getDatetime(), duration));
-						loanStartInvest.add(loan);
+					Loan loan = loans.get(i);
+					if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){ 
+						//债权标
+						if(Strings.empty(loan.getCreditInfoId())){
+							Logger.info(JobDESC+",职权标id="+loan.getId()+",的债权信息id为空,跳过处理");
+							continue;
+						}
+						CrediteInfo  creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+						if(creditInfo!=null && creditInfo.getBidEndTime() !=null){
+							loan.setBusinessDate(creditInfo.getBidEndTime()); //设置投标的截至时间
+							loanStartInvest.add(loan);
+						}else{
+							Logger.info(JobDESC+"异常：id="+loan.getId()+",招标截止时间为空。");
+						}
+					}else{
+						//普通标
+						LoanLog LoanLogStartInvest = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.START_INVEST);
+						if (LoanLogStartInvest != null) {
+							String duration = String.valueOf(loan.getPeriod() + "d");
+							loan.setBusinessDate(Calendars.add(LoanLogStartInvest.getDatetime(), duration)); //设置投标的截至时间
+							loanStartInvest.add(loan);
+						}
 					}
 				}
 				//由于每天有可能有新的终审通过，开始招标的借款，故设置有效期为1天 
