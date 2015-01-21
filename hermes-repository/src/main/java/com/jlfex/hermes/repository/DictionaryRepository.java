@@ -33,8 +33,8 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	 * @param typeCode
 	 * @return
 	 */
-	@Query("from Dictionary d where d.type.code = ?1 order by d.order")
-	public List<Dictionary> findByTypeCode(String typeCode);
+	@Query("from Dictionary d where d.type.code = ?1 and d.status = ?2 order by d.order")
+	public List<Dictionary> findByTypeCodeAndStatus(String typeCode, String status);
 
 	/**
 	 * 根据字典名称查找记录

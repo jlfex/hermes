@@ -12,7 +12,7 @@
 			<div class="row hm-row form-group">
 				<label for="code" class="col-xs-1 control-label"><@messages key="model.product.code" /></label>
 				<div class="col-xs-3">
-					<input id="code" name="code" type="text" class="form-control" value="<#if (prodtl.code)??>${(prodtl.code)!}<#else>000001</#if>">
+					<input id="code" name="code" type="text" class="form-control" value="<#if (prodtl.code)??>${(prodtl.code)!}<#else>${productCode}</#if>">
 				</div>
 				<div class="col-xs-3">
 					<span class="alert-danger" style="display:none;background:none">必填项，数字、汉字、英文字母等，限20个字符</span>

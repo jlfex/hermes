@@ -58,7 +58,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 */
 	@Override
 	public List<Dictionary> findByTypeCode(String typeCode) {
-		return dictionaryRepository.findByTypeCode(typeCode);
+		return dictionaryRepository.findByTypeCodeAndStatus(typeCode, "00");
 	}
 
 	/*
@@ -80,6 +80,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return dictionaries;
 	}
 
+	@Override
 	public String maxCodeByCode(String code) {
 		return dictionaryRepository.maxCodeByCode(code);
 	};

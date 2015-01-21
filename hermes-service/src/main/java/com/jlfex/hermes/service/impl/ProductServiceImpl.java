@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.model.Dictionary;
@@ -44,6 +45,7 @@ import com.jlfex.hermes.service.pojo.SimpleProduct;
  * @since 1.0
  */
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
 	private static final String CACHE_PRODUCT = "com.jlfex.hermes.cache.products";
@@ -80,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
 		validState.add(Product.Status.VALID);
 		Iterable<Product> productList = productRepository.findByStatusIn(validState);
 		List<Repay> repayList = repayRepository.findAll();
-		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCode("loan_purpose");
+		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCodeAndStatus("loan_purpose", "00");
 		ProductInfo productInfo = null;
 		for (Product product : productList) {
 			productInfo = new ProductInfo();
@@ -181,9 +183,10 @@ public class ProductServiceImpl implements ProductService {
 			}
 		});
 	}
-    /**
-     * 根据 状态 获取产品信息
-     */
+
+	/**
+	 * 根据 状态 获取产品信息
+	 */
 	@Override
 	public List<Product> findByStatusIn(String... status) throws Exception {
 		return productRepository.findByStatusIn(Arrays.asList(status));
@@ -238,4 +241,20 @@ public class ProductServiceImpl implements ProductService {
 		return p;
 	}
 
+	@Override
+	public Long countProductNum() {
+
+		return productRepository.countProductNum();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.ProductService#generateProductCode()
+	 */
+	@Override
+	public String generateProductCode() {
+		Long count = countProductNum() + 1;
+		return StringUtils.leftPad(count.toString(), 6, "0");
+	}
 }
