@@ -31,22 +31,23 @@
 <div id="addDialog" title="新增参数配置" style="display:none;">
 			<form id="addForm"   method="post" action="${app}/parameter/addDictionary">
 			<table align="center">
-				<tr>
+				<tr style="height:45px">
 					<td align="right">参数类：</td>
-					<td><select class="textbox" name="parameterType">
+					<td><select class="textbox selector" name="parameterType" id="parameterType1" style="width:130px">
                         <option value="176c9150-7103-11e3-ae10-6cae8b21aeab">产品担保方式</option>
 						<option value="176c9150-7103-11e3-ae10-6cae8b21aeac">产品用途</option>
-                        <option value="176c9150-7103-11e3-ae10-6cae8b21aead">产品招标期限</option>
+                        <option value="176c9150-7103-11e3-ae10-6cae8b21aead" selected="selected">产品招标期限</option>
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<tr style="height:45px">
 					<td align="right">参数值：</td>
-					<td><input type="text" class="textbox pav" name="parameterValue" /></td>
+					<td><input type="text" class="textbox pav" name="parameterValue" id ="parameterValue1" style="width:130px" /></td>
+					<td class="alert-danger" style="display:none;background:none;width:200px;">只能输入1~100的数字</td>				                               					
 				</tr>
-				<tr>
+				<tr style="height:45px">
 					<td align="right">状态：</td>
-					<td><select class="textbox" name="status">
+					<td><select class="textbox" name="status" style="width:130px">
 							<option value="00">启用</option>
 							<option value="09">禁用</option>
 						</select>
@@ -63,14 +64,24 @@
 <script type="text/javascript">
 
 jQuery(function($) {
-		$.page.withdraw({
-		search: '${app}/parameter/parameterdata'
+	$.page.withdraw({		
+	   search: '${app}/parameter/parameterdata'
+	});
+	//如果参数类选择产品招标期限，在此加入校验
+	$('#parameterValue1').keyup(function(){
+	   var parameterType  = $("#parameterType1").val();
+	   var parameterValue = $("#parameterValue1").val(); 
+	   if(parameterType == '176c9150-7103-11e3-ae10-6cae8b21aead' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
+		   $(this).parent().parent().find(".alert-danger:eq(0)").show();    
+	   }else{
+	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();
+	   }
 	});
 	$("#addBtn").click(function(){
 	$(".pav").val("");
 		$("#addDialog").dialog({ 
 			height:250, 
-			width:500, 
+			width:600, 
                buttons:{  
                 "确定":function(){  
                     var form = $(this).find("#addForm");

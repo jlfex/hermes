@@ -44,10 +44,6 @@
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="order" name="order">
                 </div>
-           		 <div class="col-xs-2">
-					<span class="alert-danger" style="display:none;background:none">必填项</span>
-				</div>                                                        
-           
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，只能输入数字</span>
 				</div>                                
@@ -69,7 +65,7 @@ jQuery(function($) {
 	$("#order").on('blur',function(i,item){
 		checkInput(this);
 	});
-	    //对输入元素进行校验
+	//对输入元素进行校验
 	function checkInput(e){
 		var $this = $(e);
 		var val = $this.val();

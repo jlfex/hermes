@@ -19,10 +19,11 @@
             <#else>
             <#list contentData.content as l>                    
             <tr>
-                <#-- <td class="align-center">0000001</td> -->
+                <#-- <td class="align-center">0000001</td>
                 <td class="align-center">
                 	<input class="form-control" id="disabledInput" type="text" placeholder="6" >
-                </td>
+                </td> -->
+                <td class="align-center">${l.order!}</td>                
                 <td class="align-center">${l.articleTitle!}</td>
                 <td class="align-center">${l.updateTime!}</td>
                 <td class="align-center">${l.category.name!}</td>
@@ -42,7 +43,7 @@
     <div class="mr_15px clearfix">
         <div class="pull-right">
             <span class="vlight"><button type="button" class="btn btn-default batch" >批量删除</button></span>
-            <span class="vlight hm-col">&nbsp;&nbsp;&nbsp;&nbsp; 全选 <input type="checkbox" class="all"> </span>
+            <span class="vlight hm-col">&nbsp;&nbsp;&nbsp;&nbsp; 全选 <input type="checkbox" class="all" name="artchbox"> </span>
         </div>
     </div>
 </div>
@@ -66,49 +67,25 @@ $(".batch").on("click",function(){
 		 var ches=document.getElementsByName("deleteBox");
 		 var ids="";		 
 		 for(var i=0;i<ches.length;i++){
-		   if(ches[i].checked){
-		     ids+=ches[i].value+",";
-		   }
+			   if(ches[i].checked){
+			     ids+=ches[i].value+",";
+			   }
 		 }
-	  $.ajax({
-			type : 'POST',
-			url : '${app}/content/batchDeleteContent',
-			data : 'ids='+ids,
-			success : function(data)
-			{
-				if(data.code==0){
-				   alert(data.attachment);
-				   location.reload();
-				   
-				}else{alert(data.attachment)
-				}
-				
-				
-			},
-			error : function(msg, textStatus, e)
-			{
-				
-			}
-		});
-	
-	
-	
+		$.link.html(null, {
+			   url: '${app}/content/batchDeleteContent?ids='+ids,
+			   target: 'main'
+	    });		 	
 	});
 
-
 	$(".all").on("click",function(){
-		 //var ches=$("#chooseCheckbox");
-		 var ches=document.getElementsByName("artchbox");
+		 var ches=document.getElementsByName("deleteBox");
 		 for(var i=0;i<ches.length;i++){
 		   if(ches[i].checked){
 		      ches[i].checked=false;
 		   }else{
 		    ches[i].checked=true;
-		   }
-		 
-		 }
-	
-	
+		   }		 
+		 }		
 	});
 	
 	
