@@ -636,10 +636,10 @@ public class LoanController {
 				code = "01";
 				msg = "还款失败";
 			}
-		} catch (Exception ex) {
+		} catch (Exception e) {
 			code = "01";
-			msg = "还款异常";
-			Logger.error(ex.getMessage(), ex);
+			msg = e.getMessage();
+			Logger.error("债权标 :还款", e);
 		}
 		model.addAttribute("code", code);
 		model.addAttribute("msg", msg);

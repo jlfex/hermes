@@ -30,8 +30,8 @@
 								<td class="align-center">${l.borrower!''}</td>
 								<td class="align-right">${l.certificateNo!''}</td>
 								<td class="align-right">${l.amount!''}</td>
-								<td class="align-center">${l.rate!''}</td>
-								<td class="align-center">${l.period!''}</td>
+								<td class="align-center">${(l.rate!'')?string.percent}</td>
+								<td class="align-center">${l.period!'0'}天</td>
 								<td class="align-center">${l.createTime!''}</td>
 								<td class="align-center">${l.crediteType!''}</td>
 								<td class="align-center">${l.purpose!''}</td>

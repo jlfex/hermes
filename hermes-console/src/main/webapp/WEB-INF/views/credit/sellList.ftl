@@ -76,12 +76,12 @@
 	                        <td class="align-center">${(l.crediteCode)!''}</td> 
 	                        <td class="align-center">${(l.crediteType)!''}</td> 
 	                        <td class="align-center">${(l.amount)!''}</td> 
-	                        <td class="align-center">${(l.rate)!''}</td> 
+	                        <td class="align-center">${(l.rate!'')?string.percent}</td> 
 	                        <td class="align-center">${(l.period)!''}个月</td>
 	                        <td class="align-center">${(l.purpose)!''}</td>
-	                        <td class="align-center">${(l.purpose)!''}</td> 
-	                        <td class="align-center">${(l.payType)!''}</td>
-	                        <td class="align-center">${(l.deadTime)!''}</td>
+	                        <td class="align-center">${(l.payType)!''}</td> 
+	                        <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td>
+	                        <td class="align-center">${(l.businessTime)?string('yyyy-MM-dd')}</td>
 	                        <td class="align-center">${(l.createTime)!''}</td> 
 	                        <td class="align-center">${(l.currentUserName!'')}</td> 
 	                        <td class="align-center">${(l.statusName)!''}</td> 

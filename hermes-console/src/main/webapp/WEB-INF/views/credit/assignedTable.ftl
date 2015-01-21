@@ -31,7 +31,7 @@
                <td class="align-center">${l.rate!''}</td> 
                <td class="align-center">${l.period!''}</td>
                <td class="align-center">${l.updateTime!''}</td>
-               <td class="align-center">${l.deadTime!''}</td> 
+               <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td> 
                <td class="align-center">${l.payType}</td> 
                <td class="align-center">${l.statusName}</td>
                <td class="align-center">

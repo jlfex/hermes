@@ -316,7 +316,7 @@ public interface LoanService {
 	 * @param creditRepayPlanId
 	 * @return
 	 */
-    public String queryLoanRepayId(String creditRepayPlanId);
+    public String queryLoanRepayId(String creditRepayPlanId) throws Exception;
     /**
      * 更新 债权还款计划明细状态
      * @param repayid
