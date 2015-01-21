@@ -73,7 +73,7 @@ public class LoanController {
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String COMPANY_ADDRESS = "app.company.address";
-	private static final String COMPANY_PNAME = "app.company.pname";
+	private static final String COMPANY_PNAME = "app.operation.name";
 
 	/**
 	 * 索引
@@ -278,8 +278,7 @@ public class LoanController {
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
-		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName
-				+ ",purposeId :" + purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
+		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName + ",purposeId :" + purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
 		model.addAttribute("amount", Numbers.toCurrency(new Double(amount)));
 		model.addAttribute("rate", Numbers.toPercent(new Double(rate) / 100));
 		model.addAttribute("period", period);
