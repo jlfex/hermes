@@ -59,6 +59,7 @@ public class ProductManageController {
 		model.addAttribute("purpose", dictionaryService.findByTypeCode("product.purpose"));
 		model.addAttribute("repay", repayService.findAll());
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));
+		model.addAttribute("productCode", productService.generateProductCode());
 		return "product/add";
 	}
 

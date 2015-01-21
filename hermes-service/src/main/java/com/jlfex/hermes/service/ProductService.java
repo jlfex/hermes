@@ -57,13 +57,29 @@ public interface ProductService {
 	 * 对象持久化
 	 */
 	public Product save(Product product);
+
 	/**
 	 * 根据 状态 获取 产品信息
+	 * 
 	 * @param status
 	 * @return
 	 * @throws Exception
 	 */
-    public  List<Product>   findByStatusIn(String... status) throws Exception;
+	public List<Product> findByStatusIn(String... status) throws Exception;
 
 	public Product editProduct(Product p, SimpleProduct product);
+
+	/**
+	 * 获取产品数量
+	 * 
+	 * @return
+	 */
+	public Long countProductNum();
+
+	/**
+	 * 生成产品标识数
+	 * 
+	 * @return
+	 */
+	public String generateProductCode();
 }
