@@ -44,7 +44,6 @@
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="order" name="order" placeholder="1" value="${friendLink.order}">
                 </div>
-                <span class="vlight">请以，号隔开</span>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，只能输入数字</span>
 				</div>                                

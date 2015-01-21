@@ -31,10 +31,8 @@
                         <div class="col-xs-2 hm-col">
                             <label for=""  class="sr-only">选择一级分类</label>
                             <select id="levelOne" name="levelOne" class="form-control categoryLevelOne">
-  						         <option value="">请选择</option>
-						               <#list categoryForLevel1 as cf1>
-							     <option value="${cf1.id}">${cf1.name}</option>
-						               </#list>
+  						         <option value="">请选择</option>						               
+							     <option value="d82d503c-9efe-11e4-aae2-1f2b79deec07">帮助中心</option>						               
                             </select>
                         </div>
                         <div class="col-xs-2 hm-col">
@@ -127,7 +125,7 @@ UE.getEditor('content');
 		    ||(e.id == 'levelOne' && $this.val()=='')		    
 		    ||(e.id == 'keywords' && !/.{0,30}/.test(val)) //非必填
 		    ||(e.id == 'description' && !/.{0,400}/.test(val)) //非必填
-		    ||(e.id == 'content' && !/.{1,5000}/.test(val)) ) 		    
+		     ) 		    
 		    ){
 			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
 			$this.parent().parent().find(".alert-danger:eq(0)").show();

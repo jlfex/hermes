@@ -10,6 +10,16 @@
             <div id="data" style="display:block">
           <form class="form-horizontal" role="form" id="editForm" method="post">
           <input type="hidden" value="${(tmpNotice.id)!}" name="id" />
+             <div class="form-group">
+                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>公告标题</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="title"  name="title"  value="${tmpNotice.title}">
+                </div>
+				<div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项，汉字限定为8个字</span>
+				</div>                
+              </div>
+          
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>公告内容</label>
                 <div class="col-sm-5">
