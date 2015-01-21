@@ -98,7 +98,7 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	public ResultVo addParameterSet(ParameterSetInfo parameterSetInfo) {
 		try {
 			Dictionary dictionary = new Dictionary();
-			DictionaryType dictionaryType = dictionaryTypeRepository.findByCode(parameterSetInfo.getParameterType());
+			DictionaryType dictionaryType = dictionaryTypeRepository.findOne(parameterSetInfo.getParameterType());
 			dictionary.setType(dictionaryType);
 			if (findByName(parameterSetInfo.getParameterValue())) {
 				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "参数值已经存在");
