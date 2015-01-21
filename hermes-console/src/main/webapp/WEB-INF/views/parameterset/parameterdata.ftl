@@ -46,12 +46,13 @@
 				<tr>
 					<td align="right">参数类：</td>
 					<td>
-						<input type="text"  class="textbox type" name="parameterType" disabled/>
+						<input type="text"  id="parameterType2" class="textbox type" name="parameterType" disabled/>
 					</td>
 				</tr>
 				<tr>
 					<td align="right">参数值：</td>
-					<td><input type="text" class="textbox pv" name="parameterValue" /></td>
+					<td><input type="text" id="parameterValue2" class="textbox pv" name="parameterValue" /></td>
+					<td class="alert-danger" style="display:none;background:none;width:200px;">只能输入1~100的数字</td>				                               										
 				</tr>
 				
 			</table>
@@ -69,112 +70,108 @@ function change(id,status){
      $("#tip3").html("您确定要"+status+"该参数值吗？");
       var checkParams = {"id" : id};
 			$.post("${app}/parameter/switch", checkParams,
-					function(data) {
-					     if(data.code==0){							     			                                    
-                               $("#tip3").dialog({
-				                        height:200, 
-					                    width:300,
-					                     buttons:{ 
-					                      "确定":function(){
-					                              
-                                                  $(this).dialog("close");
-						                          $.link.html(null,{
-														url:'${app}/parameter/index',
-														data:'',
-														target:'main'
-													});			
-					                         },
-					                       "关闭": function() {  
-                                                $(this).dialog("close");	  
-                                              } } 					                         					                     
-					                      })
-					       
+				function(data) {
+			     if(data.code==0){							     			                                    
+                   $("#tip3").dialog({
+	                    height:200, 
+	                    width:300,
+	                     buttons:{ 
+	                      "确定":function(){					                              
+	                          $(this).dialog("close");
+	                          $.link.html(null,{
+									url:'${app}/parameter/index',
+									data:'',
+									target:'main'
+								});			
+	                         },
+	                       "关闭": function() {  
+	                            $(this).dialog("close");	  
+	                          } } 					                         					                     
+			                })				       
 					      }	else {
 					        $("#tip3").html( data.attachment);			                                    
                                $("#tip3").dialog({
-				                        height:200, 
-					                    width:300,
-					                     buttons:{ 
-					                      "确定":function(){
-					                          $(this).dialog("close");
-						                          $.link.html(null,{
-														url:'${app}/parameter/index',
-														data:'',
-														target:'main'
-													});			
+		                        height:200, 
+			                    width:300,
+			                     buttons:{ 
+			                      "确定":function(){
+			                          $(this).dialog("close");
+				                          $.link.html(null,{
+												url:'${app}/parameter/index',
+												data:'',
+												target:'main'
+											});			
 					                         },
-					                       "关闭": function() {  
-                                                $(this).dialog("close");
-                                                $.link.html(null,{
-														url:'${app}/parameter/index',
-														data:'',
-														target:'main'
-													});	  
-                                              } } 					                         					                     
-					                      })
-                         }
-                })
+			                       "关闭": function() {  
+                                        $(this).dialog("close");
+                                        $.link.html(null,{
+												url:'${app}/parameter/index',
+												data:'',
+												target:'main'
+											});	  
+                                      } } 					                         					                     
+					        })
+                  }
+        })
 }
 
 
 function update(id){
 		  var checkParams = {"id" : id};
 			$.post("${app}/parameter/update", checkParams,
-					function(data) {
-					    if(data.code==0){
-					       $(".type").empty();
-					       $(".type").val(data.attachment.type.name);
-					       $(".dicId").val(data.attachment.id);
-					       $(".parameterType").val(data.attachment.type.id);
-					       $(".pv").val(data.attachment.name);
-					      }	
-		                   $("#updateDialog").dialog({
-		                        height:250, 
-			                    width:500,
-			                     buttons:{  
-					                "确定":function(){  
-					                    var form = $("#updateForm");  
-					                    $.ajax({  
-					                        url:form.attr('action'),  
-					                        type:form.attr('method'),  
-					                        data:form.serialize(),  
-					                        dataType:"json",  
-					                        success:function(data){  
-					                                 if(data.code==0){					                                    
-					                                       $("#operateTip2").dialog({
-											                        height:150, 
-												                    width:300,
-												                     buttons:{ 
-												                      "关闭":function(){
-												                          $(this).dialog("close");
-						                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");
-												                          
-													                          $.link.html(null,{
-																					url:'${app}/parameter/index',
-																					data:'',
-																					target:'main'
-																				});			
-												                         }}
-												                     
-												                      })
-					                                 }else{
-					                                   $("#errorTip2").html( data.attachment);
-					                                      $("#errorTip2").dialog({
-											                        height:150, 
-												                    width:300,
-												                     buttons:{ 
-												                      "关闭":function(){
-												                          $(this).dialog("close");
-						                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");												                          											                          												                          
-												                         }
-												                      }											                     
-												           })
-					                                                                     
-					                       } }, 
-					                        error:function(){  
-					                            
-					                             $(this).dialog("close");
-						                         $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         
+			function(data) {
+			    if(data.code==0){
+			       $(".type").empty();
+			       $(".type").val(data.attachment.type.name);
+			       $(".dicId").val(data.attachment.id);
+			       $(".parameterType").val(data.attachment.type.id);
+			       $(".pv").val(data.attachment.name);
+			      }	
+                   $("#updateDialog").dialog({
+                        height:250, 
+	                    width:600,
+	                     buttons:{  
+			                "确定":function(){  
+			                    var form = $("#updateForm");  
+			                    $.ajax({  
+			                        url:form.attr('action'),  
+			                        type:form.attr('method'),  
+			                        data:form.serialize(),  
+			                        dataType:"json",  
+			                        success:function(data){  
+		                                 if(data.code==0){					                                    
+	                                       $("#operateTip2").dialog({
+					                        height:150, 
+						                    width:300,
+						                     buttons:{ 
+						                      "关闭":function(){
+					                          $(this).dialog("close");
+                     	                      $(this).parent().prev().find("#updateDialog").dialog("close");
+					                          
+						                          $.link.html(null,{
+														url:'${app}/parameter/index',
+														data:'',
+														target:'main'
+													});			
+						                         }}									                     
+							                   })
+	                                 }else{
+	                                   $("#errorTip2").html( data.attachment);
+	                                      $("#errorTip2").dialog({
+							                        height:150, 
+								                    width:300,
+								                     buttons:{ 
+								                      "关闭":function(){
+								                          $(this).dialog("close");
+		                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");												                          											                          												                          
+								                         }
+								                      }											                     
+								           })					                                                                     
+					                       }}, 
+			                        error:function(){  
+			                            
+			                             $(this).dialog("close");
+				                         $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         
 					                         }  
 					                    })  
 					                },  
@@ -197,6 +194,18 @@ jQuery(function($) {
 			$('#searchForm').trigger('submit');
 		}
 	});
+	
+//如果参数类选择产品招标期限，在此加入校验
+	$('#parameterValue2').keyup(function(){
+	   var parameterType  = $("#parameterType2").val();
+	   var parameterValue = $("#parameterValue2").val(); 
+	   if(parameterType == '产品招标期限' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
+		   $(this).parent().parent().find(".alert-danger:eq(0)").show();    
+	   }else{
+	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();
+	   }
+	});
+	
 });
  
 </script>
