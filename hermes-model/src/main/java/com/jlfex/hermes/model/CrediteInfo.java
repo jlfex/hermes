@@ -115,6 +115,11 @@ public class CrediteInfo extends Model {
 	private String  creditorName;
 	@Transient
 	private String  ratePercent;
+	@Transient
+	private String  beginDate; //开始时间  用于检索导入时间段
+	@Transient
+	private String  endDate;  //结束时间   用于检索导入时间段
+	
 	
 	
 
@@ -344,7 +349,20 @@ public class CrediteInfo extends Model {
 		return dateStr;
 	}
 	
+	
 
+	public String getBeginDate() {
+		return beginDate;
+	}
+	public void setBeginDate(String beginDate) {
+		this.beginDate = beginDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 	/**
 	 * 读取当前用户名称
 	 * 

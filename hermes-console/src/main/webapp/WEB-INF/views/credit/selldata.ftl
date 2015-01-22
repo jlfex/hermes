@@ -42,8 +42,11 @@
 		                        <td class="align-center">${(l.currentUserName!'')}</td> 
 		                        <td class="align-center">${(l.statusName)!''}</td> 
 								<td class="align-center">
-									<a href="#" id="creditDetailView" data-url="${app}/credit/repayPlanDetail/${l.id}" >查看</a>
-								</td>
+	                                 <a href="#" id="creditDetailView" data-url="${app}/credit/repayPlanDetail/${l.id}" >查看</a>
+	                            <#if l.status == '00'>
+	                                 <a href="#" data-url="${app}/credit/goSell/${l.id}" >发售</a>
+	                            </#if>
+	                        </td>    
 							</tr>
 						</#list>
 					</#if>

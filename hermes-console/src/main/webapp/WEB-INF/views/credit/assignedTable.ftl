@@ -1,6 +1,7 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		              <tr>
+		                <th class="align-center">债权人名称</th>
                         <th class="align-center">债权人编号</th>
                         <th class="align-center">债权人名称</th>
                         <th class="align-center">债权编号</th>
@@ -23,13 +24,14 @@
 		<#else>
 		<#list (assignedList.content)?sort_by("createTime")?reverse as l>  
 			 <tr>
+			   <td class="align-center">${(l.creditor.creditorName)!''}</td> 
 			   <td class="align-center">${(l.creditor.creditorNo)!''}</td>
                <td class="align-center">${(l.creditor.creditorName)!''}</td>  
                <td class="align-center">${l.crediteCode!''}</td> 
                <td class="align-center">${l.purpose!''}</td> 
                <td class="align-center">${l.amount!''}</td> 
-               <td class="align-center">${l.rate!''}</td> 
-               <td class="align-center">${l.period!''}</td>
+               <td class="align-center">${(l.rate!'')?string.percent}</td> 
+               <td class="align-center">${l.period!''}天</td>
                <td class="align-center">${l.updateTime!''}</td>
                <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td> 
                <td class="align-center">${l.payType}</td> 
