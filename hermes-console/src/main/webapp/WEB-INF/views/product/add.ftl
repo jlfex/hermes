@@ -53,7 +53,6 @@
 				<div class="col-xs-1">
 					<select class="form-control" name="periodType" id="periodType">
 						<option value="月">月</option>
-						<option value="天">天</option>
 					</select>
 				</div>
 				<div class="col-xs-3">
