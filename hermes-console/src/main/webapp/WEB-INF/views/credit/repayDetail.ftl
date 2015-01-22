@@ -80,11 +80,12 @@
                                 <th class="align-center">状态</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
+                         
                             <tr> 	
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
-                                <td class="align-center">${(creditInfo.rate)?string.percent}</td> 
+                                <td class="align-center">${(creditInfo.rate!'')?string.percent}</td> 
                                 <td class="align-center">${(creditInfo.period)!''}</td>
                                 <td class="align-center">${(creditInfo.amount)!''}</td>
                                 <td class="align-center">${deadLine!''}</td> 
