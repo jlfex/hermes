@@ -23,6 +23,8 @@
   ul.pagination li{
   	float:none;
   }
+  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+  
 </style>
 </head>
 <body>

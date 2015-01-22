@@ -23,4 +23,6 @@ public interface DictionaryTypeRepository extends JpaRepository<DictionaryType, 
 	 */
 	public DictionaryType findByCode(String code);
 
+	public DictionaryType findOneByName(String name);
+
 }
