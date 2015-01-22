@@ -3,10 +3,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
@@ -73,6 +77,12 @@ jQuery(function($) {
 });
 
 </script>
+<style type="text/css">
+  table th{text-align:center;}
+.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+</style>
+</head>
+
 </head>
 
 <body>

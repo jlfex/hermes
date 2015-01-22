@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -137,9 +138,13 @@ public class ContentController {
 	@RequestMapping("/insertCategory")
 	public String insertCategory(ContentCategory contentCategory, RedirectAttributes attr) {
 		try {
-			contentService.insertCategory(contentCategory);
-			attr.addFlashAttribute("msg", "新增分类成功");
-			return "redirect:/content/categoryIndex";
+			if (StringUtils.isEmpty(contentCategory.getCategoryLevelOne())) {
+				attr.addFlashAttribute("msg", "您还未选择任何分类");
+			} else {
+				contentService.insertCategory(contentCategory);
+				attr.addFlashAttribute("msg", "新增分类成功");
+			}
+			return "redirect:/content/addCategory";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "新增分类失败");
 			Logger.error("新增分类失败：", e);
