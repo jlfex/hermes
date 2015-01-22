@@ -11,7 +11,7 @@
           <form class="form-horizontal" role="form" id="editForm" method="post">
           <input type="hidden" value="${(friendLink.id)!}" name="id" />
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>网站名称</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>网站名称</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="linkName"  name="linkName" placeholder="网站名称"  value="${friendLink.name}">
                 </div>
@@ -20,7 +20,7 @@
 				</div>                
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label">网站网址</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>网站网址</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="link" name="link" placeholder="网站网址" value="${friendLink.link}">
                 </div>
@@ -29,7 +29,7 @@
 				</div>                                                        
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label">所属分类</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
                    <select id="type" name="type" class="form-control">
                       <option value="${friendLink.type}">${friendLink.type}</option>
@@ -40,7 +40,7 @@
 				</div>                                                        
               </div>        
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label">排序</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>排序</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="order" name="order" placeholder="1" value="${friendLink.order}">
                 </div>
