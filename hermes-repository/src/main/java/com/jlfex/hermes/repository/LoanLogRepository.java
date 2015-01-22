@@ -3,13 +3,14 @@ package com.jlfex.hermes.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanLog;
 
 @Repository
-public interface LoanLogRepository  extends JpaRepository<LoanLog, String> {
+public interface LoanLogRepository  extends JpaRepository<LoanLog, String>, JpaSpecificationExecutor<LoanLog> {
 	
 	
 	/**
@@ -28,5 +29,13 @@ public interface LoanLogRepository  extends JpaRepository<LoanLog, String> {
 	 * @return 返回单个借款日志List
 	 */
 	public List<LoanLog> findByLoanAndType(Loan loan,String... type);
+	/**
+	 * 通过loan 查找借款日志对象List
+	 * @param loanId
+	 * @param type
+	 * @return 返回单个借款日志List
+	 * @author Administrator
+	 */
+	public List<LoanLog> findByLoan(Loan loan);
 
 }

@@ -13,8 +13,8 @@
                         <input id="crediteCode" name="crediteCode" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
-                         <label for="cellphone">借款类型</label>
-                        <input id="crediteType" name="crediteType" value="" class="form-control" type="text">
+                         <label for="cellphone">产品名称</label>
+                        <input id="purpose" name="purpose" value="" class="form-control" type="text">
                     </div>
                 </div>
                 <div class="row">

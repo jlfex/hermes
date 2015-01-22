@@ -16,6 +16,7 @@ import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanLog.Type;
 import com.jlfex.hermes.repository.CreditInfoRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
+import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
 
@@ -35,11 +36,14 @@ public class AutoBidFailureJob extends Job {
 
 	@Autowired
 	private InvestService investService;
+	@Autowired
+	private CreditInfoService creditInfoService;
 	/** 借款信息仓库扩展 */
 	@Autowired
 	private LoanLogRepository loanLogRepository;
 	@Autowired
 	private  CreditInfoRepository creditInfoRepository;
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -99,7 +103,9 @@ public class AutoBidFailureJob extends Job {
 						loanLog.setRemark("自动流标成功");
 						loanLogRepository.save(loanLog);
 						remarks.append("编号为" + loan.getLoanNo() + "的借款于" + Calendars.date() + "自动流标。\r\n");
-					
+						if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+							creditInfoService.afterBidAwayUpdateCredt(loan);
+						}
 					} else {
 						remarks.append("编号为" + loan.getLoanNo() + "的借款于" + Calendars.date() + "自动流标失败。\r\n");
 						Logger.error("更新借款状态失败，借款编号%s", loan.getLoanNo());

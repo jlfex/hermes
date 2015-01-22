@@ -10,10 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -64,6 +62,7 @@ public class CreditController {
 	private LoanService loanService;
 	@Autowired
 	private UserService  userService;
+	
 	
 
 	public static final String FLAG_KIND_NINE = "99";
@@ -508,8 +507,10 @@ public class CreditController {
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
 			Map<String, Object> calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
-			model.addAttribute("creditInfo", creditInfo); // 债权信息
-			model.addAttribute("repayPlanDetailList", planList); // 还款明细
+			List<LoanLog>  operateList = creditInfoService.queryCreditLogList(creditInfo);
+			model.addAttribute("creditInfo", creditInfo);                          // 债权信息
+			model.addAttribute("repayPlanDetailList", planList);                   // 还款明细
+			model.addAttribute("operateList", operateList);                        // 债权标操作 明细
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
 			User user = creditInfo.getCreditor().getUser();
 			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
