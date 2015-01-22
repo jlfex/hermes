@@ -20,6 +20,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 
 	public Dictionary findByTypeCodeAndCode(String typeCode, String code);
 
+	@Override
 	public Dictionary findOne(String id);
 
 	public Dictionary findByName(String name);
