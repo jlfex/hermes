@@ -53,7 +53,6 @@
 				<div class="col-xs-1">
 					<select class="form-control" name="periodType" id="periodType">
 						<option value="月">月</option>
-						<option value="天">天</option>
 					</select>
 				</div>
 				<div class="col-xs-3">
@@ -190,21 +189,21 @@ jQuery(function($) {
 		}else{
 			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
 			if(e_id=='' || e_id==e.id){			
-			    if($("#amount2").val()<$("#amount1").val()){
+			    if(parseFloat($("#amount2").val())<parseFloat($("#amount1").val())){
 			      $this.parent().parent().find(".alert-danger:eq(0)").hide();
 				  $("#my_amount2").show();
 				  return false;
 			    }else{
 			       $("#my_amount2").hide();
 			     }
-			    if($("#period2").val()<$("#period1").val()){
+			    if(parseFloat($("#period2").val())<parseFloat($("#period1").val())){
 			        $this.parent().parent().find(".alert-danger:eq(0)").hide();   
 			   	    $("#my_period2").show();
 				    return false;
 			    }else{
 			    	 $("#my_period2").hide();
 			     }
-			    if($("#rate2").val()<$("#rate1").val()){
+			    if(parseFloat($("#rate2").val())<parseFloat($("#rate1").val())){
 			         $this.parent().parent().find(".alert-danger:eq(0)").hide();
 			         $("#my_rate2").show();
 				     return false;
