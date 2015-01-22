@@ -1,11 +1,11 @@
 <div id="dataResult" style="display:block">
-    <table class="table table-striped">        	
+    <table class="table table-striped" style="margin-top:15px;">        	
         <thead>
             <tr>
                 <#-- <th class="align-center" width="10%">ID</th> -->
                 <th class="align-left"   width="5%">排序</th>
                 <th class="align-center" width="20%">文章标题</th>
-                <th class="align-center" width="10%">更新时间</th>
+                <th class="align-center" width="20%">更新时间</th>
                 <th class="align-center" width="10%">所属分类</th>
                 <th class="align-center" width="10%">发布人</th>
                 <th class="align-center" width="20%">操作</th>

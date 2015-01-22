@@ -4,58 +4,53 @@
 		${msg!}
 	</div>
 </#if>
-<div class="row panel-body">
-	<div class="col-xs-1">
-		<button class="btn btn-primary btn-block" type="button" id="publishContent">+ 发布内容</button>
-    </div>
-</div>
-<div class="row">
-	<form id="searchForm" method="post" action="#">
-	<div class="row">
-    	<div class="col-xs-2 hm-col form-group">
-			<label for="status" class="sr-only">分类</label>
-			<select id="status" name="levelOne" class="form-control categoryLevelOne">
-				<option value="">请选择</option>
+<div class="panel-body">
+      <form id="searchForm" method="post" action="#">
+       <div class="row">
+            <div class="col-xs-2 hm-col form-group">
+                <label for="account">一级分类</label>
+                <select id="status" name="levelOne" class="form-control categoryLevelOne">
+		             <option value="">请选择</option>
 				<#list categoryForLevel1 as cf1>
 					<option value="${cf1.id}">${cf1.name}</option>
 				</#list>
-			</select>
-		</div>
-        
-        <div class="col-xs-2 hm-col form-group">
-			<label for="status" class="sr-only">分类</label>
-			<select id="status" name="levelTwo" class="form-control categoryLevelTwo">
-				<option value="">请选择</option>
-				<#list categoryForLevel2 as cf2>
-					<option value="${cf2.id}">${cf2.name}</option>
-				</#list>
-			</select>
-		</div>
-        
-        <div class="col-xs-2 hm-col form-group">
-			<label for="status" class="sr-only">分类</label>
-			<select id="status" name="levelThree" class="form-control categoryLevelThree">
-				<option value="">请选择</option>
-				<#list categoryForLevel3 as cf3>
-					<option value="${cf3.id}">${cf3.name}</option>
-				</#list>
-			</select>
-		</div>
-        
-		<div class="col-xs-2 hm-col form-group">
-			<label for="name" class="sr-only">内容</label>
-			<input id="content" name="inputName" class="form-control" type="text">
-		</div>
-        
-		<div class="col-xs-1 hm-col form-group">
-			<label class="sr-only">&nbsp;</label>
-			<button id="searchBtn" type="button" class="btn btn-primary btn-block">查询</button>
-			<input id="page" name="page" value="0" type="hidden">
-		</div>
-	</div>
-</form>
+			   </select>                        
+            </div>
+            <div class="col-xs-2 hm-col form-group">
+                <label for="cellphone">二级分类</label>
+				<select id="status" name="levelTwo" class="form-control categoryLevelTwo">
+					<option value="">请选择</option>
+					<#list categoryForLevel2 as cf2>
+						<option value="${cf2.id}">${cf2.name}</option>
+					</#list>
+				</select>                        
+            </div>
+            <div class="col-xs-2 hm-col form-group">
+                 <label for="cellphone">三级分类</label>
+				 <select id="status" name="levelThree" class="form-control categoryLevelThree">
+					<option value="">请选择</option>
+					<#list categoryForLevel3 as cf3>
+						<option value="${cf3.id}">${cf3.name}</option>
+					</#list>
+				</select>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-xs-2 hm-col form-group">
+                    <label for="beginDate">文章标题</label>
+	                <input id="content" name="inputName" class="form-control" type="text">
+                </div>
+                <div class="col-xs-1 hm-col form-group">
+                <label>&nbsp;</label>
+	            <button id="searchBtn" type="button" class="btn btn-primary btn-block">查询</button>
+	            <button id="publishContent"  type="button" class="btn btn-primary btn-block" style="margin-left:120px;margin-top:-33px;">发布内容</button>			            
+                <input id="page" name="page" value="0" type="hidden">
+            </div>
+        </div>
+    </form>
 </div>
-        
+</div>
+    
 <div id="data"></div>
 <script type="text/javascript">
 <!--
