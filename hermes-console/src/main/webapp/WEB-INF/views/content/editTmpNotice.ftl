@@ -11,7 +11,7 @@
           <form class="form-horizontal" role="form" id="editForm" method="post">
           <input type="hidden" value="${(tmpNotice.id)!}" name="id" />
              <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>公告标题</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>公告标题</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="title"  name="title"  value="${tmpNotice.title}">
                 </div>
@@ -21,7 +21,7 @@
               </div>
           
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>公告内容</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>公告内容</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="content"  name="content"  value="${tmpNotice.content}">
                 </div>
@@ -30,18 +30,18 @@
 				</div>                
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>显示开始日期</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>显示开始日期</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="startDate" name="startDate" value="${tmpNotice.startDate}">
+                  <input type="text" class="form-control" id="startDate" name="startDate" value="${tmpNotice.startDate?string("yyyy-MM-dd")}">
                 </div>
 		        <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，请输入正确的日期</span>
 				</div>                                                        
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>显示结束日期</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>显示结束日期</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="endDate" name="endDate" value="${tmpNotice.endDate}">
+                  <input type="text" class="form-control" id="endDate" name="endDate" value="${tmpNotice.endDate?string("yyyy-MM-dd")}">
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，请输入正确的日期</span>

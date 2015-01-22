@@ -11,7 +11,7 @@
   <form class="form-horizontal" role="form" id="editForm" method="post">
       <input type="hidden" value="${(article.id)!}" name="id" />
       <div class="form-group">
-        <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>文章标题</label>
+        <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>文章标题</label>
         <div class="col-sm-5">
           <input type="text" class="form-control" id="articleTitle"  name="articleTitle" placeholder="文章标题" value="${article.articleTitle!}">
         </div>
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>所属分类</label>
+        <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
         <div class="col-sm-8">
           <div class="row">
                 <div class="col-xs-2 hm-col">
@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="" class="col-sm-2 control-label">排序</label>
+        <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>排序</label>
         <div class="col-sm-5">
           <input type="text" class="form-control" id="order" name="order" placeholder="1" value="${article.order!}">
         </div>
@@ -92,7 +92,7 @@
 		</div>                                                
       </div>
       <div class="form-group">
-        <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>内容编辑</label>
+        <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>内容编辑</label>
             <div class="col-sm-8">
                   <textarea rows="8" id="content" name="content">${article.content!}</textarea>
             </div>        
