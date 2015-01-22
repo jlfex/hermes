@@ -206,9 +206,7 @@ public class CreditController {
 	public String loandata(String page, String size, Model model) {
 		try {
 			size = "10";
-			List<String> statuslist = new ArrayList<String>();
-			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null, page, size, statuslist);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null, page, size, null);
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -553,6 +551,7 @@ public class CreditController {
 			size = "10";
 			List<String> statuslist = new ArrayList<String>();
 			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
+			statuslist.add(CrediteInfo.Status.BIDING);
 			statuslist.add(CrediteInfo.Status.FAIL_ASSIGNING);
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
 			model.addAttribute("sellList", obj);
@@ -731,7 +730,6 @@ public class CreditController {
 		creditInfo.setStatus(CrediteInfo.Status.REPAYING);
 		try {
 			List<String> statuslist = new ArrayList<String>();
-			statuslist.add(CrediteInfo.Status.BIDING);
 			statuslist.add(CrediteInfo.Status.REPAYING);
 			statuslist.add(CrediteInfo.Status.REPAY_FIINISH);
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);

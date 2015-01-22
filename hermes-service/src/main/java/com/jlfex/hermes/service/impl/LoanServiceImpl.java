@@ -1300,28 +1300,28 @@ public class LoanServiceImpl implements LoanService {
 	 * 根据： 导入还款明细id 获取 loan 还款计划表 id
 	 */
 	@Override
-	public String queryLoanRepayId(String creditRepayPlanId) {
+	public String queryLoanRepayId(String creditRepayPlanId) throws Exception{
 		int sequnce = 0; // 还款期数
 		CreditRepayPlan repayPlan = creditorRepayPlanRepository.findOne(creditRepayPlanId);
 		if (repayPlan != null) {
 			sequnce = repayPlan.getPeriod();
 			if (sequnce <= 0) {
-				throw new ServiceException("债权还款明细:还款期数:period=" + sequnce + ",不正确");
+				throw new Exception("债权还款明细:还款期数:period=" + sequnce + ",不正确");
 			}
 			String creditInfoId = repayPlan.getCrediteInfo().getId();
 			List<Loan> waitRepayCreditlist = loanRepository.findByCreditInfoAndLoanKindAndStatus(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, Loan.Status.REPAYING);
-			if (waitRepayCreditlist == null && waitRepayCreditlist.size() != 0) {
-				throw new ServiceException("根据：债权id=" + creditInfoId + ", 查询到状态为：待还款的债权标 为空");
-			} else if (waitRepayCreditlist.size() != 1) {
-				throw new ServiceException("根据：债权id=" + creditInfoId + ", 查状到态为：待还款的债权标个数不唯一");
+			if (waitRepayCreditlist == null || waitRepayCreditlist.size() == 0) {
+				throw new Exception("根据：债权id=" + creditInfoId + ", 查询到状态为：待还款 , 的债权标 为空");
+			} else if (waitRepayCreditlist.size() > 1) {
+				throw new Exception("根据：债权id=" + creditInfoId + ", 查状到态为：待还款, 的债权标个数不唯一");
 			}
 			LoanRepay loanRepay = loanRepayRepository.findByLoanAndSequence(waitRepayCreditlist.get(0), sequnce);
 			if (loanRepay == null) {
-				throw new ServiceException("根据：债权id=" + creditInfoId + ", 期数=" + sequnce + ",没有查到还款明细");
+				throw new Exception("根据：债权id=" + creditInfoId + ", 期数=" + sequnce + ",没有查到还款明细");
 			}
 			return loanRepay.getId();
 		}else{
-			throw new ServiceException("还款明细id="+creditRepayPlanId+",没有对应信息。");
+			throw new Exception("还款明细id="+creditRepayPlanId+",没有对应信息。");
 		}
 	}
 
