@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.DictionaryType;
-import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.repository.CommonRepository;
 import com.jlfex.hermes.repository.CommonRepository.Script;
 import com.jlfex.hermes.repository.DictionaryRepository;
@@ -95,27 +94,16 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	/**
 	 * 添加参数配置
 	 */
-	public ResultVo addParameterSet(ParameterSetInfo parameterSetInfo) {
-		try {
-			Dictionary dictionary = new Dictionary();
-			DictionaryType dictionaryType = dictionaryTypeRepository.findOne(parameterSetInfo.getParameterType());
-			dictionary.setType(dictionaryType);
-			if (findByName(parameterSetInfo.getParameterValue())) {
-				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "参数值已经存在");
-			} else if (parameterSetInfo.getParameterValue().equals("")) {
-				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "参数值不能为空");
-			}
-			dictionary.setName(parameterSetInfo.getParameterValue());
-			dictionary.setCode(nextDataCode(dictionaryType.getCode()));
-			dictionary.setStatus(parameterSetInfo.getStatus());
-			dictionary.setOrder(nextOrder(dictionaryType.getId()));
-			dictionaryRepository.save(dictionary);
-			logger.info("添加字典成功：" + dictionary.getType() + "." + dictionary.getCode() + "=" + dictionary.getName());
-			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "操作成功！");
-		} catch (Exception e) {
-			logger.info("添加字典失败：" + parameterSetInfo.getParameterType() + "-" + parameterSetInfo.getParameterValue());
-			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, e.getMessage());
-		}
+	public Dictionary addParameterSet(ParameterSetInfo parameterSetInfo) {
+		Dictionary dictionary = new Dictionary();
+		DictionaryType dictionaryType = dictionaryTypeRepository.findOne(parameterSetInfo.getParameterType());
+		dictionary.setType(dictionaryType);
+		dictionary.setName(parameterSetInfo.getParameterValue());
+		dictionary.setCode(nextDataCode(dictionaryType.getCode()));
+		dictionary.setStatus(parameterSetInfo.getStatus());
+		dictionary.setOrder(nextOrder(dictionaryType.getId()));
+		dictionaryRepository.save(dictionary);
+		return dictionary;
 	}
 
 	/**
@@ -155,64 +143,28 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	}
 
 	/**
-	 * 根据name判断记录是否存在
-	 */
-
-	public Boolean findByName(String name) {
-		Dictionary dic = dictionaryRepository.findByName(name);
-		if (dic != null) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	/**
 	 * 修改启用停用状态
 	 * 
 	 */
-	public ResultVo switchDictionary(String id) {
+	public void switchDictionary(String id) {
 		Dictionary dic = dictionaryRepository.findOne(id);
-
-		if (dic != null) {
-			if (dic.getStatus().equals("00")) {
-				dic.setStatus("09");
-			} else {
-				dic.setStatus("00");
-			}
-			dictionaryRepository.save(dic);
-			return new ResultVo(0, "修改成功");
+		if (dic.getStatus().equals("00")) {
+			dic.setStatus("09");
 		} else {
-			return new ResultVo(1, "修改失败");
+			dic.setStatus("00");
 		}
-
+		dictionaryRepository.save(dic);
 	}
 
 	/**
 	 * 修改参数配置并保存
 	 * 
 	 */
-	public ResultVo updateDictionary(String id, ParameterSetInfo parameterSetInfo) {
-		try {
-			Dictionary dictionary = dictionaryRepository.findOne(id);
-			DictionaryType dicType = dictionaryTypeRepository.findOne(parameterSetInfo.getParameterType());
-			// 判断参数值是否已经存在以及不能为空
-			if (dictionary.getName().equals(parameterSetInfo.getParameterValue())) {
-				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "参数值已经存在");
-			} else if (!StringUtils.isNotBlank(parameterSetInfo.getParameterValue())) {
-				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "参数值不能为空");
-			}
-			String oldName = dictionary.getName();
-			dictionary.setName(parameterSetInfo.getParameterValue());
-			dictionary.setType(dicType);
-			dictionary.setOrder(1);//
-			dictionaryRepository.save(dictionary);
-			logger.info("修改参数配置成功：" + dictionary.getType() + "." + dictionary.getCode() + ":" + oldName + "->" + dictionary.getName());
-			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "操作成功！");
-		} catch (Exception e) {
-			logger.info("修改参数配置失败：" + parameterSetInfo.getParameterValue());
-			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, e.getMessage());
-		}
+	public Dictionary updateDictionary(ParameterSetInfo parameterSetInfo) {
+		Dictionary dictionary = dictionaryRepository.findOne(parameterSetInfo.getId());
+		dictionary.setName(parameterSetInfo.getParameterValue());
+		dictionaryRepository.save(dictionary);
+		return dictionary;
 	}
 
 	/**
@@ -221,6 +173,14 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	 */
 	public Dictionary findOne(String id) {
 		return dictionaryRepository.findOne(id);
+	}
+
+	public DictionaryType findOneById(String id) {
+		return dictionaryTypeRepository.findOne(id);
+	}
+
+	public DictionaryType findOneByName(String name) {
+		return dictionaryTypeRepository.findOneByName(name);
 	}
 
 	/**
@@ -234,6 +194,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		} else {
 			return new ResultVo(1, "");
 		}
+	}
+
+	@Override
+	public List<Dictionary> findByNameAndType(String name, String typeId) {
+		return dictionaryRepository.findByNameAndType(name, typeId);
 	}
 
 }

@@ -18,29 +18,15 @@ import com.jlfex.hermes.model.Dictionary;
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, String> {
 
-	/**
-	 * 通过类型代码以及字典代码查询字典
-	 * 
-	 * @param typeCode
-	 * @param code
-	 * @return
-	 */
 	public Dictionary findByTypeCodeAndCode(String typeCode, String code);
 
-	/**
-	 * 通过类型代码查询字典
-	 * 
-	 * @param typeCode
-	 * @return
-	 */
+	@Override
+	public Dictionary findOne(String id);
+
+	public Dictionary findByName(String name);
+
 	@Query("from Dictionary d where d.type.code = ?1 and d.status = ?2 order by d.order")
 	public List<Dictionary> findByTypeCodeAndStatus(String typeCode, String status);
-
-	/**
-	 * 根据字典名称查找记录
-	 * 
-	 */
-	public Dictionary findByName(String name);
 
 	@Query("SELECT MAX(t.order) FROM Dictionary t WHERE t.type.id=?1")
 	public Integer maxOrderByTypeId(String typeId);
@@ -48,10 +34,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 	@Query("SELECT MAX(t.code) FROM Dictionary t WHERE t.code=?1")
 	public String maxCodeByCode(String code);
 
-	/**
-	 * 根据id查找记录
-	 * 
-	 */
-	@Override
-	public Dictionary findOne(String id);
+	@Query("from Dictionary d where d.name = ?1 and d.type.id = ?2")
+	public List<Dictionary> findByNameAndType(String name, String typeId);
+
 }

@@ -23,12 +23,12 @@
 			  <td class="align-center">禁用</td>
 			</#if>
 			<td class="align-center">
-				<a href="javascript:void(0)"  onclick="update('${p.id}')">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<#if p.status == "00">
-				  <a href="javascript:void(0)" onclick="change('${p.id}','禁用')">禁用</a>
-				<#else>
-				  <a href="javascript:void(0)" onclick="change('${p.id}','启用')">启用</a>
-				  </#if>
+                <button type="button" class="btn btn-link hm-col editBtn"  pid="${p.id}">编辑</button>
+                <#if p.status == "00">
+                  <button type="button" class="btn btn-link forbiddenBtn"  fid="${p.id}">禁用</button>
+                <#else>
+                  <button type="button" class="btn btn-link enabledBtn"  eid="${p.id}">启用</button>
+                </#if>				  
 			</td>			
 		</tr>
 		</#list>
@@ -37,175 +37,36 @@
 </table>
 
 <ul class="pagination" data-number="${parameterSet.number}" data-total-pages="${parameterSet.totalPages}"></ul>
-                          <#-----------------------修改参数配置------------------------>
-<div id="updateDialog" title="修改参数配置" style="display:none;">
-			<form id="updateForm"   method="post" action="${app}/parameter/updateDictionary">
-			<input type="hidden" class="dicId" name="id" />
-			<input type="hidden" class="parameterType" name="parameterType" />
-			<table align="center">
-				<tr>
-					<td align="right">参数类：</td>
-					<td>
-						<input type="text"  id="parameterType2" class="textbox type" name="parameterType" disabled/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">参数值：</td>
-					<td><input type="text" id="parameterValue2" class="textbox pv" name="parameterValue" /></td>
-					<td class="alert-danger" style="display:none;background:none;width:200px;">只能输入1~100的数字</td>				                               										
-				</tr>
-				
-			</table>
-		</form>
-
-</div>
-                               <#-----------------------弹框------------------------>
-<div id="operateTip2" title="操作信息" style="display:none;">修改成功</div>
-<div id="errorTip2" title="错误提示" style="display:none;"></div>
-<div id="tip3" title="操作参数" style="display:none;"></div>
-
 <script type="text/javascript">
-
-function change(id,status){  
-     $("#tip3").html("您确定要"+status+"该参数值吗？");
-      var checkParams = {"id" : id};
-			$.post("${app}/parameter/switch", checkParams,
-				function(data) {
-			     if(data.code==0){							     			                                    
-                   $("#tip3").dialog({
-	                    height:200, 
-	                    width:300,
-	                     buttons:{ 
-	                      "确定":function(){					                              
-	                          $(this).dialog("close");
-	                          $.link.html(null,{
-									url:'${app}/parameter/index',
-									data:'',
-									target:'main'
-								});			
-	                         },
-	                       "关闭": function() {  
-	                            $(this).dialog("close");	  
-	                          } } 					                         					                     
-			                })				       
-					      }	else {
-					        $("#tip3").html( data.attachment);			                                    
-                               $("#tip3").dialog({
-		                        height:200, 
-			                    width:300,
-			                     buttons:{ 
-			                      "确定":function(){
-			                          $(this).dialog("close");
-				                          $.link.html(null,{
-												url:'${app}/parameter/index',
-												data:'',
-												target:'main'
-											});			
-					                         },
-			                       "关闭": function() {  
-                                        $(this).dialog("close");
-                                        $.link.html(null,{
-												url:'${app}/parameter/index',
-												data:'',
-												target:'main'
-											});	  
-                                      } } 					                         					                     
-					        })
-                  }
-        })
-}
-
-
-function update(id){
-		  var checkParams = {"id" : id};
-			$.post("${app}/parameter/update", checkParams,
-			function(data) {
-			    if(data.code==0){
-			       $(".type").empty();
-			       $(".type").val(data.attachment.type.name);
-			       $(".dicId").val(data.attachment.id);
-			       $(".parameterType").val(data.attachment.type.id);
-			       $(".pv").val(data.attachment.name);
-			      }	
-                   $("#updateDialog").dialog({
-                        height:250, 
-	                    width:600,
-	                     buttons:{  
-			                "确定":function(){  
-			                    var form = $("#updateForm");  
-			                    $.ajax({  
-			                        url:form.attr('action'),  
-			                        type:form.attr('method'),  
-			                        data:form.serialize(),  
-			                        dataType:"json",  
-			                        success:function(data){  
-		                                 if(data.code==0){					                                    
-	                                       $("#operateTip2").dialog({
-					                        height:150, 
-						                    width:300,
-						                     buttons:{ 
-						                      "关闭":function(){
-					                          $(this).dialog("close");
-                     	                      $(this).parent().prev().find("#updateDialog").dialog("close");
-					                          
-						                          $.link.html(null,{
-														url:'${app}/parameter/index',
-														data:'',
-														target:'main'
-													});			
-						                         }}									                     
-							                   })
-	                                 }else{
-	                                   $("#errorTip2").html( data.attachment);
-	                                      $("#errorTip2").dialog({
-							                        height:150, 
-								                    width:300,
-								                     buttons:{ 
-								                      "关闭":function(){
-								                          $(this).dialog("close");
-		                         	                      $(this).parent().prev().find("#updateDialog").dialog("close");												                          											                          												                          
-								                         }
-								                      }											                     
-								           })					                                                                     
-					                       }}, 
-			                        error:function(){  
-			                            
-			                             $(this).dialog("close");
-				                         $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         
-					                         }  
-					                    })  
-					                },  
-					                "关闭": function() {  
-					                    
-					                    $(this).dialog("close");
-						                $(this).parent().prev().find("#updateDialog").dialog("close");					                                                         					                      
-					                }  
-                     }  
-		  }); 
-									
-	  });
-}
-
-jQuery(function($) {
-	$('#table a').link();
-	$('.pagination').pagination({
+$('.pagination').pagination({
 		handler: function(elem) {
 			$('#page').val(elem.data().page);
 			$('#searchForm').trigger('submit');
 		}
+	});		
+//点击修改按钮
+$(".editBtn").on("click",function(){
+	var pid = $(this).attr("pid");
+	$.link.html(null, {
+		url: '${app}/parameter/editParameter?id='+pid,
+		target: 'main'
 	});
-	
-//如果参数类选择产品招标期限，在此加入校验
-	$('#parameterValue2').keyup(function(){
-	   var parameterType  = $("#parameterType2").val();
-	   var parameterValue = $("#parameterValue2").val(); 
-	   if(parameterType == '产品招标期限' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
-		   $(this).parent().parent().find(".alert-danger:eq(0)").show();    
-	   }else{
-	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();
-	   }
+});	
+//点击禁用按钮
+$(".forbiddenBtn").on("click",function(){
+	var fid = $(this).attr("fid");
+	$.link.html(null, {
+		url: '${app}/parameter/switch?id='+fid,
+		target: 'main'
 	});
-	
-});
- 
-</script>
+});	
+//点击启用按钮
+$(".enabledBtn").on("click",function(){
+	var eid = $(this).attr("eid");
+	$.link.html(null, {
+		url: '${app}/parameter/switch?id='+eid,
+		target: 'main'
+	});
+});	
+
+</script> 

@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
@@ -29,6 +30,8 @@ border-radius: 5px;}
 -moz-box-sizing: content-box;
 box-sizing: content-box;
 }
+  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+
 </style>
 </head>
 
