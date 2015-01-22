@@ -23,10 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
-import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.RequestUtils;
@@ -81,7 +79,11 @@ public class CreditController {
 	public String index(Model model) {
 		return "credit/index";
 	}
-
+    /**
+    * 新增债权人1
+    * @param model
+    * @return
+    */
 	@RequestMapping("/goAdd")
 	public String addCredit(Model model) {
 		String uniqueueCode = "";
@@ -93,7 +95,15 @@ public class CreditController {
 		model.addAttribute("creditorNo", uniqueueCode);
 		return "credit/add";
 	}
-
+    /**
+     * 债权人列表
+     * @param creditorName
+     * @param cellphone
+     * @param page
+     * @param size
+     * @param model
+     * @return
+     */
 	@RequestMapping("/list")
 	public String loandata(String creditorName, String cellphone, String page, String size, Model model) {
 		model.addAttribute("lists", creditorService.findCreditorList(creditorName, cellphone, page, size));
@@ -101,8 +111,7 @@ public class CreditController {
 	}
 
 	/**
-	 * 债权人 新增
-	 * 
+	 * 债权人 新增2
 	 * @param creditor
 	 * @param model
 	 * @return
@@ -186,12 +195,11 @@ public class CreditController {
 
 	/**
 	 * 债权导入 列表
-	 * 
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/assign")
-	public String assign(String page, String size, Model model) {
+	public String assign(Model model) {
 		return "credit/assign";
 	}
 
@@ -203,13 +211,14 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/loandata")
-	public String loandata(String page, String size, Model model) {
+	public String loandata(CrediteInfo info,String page, Model model) {
 		try {
-			size = "10";
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(null, page, size, null);
+			String size = "10";
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(info, page, size, null);
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
+			model.addAttribute("infoList", null);
 		}
 		return "credit/loandata";
 	}
@@ -546,7 +555,19 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/sellIndex")
-	public String sellIndex(CrediteInfo creditInfo, String page, String size, Model model) {
+	public String sellIndex(Model model) {
+		return "credit/sellList";
+	}
+	/**
+	 * 发售列表数据
+	 * @param creditInfo
+	 * @param page
+	 * @param size
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/sellListTable")
+	public String sellListTable(CrediteInfo creditInfo, String page, String size, Model model){
 		try {
 			size = "10";
 			List<String> statuslist = new ArrayList<String>();
@@ -554,11 +575,12 @@ public class CreditController {
 			statuslist.add(CrediteInfo.Status.BIDING);
 			statuslist.add(CrediteInfo.Status.FAIL_ASSIGNING);
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
-			model.addAttribute("sellList", obj);
+			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
+			model.addAttribute("infoList", null);
 		}
-		return "credit/sellList";
+		return "credit/selldata";
 	}
 
 	/**
@@ -632,7 +654,6 @@ public class CreditController {
 		FileInputStream fileInput = null;
 		try {
 			String fileName = "外部债权导入模板.xlsx";
-
 			RequestUtils.setDownload(request, response, "application/vnd.ms-excel", fileName);
 			// 读取文件
 			String url = request.getSession().getServletContext().getRealPath("resources/model/order-import-template.xlsx");
@@ -646,7 +667,6 @@ public class CreditController {
 			ouputStream = response.getOutputStream();
 			ouputStream.write(bytesarray.toByteArray());
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ServiceException("债权导入模板文件下载异常");
 		} finally {
 			try {
@@ -658,12 +678,11 @@ public class CreditController {
 					ouputStream.flush();
 					ouputStream.close();
 				}
-
 				if (fileInput != null) {
 					fileInput.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.error("债权导入模板文件下载IO异常：",e);
 			}
 		}
 	}
@@ -724,10 +743,8 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/assignedTable")
-	public String assignedTable(String page, String size, Model model) {
-		size = "10";
-		CrediteInfo creditInfo = new CrediteInfo();
-		creditInfo.setStatus(CrediteInfo.Status.REPAYING);
+	public String assignedTable(CrediteInfo creditInfo, String page, Model model) {
+		String size = "10";
 		try {
 			List<String> statuslist = new ArrayList<String>();
 			statuslist.add(CrediteInfo.Status.REPAYING);

@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
@@ -112,20 +113,36 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @return
 	 */
 	@Override
-	public Page<CrediteInfo>  queryByCondition(CrediteInfo creditInfo,String page, String size, final List<String> statusList) throws Exception{
-		 Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "15")));
-		 final  String crediteCode = creditInfo!=null?creditInfo.getCrediteCode():"";
+	public Page<CrediteInfo>  queryByCondition(final CrediteInfo creditInfo,String page, String size, final List<String> statusList) throws Exception{
+		 Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
 		 return  creditInfoRepository.findAll(new Specification<CrediteInfo>() {
 			@Override
 			public Predicate toPredicate(Root<CrediteInfo> root, CriteriaQuery<?> query,CriteriaBuilder cb) {
-				List<Predicate> p = new ArrayList<Predicate>();
-				if (StringUtils.isNotEmpty(crediteCode)) {
-					p.add(cb.equal(root.get("crediteCode"), crediteCode));
+				List<Predicate> list = new ArrayList<Predicate>();
+				if (StringUtils.isNotEmpty(creditInfo.getCrediteCode())) {
+					list.add(cb.equal(root.get("crediteCode"), creditInfo.getCrediteCode().trim()));
+				}
+				if (StringUtils.isNotEmpty(creditInfo.getCrediteType())) {
+					list.add(cb.like(root.<String>get("crediteType"), "%"+creditInfo.getCrediteType().trim()+"%"));
+				}
+				if (StringUtils.isNotEmpty(creditInfo.getCreditorName())) {
+					list.add(cb.like(root.<Creditor>get("creditor").<String>get("creditorName"), "%"+creditInfo.getCreditorName().trim()+"%"));
 				}
 				if(statusList!=null && statusList.size() !=0){
-					p.add(root.get("status").in(statusList));
+					list.add(root.get("status").in(statusList));
 				}
-				return cb.and(p.toArray(new Predicate[p.size()]));
+				if(StringUtils.isNotEmpty(creditInfo.getBeginDate()) && StringUtils.isNotEmpty(creditInfo.getEndDate())){
+					Date beginDate = null, endDate = null;
+					try{
+							beginDate = Calendars.parse("yyyy-MM-dd", creditInfo.getBeginDate());
+							endDate = Calendars.parse("yyyy-MM-dd", creditInfo.getEndDate());
+					}catch(Exception e){
+						Logger.error("债权 列表查询：格式化导入开时间["+beginDate+"]，结束时间["+endDate+"],异常，忽略时间查询条件");
+					}
+					list.add(cb.greaterThanOrEqualTo(root.<Date> get("createTime"), beginDate));
+					list.add(cb.lessThanOrEqualTo(root.<Date> get("createTime"), endDate));
+				}
+				return cb.and(list.toArray(new Predicate[list.size()]));
 			}
 		},pageable);
 	}
