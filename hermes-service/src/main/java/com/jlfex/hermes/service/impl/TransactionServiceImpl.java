@@ -342,14 +342,14 @@ public class TransactionServiceImpl implements TransactionService {
 	public Page<Transaction> findByUserIdAndDateType(String userId, Integer page, Integer size, List<String> types) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
 		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "datetime");
-		return transactionRepository.findBySourceUserAccountOrTargetUserAccountAndTypeIn(userAccount, userAccount, types, pageable);
+		return transactionRepository.findBySourceUserAccountAndTypeIn(userAccount, types, pageable);
 
 	}
 
 	@Override
-	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types) {
+	public List<Transaction> findBySourceUserAccountAndTypeIn(String userId, List<String> types) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.RISK);
-		return transactionRepository.findByUserAccountAndTypeIn(userAccount, userAccount, types);
+		return transactionRepository.findBySourceUserAccountAndTypeIn(userAccount, types);
 	}
 
 	/*
@@ -371,6 +371,7 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setDatetime(new Date());
 		transactionRepository.save(transaction);
 	}
+
 	@Override
 	public List<Transaction> cropAccountToCreditorOutline(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);

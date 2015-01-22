@@ -201,7 +201,7 @@ public interface TransactionService {
 	 */
 	public Page<Transaction> findByUserIdAndDateType(String userId, Integer page, Integer size, List<String> types);
 
-	public List<Transaction> findByUserAccountAndTypeIn(String userId, List<String> types);
+	public List<Transaction> findBySourceUserAccountAndTypeIn(String userId, List<String> types);
 
 	/**
 	 * 现金账户充值流水
@@ -213,9 +213,10 @@ public interface TransactionService {
 	 * @param remark
 	 */
 	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
-    
+
 	/**
 	 * 债权人 账户线下充值
+	 * 
 	 * @param type
 	 * @param user
 	 * @param cropAccountType
@@ -224,6 +225,6 @@ public interface TransactionService {
 	 * @param remark
 	 * @return
 	 */
-	List<Transaction> cropAccountToCreditorOutline(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
+	List<Transaction> cropAccountToCreditorOutline(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark);
 
 }
