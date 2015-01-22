@@ -114,9 +114,41 @@ jQuery(function($) {
 				$("#maturegain").html('');
 			}
 	  });
-	
+	  var remainDate_ = '${creditDeadTime!''}';
+	  var nowStr = (new Date()).format("yyyy-MM-dd"); 
+	  $("#credit_remainDate").html(dateDiff(remainDate_, nowStr)) ;
 });
 
+   //计算天数差  
+   function  dateDiff(sDate1,  sDate2){
+       var  aDate,  oDate1,  oDate2,  iDays  
+       aDate  =  sDate1.split("-")  
+       oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0]);
+       aDate  =  sDate2.split("-");
+       oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0]);
+       iDays  =  parseInt(Math.abs(oDate1  -  oDate2)/1000/60/60/24);
+       return  iDays  
+   }  
+   
+   Date.prototype.format = function(format){ 
+		var o = { 
+		"M+" : this.getMonth()+1, //month 
+		"d+" : this.getDate(), //day 
+		"h+" : this.getHours(), //hour 
+		"m+" : this.getMinutes(), //minute 
+		"s+" : this.getSeconds(), //second 
+		"q+" : Math.floor((this.getMonth()+3)/3), //quarter 
+		"S" : this.getMilliseconds() //millisecond 
+   } 
+	if(/(y+)/.test(format)) { 
+	   format = format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+	} 
+	for(var k in o) { 
+	if(new RegExp("("+ k +")").test(format)) { 
+	format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)); 
+	} } 
+    return format; 
+    } 
 </script>
 </head>
 
@@ -146,7 +178,7 @@ jQuery(function($) {
 						 	<img src="${app.theme}/public/other/images/icon1/info_iconemail.png"/>
 						 </a>
 					 	<#else> 
-						    <a href="javascript:value(0);"><img src="${app.theme}/public/other/images/icon1/info_iconemail01.png"/></a>
+						 <a href="javascript:value(0);"><img src="${app.theme}/public/other/images/icon1/info_iconemail01.png"/></a>
 					 </#if>
 					 
 					 <#if loanUserInfo?exists && loanUserInfo.authCellphone?exists &&loanUserInfo.authCellphone=='10'>
@@ -207,12 +239,12 @@ jQuery(function($) {
                             <td class="td_height th_06">
                              <#if loan.loanKind=='00'><@messages key="model.loan.amount" /> <#else> 剩余金额 </#if>：
                             <span>${loan.amount}元</span></td>
-                            <td class="th_06"><@messages key="model.loan.rate" />：<span>${loan.rate *100}%</span></td>
+                            <td class="th_06"><@messages key="model.loan.rate" />：<span>${(loan.rate!0)?string.percent}</span></td>
                             <td class="th_06">
                              <#if loan.loanKind=='00'>
-                             <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
+                              <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
                              <#else>
-                                                     剩余期限：<span>${loan.period}天</span>
+                                                     剩余期限：<span id="credit_remainDate"></span>天
                              </#if>
                              </td>
                         </tr>
