@@ -8,7 +8,7 @@
                         <th class="align-center">产品名称</th>
                         <th class="align-center">发售价格</th>
                         <th class="align-center">年利率</th>
-                        <th class="align-center">期限</th>
+                        <th class="align-center">期限(月)</th>
                         <th class="align-center">转让日期</th>
                         <th class="align-center">到期日期</th>
                         <th class="align-center">还款方式</th>
@@ -31,7 +31,7 @@
                <td class="align-center">${l.purpose!''}</td> 
                <td class="align-center">${l.amount!''}</td> 
                <td class="align-center">${(l.rate!0)?string.percent}</td> 
-               <td class="align-center">${l.period!''}天</td>
+               <td class="align-center">${l.period!''}</td>
                <td class="align-center">${l.updateTime!''}</td>
                <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td> 
                <td class="align-center">${l.payType}</td> 

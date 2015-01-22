@@ -59,10 +59,11 @@
                         <div class="spanblock"><span class="wd_100">银行名称：</span>${(creditInfo.creditor.bankName)!''}</div>
                         <div class="spanblock"><span class="wd_100">开户行：</span>${(creditInfo.creditor.bankBrantch)!''}</div>
                     </div>
+                    <!--
                     <div class="col-xs-4">
                         <div class="spanblock"><span class="wd_100">省份：</span>${(creditInfo.creditor.bankProvince)!''}</div>
                         <div class="spanblock"><span class="wd_100">城市：</span>${(creditInfo.creditor.bankCity)!''}</div>
-                    </div>
+                    </div>-->
                 </div>
 
               </div>
