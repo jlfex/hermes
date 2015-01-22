@@ -3,7 +3,9 @@ package com.jlfex.hermes.main;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,7 @@ import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
@@ -33,6 +36,7 @@ import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.InvestService;
@@ -58,30 +62,26 @@ public class InvestController {
 	/** 理财业务接口 */
 	@Autowired
 	private LoanService loanService;
-
 	@Autowired
 	private ProductService productService;
-
 	@Autowired
 	private InvestService investService;
-
 	@Autowired
 	private InvestProfitService investProfitService;
-
 	@Autowired
 	private UserInfoService userInfoService;
-
 	/** 系统属性业务接口 */
 	@Autowired
 	private PropertiesService propertiesService;
-
 	@Autowired
 	private RepayService repayService;
 	@Autowired
 	private DictionaryService dictionaryService;
-
 	@Autowired
 	private LabelService labelService;
+	@Autowired
+	private CreditInfoService creditInfoService;
+	
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -337,60 +337,84 @@ public class InvestController {
 		Logger.info("loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
 		model.addAttribute("loan", loan);
-		String loanPurpose = "";
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			loanPurpose = loan.getPurpose();
-		} else {
-			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
-		}
-		model.addAttribute("purpose", loanPurpose);
+		Map<String, Object> calculateMap = calculateRemainTime(loan);
+		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
+		model.addAttribute("remaintime", calculateMap.get("remaintime"));
+		model.addAttribute("creditDeadTime", calculateMap.get("creditDeadTime"));
+		
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
-		if (!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
-			loan.getCreditInfoId();
-		}
-		// 从借款日志表里取开始投标的起始时间
-
-		if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loanid) == null) {
-			LoanLog loanLogStartInvest = loanService.loadLogByLoanIdAndType(loanid, LoanLog.Type.START_INVEST);
-			if (loanLogStartInvest != null && loanLogStartInvest.getDatetime() != null) {
-				String duration = String.valueOf(loan.getDeadline()) + "d";
-				Date datetimeloanLogStartInvest = loanLogStartInvest.getDatetime();
-				Date deadline = Calendars.add(datetimeloanLogStartInvest, duration);
-				Caches.set(CACHE_LOAN_DEADLINE_PREFIX + loanid, deadline, "7d");
-			}
-		}
-		if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loanid) != null) {
-			Date deadline = Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loanid, Date.class);
-			Date start = new Date();
-			long endTime = deadline.getTime();
-			long startTime = start.getTime();
-			if (endTime - startTime > 0) {
-				model.addAttribute("remaintime", String.valueOf(endTime - startTime));
-			} else {
-				model.addAttribute("remaintime", 0);
-			}
-			// 投标最后期限
-		} else {
-			model.addAttribute("remaintime", 0);
-		}
 		LoanUserInfo loanUserInfo = loanService.loadLoanUserInfoByUserId(App.user().getId());
 		model.addAttribute("loanUserInfo", loanUserInfo);
-
 		List<Invest> investList = investService.findByLoan(loan);
 		model.addAttribute("invests", investList);
-
 		List<LoanAuth> loanAuthlist = loanService.findLoanAuthByLoan(loan);
-
 		model.addAttribute("loanauths", loanAuthlist);
-
 		model.addAttribute("nav", "invest");
 		// 读取投标金额倍数设置
 		String investBidMultiple = App.config(INVEST_BID_MULTIPLE);
 		model.addAttribute("investBidMultiple", investBidMultiple);
 		// 返回视图
 		return "invest/info";
+	}
+	/**
+	 * 计算招标截止日 剩余时间
+	 * @param loan
+	 * @return
+	 */
+	public Map<String,Object> calculateRemainTime(Loan loan) {
+		String loanPurpose = "";
+		String remaintime = "0" ;
+		String creditDeadTime = "";
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		    loanPurpose = loan.getPurpose();
+			CrediteInfo crediteInfo = null;
+			try {
+				crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
+			} catch (Exception e) {
+				Logger.info("根据loanid="+loan.getId()+",查询获取的债权招标截止时间异常!",e);
+			}
+			if(crediteInfo ==null || crediteInfo.getDeadTime() == null ){
+				Logger.info("根据loanid="+loan.getId()+",查询获取的债权招标截止时间为空!");
+			}
+		    creditDeadTime = crediteInfo.getDeadTimeFormate() ; //获取债权表的招标截止时间
+			long endTime = crediteInfo.getDeadTime().getTime();
+			long startTime = new Date().getTime();
+			if (endTime - startTime > 0){
+				remaintime =  String.valueOf(endTime - startTime);
+			} 
+		}else{
+			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
+			// 从借款日志表里取开始投标的起始时间
+			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) == null) {
+				LoanLog loanLogStartInvest = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.START_INVEST);
+				if (loanLogStartInvest != null && loanLogStartInvest.getDatetime() != null) {
+					String duration = String.valueOf(loan.getDeadline()) + "d";
+					Date datetimeloanLogStartInvest = loanLogStartInvest.getDatetime();
+					Date deadline = Calendars.add(datetimeloanLogStartInvest, duration);
+					Caches.set(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), deadline, "7d");
+				}
+			}
+			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) != null) {
+				Date deadline = Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), Date.class);
+				Date start = new Date();
+				long endTime = deadline.getTime();
+				long startTime = start.getTime();
+				if (endTime - startTime > 0) {
+					remaintime =  String.valueOf(endTime - startTime);
+				} else {
+					remaintime  = "0";
+				}
+			}else{
+				 remaintime = "0";
+			}
+		}
+		paramMap.put("loanPurpose", loanPurpose);
+		paramMap.put("remaintime", remaintime);
+		paramMap.put("creditDeadTime", creditDeadTime);
+		return   paramMap;
 	}
 
 	/**
