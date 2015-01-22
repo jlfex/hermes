@@ -1,20 +1,19 @@
-
 <div class="panel panel-primary">
         <div class="panel-heading">外部债权导入</div>  </div>
     	<div class="panel-body">
             <form id="searchForm" method="post" action="#">
                 <div class="row">
                     <div class="col-xs-2 hm-col form-group">
-                        <label for="account">债权来源</label>
-                        <input id="cellphone" name="cellphone" value="" class="form-control" type="text">
+                        <label for="account">债权人名称</label>
+                        <input id="creditorName" name="creditorName" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
                         <label for="cellphone">债权编号</label>
-                        <input id="cellphone" name="cellphone" value="" class="form-control" type="text">
+                        <input id="crediteCode" name="crediteCode" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
                          <label for="cellphone">借款类型</label>
-                        <input id="creditKind" name="creditKind" value="" class="form-control" type="text">
+                        <input id="crediteType" name="crediteType" value="" class="form-control" type="text">
                     </div>
                     
                     <div class="col-xs-1 hm-col form-group">
@@ -33,14 +32,6 @@
                             <label for="endDate">&nbsp;</label>
                                <input readonly="" id="endDate" name="endDate"  class="form-control" type="text">
                         </div>
-                        <div class="col-xs-2 hm-col form-group">
-                            <label for="realname">借款用途</label>
-                            <select id="status" name="status" class="form-control">
-                                <option value="">买方</option>
-                                <option value="00">买车</option>
-                                <option value="10">日常消费</option>
-                            </select>
-                        </div>
                         <div class="col-xs-1 hm-col form-group">
                             <label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
                            <button id="downloadModelFile" type="button" class="btn  btn-default btn-block">
@@ -55,15 +46,16 @@
                 </div>
             </form>
         </div>
-        <div id="importResult"></div>
-  
+<div id="importResult"></div>
 <div id="data"></div>   
 <input type="hidden" value="" id="creditInfoIds">
 <script type="text/javascript" charset="utf-8">
 <!--
 var labelId;
 jQuery(function($) {
-    $('#table a').link();
+    $("#beginDate").datepicker();  
+	$("#endDate").datepicker();
+    //$('#table a').link();
 	// 点击上传处理
 	$('#uploadBtn').on('click', function(e) { $('#file').click();});
 	$('#file').on('change', function(e) {
@@ -75,7 +67,7 @@ jQuery(function($) {
 	}
 	upload($(this).get(0).files);
 	});
-	//模板下载
+	
 	$("#downloadModelFile").click(function(){
 		var form=$("<form>");//
 		form.attr("style","display:none");
@@ -88,15 +80,14 @@ jQuery(function($) {
 		input1.attr("value",(new Date()).getMilliseconds());
 		$("body").append(form);
 		form.append(input1);
-		form.submit();//表单提交 
+		form.submit();
 	});
 	
 	$.page.withdraw({
 	search: '${app}/credit/loandata'
 	});
 	
-	$("#beginDate").datepicker();  
-	$("#endDate").datepicker();
+	
 });
 // 异步上传
 function upload(files) {
