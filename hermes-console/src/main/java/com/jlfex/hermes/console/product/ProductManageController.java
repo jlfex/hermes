@@ -93,6 +93,7 @@ public class ProductManageController {
 			attr.addFlashAttribute("msg", msg);
 			return "redirect:/product/index";
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (StringUtils.isNotEmpty(id)) {
 				attr.addFlashAttribute("msg", "修改产品失败");
 				return "redirect:/product/detail/" + id;

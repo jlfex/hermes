@@ -56,7 +56,7 @@ public class AutoBidFailureJob extends Job {
 					if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){ 
 						//债权标
 						if(Strings.empty(loan.getCreditInfoId())){
-							Logger.info(JobDESC+",职权标id="+loan.getId()+",的债权信息id为空,跳过处理");
+							Logger.info(JobDESC+",债权标id="+loan.getId()+",的债权信息id为空,跳过处理");
 							continue;
 						}
 						CrediteInfo  creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
@@ -64,7 +64,7 @@ public class AutoBidFailureJob extends Job {
 							loan.setBusinessDate(creditInfo.getBidEndTime()); //设置投标的截至时间
 							loanStartInvest.add(loan);
 						}else{
-							Logger.info(JobDESC+"异常：id="+loan.getId()+",招标截止时间为空。");
+							Logger.info(JobDESC+",普通标id="+loan.getId()+",招标截止时间为空，跳过处理。");
 						}
 					}else{
 						//普通标

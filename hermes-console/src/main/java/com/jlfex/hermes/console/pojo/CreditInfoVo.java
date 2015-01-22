@@ -33,7 +33,7 @@ public class CreditInfoVo implements Serializable    {
 	private String  payType;         //还款方式
 	private Date    deadTime;        //债权到期日
 	private Date    businessTime;    //放款日
-	private String  status;      //导入结果
+	private String  status;          //导入结果
 	private String  remark;          //备注
 	private String  fileName;        //文件名称
 	

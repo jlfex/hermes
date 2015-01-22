@@ -91,7 +91,7 @@ public class WithdrawController {
 		BigDecimal riskOut = new BigDecimal(0);
 		try {
 			UserAccount account = userManageServiceImpl.findByUserIdAndType(userId, UserAccount.Type.RISK);
-			List<Transaction> trans = transactionServiceImpl.findByUserAccountAndTypeIn(userId, types);
+			List<Transaction> trans = transactionServiceImpl.findBySourceUserAccountAndTypeIn(userId, types);
 			if (trans != null && trans.size() > 0) {
 				for (Transaction tran : trans) {
 					if (Transaction.Type.IN.equals(tran.getType())) {

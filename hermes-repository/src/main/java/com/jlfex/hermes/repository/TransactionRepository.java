@@ -33,7 +33,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 	 */
 	@Query("from Transaction tx where tx.sourceUserAccount = ?1 and type in (?2) and datetime between ?3 and ?4 order by datetime desc")
 	public List<Transaction> findBySourceUserAccountAndTypeInAndDatetimeBetween(UserAccount userAccount, List<String> types, Date beginDate, Date endDate);
-	
+
 	/**
 	 * 通过来源账户和类型列表以及日期范围分页查询交易
 	 * 
@@ -45,12 +45,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 	 * @return
 	 */
 	public Page<Transaction> findBySourceUserAccountAndTypeInAndDatetimeBetween(UserAccount userAccount, List<String> types, Date beginDate, Date endDate, Pageable pageable);
-	
+
 	/**
-	 * 通过账户查询风险金的所有转入转出 
+	 * 通过账户查询风险金的所有转入转出
 	 */
 	@Query("from Transaction tx where tx.sourceUserAccount = ?1 or targetUserAccount = ?2 and type in (?3) ")
-	public List<Transaction> findByUserAccountAndTypeIn(UserAccount sourceuserAccount,UserAccount targetuserAccount, List<String> types);
-	
-	public Page<Transaction> findBySourceUserAccountOrTargetUserAccountAndTypeIn(UserAccount sourceuserAccount,UserAccount targetuserAccount,List<String> types, Pageable pageable);
+	public List<Transaction> findByUserAccountAndTypeIn(UserAccount sourceuserAccount, UserAccount targetuserAccount, List<String> types);
+
+	public Page<Transaction> findBySourceUserAccountAndTypeIn(UserAccount sourceuserAccount, List<String> types, Pageable pageable);
+
+	@Query("from Transaction tx where tx.sourceUserAccount = ?1 and type in (?2) ")
+	public List<Transaction> findBySourceUserAccountAndTypeIn(UserAccount sourceuserAccount, List<String> types);
 }

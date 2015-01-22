@@ -122,7 +122,7 @@
             'adapter/autosave.js'
 
         ],
-        baseURL = '/resources/javascripts/_src/';
+        baseURL = (window.ctxforcontent?window.ctxforcontent:'')+'/_src/';
     for (var i=0,pi;pi = paths[i++];) {
         document.write('<script type="text/javascript" src="'+ baseURL + pi +'"></script>');
     }
