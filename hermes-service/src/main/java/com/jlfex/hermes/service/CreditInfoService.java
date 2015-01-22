@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
@@ -109,6 +110,16 @@ public interface CreditInfoService {
     * @return
     */
 	public User queryUserByID(String userId);
-	
-	
+	/**
+	 * 根据债权  获取操作日志
+	 * @param creditId
+	 * @return
+	 */
+	public List<LoanLog> queryCreditLogList(CrediteInfo creditInfo) throws Exception;
+    /**
+     * 债权标：自动流标后， 更新 债权 状态
+     * @param loan
+     * @return
+     */
+	public boolean afterBidAwayUpdateCredt(Loan loan) ;
 }
