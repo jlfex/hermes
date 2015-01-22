@@ -80,11 +80,12 @@
                                 <th class="align-center">状态</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
+                         
                             <tr> 	
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
-                                <td class="align-center">${(creditInfo.rate)?string.percent}</td> 
+                                <td class="align-center">${(creditInfo.rate!'')?string.percent}</td> 
                                 <td class="align-center">${(creditInfo.period)!''}</td>
                                 <td class="align-center">${(creditInfo.amount)!''}</td>
                                 <td class="align-center">${deadLine!''}</td> 
@@ -95,8 +96,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
                 <div id="" style="display:block; margin-top:20px;">
                     <h3>历史操作</h3>
                     <table class="table table-bordered table-hover">
@@ -110,23 +109,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
+                          <#if operateList??>
+                             <#list operateList as l>
                                 <tr> 
-                                <td class="align-center">1</td> 
-                                <td class="align-center">sfjdfgd</td> 
-                                <td class="align-center">2015-02-05 13:12：15</td> 
-                                <td class="align-center">流标</td>
-                                <td class="align-center">手动流标</td>     
+                                <td class="align-center">${l_index +1}</td>
+                                <td class="align-center">${l.userName!''}</td> 
+                                <td class="align-center">${l.datetime!''}</td> 
+                                <td class="align-center">${l.typeName}</td>
+                                <td class="align-center">${l.remark!''}</td>
                             </tr>
-
-
-                       
+                           </#list>
+                           <#else>
+                                <tr>
+									<td colspan="5" class="align-center"><@messages key="common.table.empty" /></td>
+								</tr>
+                           </#if>
                         </tbody>
                     </table>
                 </div>
                 <h3>相关协议</h3>
                 <span class="protocol">
-			     <a href="#" class="m_a1">《债权转让协议》</a>
+			     <a href="#" id="protocol" class="m_a1">《债权转让协议》</a>
 		      </span>
               </div>
               <div role="tabpanel" class="tab-pane" id="planDetail">

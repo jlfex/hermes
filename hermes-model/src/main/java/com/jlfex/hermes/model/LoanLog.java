@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -49,6 +50,9 @@ public class LoanLog extends Model {
 	/** 备注 */
 	@Column(name = "remark")
 	private String remark;
+	
+	@Transient
+	private String userName;
 
 	/**
 	 * 读取用户
@@ -168,6 +172,14 @@ public class LoanLog extends Model {
 	 */
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

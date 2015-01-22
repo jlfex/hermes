@@ -3,16 +3,11 @@ package com.jlfex.hermes.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
-import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
@@ -34,6 +28,7 @@ import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.repository.CreditInfoRepository;
 import com.jlfex.hermes.repository.CreditorRepayPlanRepository;
+import com.jlfex.hermes.repository.LoanLogRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.repository.UserRepository;
@@ -72,6 +67,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	private LoanRepository loanRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private LoanLogRepository loanLogRepository;
 	
 	private static final String INIT_CREDIT_LEND_FEE = "0.02000000";  //债权标：借款手续费率
 	private static final String INIT_CREDIT_RISK_FEE = "0.03000000";  //债权标：风险金费率   
@@ -122,8 +119,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 				if (StringUtils.isNotEmpty(creditInfo.getCrediteCode())) {
 					list.add(cb.equal(root.get("crediteCode"), creditInfo.getCrediteCode().trim()));
 				}
-				if (StringUtils.isNotEmpty(creditInfo.getCrediteType())) {
-					list.add(cb.like(root.<String>get("crediteType"), "%"+creditInfo.getCrediteType().trim()+"%"));
+				if (StringUtils.isNotEmpty(creditInfo.getPurpose())) {
+					list.add(cb.like(root.<String>get("purpose"), "%"+creditInfo.getPurpose().trim()+"%"));
 				}
 				if (StringUtils.isNotEmpty(creditInfo.getCreditorName())) {
 					list.add(cb.like(root.<Creditor>get("creditor").<String>get("creditorName"), "%"+creditInfo.getCreditorName().trim()+"%"));
@@ -293,5 +290,54 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	@Override
 	public  User queryUserByID(String userId){
 		return  userRepository.findOne(userId);
+	}
+    /**
+     * 根据id  获取操作日志
+     */
+	@Override
+	public List<LoanLog> queryCreditLogList(CrediteInfo creditInfo) throws Exception {
+		String creditInfoId = creditInfo.getId();
+		List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		if (loanList == null || loanList.size() == 0) {
+			throw new Exception("根据：债权id=" + creditInfoId + ", 查询到状态为：待还款 , 的债权标 为空");
+		} else if (loanList.size() > 1) {
+			throw new Exception("根据：债权id=" + creditInfoId + ", 查状到态为：待还款, 的债权标个数不唯一");
+		}
+		List<LoanLog> list = loanLogRepository.findByLoan(loanList.get(0));
+		for(LoanLog log : list){
+			if(log!=null ){
+				log.setUserName(userRepository.findOne(log.getUser()).getAccount());
+			}
+		}
+		return list;
+	}
+	/**
+	 * 债权标：自动流标后， 更新 债权 状态
+	 * @param loan
+	 * @return
+	 */
+	@Override
+	public boolean afterBidAwayUpdateCredt(Loan loan)  {
+		String var = "债权标自动流标：进行债权信息更新操作,";
+		try{
+			if(loan != null && StringUtils.isNotEmpty(loan.getCreditInfoId())){
+				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId().trim());
+				if(creditInfo.getDeadTime() == null){
+					Logger.info(var+",获取债权到期时间为空， 无法状态更新");
+				}
+				if(creditInfo.getDeadTime().after(new Date())){
+					creditInfo.setStatus(CrediteInfo.Status.WAIT_ASSIGN);    //原始债权未到期，可以继续出售
+				}else{
+					creditInfo.setStatus(CrediteInfo.Status.FAIL_ASSIGNING); //原始债权已到期，无法继续出售
+				}
+				creditInfoRepository.save(creditInfo);
+				Logger.info(var+",成功更新状态为："+creditInfo.getStatusName());
+				return true;
+			}
+			return false;
+		}catch(Exception e){
+			Logger.error(var, e);
+			return false;
+		}
 	}
 }
