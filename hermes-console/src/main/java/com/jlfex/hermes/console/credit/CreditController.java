@@ -10,8 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -61,9 +64,7 @@ public class CreditController {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
-	private UserService  userService;
-	
-	
+	private UserService userService;
 
 	public static final String FLAG_KIND_NINE = "99";
 	public static final String FLAG_KIND_SUC = "00";
@@ -78,11 +79,13 @@ public class CreditController {
 	public String index(Model model) {
 		return "credit/index";
 	}
-    /**
-    * 新增债权人1
-    * @param model
-    * @return
-    */
+
+	/**
+	 * 新增债权人1
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/goAdd")
 	public String addCredit(Model model) {
 		String uniqueueCode = "";
@@ -94,15 +97,17 @@ public class CreditController {
 		model.addAttribute("creditorNo", uniqueueCode);
 		return "credit/add";
 	}
-    /**
-     * 债权人列表
-     * @param creditorName
-     * @param cellphone
-     * @param page
-     * @param size
-     * @param model
-     * @return
-     */
+
+	/**
+	 * 债权人列表
+	 * 
+	 * @param creditorName
+	 * @param cellphone
+	 * @param page
+	 * @param size
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/list")
 	public String loandata(String creditorName, String cellphone, String page, String size, Model model) {
 		model.addAttribute("lists", creditorService.findCreditorList(creditorName, cellphone, page, size));
@@ -111,6 +116,7 @@ public class CreditController {
 
 	/**
 	 * 债权人 新增2
+	 * 
 	 * @param creditor
 	 * @param model
 	 * @return
@@ -194,6 +200,7 @@ public class CreditController {
 
 	/**
 	 * 债权导入 列表
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -204,13 +211,14 @@ public class CreditController {
 
 	/**
 	 * 债权导入 加载列表
+	 * 
 	 * @param page
 	 * @param size
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/loandata")
-	public String loandata(CrediteInfo info,String page, Model model) {
+	public String loandata(CrediteInfo info, String page, Model model) {
 		try {
 			String size = "10";
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(info, page, size, null);
@@ -248,7 +256,7 @@ public class CreditController {
 			sheet1AllNum = creditList != null ? creditList.size() : 0;
 			sheet2AllNum = repayList != null ? repayList.size() : 0;
 			// 1.2: 业务规则校验
-			Map<String, Object> creditResult = checkCreditValid(creditList);
+			Map<String, Object> creditResult = checkCreditValid(creditList, repayList);
 			if (FLAG_KIND_NINE.equals(creditResult.get("code"))) {
 				throw new Exception("" + creditResult.get("msg"));
 			} else {
@@ -287,10 +295,13 @@ public class CreditController {
 			// 3:持久化:债权还款明细
 			CrediteInfo load_crediteInfo = savedCreditInfolist.get(0);
 			Creditor load_creditor = savedCreditInfolist.get(0).getCreditor();
+			List<CreditInfoVo> invalidListForReplay = (List<CreditInfoVo>) creditResult.get("invalidList");
 			for (RepayPlanVo vo : repayList) {
-				CreditRepayPlan repayPlan = new CreditRepayPlan();
-				entitLoanPayList.add(initCreditRepayPlanEntity(vo, repayPlan, load_creditor, load_crediteInfo));
-				sheet2SucNum++;
+				if (!isReplayVoValid(invalidListForReplay, vo)) {
+					CreditRepayPlan repayPlan = new CreditRepayPlan();
+					entitLoanPayList.add(initCreditRepayPlanEntity(vo, repayPlan, load_creditor, load_crediteInfo));
+					sheet2SucNum++;
+				}
 			}
 
 			List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.saveBatch(entitLoanPayList);
@@ -320,6 +331,25 @@ public class CreditController {
 		return resultMap;
 	}
 
+	private boolean isReplayVoValid(List<CreditInfoVo> replayList, RepayPlanVo vo) {
+		for (CreditInfoVo creditINfoTmp : replayList) {
+			if (creditINfoTmp.getCreditCode().equals(vo.getCreditCode()) && creditINfoTmp.getCreditorNo().equals(vo.getCreditorNo())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Integer countRepayNum(List<RepayPlanVo> repayList, String crediteCode, String creditorNo) {
+		int count = 0;
+		for (RepayPlanVo replay : repayList) {
+			if (crediteCode.equals(replay.getCreditCode()) && creditorNo.equals(replay.getCreditorNo())) {
+				count = count + 1;
+			}
+		}
+		return count;
+	}
+
 	/**
 	 * 规则校验
 	 * 
@@ -327,7 +357,7 @@ public class CreditController {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> checkCreditValid(List<CreditInfoVo> creditList) throws Exception {
+	public Map<String, Object> checkCreditValid(List<CreditInfoVo> creditList, List<RepayPlanVo> repayList) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Map<String, String> uniqCreditCodeMap = new HashMap<String, String>(); // 同一个债权人
 																				// 债权编号不能重复
@@ -349,8 +379,17 @@ public class CreditController {
 			if (vo != null && CreditInfoVo.Status.VALID.equals(vo.getStatus())) {
 				Map<String, Object> result = businessRuleCheck(vo, uniqCreditCodeMap, creditorNo);
 				if (FLAG_KIND_SUC.equals(result.get("flag"))) {
-					vo.setRemark("");
-					validList.add(vo);
+					String period = vo.getPeriod();
+					String countResult = countRepayNum(repayList, vo.getCreditCode(), vo.getCreditorNo()).toString();
+					if (period.equals(countResult)) {
+						vo.setRemark("");
+						validList.add(vo);
+					} else {
+						vo.setStatus(CrediteInfo.Status.IMP_FAIL);
+						vo.setRemark("" + "还款期数验证失败");
+						invalidList.add(vo); // 业务规则校验不通过
+					}
+
 				} else {
 					vo.setStatus(CrediteInfo.Status.IMP_FAIL);
 					vo.setRemark("" + result.get("errMsg"));
@@ -469,27 +508,24 @@ public class CreditController {
 			entity.setRepayInterest(vo.getRepayInterest());
 			entity.setRepayAllmount(vo.getRepayAllmount());
 			entity.setRemainPrincipal(vo.getRemainPrincipal());
-			if(checkExpireDate(vo.getRepayTime())){
-				entity.setStatus(CreditRepayPlan.Status.ALREADY_PAY); //设置为已还款
+			if (checkExpireDate(vo.getRepayTime())) {
+				entity.setStatus(CreditRepayPlan.Status.ALREADY_PAY); // 设置为已还款
 				entity.setRemark("导入时：还款时间小于当天24点,系统设置为已还款");
-			}else{
+			} else {
 				entity.setStatus(CreditRepayPlan.Status.WAIT_PAY);
 				entity.setRemark(vo.getRemark());
 			}
 		}
 		return entity;
 	}
+
 	/**
-	 * 还款时间 必须小于当天24:00
-	 * 否则 置为已还款 
-	 * true : 已还款
-	 * false: 未失效
+	 * 还款时间 必须小于当天24:00 否则 置为已还款 true : 已还款 false: 未失效
 	 */
-	public boolean  checkExpireDate(Date repayPlanDate) {
+	public boolean checkExpireDate(Date repayPlanDate) {
 		Date endOfToday = Calendars.parseEndDateTime(Calendars.format("yyyy-MM-dd", new Date()));
 		return repayPlanDate.before(endOfToday);
 	}
-	
 
 	/**
 	 * 查询 债权还款计划明细
@@ -507,10 +543,10 @@ public class CreditController {
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
 			Map<String, Object> calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
-			List<LoanLog>  operateList = creditInfoService.queryCreditLogList(creditInfo);
-			model.addAttribute("creditInfo", creditInfo);                          // 债权信息
-			model.addAttribute("repayPlanDetailList", planList);                   // 还款明细
-			model.addAttribute("operateList", operateList);                        // 债权标操作 明细
+			List<LoanLog> operateList = creditInfoService.queryCreditLogList(creditInfo);
+			model.addAttribute("creditInfo", creditInfo); // 债权信息
+			model.addAttribute("repayPlanDetailList", planList); // 还款明细
+			model.addAttribute("operateList", operateList); // 债权标操作 明细
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
 			User user = creditInfo.getCreditor().getUser();
 			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
@@ -559,8 +595,10 @@ public class CreditController {
 	public String sellIndex(Model model) {
 		return "credit/sellList";
 	}
+
 	/**
 	 * 发售列表数据
+	 * 
 	 * @param creditInfo
 	 * @param page
 	 * @param size
@@ -568,14 +606,14 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/sellListTable")
-	public String sellListTable(CrediteInfo creditInfo, String page, String size, Model model){
+	public String sellListTable(CrediteInfo creditInfo, String page, String size, Model model) {
 		try {
 			size = "10";
 			List<String> statuslist = new ArrayList<String>();
 			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
 			statuslist.add(CrediteInfo.Status.BIDING);
 			statuslist.add(CrediteInfo.Status.FAIL_ASSIGNING);
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size, statuslist);
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
@@ -605,9 +643,9 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getBidEndTimeStr())) {
 					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
 				}
-				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
-					 throw new ServiceException("发售金额必须大于0");
-				}else{
+				if (creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1) {
+					throw new ServiceException("发售金额必须大于0");
+				} else {
 					entity.setAmount(creditInfo.getAmount());
 				}
 				if (!Strings.empty(creditInfo.getAssureType())) {
@@ -616,24 +654,24 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getAmountAim())) {
 					entity.setAmountAim(creditInfo.getAmountAim());
 				}
-				if(creditInfo.getTermNum() <= 0){
-					 throw new ServiceException("还款期数必须大于0");
-				}else{
+				if (creditInfo.getTermNum() <= 0) {
+					throw new ServiceException("还款期数必须大于0");
+				} else {
 					entity.setTermNum(creditInfo.getTermNum());
 				}
 				String bidEndTimeStr = creditInfo.getBidEndTimeStr();
-				if(Strings.empty(bidEndTimeStr)){
-					 throw new ServiceException("招标截止时间不能为空");
-				}else{
+				if (Strings.empty(bidEndTimeStr)) {
+					throw new ServiceException("招标截止时间不能为空");
+				} else {
 					entity.setBidEndTime(Calendars.parse("yyyy-MM-dd", bidEndTimeStr));
 				}
-				if(creditInfo.getDeadLine() <= 0){
-					 throw new ServiceException("招标期限必须大于0");
-				}else{
+				if (creditInfo.getDeadLine() <= 0) {
+					throw new ServiceException("招标期限必须大于0");
+				} else {
 					entity.setDeadLine(creditInfo.getDeadLine());
 				}
-				if(creditInfoService.sellCredit(entity)){
-					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
+				if (creditInfoService.sellCredit(entity)) {
+					Logger.info("发售债权人" + entity.getCreditor().getCreditorNo() + "，债权编号:" + entity.getCertificateNo() + ",发售成功");
 				}
 			}
 		} catch (Exception e) {
@@ -683,7 +721,7 @@ public class CreditController {
 					fileInput.close();
 				}
 			} catch (IOException e) {
-				Logger.error("债权导入模板文件下载IO异常：",e);
+				Logger.error("债权导入模板文件下载IO异常：", e);
 			}
 		}
 	}
@@ -750,16 +788,17 @@ public class CreditController {
 			List<String> statuslist = new ArrayList<String>();
 			statuslist.add(CrediteInfo.Status.REPAYING);
 			statuslist.add(CrediteInfo.Status.REPAY_FIINISH);
-			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
+			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size, statuslist);
 			model.addAttribute("assignedList", obj);
 		} catch (Exception e) {
 			throw new ServiceException(" 已转让列表 table加载异常");
 		}
 		return "credit/assignedTable";
 	}
-	
+
 	/**
 	 * 投标明细
+	 * 
 	 * @param ids
 	 * @param model
 	 * @return
@@ -769,39 +808,41 @@ public class CreditController {
 		if (Strings.empty(id)) {
 			Logger.error("查看投标明细 参数:id为空");
 		}
-		List<LoanLog> loanLogList = new  ArrayList<LoanLog>();
+		List<LoanLog> loanLogList = new ArrayList<LoanLog>();
 		List<Loan> loanList = creditInfoService.queryLoanByCredit(id);
-		for(Loan loan : loanList){
-			if(loan!=null){ 
+		for (Loan loan : loanList) {
+			if (loan != null) {
 				// 债权标是 全额投标: 状态是满标
 				LoanLog loanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.FULL);
-				if(loanLog != null){
+				if (loanLog != null) {
 					User user = creditInfoService.queryUserByID(loanLog.getUser());
 					loanLog.setUser(user.getAccount());
-					loanLogList.add(loanLog); 
+					loanLogList.add(loanLog);
 				}
 			}
 		}
-		if(loanLogList ==null || loanLogList.size() == 0){
+		if (loanLogList == null || loanLogList.size() == 0) {
 			loanLogList = null;
 		}
 		model.addAttribute("bidLogList", loanLogList);
 		return "credit/assignedBidDetail";
 	}
+
 	/**
 	 * 已转让债权-回款明细查看
+	 * 
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/repayDetail/{id}")
-	public String  repayDetail(@PathVariable("id") String id, Model model){
-		List<CreditRepayPlan> planList = null ;
+	public String repayDetail(@PathVariable("id") String id, Model model) {
+		List<CreditRepayPlan> planList = null;
 		try {
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
 		} catch (Exception e) {
-			Logger.info("已转让债权-回款明细查看异常 ,债权id="+id);
+			Logger.info("已转让债权-回款明细查看异常 ,债权id=" + id);
 		}
 		model.addAttribute("repayPlanDetailList", planList); // 还款明细
 		return "credit/assignedRepayDetail";
