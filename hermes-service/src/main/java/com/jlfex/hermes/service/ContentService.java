@@ -18,7 +18,7 @@ public interface ContentService {
 
 	public ArticleCategory findCategoryByNameAndLevel(String name, String level);
 
-	public List<ArticleCategory> findByLevelNotNull();
+	public Page<ArticleCategory> findByLevelNotNull(int page, int size);
 
 	public ResultVo deleteCategory(String id);
 
