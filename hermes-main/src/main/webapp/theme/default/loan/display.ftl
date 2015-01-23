@@ -10,6 +10,8 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="shortcut icon" href="${app.theme}/public/images/smallIcon.png">
+<link rel="apple-touch-icon-precomposed" href="${app.theme}/public/images/bigIcon.png">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
