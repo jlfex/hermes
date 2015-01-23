@@ -128,10 +128,10 @@
                         </tbody>
                     </table>
                 </div>
-                <h3>相关协议</h3>
+                <!--<h3>相关协议</h3>
                 <span class="protocol">
 			     <a href="#" id="protocol" class="m_a1">《债权转让协议》</a>
-		      </span>
+		      </span>-->
               </div>
               <div role="tabpanel" class="tab-pane" id="planDetail">
                     <div id="" style="display:block; margin-top:20px;">
@@ -177,8 +177,6 @@
                            </#if>
                         </tbody>
                     </table>
-                     <div class="col-xs-1 hm-col form-group" style="margin-right:100px;"><button type="button" class="btn btn-default btn-block" id="cancelBtn">关闭</button></div>
-                    
                 </div>
               </div>
                 <div role="tabpanel" class="tab-pane" id="planDetail">
@@ -235,14 +233,6 @@
 		});
      });
    
-  	//点击取消按钮
-	$("#cancelBtn").on("click",function(){
-		$.link.html(null, {
-			url: '${app}/credit/assigned',
-			target: 'main'
-		});
-	});
-});
-  
+ 
 //-->
 </script>
