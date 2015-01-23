@@ -48,8 +48,8 @@ public class ContentController {
 	 * 
 	 */
 	@RequestMapping("/categoryIndex")
-	public String categoryIndex(Model model) {
-		model.addAttribute("categories", contentService.findByLevelNotNull());
+	public String categoryIndex(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("categories", contentService.findByLevelNotNull(page, size));
 		return "/content/categoryIndex";
 	}
 
