@@ -365,6 +365,7 @@ public class InvestController {
 		String loanPurpose = "";
 		String remaintime = "0";
 		String creditDeadTime = "";
+		String remainPeroid = "";
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			loanPurpose = loan.getPurpose();
@@ -378,6 +379,12 @@ public class InvestController {
 				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间为空!");
 			}
 			creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
+			long deadTime = crediteInfo.getDeadTime().getTime(); // 获取债权到期日
+			long bidEndTime = crediteInfo.getBidEndTime().getTime();
+			// 下面获取剩余期限：债权到期日-招标截止时间
+			if (deadTime - bidEndTime > 0) {
+				remainPeroid = String.valueOf(deadTime - bidEndTime);
+			}
 			long endTime = crediteInfo.getBidEndTime().getTime();
 			long startTime = new Date().getTime();
 			if (endTime - startTime > 0) {
@@ -410,6 +417,7 @@ public class InvestController {
 			}
 		}
 		paramMap.put("loanPurpose", loanPurpose);
+		paramMap.put("remainPeroid", remainPeroid);
 		paramMap.put("remaintime", remaintime);
 		paramMap.put("creditDeadTime", creditDeadTime);
 		return paramMap;
@@ -477,12 +485,7 @@ public class InvestController {
 		model.addAttribute("loan", loan);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
 		model.addAttribute("product", loan.getProduct());
-		if (dictionary == null) {
-			model.addAttribute("purpose", loan.getPurpose());
-		} else {
-			model.addAttribute("purpose", dictionary.getName());
-		}
-
+		model.addAttribute("purpose", dictionary.getName());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
 		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest));
