@@ -298,18 +298,19 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	public List<LoanLog> queryCreditLogList(CrediteInfo creditInfo) throws Exception {
 		String creditInfoId = creditInfo.getId();
 		List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
-		if (loanList == null || loanList.size() == 0) {
-			throw new Exception("根据：债权id=" + creditInfoId + ", 查询到状态为：待还款 , 的债权标 为空");
-		} else if (loanList.size() > 1) {
+		if (loanList != null && loanList.size() > 1) {
 			throw new Exception("根据：债权id=" + creditInfoId + ", 查状到态为：待还款, 的债权标个数不唯一");
-		}
-		List<LoanLog> list = loanLogRepository.findByLoan(loanList.get(0));
-		for(LoanLog log : list){
-			if(log!=null ){
-				log.setUserName(userRepository.findOne(log.getUser()).getAccount());
+		} 
+		if(loanList != null && loanList.size() == 1){
+			List<LoanLog> list = loanLogRepository.findByLoan(loanList.get(0));
+			for(LoanLog log : list){
+				if(log!=null ){
+					log.setUserName(userRepository.findOne(log.getUser()).getAccount());
+				}
 			}
+			return list;
 		}
-		return list;
+		return null;
 	}
 	/**
 	 * 债权标：自动流标后， 更新 债权 状态
@@ -339,5 +340,12 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			Logger.error(var, e);
 			return false;
 		}
+	}
+     /**
+      * 债权人编号 + 债权编号 获取债权信息
+      */
+	@Override
+	public List<CrediteInfo> findByCreditorNoAndCreditCode(String creditorNo,String creditCode) throws Exception {
+		return creditInfoRepository.findByCreditorNoAndCrediteCode(creditorNo, creditCode);
 	}
 }
