@@ -43,7 +43,8 @@
 		                        <td class="align-center">${(l.statusName)!''}</td> 
 								<td class="align-center">
 	                                 <a href="#" id="creditDetailView" data-url="${app}/credit/repayPlanDetail/${l.id}" >查看</a>
-	                            <#if l.status == '00'>
+	                                 
+	                            <#if l.status == '00' &&  !l.outOfDate>
 	                                 <a href="#" data-url="${app}/credit/goSell/${l.id}" >发售</a>
 	                            </#if>
 	                        </td>    
