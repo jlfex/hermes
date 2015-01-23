@@ -111,7 +111,7 @@ display: block;
 height: 82px;
 line-height: 82px;
 background: #000;
-opacity: 0.5;
+opacity: 0.2;
 padding: 0 10px;
 color: #fff;
 cursor: pointer;" id="_perv">《</span>
@@ -122,7 +122,7 @@ display: block;
 height: 82px;
 line-height: 82px;
 background: #000;
-opacity: 0.5;
+opacity: 0.2;
 padding: 0 10px;
 color: #fff;
 cursor: pointer;
