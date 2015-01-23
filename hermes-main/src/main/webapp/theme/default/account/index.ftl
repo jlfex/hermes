@@ -11,6 +11,8 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/temp.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
+<link rel="shortcut icon" href="${app.theme}/public/images/smallIcon.png">
+<link rel="apple-touch-icon-precomposed" href="${app.theme}/public/images/bigIcon.png">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery.ui.datepicker-zh-CN.js"></script>
