@@ -7,7 +7,7 @@
                         <th class="align-center">债权类型</th>
                         <th class="align-center">借款金额</th>
                         <th class="align-center">年利率</th>
-                        <th class="align-center">期限</th>
+                        <th class="align-center">期限(月)</th>
                         <th class="align-center">借款用途</th>
                         <th class="align-center">还款方式</th>
                         <th class="align-center">债权到期日</th>
@@ -32,8 +32,8 @@
 		                        <td class="align-center">${(l.crediteCode)!''}</td> 
 		                        <td class="align-center">${(l.crediteType)!''}</td> 
 		                        <td class="align-center">${(l.amount)!''}</td> 
-		                        <td class="align-center">${(l.rate!'')?string.percent}</td> 
-		                        <td class="align-center">${(l.period)!''}天</td>
+		                        <td class="align-center">${(l.rate!0)?string.percent}</td> 
+		                        <td class="align-center">${(l.period)!''}</td>
 		                        <td class="align-center">${(l.purpose)!''}</td>
 		                        <td class="align-center">${(l.payType)!''}</td> 
 		                        <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td>
