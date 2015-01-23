@@ -131,7 +131,7 @@
 						<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
                         <td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
                        <td class="td_03">${l.rate}</td>
-                        <td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
+                        <td class="td_04">${l.period}天</td>
                         
                         <td class="td_05">
                             <div class="layer_box">
