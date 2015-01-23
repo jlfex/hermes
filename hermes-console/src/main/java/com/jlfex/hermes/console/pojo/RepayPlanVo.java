@@ -29,6 +29,7 @@ public class RepayPlanVo implements Serializable    {
 	private String  status;                //处理结果
 	private String  remark;                //备注
 	private String  fileName;              //文件名称
+	private String  creditId;              //所属债权ID
 	
 	
 	public String getCreditorNo() {
@@ -101,8 +102,15 @@ public class RepayPlanVo implements Serializable    {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	
+	public String getCreditId() {
+		return creditId;
+	}
+	public void setCreditId(String creditId) {
+		this.creditId = creditId;
+	}
+
+
+
 	public static final class  Status{
 		@Element("格式正常")
 		public static final String VALID = "00";

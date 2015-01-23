@@ -1,9 +1,6 @@
 package com.jlfex.hermes.console.pojo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.jlfex.hermes.common.dict.Element;
 
 
@@ -26,13 +23,13 @@ public class CreditInfoVo implements Serializable    {
 	private String  workType ;       //行业
 	private String  province ;       //省份
 	private String  city ;           //城市
-	private BigDecimal  amount;      //借款金额
-	private BigDecimal  rate ;       //年利率
+	private String  amount;          //借款金额
+	private String  rate ;           //年利率
 	private String  period;          //借款期限
 	private String  purpose ;        //借款用途
 	private String  payType;         //还款方式
-	private Date    deadTime;        //债权到期日
-	private Date    businessTime;    //放款日
+	private String  deadTime;        //债权到期日
+	private String  businessTime;    //放款日
 	private String  status;          //导入结果
 	private String  remark;          //备注
 	private String  fileName;        //文件名称
@@ -93,20 +90,6 @@ public class CreditInfoVo implements Serializable    {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
-	public BigDecimal getAmount() {
-		return amount;
-	}
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-	
-	public BigDecimal getRate() {
-		return rate;
-	}
-	public void setRate(BigDecimal rate) {
-		this.rate = rate;
-	}
 	public String getPeriod() {
 		return period;
 	}
@@ -124,20 +107,6 @@ public class CreditInfoVo implements Serializable    {
 	}
 	public void setPayType(String payType) {
 		this.payType = payType;
-	}
-	
-	public Date getDeadTime() {
-		return deadTime;
-	}
-	public void setDeadTime(Date deadTime) {
-		this.deadTime = deadTime;
-	}
-	
-	public Date getBusinessTime() {
-		return businessTime;
-	}
-	public void setBusinessTime(Date businessTime) {
-		this.businessTime = businessTime;
 	}
 	public String getStatus() {
 		return status;
@@ -157,6 +126,31 @@ public class CreditInfoVo implements Serializable    {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	public String getAmount() {
+		return amount;
+	}
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+	public String getRate() {
+		return rate;
+	}
+	public void setRate(String rate) {
+		this.rate = rate;
+	}
+	public String getDeadTime() {
+		return deadTime;
+	}
+	public void setDeadTime(String deadTime) {
+		this.deadTime = deadTime;
+	}
+	public String getBusinessTime() {
+		return businessTime;
+	}
+	public void setBusinessTime(String businessTime) {
+		this.businessTime = businessTime;
+	}
+
 
 	public static final class  Status{
 		@Element("格式正常")
