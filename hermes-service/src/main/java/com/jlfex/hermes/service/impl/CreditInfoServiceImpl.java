@@ -340,4 +340,11 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			return false;
 		}
 	}
+     /**
+      * 债权人编号 + 债权编号 获取债权信息
+      */
+	@Override
+	public CrediteInfo findByCreditorNoAndCreditCode(String creditorNo,String creditCode) throws Exception {
+		return creditInfoRepository.findByCreditorNoAndCrediteCode(creditorNo, creditCode);
+	}
 }

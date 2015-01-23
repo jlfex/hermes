@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -242,8 +243,8 @@ public class CreditController {
 			// 1: 解析Excel 到 数据模型
 			FileInputStream fileInputStream = (FileInputStream) file.getInputStream();
 			sheetMap = CreditExcelUtil.analysisExcel(fileName, fileInputStream);
-			List<CreditInfoVo> creditList = (List<CreditInfoVo>) sheetMap.get("creditList");
-			List<RepayPlanVo> repayList = (List<RepayPlanVo>) sheetMap.get("repayList");
+			List<CreditInfoVo> creditList = (List<CreditInfoVo>) sheetMap.get("creditList"); //债权信息
+			List<RepayPlanVo> repayList = (List<RepayPlanVo>) sheetMap.get("repayList");     //还款明细
 			// 1.1 统计总数
 			sheet1AllNum = creditList != null ? creditList.size() : 0;
 			sheet2AllNum = repayList != null ? repayList.size() : 0;
@@ -329,8 +330,7 @@ public class CreditController {
 	 */
 	public Map<String, Object> checkCreditValid(List<CreditInfoVo> creditList) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		Map<String, String> uniqCreditCodeMap = new HashMap<String, String>(); // 同一个债权人
-																				// 债权编号不能重复
+		Map<String, String> uniqCreditCodeMap = new HashMap<String, String>(); // 同一个债权人 债权编号不能重复
 		List<CreditInfoVo> validList = new ArrayList<CreditInfoVo>();
 		List<CreditInfoVo> invalidList = new ArrayList<CreditInfoVo>();
 		if (creditList == null || creditList.size() == 0) {
@@ -345,24 +345,53 @@ public class CreditController {
 			resultMap.put("msg", "债权人编号系统不存在");
 			return resultMap;
 		}
+		//业务逻辑校验
+		int lineNum = 0 ;
 		for (CreditInfoVo vo : creditList) {
-			if (vo != null && CreditInfoVo.Status.VALID.equals(vo.getStatus())) {
-				Map<String, Object> result = businessRuleCheck(vo, uniqCreditCodeMap, creditorNo);
-				if (FLAG_KIND_SUC.equals(result.get("flag"))) {
-					vo.setRemark("");
-					validList.add(vo);
-				} else {
-					vo.setStatus(CrediteInfo.Status.IMP_FAIL);
-					vo.setRemark("" + result.get("errMsg"));
-					invalidList.add(vo); // 业务规则校验不通过
+			lineNum ++ ;
+			if(vo != null && !Strings.empty(vo.getCreditorNo())){
+				if(!creditorNo.equals(vo.getCreditorNo())){
+					throw new Exception("第"+lineNum+"行,债权人编号有误,与其它行值不同。");
 				}
-			} else {
+				if(CreditInfoVo.Status.VALID.equals(vo.getStatus())){
+					Map<String, Object> result = businessRuleCheck(vo, uniqCreditCodeMap, creditorNo);
+					if (FLAG_KIND_SUC.equals(result.get("flag"))) {
+						vo.setRemark("");
+						validList.add(vo);
+					} else {
+						vo.setStatus(CrediteInfo.Status.IMP_FAIL);
+						vo.setRemark("" + result.get("errMsg"));
+						invalidList.add(vo); // 业务规则校验不通过
+					}
+				} 
+			}else {
 				invalidList.add(vo); // 非空校验不通过
 			}
 		}
 		resultMap.put("validList", validList);
 		resultMap.put("invalidList", invalidList);
 		return resultMap;
+	}
+	/**
+	 * 校验 同一个债权人 对应 债权编号是否重复
+	 * @param creditList
+	 * @return
+	 */
+	public  boolean checkCreditCodeUnq(List<CreditInfoVo> creditList){
+		boolean flag = false;
+	    if(creditList != null && creditList.size() > 0){
+	    	int allNum = creditList.size();
+	    	Map<String,String> crditCodeMap = new HashMap<String,String>();
+	    	for(CreditInfoVo obj : creditList){
+	    		if(obj != null && !Strings.empty(obj.getCreditCode())){
+	    			crditCodeMap.put(obj.getCreditCode(), obj.getCreditCode());
+	    		}
+	    	}
+	    	if(crditCodeMap.size() == allNum){
+	    		flag = true;
+	    	}
+	    }
+		return flag;
 	}
 
 	/**
@@ -381,11 +410,25 @@ public class CreditController {
 		String creditCode = vo.getCreditorNo(); // 债权编号不能重复
 		if (uniqCreditCodeMap == null) {
 			uniqCreditCodeMap.put(creditCode, creditCode);
-		} else {
-			if (uniqCreditCodeMap.containsKey(creditCode)) {
+		}else{
+			if (uniqCreditCodeMap.containsKey(creditCode)){
 				flag = false;
 				errMsg.append("同一个债权人对应债权编号不能重复;");
 			}
+		}
+		//数据库校验
+		boolean checkUniqLineFlag = true;
+		try{
+		   CrediteInfo creditInfo = creditInfoService.findByCreditorNoAndCreditCode(creditorNo, creditCode);
+		   if(creditInfo == null){
+			   checkUniqLineFlag = false;
+		   }
+		}catch(Exception e){
+			Logger.error("查询异常：债权人编号:"+creditorNo+",债权编号:"+creditCode, e);
+		} 
+		if(checkUniqLineFlag){
+			flag = false;
+			errMsg.append("债权人编号:"+creditorNo+",债权编号:"+creditCode+", 系统已经存在.");
 		}
 		if (!creditorNo.equals(vo.getCreditorNo())) { // 债权人
 			flag = false;
@@ -412,9 +455,35 @@ public class CreditController {
 			flag = false;
 		}
 		// 业务规则：放款日期 < 导入日期 < 债权到期日
-		if (!(nowDate.after(vo.getBusinessTime()) && nowDate.before(vo.getDeadTime()) && vo.getBusinessTime().before(vo.getDeadTime()))) {
-			errMsg.append("日期有误：放款日期 < 导入日期 < 债权到期日 ");
+		int i = 0;
+		Date businessDate = null;
+		Date deadTime = null ;
+		try{
+			 businessDate = Calendars.parse("yyyy-MM-dd", vo.getBusinessTime());i++;  
+			 deadTime =  Calendars.parse("yyyy-MM-dd", vo.getDeadTime());
+			 if (!(nowDate.after(businessDate) && nowDate.before(deadTime) && businessDate.before(deadTime))) {
+				errMsg.append("日期有误：放款日期 < 导入日期 < 债权到期日 ");
+				flag = false;
+			}
+		}catch(Exception e){
+			if(i <1){
+				errMsg.append("放款日期"+vo.getBusinessTime()+"格式化异常： ");
+			}else{
+				errMsg.append("债权到期日"+vo.getDeadTime()+"格式化异常： ");
+			}
 			flag = false;
+		}
+		//校验借款金额 必须是正整数
+		if(!CreditExcelUtil.checkNumber(vo.getAmount(),"+" ) ){
+			errMsg.append("借款金额 必须是正整数：当前值: "+vo.getAmount());
+			flag = false;
+		}
+		//年利率 格式：10% 0--100
+		String rateStr = vo.getRate();
+		if(rateStr.contains(CreditExcelUtil.VAR_PERCENT) && CreditExcelUtil.checkNumber(rateStr.replace(CreditExcelUtil.VAR_PERCENT, ""), "0-100")){
+		}else{
+			errMsg.append("年利率 必须是百分比格式，且数值是0-100：当前值: "+vo.getRate());
+			flag = true;
 		}
 		resultMap.put("flag", flag ? FLAG_KIND_SUC : FLAG_KIND_ONE);
 		resultMap.put("errMsg", flag ? "" : errMsg.toString());

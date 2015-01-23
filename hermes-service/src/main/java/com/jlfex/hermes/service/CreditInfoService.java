@@ -122,4 +122,12 @@ public interface CreditInfoService {
      * @return
      */
 	public boolean afterBidAwayUpdateCredt(Loan loan) ;
+	/**
+	 *  债权人编号 + 债权编号 获取债权信息
+	 * @param creditorNo
+	 * @param creditCode
+	 * @return
+	 * @throws Exception
+	 */
+	public CrediteInfo  findByCreditorNoAndCreditCode(String creditorNo, String creditCode) throws Exception;
 }

@@ -3,6 +3,7 @@ package com.jlfex.hermes.repository;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
@@ -30,8 +31,12 @@ public interface CreditInfoRepository extends JpaRepository<CrediteInfo, String>
 	 * @return
 	 */
 	public CrediteInfo  findByCreditorAndCrediteCode(Creditor creditor ,String crediteCode);
-	
-	
+	/**
+	 * 根据：债权人编号 + 债权编号 获取债权信息
+	 * @return
+	 */
+	@Query("select t from CrediteInfo t where  t.creditor.creditorNo = ?1 and crediteCode = ?2")
+	public CrediteInfo  findByCreditorNoAndCrediteCode(String creditorNo , String crediteCode);
 	
 
 
