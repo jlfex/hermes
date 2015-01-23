@@ -81,7 +81,6 @@ public class InvestController {
 	private LabelService labelService;
 	@Autowired
 	private CreditInfoService creditInfoService;
-	
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -287,12 +286,9 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/indexsearch")
-	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection, String loanKind,
-			Model model) {
-		Logger.info("理财列表查询参数: purpose=" + getUTFFormat(purpose) + ",raterange=" + getUTFFormat(raterange) + ",periodrange=" + getUTFFormat(periodrange) + ",repayname=" + getUTFFormat(repayname)
-				+ ",loanKind=" + getUTFFormat(loanKind));
-		model.addAttribute("loans",
-				investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection, loanKind));
+	public String indexsearch(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection, String loanKind, Model model) {
+		Logger.info("理财列表查询参数: purpose=" + getUTFFormat(purpose) + ",raterange=" + getUTFFormat(raterange) + ",periodrange=" + getUTFFormat(periodrange) + ",repayname=" + getUTFFormat(repayname) + ",loanKind=" + getUTFFormat(loanKind));
+		model.addAttribute("loans", investService.findByJointSql(getUTFFormat(purpose), getUTFFormat(raterange), getUTFFormat(periodrange), getUTFFormat(repayname), page, size, orderByField, orderByDirection, loanKind));
 		return "invest/loandata";
 	}
 
@@ -341,7 +337,7 @@ public class InvestController {
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
 		model.addAttribute("remaintime", calculateMap.get("remaintime"));
 		model.addAttribute("creditDeadTime", calculateMap.get("creditDeadTime"));
-		
+
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
@@ -358,34 +354,36 @@ public class InvestController {
 		// 返回视图
 		return "invest/info";
 	}
+
 	/**
 	 * 计算招标截止日 剩余时间
+	 * 
 	 * @param loan
 	 * @return
 	 */
-	public Map<String,Object> calculateRemainTime(Loan loan) {
+	public Map<String, Object> calculateRemainTime(Loan loan) {
 		String loanPurpose = "";
-		String remaintime = "0" ;
+		String remaintime = "0";
 		String creditDeadTime = "";
-		Map<String,Object> paramMap = new HashMap<String, Object>();
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
-		    loanPurpose = loan.getPurpose();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			loanPurpose = loan.getPurpose();
 			CrediteInfo crediteInfo = null;
 			try {
 				crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
 			} catch (Exception e) {
-				Logger.info("根据loanid="+loan.getId()+",查询获取的债权招标截止时间异常!",e);
+				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间异常!", e);
 			}
-			if(crediteInfo ==null || crediteInfo.getDeadTime() == null ){
-				Logger.info("根据loanid="+loan.getId()+",查询获取的债权招标截止时间为空!");
+			if (crediteInfo == null || crediteInfo.getDeadTime() == null) {
+				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间为空!");
 			}
-		    creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()) ; //获取债权表的招标截止时间
+			creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
 			long endTime = crediteInfo.getBidEndTime().getTime();
 			long startTime = new Date().getTime();
-			if (endTime - startTime > 0){
-				remaintime =  String.valueOf(endTime - startTime);
-			} 
-		}else{
+			if (endTime - startTime > 0) {
+				remaintime = String.valueOf(endTime - startTime);
+			}
+		} else {
 			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
 			// 从借款日志表里取开始投标的起始时间
 			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) == null) {
@@ -403,18 +401,18 @@ public class InvestController {
 				long endTime = deadline.getTime();
 				long startTime = start.getTime();
 				if (endTime - startTime > 0) {
-					remaintime =  String.valueOf(endTime - startTime);
+					remaintime = String.valueOf(endTime - startTime);
 				} else {
-					remaintime  = "0";
+					remaintime = "0";
 				}
-			}else{
-				 remaintime = "0";
+			} else {
+				remaintime = "0";
 			}
 		}
 		paramMap.put("loanPurpose", loanPurpose);
 		paramMap.put("remaintime", remaintime);
 		paramMap.put("creditDeadTime", creditDeadTime);
-		return   paramMap;
+		return paramMap;
 	}
 
 	/**
@@ -435,8 +433,7 @@ public class InvestController {
 		// 利息
 		BigDecimal interestSum = investProfitService.loadInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		// 罚息
-		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE,
-				InvestProfit.Status.ADVANCE });
+		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 
 		List<InvestInfo> investInfoList = investService.findByUser(user, Loan.LoanKinds.NORML_LOAN);
 		int investSuccessCount = 0;
@@ -480,7 +477,12 @@ public class InvestController {
 		model.addAttribute("loan", loan);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
 		model.addAttribute("product", loan.getProduct());
-		model.addAttribute("purpose", dictionary.getName());
+		if (dictionary == null) {
+			model.addAttribute("purpose", loan.getPurpose());
+		} else {
+			model.addAttribute("purpose", dictionary.getName());
+		}
+
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
 		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest));
@@ -502,8 +504,7 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		// 已获收益
-		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE,
-				InvestProfit.Status.ADVANCE });
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		BigDecimal allProfitSum = BigDecimal.ZERO;// 总收益
 		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
 		BigDecimal overdueInterestSum = BigDecimal.ZERO; // 罚息收益总数
