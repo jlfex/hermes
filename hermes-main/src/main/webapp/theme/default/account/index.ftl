@@ -10,12 +10,17 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/temp.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery.ui.datepicker-zh-CN.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
+<style type="text/css">
+  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+</style>
+
 </head>
 <body>
 
