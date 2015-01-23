@@ -114,7 +114,7 @@ jQuery(function($) {
 				$("#maturegain").html('');
 			}
 	  });
-	  var remainDate_ = '${creditDeadTime!''}';
+	  var remainDate_ = '${remainPeroid!''}';
 	  var nowStr = (new Date()).format("yyyy-MM-dd"); 
 	  $("#credit_remainDate").html(dateDiff(remainDate_, nowStr)) ;
 });
@@ -163,7 +163,7 @@ jQuery(function($) {
 <input id="investBidMultiple" name="investBidMultiple" type="hidden"  value="${investBidMultiple}" ></input>
 <input id="otherrepayselect" name="otherrepayselect" type="hidden" ></input>
 <input id="loanid" name="loanid" type="hidden" value="${loan.id}" ></input>	
-<input id="remaintime" name="remaintime" type="hidden" value="${remaintime}" ></input>	
+<input id="remaintime" name="remaintime" type="hidden" value="${creditDeadTime}" ></input>	
 <div class="sub_main" id="invest">
 	<div class="account_center">
 		<div class="account_nav_left">
