@@ -54,7 +54,7 @@ jQuery(function($) {
 			_footer_height = _footer.outerHeight();
 		
 		// 设置最小高度
-		_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
+		//_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
 	}).trigger('resize');
 });
 //-->
