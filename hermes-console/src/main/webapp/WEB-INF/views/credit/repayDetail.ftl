@@ -86,7 +86,7 @@
                             <tr> 	
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
-                                <td class="align-center">${(creditInfo.rate!0)?string.percent}</td> 
+                                <td class="align-center"><#if (creditInfo.rate)?? >${(creditInfo.rate)?string.percent}<#else>0%</#if></td> 
                                 <td class="align-center">${(creditInfo.period)!''}</td>
                                 <td class="align-center">${(creditInfo.amount)!''}</td>
                                 <td class="align-center">${deadLine!''}</td> 
