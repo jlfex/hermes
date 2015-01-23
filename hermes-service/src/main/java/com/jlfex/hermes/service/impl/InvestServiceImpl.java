@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
@@ -516,9 +517,16 @@ public class InvestServiceImpl implements InvestService {
 	public Page<LoanInfo> investIndexLoanList(String page, String size, String loanKind) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String purpose = "", raterange = "", periodrange = "", repay = "", orderByField = "", orderByDirection = ""; // 页面调整中，过滤条件
-																														// 后续调整
-		String sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
-		String sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
+		String sqlSearchByLoan = null, sqlCountSearchByLoan = null ;
+		if(Loan.LoanKinds.NORML_LOAN.equals(loanKind)){
+			sqlSearchByLoan = commonRepository.readScriptFile(Script.searchByLoan);
+			sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoan);
+		}else if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)){
+			sqlSearchByLoan =  commonRepository.readScriptFile(Script.searchByLoanAssign);
+			sqlCountSearchByLoan = commonRepository.readScriptFile(Script.countSearchByLoanAssign);
+		}else{
+			throw new  ServiceException("无效的标类型："+loanKind);
+		}
 		String condition = getCondition(purpose, raterange, periodrange, repay, orderByField, orderByDirection, loanKind, params);
 		sqlSearchByLoan = String.format(sqlSearchByLoan, condition);
 		sqlCountSearchByLoan = String.format(sqlCountSearchByLoan, condition);
