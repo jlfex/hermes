@@ -1,7 +1,7 @@
 <!-- foot start-->
 <div class="footer">
     <div class="footcenter">
-        <div class="companyinfo clearfix">
+        <!--<div class="companyinfo clearfix">
             <h4>公司介绍</h4>
             <ul>
                 <li><a href="javascript:value(0);">平台原理</a></li>
@@ -10,7 +10,7 @@
                 <li><a href="javascript:value(0);">联系我们</a></li>
             </ul>
 
-        </div>
+        </div>-->
 		<img src="${app.theme}/public/images/footerline.png" alt="" />
         <div class="links clearfix">
             <h4>友情链接</h4>
@@ -54,7 +54,7 @@ jQuery(function($) {
 			_footer_height = _footer.outerHeight();
 		
 		// 设置最小高度
-		_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
+		//_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
 	}).trigger('resize');
 });
 //-->

@@ -50,8 +50,8 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public List<ArticleCategory> findByLevelNotNull() {
-		return articleCategoryRepository.findByLevelNotNull();
+	public Page<ArticleCategory> findByLevelNotNull(int page, int size) {
+		return articleCategoryRepository.findAll(new PageRequest(page, size));
 	}
 
 	/**

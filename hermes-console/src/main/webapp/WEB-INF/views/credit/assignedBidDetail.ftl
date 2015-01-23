@@ -25,4 +25,4 @@
 		</#if>
 	<tbody>
 </table>
-
+</script>  

@@ -8,6 +8,7 @@
 <div class="row panel-body">
 	<div class="col-xs-1">
 		<button class="btn btn-primary btn-block" type="button" id="addBtn">+ 新增分类</button>
+		<input id="page" name="page" type="hidden" value="0"/>		
     </div>
 </div>
 <div id="data" style="display:block">
@@ -22,8 +23,12 @@
                 <th class="align-center">操作</th>
         	</tr>
         </thead>
-            <tbody>
-            <#list categories as l>
+            <#if categories.numberOfElements == 0>
+            <tr>
+	            <td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
+            </tr>
+            <#else>        
+            <#list categories.content as l>
             <tr>
                 <td class="align-center">${l.name}</td>
                 <td class="align-center">1</td>
@@ -40,13 +45,20 @@
                 </td>
             </tr>
             </#list>
-        </tbody>
+            </#if>
     </table>
+           <ul class="pagination" data-number="${categories.number}" data-total-pages="${categories.totalPages}"></ul>      
 </div>
         
         
 <script type="text/javascript">
 	jQuery(function($) {
+		$('.pagination').pagination({
+		handler: function(elem) {
+			$('#page').val(elem.data().page);
+			$('#searchForm').trigger('submit');
+		}
+	});
 	    //点击删除按钮
 		$(".deleteBtn").on("click",function(){
 			$.post("${app}/content/deleteCategory",

@@ -20,6 +20,8 @@
 		</tr>
 		<#else>
 		<#list data.content as l>
+		<#if l.code != '00' && l.name != '债权标虚拟产品'>
+		
 		<tr>
 			<td>${l.code}</td>
 			<td>${l.name!''}</td>
@@ -35,6 +37,8 @@
 				<a href="#" data-url="${app}/product/detail/${l.id}" data-target="main">查看</a>
 			</td>
 		</tr>
+		</#if>
+		
 		</#list>
 		</#if>
 	<tbody>

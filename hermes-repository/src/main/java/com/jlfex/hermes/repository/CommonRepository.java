@@ -169,7 +169,9 @@ public class CommonRepository {
 		public static final String countByLoanStatus = "/script/count-by-loan-status.sql";
 		public static final String countByLoanOverdue = "/script/count-by-loan-overdue.sql";
 		public static final String searchByLoan = "/script/search-by-loan.sql";
+		public static final String searchByLoanAssign = "/script/search-by-loan-assign.sql";
 		public static final String countSearchByLoan = "/script/count-search-by-loan.sql";
+		public static final String countSearchByLoanAssign = "/script/count-search-by-loan-assign.sql";
 		public static final String searchByInvestProfit = "/script/search-by-invest-profit.sql";
 		public static final String countSearchByInvestProfit = "/script/count-search-by-invest-profit.sql";
 		public static final String searchUser = "/script/search-user.sql";

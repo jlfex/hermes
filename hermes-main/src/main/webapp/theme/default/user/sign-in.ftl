@@ -22,7 +22,7 @@
 <br/>
 
 <div id="content" class="content">
-	<div class="u-container row">
+	<div class="u-container row" style=" margin-top:100px;">
 		<div class="col-xs-8">
 			<img alt="" src="${app.theme}/public/images/sign.jpg">
 		</div>

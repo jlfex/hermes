@@ -40,13 +40,13 @@
                            </#if>
                         </tbody>
                     </table>
-          
- <script type="text/javascript" charset="utf-8">
+  <script type="text/javascript" charset="utf-8">
    $('#creditRepayPlanDetail .btn-primary').click(function() {
    	    $.link.html(null, {
 			url: '${app}/loan/repayment/'+$(this).data().id,
 			target: 'main'
 		});
      });
+     	     
  </script>         
                     

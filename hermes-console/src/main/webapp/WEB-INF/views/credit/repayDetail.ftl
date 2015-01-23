@@ -59,10 +59,11 @@
                         <div class="spanblock"><span class="wd_100">银行名称：</span>${(creditInfo.creditor.bankName)!''}</div>
                         <div class="spanblock"><span class="wd_100">开户行：</span>${(creditInfo.creditor.bankBrantch)!''}</div>
                     </div>
+                    <!--
                     <div class="col-xs-4">
                         <div class="spanblock"><span class="wd_100">省份：</span>${(creditInfo.creditor.bankProvince)!''}</div>
                         <div class="spanblock"><span class="wd_100">城市：</span>${(creditInfo.creditor.bankCity)!''}</div>
-                    </div>
+                    </div>-->
                 </div>
 
               </div>
@@ -85,7 +86,7 @@
                             <tr> 	
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
-                                <td class="align-center">${(creditInfo.rate!0)?string.percent}</td> 
+                                <td class="align-center"><#if (creditInfo.rate)?? >${(creditInfo.rate)?string.percent}<#else>0%</#if></td> 
                                 <td class="align-center">${(creditInfo.period)!''}</td>
                                 <td class="align-center">${(creditInfo.amount)!''}</td>
                                 <td class="align-center">${deadLine!''}</td> 
@@ -127,10 +128,10 @@
                         </tbody>
                     </table>
                 </div>
-                <h3>相关协议</h3>
+                <!--<h3>相关协议</h3>
                 <span class="protocol">
 			     <a href="#" id="protocol" class="m_a1">《债权转让协议》</a>
-		      </span>
+		      </span>-->
               </div>
               <div role="tabpanel" class="tab-pane" id="planDetail">
                     <div id="" style="display:block; margin-top:20px;">
@@ -232,6 +233,6 @@
 		});
      });
    
-  
+ 
 //-->
 </script>
