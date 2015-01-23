@@ -382,8 +382,16 @@ public class CreditController {
 					String period = vo.getPeriod();
 					String countResult = countRepayNum(repayList, vo.getCreditCode(), vo.getCreditorNo()).toString();
 					if (period.equals(countResult)) {
-						vo.setRemark("");
-						validList.add(vo);
+
+						if (creditInfoService.findByCreditorAndCrediteCode(creditor, vo.getCreditCode()) != null) {
+							vo.setStatus(CrediteInfo.Status.IMP_FAIL);
+							vo.setRemark("" + "重复的外部债权导入");
+							invalidList.add(vo); // 业务规则校验不通过
+						} else {
+							vo.setRemark("");
+							validList.add(vo);
+						}
+
 					} else {
 						vo.setStatus(CrediteInfo.Status.IMP_FAIL);
 						vo.setRemark("" + "还款期数验证失败");
