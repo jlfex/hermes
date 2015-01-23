@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +70,7 @@ public class CreditController {
 	public static final String FLAG_KIND_NINE = "99";
 	public static final String FLAG_KIND_SUC = "00";
 	public static final String FLAG_KIND_ONE = "01";
+	public static final String VAR_GAP = "|";
 
 	/**
 	 * 债权人 列表
@@ -237,8 +239,10 @@ public class CreditController {
 		int sheet2AllNum = 0, sheet2SucNum = 0, sheet2ErrNum = 0;
 		Map<String, String> resultMap = new HashMap<String, String>();
 		String fileName = file.getOriginalFilename();
-		StringBuilder creditInfoIds = new StringBuilder();
+		Map<String,String> sheet1Map = new  HashMap<String,String>();
 		Map<String, Object> sheetMap = null;
+		Logger.info(fileName+"：文件导入解析 开始");
+		List<CrediteInfo> savedCreditInfolist = null;
 		try {
 			// 1: 解析Excel 到 数据模型
 			FileInputStream fileInputStream = (FileInputStream) file.getInputStream();
@@ -249,75 +253,123 @@ public class CreditController {
 			sheet1AllNum = creditList != null ? creditList.size() : 0;
 			sheet2AllNum = repayList != null ? repayList.size() : 0;
 			// 1.2: 业务规则校验
-			Map<String, Object> creditResult = checkCreditValid(creditList);
+			Map<String, Object> creditResult = checkCreditValid(creditList); //校验结果
 			if (FLAG_KIND_NINE.equals(creditResult.get("code"))) {
 				throw new Exception("" + creditResult.get("msg"));
 			} else {
-				creditList = new ArrayList<CreditInfoVo>();
+				creditList.clear();
 				List<CreditInfoVo> validList = (List<CreditInfoVo>) creditResult.get("validList");
 				List<CreditInfoVo> invalidList = (List<CreditInfoVo>) creditResult.get("invalidList");
-				if (validList.size() == 0) {
-					StringBuilder errorMsg = new StringBuilder();
-					for (CreditInfoVo vo : invalidList) {
-						errorMsg.append(vo.getRemark());
-					}
-					throw new Exception(errorMsg.toString());
-				} else {
-					creditList.addAll(validList);
-				}
-				// 1.2 统计 校验通过 数据
-				sheet1SucNum = validList != null ? validList.size() : 0;
-				sheet1ErrNum = invalidList != null ? invalidList.size() : 0;
+				creditList.addAll(validList);
+				creditList.addAll(invalidList);
 			}
-			// 1 checkRepayListValid(repayList);
 			// 2:持久化:债权信息
 			List<CrediteInfo> entityCreditList = new ArrayList<CrediteInfo>();
-			List<CreditRepayPlan> entitLoanPayList = new ArrayList<CreditRepayPlan>();
 			for (CreditInfoVo vo : creditList) {
 				CrediteInfo crediteInfo = new CrediteInfo();
 				entityCreditList.add(initCreditInfoEntity(vo, crediteInfo));
 			}
-			List<CrediteInfo> savedCreditInfolist = creditInfoService.saveBatch(entityCreditList);
+			try {
+				// 1.2 统计 校验通过 数据
+				savedCreditInfolist = creditInfoService.saveBatch(entityCreditList);
+			} catch (Exception e) {
+				Logger.error(fileName+"：债权信息保存失败",e);
+			}
 			if (savedCreditInfolist == null || savedCreditInfolist.size() == 0) {
-				throw new Exception("债权信息保存失败");
-			} else {
+				sheet1SucNum = 0;
+				throw new Exception(fileName+"：债权信息保存失败");
+			}else{
+				sheet1SucNum = savedCreditInfolist.size();
 				for (CrediteInfo obj : savedCreditInfolist) {
-					creditInfoIds.append(obj.getId()).append("_");
+					if(CrediteInfo.Status.WAIT_ASSIGN.equals(obj.getStatus() ) ){
+						sheet1Map.put(obj.getCreditor().getCreditorNo()+VAR_GAP+obj.getCrediteCode(), obj.getId()+VAR_GAP+obj.getPeriod());
+					}
 				}
 			}
-			// 3:持久化:债权还款明细
-			CrediteInfo load_crediteInfo = savedCreditInfolist.get(0);
-			Creditor load_creditor = savedCreditInfolist.get(0).getCreditor();
-			for (RepayPlanVo vo : repayList) {
-				CreditRepayPlan repayPlan = new CreditRepayPlan();
-				entitLoanPayList.add(initCreditRepayPlanEntity(vo, repayPlan, load_creditor, load_crediteInfo));
-				sheet2SucNum++;
+			//3.0 循环获取 CreditsheetMap
+			List<RepayPlanVo>  validRepayplanList = new ArrayList<RepayPlanVo>();
+			for(Map.Entry<String, String> entry: sheet1Map.entrySet()) {
+				 String  creditUniqueKey = entry.getKey();
+				 String  creditUniqueVal = entry.getValue();
+				 String  crditId = null;
+				 int  period = 0;
+				 if(!Strings.empty(creditUniqueVal)){
+					 String[] array = creditUniqueVal.split("\\|");
+					 crditId  = array[0];
+					 period = Integer.parseInt(array[1]);
+					 Logger.info(fileName+"：开始提取"+creditUniqueKey+"所属明细：根据债权期限："+period+",应该有"+period+"条还款明细");
+				 }else{
+					 Logger.warn(fileName+"：creditUniqueKey="+creditUniqueKey+",对应的值"+creditUniqueVal+"为空");
+					 continue;
+				 }
+				 // 提取对应的 还款明细
+				 List<RepayPlanVo>  belongRepayplanList = new ArrayList<RepayPlanVo>();
+				 int i = 0;
+				 for(RepayPlanVo vo : repayList){
+					i++;
+					if(vo != null){
+						String originalKey = vo.getCreditorNo().trim()+VAR_GAP+vo.getCreditCode().trim();
+						if(creditUniqueKey.equals(originalKey)){
+							vo.setCreditId(crditId); //设置明细所属的 债权信息ID
+							belongRepayplanList.add(vo);
+							
+						}else{
+							Logger.info(fileName+"：第二个sheet:第"+i+"行，出现不连续的对应关系"+creditUniqueKey+",已找到"+(i-1)+"条明细,停止搜索");
+							continue;
+						}
+					}
+				 }
+				 //期数一致 才保存
+				 if(belongRepayplanList!= null && belongRepayplanList.size() == period ){
+					 validRepayplanList.addAll(belongRepayplanList);
+				 }
 			}
+			if(validRepayplanList != null || validRepayplanList.size() > 0){
+				// 3.1:持久化:债权还款明细
+				List<CreditRepayPlan> entitLoanPayList = new ArrayList<CreditRepayPlan>();
+				for (RepayPlanVo vo : validRepayplanList) {
+					CreditRepayPlan repayPlan = new CreditRepayPlan();
+					entitLoanPayList.add(initCreditRepayPlanEntity(vo, repayPlan));
+				}
 
-			List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.saveBatch(entitLoanPayList);
-			if (creditRepayPlanList == null || creditRepayPlanList.size() == 0) {
-				sheet2SucNum = 0;
-				Logger.info("还款计划表保存失败");
+				List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.saveBatch(entitLoanPayList);
+				if (creditRepayPlanList == null || creditRepayPlanList.size() == 0) {
+					sheet2SucNum = 0;
+					Logger.info(fileName+"：还款计划表保存失败");
+				}else{
+					sheet2SucNum = creditRepayPlanList.size();
+				}
+			}else{
+				Logger.info(fileName+"：没有符合条件的 可保存的明细");
 			}
-			sheet2ErrNum = sheet2AllNum - sheet2SucNum;
 			code = FLAG_KIND_SUC;
 			msg = "成功";
+			Logger.info(fileName+"：导入解析结束");
 		} catch (Exception e) {
 			String var = "债权导入 文件解析异常";
 			Logger.error(var, e);
 			code = FLAG_KIND_NINE;
 			msg = e.getMessage();
+			Logger.info(fileName+"：导入解析异常结束");
 		}
-		resultMap.put("creditInfoIds", creditInfoIds.toString());
+		StringBuilder  checkErrorMsg = new StringBuilder();
+		if(savedCreditInfolist != null && savedCreditInfolist.size() > 0){
+			for(CrediteInfo obj :savedCreditInfolist){
+				if(obj != null && CrediteInfo.Status.IMP_FAIL.equals(obj.getStatus())){
+					checkErrorMsg.append(obj.getRemark()).append("<br/>");
+				}
+			}
+		}
 		resultMap.put("sheet1AllNum", String.valueOf(sheet1AllNum));
 		resultMap.put("sheet1SucNum", String.valueOf(sheet1SucNum));
-		resultMap.put("sheet1ErrNum", String.valueOf(sheet1ErrNum));
+		resultMap.put("sheet1ErrNum", String.valueOf(sheet1AllNum - sheet1SucNum));
 		resultMap.put("sheet2AllNum", String.valueOf(sheet2AllNum));
 		resultMap.put("sheet2SucNum", String.valueOf(sheet2SucNum));
-		resultMap.put("sheet2ErrNum", String.valueOf(sheet2ErrNum));
+		resultMap.put("sheet2ErrNum", String.valueOf(sheet2AllNum - sheet2SucNum));
 		resultMap.put("fileName", fileName);
 		resultMap.put("code", code);
 		resultMap.put("msg", msg);
+		resultMap.put("checkErrorMsg", checkErrorMsg.toString());
 		return resultMap;
 	}
 
@@ -346,26 +398,20 @@ public class CreditController {
 			return resultMap;
 		}
 		//业务逻辑校验
-		int lineNum = 0 ;
 		for (CreditInfoVo vo : creditList) {
-			lineNum ++ ;
-			if(vo != null && !Strings.empty(vo.getCreditorNo())){
-				if(!creditorNo.equals(vo.getCreditorNo())){
-					throw new Exception("第"+lineNum+"行,债权人编号有误,与其它行值不同。");
-				}
-				if(CreditInfoVo.Status.VALID.equals(vo.getStatus())){
-					Map<String, Object> result = businessRuleCheck(vo, uniqCreditCodeMap, creditorNo);
-					if (FLAG_KIND_SUC.equals(result.get("flag"))) {
-						vo.setRemark("");
-						validList.add(vo);
-					} else {
-						vo.setStatus(CrediteInfo.Status.IMP_FAIL);
-						vo.setRemark("" + result.get("errMsg"));
-						invalidList.add(vo); // 业务规则校验不通过
-					}
-				} 
-			}else {
-				invalidList.add(vo); // 非空校验不通过
+			if(vo != null){
+				Map<String, Object> result = businessRuleCheck(vo, uniqCreditCodeMap, creditorNo);
+				if (FLAG_KIND_SUC.equals(result.get("flag"))) {
+					vo.setRemark("数据正常");
+					vo.setStatus(CreditInfoVo.Status.VALID);
+					validList.add(vo);
+				} else {
+					vo.setStatus(CreditInfoVo.Status.INVALID);
+					vo.setRemark("" + result.get("errMsg"));
+					invalidList.add(vo); 
+				}	
+			}else{
+				Logger.error("债权导入规则校验：为空");
 			}
 		}
 		resultMap.put("validList", validList);
@@ -407,8 +453,12 @@ public class CreditController {
 		StringBuilder errMsg = new StringBuilder();
 		Date nowDate = new Date();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String creditCode = vo.getCreditorNo(); // 债权编号不能重复
-		if (uniqCreditCodeMap == null) {
+		String creditCode = vo.getCreditCode(); // 债权编号不能重复
+		if(!creditorNo.equals(vo.getCreditorNo())){
+			flag = false;
+			errMsg.append("债权人编号错误;");
+		}
+		if (uniqCreditCodeMap == null || uniqCreditCodeMap.size() == 0) {
 			uniqCreditCodeMap.put(creditCode, creditCode);
 		}else{
 			if (uniqCreditCodeMap.containsKey(creditCode)){
@@ -419,8 +469,8 @@ public class CreditController {
 		//数据库校验
 		boolean checkUniqLineFlag = true;
 		try{
-		   CrediteInfo creditInfo = creditInfoService.findByCreditorNoAndCreditCode(creditorNo, creditCode);
-		   if(creditInfo == null){
+		   List<CrediteInfo> existsList = creditInfoService.findByCreditorNoAndCreditCode(creditorNo, creditCode);
+		   if(existsList == null || existsList.size() == 0){
 			   checkUniqLineFlag = false;
 		   }
 		}catch(Exception e){
@@ -428,20 +478,13 @@ public class CreditController {
 		} 
 		if(checkUniqLineFlag){
 			flag = false;
-			errMsg.append("债权人编号:"+creditorNo+",债权编号:"+creditCode+", 系统已经存在.");
-		}
-		if (!creditorNo.equals(vo.getCreditorNo())) { // 债权人
-			flag = false;
-			errMsg.append("债权人编号错误;");
+			errMsg.append("债权人编号_"+creditorNo+",债权编号_"+creditCode+", 系统已经存在;");
 		}
 		if (!CreditExcelUtil.CREDIT_KIND.contains(vo.getCreditKind())) { // 债权类型
 			flag = false;
 			errMsg.append("债权类型不存在;");
 		}
-		if (!CreditExcelUtil.CREDITOR_CERTIFICATE_KIND.contains(vo.getCertType())) {// 借款人证件类型
-			flag = false;
-			errMsg.append("借款人证件类型 系统不存在;");
-		} else {
+		if (CreditExcelUtil.IDENTITY_CARD.contains(vo.getCertType())){
 			String identifyCode = vo.getCertificateNo();
 			if (CreditExcelUtil.IDENTITY_CARD.equals(identifyCode)) {
 				if (!CreditExcelUtil.checkIdentityCode(identifyCode)) {
@@ -450,7 +493,7 @@ public class CreditController {
 				}
 			}
 		}
-		if (!CreditExcelUtil.CREDIT_REPAY_WAY.equals(vo.getPayType())) { // 还款方式
+		if (!CreditExcelUtil.CREDIT_REPAY_WAY.contains(vo.getPayType())) { // 还款方式
 			errMsg.append("还款方式错误，只支持等额本息;");
 			flag = false;
 		}
@@ -462,28 +505,35 @@ public class CreditController {
 			 businessDate = Calendars.parse("yyyy-MM-dd", vo.getBusinessTime());i++;  
 			 deadTime =  Calendars.parse("yyyy-MM-dd", vo.getDeadTime());
 			 if (!(nowDate.after(businessDate) && nowDate.before(deadTime) && businessDate.before(deadTime))) {
-				errMsg.append("日期有误：放款日期 < 导入日期 < 债权到期日 ");
+				errMsg.append("日期有误：放款日期 < 导入日期 < 债权到期日 ;");
 				flag = false;
 			}
 		}catch(Exception e){
 			if(i <1){
-				errMsg.append("放款日期"+vo.getBusinessTime()+"格式化异常： ");
+				errMsg.append("放款日期"+vo.getBusinessTime()+"格式化异常;");
 			}else{
-				errMsg.append("债权到期日"+vo.getDeadTime()+"格式化异常： ");
+				errMsg.append("债权到期日"+vo.getDeadTime()+"格式化异常;");
 			}
 			flag = false;
 		}
 		//校验借款金额 必须是正整数
 		if(!CreditExcelUtil.checkNumber(vo.getAmount(),"+" ) ){
-			errMsg.append("借款金额 必须是正整数：当前值: "+vo.getAmount());
+			errMsg.append("借款金额 必须是正整数：当前值: "+vo.getAmount()+";");
 			flag = false;
 		}
 		//年利率 格式：10% 0--100
 		String rateStr = vo.getRate();
-		if(rateStr.contains(CreditExcelUtil.VAR_PERCENT) && CreditExcelUtil.checkNumber(rateStr.replace(CreditExcelUtil.VAR_PERCENT, ""), "0-100")){
+		if(rateStr.contains(CreditExcelUtil.VAR_PERCENT) && 
+		   CreditExcelUtil.checkNumber(rateStr.replace(CreditExcelUtil.VAR_PERCENT, ""), "0-100")){
 		}else{
-			errMsg.append("年利率 必须是百分比格式，且数值是0-100：当前值: "+vo.getRate());
-			flag = true;
+			errMsg.append("年利率 必须是百分比格式,且数值是0-100,当前值: "+rateStr+";");
+			flag = false;
+		}
+		//借款期限
+		String peroid = vo.getPeriod();
+		if(!CreditExcelUtil.checkNumber(peroid, "0-100")){
+			errMsg.append("借款期限 必须是正整数且数值是0-100，当前值= "+peroid+";");
+			flag = false;
 		}
 		resultMap.put("flag", flag ? FLAG_KIND_SUC : FLAG_KIND_ONE);
 		resultMap.put("errMsg", flag ? "" : errMsg.toString());
@@ -497,7 +547,7 @@ public class CreditController {
 	 * @param entity
 	 * @return
 	 */
-	public CrediteInfo initCreditInfoEntity(CreditInfoVo vo, CrediteInfo entity) {
+	public CrediteInfo initCreditInfoEntity(CreditInfoVo vo, CrediteInfo entity) throws Exception {
 		if (vo != null) {
 			entity.setCreditor(creditorService.findByCredtorNo(vo.getCreditorNo()));
 			entity.setCrediteCode(vo.getCreditCode());
@@ -508,15 +558,39 @@ public class CreditController {
 			entity.setWorkType(vo.getWorkType());
 			entity.setProvince(vo.getProvince());
 			entity.setCity(vo.getCity());
-			entity.setAmount(vo.getAmount());
-			entity.setRate(vo.getRate());
-			entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+			entity.setAmount(new BigDecimal(vo.getAmount().trim()));
 			entity.setPurpose(vo.getPurpose());
 			entity.setPayType(vo.getPayType());
-			entity.setDeadTime(vo.getDeadTime());
-			entity.setBusinessTime(vo.getBusinessTime());
 			entity.setRemark(vo.getRemark());
-			entity.setStatus(vo.getStatus());
+			if( CreditInfoVo.Status.VALID.equals(vo.getStatus()) ){
+				entity.setRate(new BigDecimal(vo.getRate().trim().replace("%", "")).divide(new BigDecimal("100"), 2, RoundingMode.HALF_DOWN)) ;
+				entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
+				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
+				entity.setStatus(CrediteInfo.Status.WAIT_ASSIGN);
+			}else{
+				entity.setRate(BigDecimal.ZERO) ;
+				entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
+				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
+				try{
+				  entity.setRate(new BigDecimal(vo.getRate().trim().replace("%", "")).divide(new BigDecimal("100"), 2, RoundingMode.HALF_DOWN)) ;
+				}catch(Exception e){
+					entity.setRate(BigDecimal.ZERO) ;
+				}
+				try{
+				    entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+				}catch(Exception e){
+					entity.setPeriod(0);
+				}
+				try{
+				   entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
+				}catch(Exception e){}
+				try{
+				   entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
+				}catch(Exception e){}
+				entity.setStatus(CrediteInfo.Status.IMP_FAIL);
+			}
 		}
 		return entity;
 	}
@@ -528,9 +602,10 @@ public class CreditController {
 	 * @param entity
 	 * @return
 	 */
-	public CreditRepayPlan initCreditRepayPlanEntity(RepayPlanVo vo, CreditRepayPlan entity, Creditor creditor, CrediteInfo creditInfo) {
+	public CreditRepayPlan initCreditRepayPlanEntity(RepayPlanVo vo, CreditRepayPlan entity) throws Exception{
 		if (vo != null) {
-			entity.setCreditor(creditor);
+			CrediteInfo creditInfo = creditInfoService.findById(vo.getCreditId());
+			entity.setCreditor(creditInfo.getCreditor());
 			entity.setCrediteInfo(creditInfo);
 			entity.setPeriod(vo.getPeriod());
 			entity.setRepayPlanTime(vo.getRepayTime());

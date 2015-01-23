@@ -35,8 +35,8 @@ public interface CreditInfoRepository extends JpaRepository<CrediteInfo, String>
 	 * 根据：债权人编号 + 债权编号 获取债权信息
 	 * @return
 	 */
-	@Query("select t from CrediteInfo t where  t.creditor.creditorNo = ?1 and crediteCode = ?2")
-	public CrediteInfo  findByCreditorNoAndCrediteCode(String creditorNo , String crediteCode);
+	@Query("select t from CrediteInfo t where  t.creditor.creditorNo = ?1 and t.crediteCode = ?2")
+	public List<CrediteInfo>  findByCreditorNoAndCrediteCode(String creditorNo , String crediteCode);
 	
 
 

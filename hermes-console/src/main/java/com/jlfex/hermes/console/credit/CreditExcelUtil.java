@@ -40,7 +40,7 @@ public class CreditExcelUtil {
 	public static final String CREDITOR_CERTIFICATE_KIND = "身份证,组织机构代码";  //借款人证件类型
 	public static final String IDENTITY_CARD =  "身份证";
 	public static final String ORGANIZATION_CODE =  "组织机构代码";
-	public static final String CREDIT_REPAY_WAY = "等额本息";
+	public static final String CREDIT_REPAY_WAY = "等额本息,等额本金,一次性还本付息";
 	
 	/**
 	 * 债权导入 Excel 文件解析

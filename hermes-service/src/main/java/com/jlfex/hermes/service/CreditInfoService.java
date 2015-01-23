@@ -129,5 +129,5 @@ public interface CreditInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public CrediteInfo  findByCreditorNoAndCreditCode(String creditorNo, String creditCode) throws Exception;
+	public List<CrediteInfo>  findByCreditorNoAndCreditCode(String creditorNo, String creditCode) throws Exception;
 }

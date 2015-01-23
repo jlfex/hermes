@@ -48,7 +48,6 @@
         </div>
 <div id="importResult"></div>
 <div id="data"></div>   
-<input type="hidden" value="" id="creditInfoIds">
 <script type="text/javascript" charset="utf-8">
 <!--
 var labelId;
@@ -110,7 +109,6 @@ function upload(files) {
 	                   _content = _content +"文件："+data.fileName+ "，导入成功! </p>";
 	                   _content = _content + "<p>债权列表：共<span class=\"text-primary\">"+data.sheet1AllNum+"</span>条记录，导入成功<span class=\"text-primary\">"+data.sheet1SucNum+"</span>条，导入失败<span class=\"color_red\">"+data.sheet1ErrNum+"</span>条。</p>";
 	                   _content = _content + "<p> 还款计划表：共<span class=\"text-primary\">"+data.sheet2AllNum+"</span>条记录，导入成功<span class=\"text-primary\">"+data.sheet2SucNum+"</span>条，导入失败<span class=\"color_red\">"+data.sheet2ErrNum+"</span>条。</p>";
-	                   //_content = _content + "<p><a href=\"#\" id=\"lookFileView\"  >查看导入结果文件</a></p>";
                    }else{
                        var err_msg = "文件导入失败。";
                        _content = _content +"文件："+data.fileName+ "，导入失败! </p>";
@@ -119,6 +117,7 @@ function upload(files) {
                        }
                        _content = _content +  "<p>"+err_msg+"</p>";
                    }
+                   _content = _content +  "<p>"+data.checkErrorMsg+"</p>";
                    _content = _content + "</div></div>";
                    $("#creditInfoIds").val(data.creditInfoIds);
                    $("#importResult").html(_content);
@@ -134,13 +133,7 @@ function upload(files) {
 	});
 }
  
- $("#importResult").on("click",function(){ 
-        var _ids = $("#creditInfoIds").val();
-		$.link.html(null, {
-			url: '${app}/credit/viewImpDetail/'+_ids,
-			target: 'main'
-		});
-  });
+
 
 //-->
 </script>
