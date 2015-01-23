@@ -543,7 +543,9 @@ public class CreditController {
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
 			Map<String, Object> calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
-			List<LoanLog> operateList = creditInfoService.queryCreditLogList(creditInfo);
+			// List<LoanLog> operateList =
+			// creditInfoService.queryCreditLogList(creditInfo);
+			List<LoanLog> operateList = null;
 			model.addAttribute("creditInfo", creditInfo); // 债权信息
 			model.addAttribute("repayPlanDetailList", planList); // 还款明细
 			model.addAttribute("operateList", operateList); // 债权标操作 明细
