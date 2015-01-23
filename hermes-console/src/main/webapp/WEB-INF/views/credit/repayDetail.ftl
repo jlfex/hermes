@@ -128,10 +128,10 @@
                         </tbody>
                     </table>
                 </div>
-                <h3>相关协议</h3>
+                <!--<h3>相关协议</h3>
                 <span class="protocol">
 			     <a href="#" id="protocol" class="m_a1">《债权转让协议》</a>
-		      </span>
+		      </span>-->
               </div>
               <div role="tabpanel" class="tab-pane" id="planDetail">
                     <div id="" style="display:block; margin-top:20px;">
