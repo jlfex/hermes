@@ -40,22 +40,13 @@
                            </#if>
                         </tbody>
                     </table>
-  <div class="col-xs-1 hm-col form-group" style="margin-right:100px;"><button type="button" class="btn btn-default btn-block" id="cancelBtn">关闭</button></div>
-         
- <script type="text/javascript" charset="utf-8">
+  <script type="text/javascript" charset="utf-8">
    $('#creditRepayPlanDetail .btn-primary').click(function() {
    	    $.link.html(null, {
 			url: '${app}/loan/repayment/'+$(this).data().id,
 			target: 'main'
 		});
      });
-     	//点击取消按钮
-	$("#cancelBtn").on("click",function(){
-		$.link.html(null, {
-			url: '${app}/credit/assigned',
-			target: 'main'
-		});
-	});
-     
+     	     
  </script>         
                     
