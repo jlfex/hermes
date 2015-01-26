@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.jlfex</groupId>
 		<artifactId>hermes-parent</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.0-GA</version>
 	</parent>
 	<artifactId>hermes-service</artifactId>
 	
