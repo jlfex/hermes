@@ -377,11 +377,16 @@ public class InvestController {
 			if (crediteInfo == null || crediteInfo.getDeadTime() == null) {
 				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间为空!");
 			}
-			creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
-			long endTime = crediteInfo.getBidEndTime().getTime();
-			long startTime = new Date().getTime();
-			if (endTime - startTime > 0) {
-				remaintime = String.valueOf(endTime - startTime);
+			try{
+				creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
+				long endTime = crediteInfo.getBidEndTime().getTime();
+				long startTime = new Date().getTime();
+				if (endTime - startTime > 0) {
+					remaintime = String.valueOf(endTime - startTime);
+				}
+			}catch(Exception e){
+				Logger.error("债权计算剩余时间异常", e);
+				remaintime = "0";
 			}
 		} else {
 			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();

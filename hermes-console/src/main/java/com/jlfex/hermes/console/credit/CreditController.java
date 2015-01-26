@@ -746,9 +746,6 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getPurpose())) {
 					entity.setPurpose(creditInfo.getPurpose());
 				}
-				if (!Strings.empty(creditInfo.getBidEndTimeStr())) {
-					entity.setBidEndTimeStr(creditInfo.getBidEndTimeStr());
-				}
 				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
 					 throw new ServiceException("发售金额必须大于0");
 				}else{
@@ -769,7 +766,7 @@ public class CreditController {
 				if(Strings.empty(bidEndTimeStr)){
 					 throw new ServiceException("招标截止时间不能为空");
 				}else{
-					entity.setBidEndTime(Calendars.parse("yyyy-MM-dd", bidEndTimeStr));
+					entity.setBidEndTime(Calendars.parse("yyyy-MM-dd", bidEndTimeStr.trim()));
 				}
 				if(creditInfo.getDeadLine() <= 0){
 					 throw new ServiceException("招标期限必须大于0");
