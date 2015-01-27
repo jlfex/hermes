@@ -18,8 +18,8 @@
 		<td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
 		<td class="td_05">
             <div class="layer_box">
-                <div class="layer1">${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}</div>
-                <div class="layer2" style="height: ${ ((l.amount?replace(',','')?number -(l.remain?replace(',','')?number))/l.amount?replace(',','')?number)?string.percent}"></div>
+                 <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
+                 <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
             </div>
 		</td>
 		<td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
