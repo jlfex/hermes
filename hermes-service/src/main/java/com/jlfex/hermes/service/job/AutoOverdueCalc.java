@@ -12,7 +12,7 @@ import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.service.RepayService;
 
 /**
- * @author 陈琪 自动预期计算，更新loan_repay的状态为逾期的各个逾期费用的计算
+ * @author 自动逾期计算，更新loan_repay的状态为逾期的各个逾期费用的计算
  */
 @Component("autoOverdueCalcJob")
 public class AutoOverdueCalc extends Job {
