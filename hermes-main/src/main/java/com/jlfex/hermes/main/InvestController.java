@@ -220,10 +220,9 @@ public class InvestController {
 			result.setType(Type.WARNING);
 			return result;
 		}
-
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		Logger.info("loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
+		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
 		boolean bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
 		if (bidResult) {
 			result.setType(Type.SUCCESS);

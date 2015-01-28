@@ -371,13 +371,18 @@ public class LoanController {
 			if (loan != null) {
 				UserProperties loanUserProperties = userInfoService.loadPropertiesByUserId(loan.getUser().getId());
 				model.addAttribute("loan", loan);
-				Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
-				model.addAttribute("purpose", dictionary.getName());
+				String purpose = "";
+				if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+					purpose = loan.getPurpose();
+				}else{
+					Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
+					purpose = dictionary.getName();
+				}
+				model.addAttribute("purpose", purpose);
 				model.addAttribute("product", loan.getProduct());
 				model.addAttribute("repay", loan.getProduct().getRepay());
 				model.addAttribute("user", loan.getUser());
 				model.addAttribute("loanUserProperties", loanUserProperties);
-
 				List<Invest> invests = investService.findByLoan(loan);
 				List<InvestInfo> investInfoList = new ArrayList<InvestInfo>();
 				BigDecimal sumInvestAmount = BigDecimal.ZERO;
