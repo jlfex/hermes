@@ -359,7 +359,13 @@ public class CreditExcelUtil {
 						errMsg.append(cellName).append(ERROR_EMPTY);
 						errFlag = true;
 					}else if(cell2.getCellType() == XSSFCell.CELL_TYPE_STRING){
-						vo.setCreditCode(cell1.getStringCellValue().trim());
+						try{
+						  vo.setPeriod(Integer.parseInt(cell2.getStringCellValue().trim()));
+						}catch(Exception e){
+							Logger.error("债权导入：还款明细：期数 格式化异常:  期数="+cell2.getStringCellValue());
+							errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_STR_DATE);
+							errFlag = true;
+						}
 					}else{
 						errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_NUMBER_OR_TXT);
 						errFlag = true;

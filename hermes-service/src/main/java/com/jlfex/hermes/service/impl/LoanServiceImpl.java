@@ -485,7 +485,7 @@ public class LoanServiceImpl implements LoanService {
 			loanRepay.setOverdueDays(0);
 			loanRepay.setOverdueInterest(BigDecimal.ZERO);
 			loanRepay.setOverduePenalty(BigDecimal.ZERO);
-			loanRepay.setStatus(LoanRepay.RepayStatus.WAIT);
+			loanRepay.setStatus(plan.getStatus());
 			loanRepayList.add(loanRepay);
 		}
 		loanRepayRepository.save(loanRepayList);
@@ -499,17 +499,19 @@ public class LoanServiceImpl implements LoanService {
 			// 转账
 			transactionService.transact(Transaction.Type.OUT, invest.getUser(), loan.getUser(), invest.getAmount(), invest.getId(), "放款理财人到借款人");
 			for (LoanRepay loanRepay : loanRepayList) {
-				investProfit = new InvestProfit();
-				investProfit.setUser(invest.getUser());
-				investProfit.setInvest(invest);
-				investProfit.setLoanRepay(loanRepay);
-				investProfit.setDate(loanRepay.getPlanDatetime());
-				investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setStatus(InvestProfit.Status.WAIT);
-				investProfitList.add(investProfit);
+				if(LoanRepay.RepayStatus.WAIT.equals(loanRepay.getStatus())){
+					investProfit = new InvestProfit();
+					investProfit.setUser(invest.getUser());
+					investProfit.setInvest(invest);
+					investProfit.setLoanRepay(loanRepay);
+					investProfit.setDate(loanRepay.getPlanDatetime());
+					investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setStatus(InvestProfit.Status.WAIT);
+					investProfitList.add(investProfit);
+				}
 			}
 		}
 		resultMap.put("investProfitList", investProfitList);

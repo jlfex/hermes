@@ -84,10 +84,6 @@ public class LoanRepay extends Model {
 	@Transient
 	private BigDecimal unRepay;
 	
-	//导入结果
-	@Transient
-	private String import_result;
-	
 		
 	
 	
@@ -372,13 +368,7 @@ public class LoanRepay extends Model {
 	}
 	
 	
-	public String getImport_result() {
-		return import_result;
-	}
 
-	public void setImport_result(String import_result) {
-		this.import_result = import_result;
-	}
 
 
 	/**

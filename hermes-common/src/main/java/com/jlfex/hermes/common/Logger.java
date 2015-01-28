@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Logger {
 
-	private static org.slf4j.Logger logger = LoggerFactory.getLogger(App.config("app.logger.name", "app"));
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(App.config("app.logger.name", "hermes"));
 	private static Boolean caller;
 
 	/**
