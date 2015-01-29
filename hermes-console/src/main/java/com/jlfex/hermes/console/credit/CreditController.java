@@ -557,7 +557,6 @@ public class CreditController {
 			entity.setWorkType(vo.getWorkType());
 			entity.setProvince(vo.getProvince());
 			entity.setCity(vo.getCity());
-			entity.setAmount(new BigDecimal(vo.getAmount().trim()));
 			entity.setPurpose(vo.getPurpose());
 			entity.setPayType(vo.getPayType());
 			entity.setRemark(vo.getRemark());
@@ -566,10 +565,20 @@ public class CreditController {
 				entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
 				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
 				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
+				entity.setAmount(new BigDecimal(vo.getAmount().trim()));
 				entity.setStatus(CrediteInfo.Status.WAIT_ASSIGN);
 			}else{
 				entity.setRate(BigDecimal.ZERO) ;
-				entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+				try{
+				     entity.setAmount(new BigDecimal(vo.getAmount().trim()));
+				}catch(Exception e){
+					 entity.setAmount(BigDecimal.ZERO) ;
+				}
+				try{
+				   entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
+				}catch(Exception e){
+					entity.setPeriod(0);
+				}
 				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
 				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
 				try{
@@ -772,6 +781,7 @@ public class CreditController {
 				}else{
 					entity.setDeadLine(creditInfo.getDeadLine());
 				}
+				entity.setProductDesc(creditInfo.getProductDesc());
 				if(creditInfoService.sellCredit(entity)){
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
 				}
