@@ -13,9 +13,10 @@
                 <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>参数类</label>
                 <div class="col-sm-5">
                       <select class="form-control selector" name="parameterType" id="parameterType1">
+                        <option value="176c9150-7103-11e3-ae10-6cae8b21aead" selected="selected">产品招标期限</option>
                         <option value="176c9150-7103-11e3-ae10-6cae8b21aeab">产品担保方式</option>
 						<option value="176c9150-7103-11e3-ae10-6cae8b21aeac">产品用途</option>
-                        <option value="176c9150-7103-11e3-ae10-6cae8b21aead" selected="selected">产品招标期限</option>
+                        <option value="b6f885cb-956c-11e4-90ca-b87932903a74">还款方式</option>
 				      </select>
                 </div>
                </div>
