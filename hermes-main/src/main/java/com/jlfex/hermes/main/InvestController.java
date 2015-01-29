@@ -26,6 +26,7 @@ import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
@@ -37,6 +38,7 @@ import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.service.CreditInfoService;
+import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.InvestService;
@@ -46,6 +48,7 @@ import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.impl.CreditRepayPlanServiceImpl;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
 
@@ -81,6 +84,8 @@ public class InvestController {
 	private LabelService labelService;
 	@Autowired
 	private CreditInfoService creditInfoService;
+	@Autowired
+	private CreditRepayPlanService creditRepayPlanService;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -329,8 +334,19 @@ public class InvestController {
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
-		Logger.info("loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			CrediteInfo creditInfo = null;
+			List<CreditRepayPlan> creditRepayList = null;
+			try {
+			    creditInfo = creditInfoService.findById(loan.getCreditInfoId());
+			    creditRepayList = creditRepayPlanService.queryByCreditInfo(creditInfo); //获取 回款记录
+			}catch (Exception e) {
+				Logger.error("根据loan_Id=%s,获取债权信息异常：",loan.getCreditInfoId());
+			}
+			model.addAttribute("creditInfo", creditInfo);
+			model.addAttribute("creditRepayList", creditRepayList);
+		}
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -350,7 +366,6 @@ public class InvestController {
 		// 读取投标金额倍数设置
 		String investBidMultiple = App.config(INVEST_BID_MULTIPLE);
 		model.addAttribute("investBidMultiple", investBidMultiple);
-		// 返回视图
 		return "invest/info";
 	}
 
@@ -399,7 +414,7 @@ public class InvestController {
 					Caches.set(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), deadline, "7d");
 				}
 			}
-			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) != null) {
+			if(Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) != null) {
 				Date deadline = Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), Date.class);
 				Date start = new Date();
 				long endTime = deadline.getTime();

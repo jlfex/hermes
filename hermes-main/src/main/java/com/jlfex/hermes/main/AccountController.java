@@ -205,11 +205,12 @@ public class AccountController {
 	@RequestMapping("/charge/add")
 	public String addCharge(String channel, Double amount, Model model) {
 		App.checkUser();
-		UserAccount account = userInfoService.loadByUserIdAndType(App.user().getId(), UserAccount.Type.CASH);
 		Payment payment = paymentService.save(channel, amount);
-		userInfoService.chargeUserAccount(account, amount);
-		transactionService.AddCashAccount(Transaction.Type.CHARGE, account, new BigDecimal(amount), payment.getId(), "现金账户充值");
-		model.addAttribute("payment", payment);
+		//模拟充值
+		transactionService.fromCropAccount(Transaction.Type.CHARGE, payment.getUser(), UserAccount.Type.PAYMENT, payment.getAmount(), payment.getId(), App.message("transaction.charge"));
+		//扣除充值手续
+		transactionService.betweenCropAccount(Transaction.Type.OUT, UserAccount.Type.PAYMENT, UserAccount.Type.PAYMENT_FEE, payment.getFee(), payment.getId(), App.message("transaction.charge.fee"));
+		model.addAttribute("payment",payment);
 		return "account/charge-success";
 	}
 

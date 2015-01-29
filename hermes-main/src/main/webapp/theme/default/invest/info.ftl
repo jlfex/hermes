@@ -319,13 +319,14 @@ jQuery(function($) {
 				<div id="tab3" class="account_right_part02 loan_myloan_sub">
 					<ul class="all_information m_tab_t">
 						<li class="active"> <#if loan.loanKind=='00'>借款人详情 <#else>债权信息 </#if></li>
-						<li>回款记录</li>
-						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>投标记录 </#if></li>  
+						<li>投标记录</li>
+						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>回款记录</#if></li>  
 					</ul>
 					<div class="m_tab_c ad_border">
 						<div style="display: block;">
 							<div class="m_tda table_mar">
 			                    <table cellpadding="0" cellspacing="0" border="0">
+			                     <#if loan.loanKind=='00'>
 			                    	<tr>
 			                            <td class="tdalign"><@messages key="model.basic.gender" /></td>
 			                            <td class="th_00 th_06 black">${loanUserInfo.genderName!''}</td>
@@ -362,14 +363,27 @@ jQuery(function($) {
 			                            <td class="tdalign"><@messages key="invest.car.mortgage.info" /></td>
 			                            <td colspan="3" class="th_00 black">${loanUserInfo.hasCarMortgage!''}</td>
 			                        </tr>
+			                        <#else>
+                			        <tr>
+			                            <td class="tdalign">产品用途</td>
+			                            <td colspan="5" class="th_00 black">${(creditInfo.purpose)!''}</td>
+			                        </tr>
+			                        <tr>
+			                            <td class="tdalign">资金用途</td>
+			                            <td colspan="5" class="th_00 black">${(loan.amountAim)!''}</td>
+			                        </tr>
+                			        </#if>
 			                    </table>
                 			</div>
 						</div>
 						<div style="display: none;">
 							<div class="m_tda table_mar">
 			                    <table cellpadding="0" cellspacing="0" border="0">
-			                        <tr><th class="th_00"><@messages key="invest.user" /></th><th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th><th>投标时间</th></tr>
-			                          <#list invests as i>  
+			                        <tr>
+			                        <th class="th_00"><@messages key="invest.user" /></th>
+			                        <th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
+			                        <th>投标时间</th></tr>
+			                        <#list invests as i>  
 									<tr>
 										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
 										<td>${i.amount?string('#,##0.00')}</td>
@@ -380,7 +394,30 @@ jQuery(function($) {
                 			</div>	
 						</div>
 						<div style="display: none;">
-							<p class="new_year">${loan.description!''}</p>
+						    <#if loan.loanKind=='00'> 
+							   <p class="new_year">${loan.description!''}</p>
+							<#else>
+							   <div class="m_tda table_mar">
+			                    <table cellpadding="0" cellspacing="0" border="0">
+			                        <tr>
+				                        <th class="th_00">应收日期</th>
+				                        <th>应收本金(<@messages key="common.unit.cny" />)</th>
+				                        <th>应收利息(<@messages key="common.unit.cny" />)</th>
+				                        <th>应收金额(<@messages key="common.unit.cny" />)</th>
+			                        </tr>
+			                        <#if creditRepayList??>
+				                        <#list creditRepayList as l>  
+										<tr>
+											<td class="th_00">${(l.repayPlanTime?string('yyyy-MM-dd'))!''}</td>
+											<td>${l.repayPrincipal?string('#,##0.00')}</td>
+											<td>${l.repayInterest}</td>
+											<td>${l.repayAllmount}</td>
+										</tr>
+										</#list>
+									</#if>
+			                    </table>
+                			</div>	
+							</#if>
 						</div>
 					</div>
 				</div>
