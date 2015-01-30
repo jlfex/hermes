@@ -156,6 +156,7 @@ jQuery(function($) {
 					<#if loanUserInfo?exists><#if loanUserInfo.lgAvatar?exists><img alt="" src="${loanUserInfo.lgAvatar!''}" class="head_img"> <#else> 	<img class="head_img" src="${app.theme}/public/other/images/icon1/acdount_head_img.png"></#if></#if>
 			
 				</div>
+				<br/>
 				<p class="clicklink">
 				 	 <#if loanUserInfo?exists && loanUserInfo.authEmail?exists && loanUserInfo.authEmail=='10'>
 						 <a href="javascript:value(0);" class="hover">
@@ -183,6 +184,7 @@ jQuery(function($) {
                    
                 </p>    
 			</div>
+			<br/><br/>
 			<div class="left_nav">
 				<!--审核记录-->
 				<div class="record_info">
