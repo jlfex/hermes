@@ -10,8 +10,8 @@ mvn clean install
 
 
 echo "[Step 2] Start all projects."
-cd hermes-main && mvn clean jetty:run -Djetty.port=8105 &
-cd hermes-console && mvn clean jetty:run -Djetty.port=8106 &
+cd hermes-main && nohup mvn clean jetty:run -Djetty.port=8105 &
+cd hermes-console && nohup mvn clean jetty:run -Djetty.port=8106 &
 
 echo "[INFO] Please wait a moment then access below demo sites:"
 echo "[INFO] http://localhost:8105/hermes-main"
