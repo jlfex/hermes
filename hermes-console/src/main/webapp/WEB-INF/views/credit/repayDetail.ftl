@@ -158,8 +158,8 @@
                                 <td class="align-center">${l.repayPlanTime?string('yyyy-MM-dd')}</td> 
                                 <td class="align-center">${l.repayPrincipal!''}</td> 
                                 <td class="align-center">${l.repayInterest!''}</td> 
-                                <td class="align-center">${l.remainPrincipal!''}</td>
                                 <td class="align-center">${l.repayAllmount!''}</td>
+                                <td class="align-center">${l.remainPrincipal!''}</td>
                                 <td class="align-center">${l.statusName!''}</td> 
                                 <td class="align-center">
                                 <#if l.status?? && l.status == '00' >
