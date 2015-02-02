@@ -184,7 +184,7 @@ jQuery(function($) {
                    
                 </p>    
 			</div>
-			<br/><br/>
+			<br/><br/><br/>
 			<div class="left_nav">
 				<!--审核记录-->
 				<div class="record_info">
