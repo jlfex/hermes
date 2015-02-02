@@ -24,7 +24,7 @@
 		</property>
 	</bean>
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
-	<!-- GreenMail 邮件配置 -->
+	<!-- 邮件配置 -->
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="protocol" value="${email.protocol}"></property>
 		<property name="host" value="${email.host}"></property>

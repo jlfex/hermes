@@ -56,8 +56,8 @@ jQuery(function($) {
 	$("#endDate").datepicker();
     //$('#table a').link();
 	// 点击上传处理
-	$('#uploadBtn').on('click', function(e) { $('#file').click();});
-	$('#file').on('change', function(e) {
+	$('#uploadBtn').on('click', function(e) { $('#file').click(); });
+	$('#file').on('change', function(e) {  
 	var name=$(this).get(0).files[0].name;
 	var imgExt = name.substring(name.lastIndexOf(".")); 
 	if(!(imgExt=='.xlsx'||imgExt=='.xls')){
@@ -65,10 +65,11 @@ jQuery(function($) {
 	   return false;
 	}
 	upload($(this).get(0).files);
+	$('#file').val("");
 	});
 	
 	$("#downloadModelFile").click(function(){
-		var form=$("<form>");//
+		var form=$("<form>");
 		form.attr("style","display:none");
 		form.attr("target","");
 		form.attr("method","post");
@@ -89,7 +90,7 @@ jQuery(function($) {
 	
 });
 // 异步上传
-function upload(files) {
+function upload(files) { 
 	$.each(files, function(i, file) {
 		// 初始化
 		var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();

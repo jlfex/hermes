@@ -507,16 +507,16 @@ public class RepayServiceImpl implements RepayService {
 		BigDecimal principal = BigDecimal.ZERO; // 总本金
 		BigDecimal interest = BigDecimal.ZERO; // 总利息
 		// 还月缴管理费
-		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_MONTHLY_FEE, loanRepay.getOtherAmount(), loanRepay.getId(), "缴纳公司月缴管理费");
+		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_MONTHLY_FEE, loanRepay.getOtherAmount(), loanRepay.getId(), "自动还款_缴纳公司月缴管理费");
 		// 如果状态为等待还款，为正常还款
 		if (Strings.equals(loanRepay.getStatus(), RepayStatus.WAIT)) {
 			List<InvestProfit> investProfitList = investProfitRepository.findByLoanRepay(loanRepay);
 			for (InvestProfit investProfit : investProfitList) {
 				// 还本金
-				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "正常还本金");
+				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "自动还款_正常还本金");
 				principal = principal.add(investProfit.getPrincipal());
 				// 还利息
-				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "正常还利息");
+				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "自动还款_正常还利息");
 				interest = interest.add(investProfit.getInterest());
 				// 更新理财收益表
 				investProfit.setStatus(InvestProfit.Status.ALREADY);
