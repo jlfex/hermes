@@ -123,6 +123,13 @@ public interface InvestService {
 	 * @return
 	 */
 	public Page<LoanInfo> investIndexLoanList(String page, String size,  String loanKind);
+   /**
+    * 自己的借款标自己不能投资
+    * @param loanId
+    * @param investUser
+    * @return
+    */
+	public boolean bidAuthentication(String loanId, User investUser);
 
 
 }

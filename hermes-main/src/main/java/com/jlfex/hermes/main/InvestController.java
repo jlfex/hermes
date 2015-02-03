@@ -228,6 +228,13 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
+		//自己发布的借款 不能自己投标
+		boolean bidAuthentication =  investService.bidAuthentication(loanid, user);
+		if(!bidAuthentication){
+			result.setType(Type.FAILURE);
+			result.setData("自己发布的借款 不能自己投标");
+			return result;
+		}
 		boolean bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
 		if (bidResult) {
 			result.setType(Type.SUCCESS);
@@ -244,8 +251,6 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		model.addAttribute("investamount", investamount);
 		model.addAttribute("loanid", loanid);
-
-		// 返回视图
 		return "invest/bidsuccess";
 	}
 
@@ -253,10 +258,19 @@ public class InvestController {
 	public String bidfull(Model model) {
 		App.checkUser();
 		model.addAttribute("nav", "invest");
-		// 返回视图
 		return "invest/bidfull";
 	}
-
+	/**
+	 * 借款标不能自己投标
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/bidInvalid")
+	public String bidInvalid(Model model) {
+		App.checkUser();
+		model.addAttribute("nav", "invest");
+		return "invest/bidInvalid";
+	}
 	/**
 	 * 计算预期收益
 	 * 
@@ -271,7 +285,6 @@ public class InvestController {
 		Logger.info("loanid:" + loanid + "investamount:" + investamount);
 		Loan loan = loanService.loadById(loanid);
 		BigDecimal maturegain = repayService.getRepayMethod(loan.getRepay().getId()).getProceeds(loan, null, new BigDecimal(investamount));
-
 		return maturegain;
 	}
 
@@ -347,6 +360,8 @@ public class InvestController {
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("creditRepayList", creditRepayList);
 		}
+		AppUser curUser = App.current().getUser();
+		boolean bidAuthentication =  investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -366,6 +381,7 @@ public class InvestController {
 		// 读取投标金额倍数设置
 		String investBidMultiple = App.config(INVEST_BID_MULTIPLE);
 		model.addAttribute("investBidMultiple", investBidMultiple);
+		model.addAttribute("validFlag",  bidAuthentication); //投标是否有效标识
 		return "invest/info";
 	}
 

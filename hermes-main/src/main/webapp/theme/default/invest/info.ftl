@@ -13,6 +13,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
+    var  validFlag = '${validFlag?c}';
+    if(validFlag == 'false'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html("提示：不能对自己发布的借款标进行投标");
+    }
     $('#funanceProtocol').click(function(){
 			openwindow("${app}/loan/funanceProtocol","",1000,800);
 			
@@ -33,6 +38,9 @@ jQuery(function($) {
 		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 	$('.confirm').click(function(){
+	    if(validFlag == 'false'){
+	       return ;
+	    }
 	 	$.ajax({
 				data: $("#loanDetail").serialize(),
 			     url: "${app}/invest/bid",
@@ -43,9 +51,10 @@ jQuery(function($) {
 						var investamount =$("#investamount").val();
 						var loanid =$("#loanid").val();
 						window.location.href="${app}/invest/bidsuccess?investamount="+investamount+"&loanid="+loanid;
-					}
-					else if(data.type=="WARNING"){
+					}else if(data.type=="WARNING"){
 						window.location.href="${app}/userIndex/skipSignIn";
+					}else if(data.type=="FAILURE"){
+					    window.location.href="${app}/invest/bidInvalid";
 					}else{
 						window.location.href="${app}/invest/bidfull";
 					}
@@ -75,9 +84,6 @@ jQuery(function($) {
 		}  
 		$('#investamount').blur(function()
 		{
-		    if(checkCredit()){
-	          return ;
-	        }
 			var investamount =$("#investamount").val();
 			var loanid =$("#loanid").val();
 			var msg =$('#investamount').siblings("span").text();
@@ -271,6 +277,7 @@ jQuery(function($) {
 	                		<span class="confirm">
 								<a href="#"  class="m_btn1 bt_red a_middle mv_submit"><@messages key="invest.loan.bid" /></a>
 							</span>
+							&nbsp;&nbsp;<span id="err_msg" ></span>
 							</td>
 						</tr>
                 	</table>
