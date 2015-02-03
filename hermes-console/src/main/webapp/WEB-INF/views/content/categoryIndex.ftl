@@ -32,7 +32,7 @@
             <tr>
                 <td class="align-center">${l.name}</td>
                 <td class="align-center">1</td>
-                <td class="align-center">${l.level}</td>
+                <td class="align-center">${l.level!''}</td>
                 <td class="align-center">${l.createTime?string('yyyy-MM-dd hh:mm:ss')}</td>
                 <td class="align-center">admin</td>
                 <td class="align-center">
