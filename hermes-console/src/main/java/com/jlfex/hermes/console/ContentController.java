@@ -239,12 +239,11 @@ public class ContentController {
 		try {
 			contentService.addPublish(pcVo);
 			attr.addFlashAttribute("msg", "发布内容成功");
-			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");
 			Logger.error("发布内容失败：", e);
-			return "redirect:/content/addPublish";
 		}
+		return "redirect:/content/publish";
 	}
 
 	/**
