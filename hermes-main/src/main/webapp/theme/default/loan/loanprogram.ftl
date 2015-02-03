@@ -80,7 +80,7 @@ jQuery(function($) {
 	<div class="section">
 		<table>
 			<tr>
-				<td class="wd1" width="40%"><a href="#" class="m_a1">${productName}<span class="m_ico1"></span></a></td>
+				<td class="wd1" width="40%">${productName}</td>
 				<td class="wd2" width="30%"><@messages key="model.loan.period" />：${period}<@messages key="common.unit.month"  /></td>
 				<td width="30%"><@messages key="model.loan.amount" />： ${amount}<@messages key="common.unit.cny"  /></td>
 			</tr>

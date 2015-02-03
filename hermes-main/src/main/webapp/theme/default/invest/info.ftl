@@ -152,12 +152,10 @@ jQuery(function($) {
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="account_center_list">
-				<div class="head_part">
+				<div class="head_part" style="height:242px;">
 					<#if loanUserInfo?exists><#if loanUserInfo.lgAvatar?exists><img alt="" src="${loanUserInfo.lgAvatar!''}" class="head_img"> <#else> 	<img class="head_img" src="${app.theme}/public/other/images/icon1/acdount_head_img.png"></#if></#if>
-			
 				</div>
-				<br/>
-				<p class="clicklink">
+				<p class="clicklink" style="height:25px;" >
 				 	 <#if loanUserInfo?exists && loanUserInfo.authEmail?exists && loanUserInfo.authEmail=='10'>
 						 <a href="javascript:value(0);" class="hover">
 						 	<img src="${app.theme}/public/other/images/icon1/info_iconemail.png"/>
@@ -181,10 +179,9 @@ jQuery(function($) {
 					 <#else> 
 					 	<a href="javascript:value(0);"><img src="${app.theme}/public/other/images/icon1/info_iconepeople01.png"/></a>
 					 </#if>
-                   
                 </p>    
 			</div>
-			<br/><br/><br/>
+			<div style="height:65px"></div>
 			<div class="left_nav">
 				<!--审核记录-->
 				<div class="record_info">
