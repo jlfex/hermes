@@ -573,6 +573,7 @@ a.a_dec{ color:#018dc8; text-decoration:underline;}
 	height:160px;
 }
 .bt_red{ background:#ff4520;color:#FFF;}
+.bt_gray{ background:#CFC8C8;color:#FFF;}
 .m_item_add {
 	display:none;
 	margin-top: 20px;

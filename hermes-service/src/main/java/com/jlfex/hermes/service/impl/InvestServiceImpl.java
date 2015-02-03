@@ -324,6 +324,24 @@ public class InvestServiceImpl implements InvestService {
 		}
 
 	}
+	/**
+	 * 投标时：自己的借款标自己不能投资
+	 * @param loanId
+	 * @param investUser
+	 * @return
+	 */
+	@Override
+	public boolean bidAuthentication(String loanId, User investUser){
+	    boolean flag = true;
+	    Loan loan = loanRepository.findOne(loanId);
+	    if(loan!=null && loan.getUser() != null && investUser!=null){
+	    	User loanUser = loan.getUser();
+	    	if(loanUser.getId().equals(investUser.getId())){
+	    		flag = false;
+	    	}
+	    }
+		return flag;
+	}
 
 	/*
 	 * (non-Javadoc)
