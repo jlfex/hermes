@@ -42,10 +42,9 @@
 		                        <td class="align-center">${(l.currentUserName!'')}</td> 
 		                        <td class="align-center">${(l.statusName)!''}</td> 
 								<td class="align-center">
-	                                 <a href="#" id="creditDetailView" data-url="${app}/credit/repayPlanDetail/${l.id}" >查看</a>
-	                                 
+	                                 <a href="#"  data-url="${app}/credit/repayPlanDetail/${l.id}" data-target="main" >查看</a>
 	                            <#if l.status == '00' &&  !l.outOfDate>
-	                                 <a href="#" data-url="${app}/credit/goSell/${l.id}" >发售</a>
+	                                 <a href="#" data-url="${app}/credit/goSell/${l.id}"  data-target="main">发售</a>
 	                            </#if>
 	                        </td>    
 							</tr>
@@ -73,11 +72,6 @@ jQuery(function($) {
 	});
 });
 
-$("table a").on("click",function(){
-		$.link.html(null, {
-			url: $(this).attr("data-url"),
-			target: 'main'
-		});
-});
+
 //-->
 </script>

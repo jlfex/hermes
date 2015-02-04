@@ -27,7 +27,7 @@ public interface CreditorRepayPlanRepository extends JpaRepository<CreditRepayPl
 	
 	/**
 	 * 根据：债权信息
-	 * 获取：还款计划时间 <= 截止当前时间 的还款明细 
+	 * 获取：还款计划时间 < 截止当前时间 的还款明细 
 	 * @return
 	 */
 	@Query("select t from CreditRepayPlan t where  t.repayPlanTime < ?1 and crediteInfo = ?2")
