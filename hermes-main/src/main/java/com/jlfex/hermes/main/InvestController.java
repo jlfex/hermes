@@ -89,7 +89,7 @@ public class InvestController {
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
-	private static final String INVEST_BID_MULTIPLE = "invest.bid.multiple";
+	//private static final String INVEST_BID_MULTIPLE = "invest.bid.multiple";
 
 	@RequestMapping("checkMoneyMore")
 	@ResponseBody
@@ -379,7 +379,7 @@ public class InvestController {
 		model.addAttribute("loanauths", loanAuthlist);
 		model.addAttribute("nav", "invest");
 		// 读取投标金额倍数设置
-		String investBidMultiple = App.config(INVEST_BID_MULTIPLE);
+		String investBidMultiple = ""+loan.getProduct().getStartingAmt().intValue();
 		model.addAttribute("investBidMultiple", investBidMultiple);
 		model.addAttribute("validFlag",  bidAuthentication); //投标是否有效标识
 		return "invest/info";

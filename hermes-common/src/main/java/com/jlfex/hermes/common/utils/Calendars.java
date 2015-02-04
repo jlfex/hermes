@@ -280,4 +280,39 @@ public abstract class Calendars {
 			throw new ServiceException("cannot parse '" + date + "' to end date", e);
 		}
 	}
+	
+	/** 
+     * 计算两个日期之间相差的天数 
+     * @param smallDate 较小的时间
+     * @param bigDate  较大的时间
+     * @return 相差天数
+	 * @throws ParseException 
+     */  
+    public static int daysBetween(Date smallDate,Date bigDate) throws ParseException  
+    {  
+    	smallDate = parse("yyyy-MM-dd", format("yyyy-MM-dd", smallDate));
+    	bigDate = parse("yyyy-MM-dd", format("yyyy-MM-dd", bigDate));
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(smallDate);  
+        long time1 = cal.getTimeInMillis();               
+        cal.setTime(bigDate);  
+        long time2 = cal.getTimeInMillis();       
+        long between_days=(time2-time1)/(1000*3600*24);
+        return Integer.parseInt(String.valueOf(between_days));         
+    }  
+    
+	/**
+	*字符串的日期格式的计算
+	*/
+    public static int daysBetween(String smllDate,String bigDate) throws ParseException{
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(parse("yyyy-MM-dd", smllDate));  
+        long time1 = cal.getTimeInMillis();               
+        cal.setTime(parse("yyyy-MM-dd", bigDate));  
+        long time2 = cal.getTimeInMillis();       
+        long between_days=(time2-time1)/(1000*3600*24);
+        return Integer.parseInt(String.valueOf(between_days));   
+    }
+	
+	
 }

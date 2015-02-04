@@ -148,13 +148,17 @@
 			  				ajax: opts.nameUniqueAjax
 			  			}]
 			  		},
-			  		mv_money50: {
+			  		mv_money_loan: {
 			  			initText: '',
-			  			initMsg: '最低投标金额为'+$("#investBidMultiple").val()+'元，并且是'+$("#investBidMultiple").val()+'的倍数。',
+			  			initMsg: '最低投标金额为'+$("#investBidMultiple").val()+'元',
 			  			methods: [{
-			  				errorMsg: '输入数字应为'+$("#investBidMultiple").val()+'的整倍',
+			  				errorMsg: '输入数字应大于起投金额:'+$("#investBidMultiple").val()+',并且最多两位小数',
 			  				rule: function(val) {
-			  					return /^([1-9]\d*)(\.0+)?$/.test(val) && val%parseInt($("#investBidMultiple").val()) === 0
+			  					var len = val.indexOf(".");
+			  					if(len>0){
+			  						len = val.substring(len).length;
+			  					}
+			  					return /^\d+(\.{0,1}\d+){0,1}$/.test(val) && val > parseInt($("#investBidMultiple").val()) && len<=3 ;
 			  				}
 			    		},{
 			  				errorMsg: '投标金额必须≤当前可投金额',
