@@ -35,7 +35,7 @@ jQuery(function($) {
 								<@messages key="model.loan.loanNo" />：&nbsp;${loan.loanNo}&nbsp;<#t>
 							</div>
 							<div class="col-xs-4 hm-col form-group">
-								<@messages key="model.loan.amount" />：&nbsp;<span class="currency">${loan.amount}</span>元&nbsp;<#t>
+								<@messages key="model.loan.repay" />：&nbsp;${repay.name}&nbsp;<#t>
 							</div>
 							
 						</div>
@@ -43,11 +43,11 @@ jQuery(function($) {
 					</p>
 					<p class="account">
 						<div class="row hm-row">
-							<div class="col-xs-4 hm-col form-group">
-								<@messages key="model.loan.rate" />：&nbsp;${loan.rate*100}%&nbsp;<#t>
+						    <div class="col-xs-4 hm-col form-group">
+								<@messages key="model.loan.amount" />：&nbsp;<span class="currency">${loan.amount}</span>元&nbsp;<#t>
 							</div>
 							<div class="col-xs-4 hm-col form-group">
-								<@messages key="model.loan.repay" />：&nbsp;${repay.name}&nbsp;<#t>
+								<@messages key="model.loan.rate" />：&nbsp;${loan.rate*100}%&nbsp;<#t>
 							</div>
 							<div class="col-xs-4 hm-col form-group">
 								<@messages key="model.loan.period" />：&nbsp;${loan.period}个月&nbsp;<#t>
@@ -68,7 +68,7 @@ jQuery(function($) {
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>第几期</th>
+					<th>期数</th>
 					<th>预计还款日</th>
 					<th>应还本息(<@messages key="common.unit.cny" />)</th>
 					<th>管理费(<@messages key="common.unit.cny" />)</th>

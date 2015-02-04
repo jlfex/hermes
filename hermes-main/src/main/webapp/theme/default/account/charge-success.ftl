@@ -12,7 +12,7 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
-	document.getElementById('toPay').click();
+	//document.getElementById('toPay').click();
 });
 //-->
 </script>

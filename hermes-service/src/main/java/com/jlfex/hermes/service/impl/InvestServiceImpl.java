@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
@@ -267,22 +268,19 @@ public class InvestServiceImpl implements InvestService {
 		return invests;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.InvestService#bid(java.lang.String,
-	 * com.jlfex.hermes.model.User, java.math.BigDecimal, java.lang.String)
+	/**
+	 * 投标
 	 */
 	@Override
 	public boolean bid(String loanId, User investUser, BigDecimal investAmount, String otherRepay) {
 		int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
-		if (updateRecord == 1) {
+		Logger.info("投标操作：剩余金额不足。loanId=%s,投标金额=%s",loanId,investAmount.toString());
+		if(updateRecord == 1){
 			Loan loan = loanRepository.findOne(loanId);
 			// 判断假如借款金额与已筹金额相等，更新状态为满标
-			if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
+			if(loan.getAmount().compareTo(loan.getProceeds()) == 0){
 				loan.setStatus(Loan.Status.FULL);
 				loanRepository.save(loan);
-
 				// 插入借款日志表(满标)
 				LoanLog loanLog = new LoanLog();
 				loanLog.setLoan(loan);
@@ -292,12 +290,10 @@ public class InvestServiceImpl implements InvestService {
 				loanLog.setAmount(investAmount);
 				loanLogRepository.save(loanLog);
 			}
-
 			// 插入投资表
 			Invest invest = new Invest();
 			invest.setAmount(investAmount);
 			invest.setOtherRepay(otherRepay);
-
 			BigDecimal ratio = investAmount.divide(loan.getAmount(), 8, RoundingMode.HALF_DOWN);
 			invest.setRatio(ratio);
 			invest.setUser(investUser);
@@ -305,10 +301,8 @@ public class InvestServiceImpl implements InvestService {
 			invest.setDatetime(new Date());
 			invest.setStatus(Invest.Status.FREEZE);
 			investRepository.save(invest);
-
 			// 投标冻结
 			transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
-
 			// 插入借款日志表
 			LoanLog loanLog = new LoanLog();
 			loanLog.setLoan(loan);
@@ -317,7 +311,6 @@ public class InvestServiceImpl implements InvestService {
 			loanLog.setType(LoanLog.Type.INVEST);
 			loanLog.setAmount(investAmount);
 			loanLogRepository.save(loanLog);
-
 			// 插入用户日志表
 			UserLog userLog = new UserLog();
 			userLog.setUser(investUser);
@@ -326,9 +319,28 @@ public class InvestServiceImpl implements InvestService {
 			userLogRepository.save(userLog);
 			return true;
 		} else {
+			Logger.info("投标操作：剩余金额不足。loanId=%s,投标金额=%s",loanId,investAmount.toString());
 			return false;
 		}
 
+	}
+	/**
+	 * 投标时：自己的借款标自己不能投资
+	 * @param loanId
+	 * @param investUser
+	 * @return
+	 */
+	@Override
+	public boolean bidAuthentication(String loanId, User investUser){
+	    boolean flag = true;
+	    Loan loan = loanRepository.findOne(loanId);
+	    if(loan!=null && loan.getUser() != null && investUser!=null){
+	    	User loanUser = loan.getUser();
+	    	if(loanUser.getId().equals(investUser.getId())){
+	    		flag = false;
+	    	}
+	    }
+		return flag;
 	}
 
 	/*

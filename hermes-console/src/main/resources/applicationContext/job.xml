@@ -10,12 +10,9 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-			    <!-- 
 			    <ref bean="autoRepayJobTrigger" />
 				<ref bean="autoBidFailureJobTrigger" />  
 				<ref bean="autoOverdueCalcJobTrigger" />   
-				 -->
-				<ref bean="autoBidFailureJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -46,7 +43,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 * */1 * * ?" />
+		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
 	
 	<!-- autoBidFailureJob job  -->
@@ -67,17 +64,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 */1 * * * ?" />
-	</bean>
-		<!-- 自动流标(到期未筹满自动流标)  -->
-	<bean id="autoAwayBidJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-				<property name="targetObject" ref="autoAwayBidJob" />
-				<property name="targetMethod" value="doJob" />
-			</bean>
-		</property>
-		<property name="cronExpression" value="0 31 14 ? * *" />
+		<property name="cronExpression" value="0 */30 * * * ?" />
 	</bean>
 	
 </beans>

@@ -112,7 +112,7 @@ public interface LoanService {
 	 * @param isPass
 	 * @return
 	 */
-	public Loan loanOut(String id, String remark, boolean isPass);
+	public Loan loanOut(String id, String remark, boolean isPass) throws Exception ;
 
 	/**
 	 * 借款催收

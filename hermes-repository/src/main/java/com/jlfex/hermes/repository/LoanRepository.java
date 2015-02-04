@@ -49,10 +49,10 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	public List<Loan> findByUser(User user);
 	
 	/**
-	 * 按照借款编号倒叙排列	
+	 * 获取最大的 标 编号
 	 * @return
 	 */
-	@Query("from Loan order by loanNo desc")
+	@Query("select t from Loan t  where t.loanNo = (select max(t1.loanNo) from Loan t1 where t1.loanNo is not null) ")
 	public List<Loan> findAllOrderByLoanNo();
 	
 	

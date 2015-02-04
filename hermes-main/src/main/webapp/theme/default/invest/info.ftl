@@ -13,6 +13,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
+    var  validFlag = '${validFlag?c}';
+    if(validFlag == 'false'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html("提示：不能对自己发布的借款标进行投标");
+    }
     $('#funanceProtocol').click(function(){
 			openwindow("${app}/loan/funanceProtocol","",1000,800);
 			
@@ -21,20 +26,7 @@ jQuery(function($) {
 			openwindow("${app}/loan/deal/${loan.id}","",1000,800);
 			
 	});
-	function  checkCredit(){
-	      var investamount =$("#investamount").val();
-	      var loanKind = '${loan.loanKind}';
-		  if( loanKind == '01'){
-		        var loanAmount = ''+'${loan.amount}';
-		        if(loanAmount != investamount ){
-		        $("#investamount").parent().find(".mv_msg").removeClass("mv_right");
-		        $("#investamount").parent().find(".mv_msg").addClass("mv_error")
-		        $("#investamount").parent().find(".mv_msg").html("债权标必须全额投标");
-		        return true;
-		        }
-		   }
-		   return false;  
-	} 
+
 	function openwindow(url,name,iWidth,iHeight)
 	{
 		var url; //转向网页的地址;
@@ -46,8 +38,8 @@ jQuery(function($) {
 		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 	$('.confirm').click(function(){
-	    if(checkCredit()){
-	      return ;
+	    if(validFlag == 'false'){
+	       return ;
 	    }
 	 	$.ajax({
 				data: $("#loanDetail").serialize(),
@@ -59,9 +51,10 @@ jQuery(function($) {
 						var investamount =$("#investamount").val();
 						var loanid =$("#loanid").val();
 						window.location.href="${app}/invest/bidsuccess?investamount="+investamount+"&loanid="+loanid;
-					}
-					else if(data.type=="WARNING"){
+					}else if(data.type=="WARNING"){
 						window.location.href="${app}/userIndex/skipSignIn";
+					}else if(data.type=="FAILURE"){
+					    window.location.href="${app}/invest/bidInvalid";
 					}else{
 						window.location.href="${app}/invest/bidfull";
 					}
@@ -91,9 +84,6 @@ jQuery(function($) {
 		}  
 		$('#investamount').blur(function()
 		{
-		    if(checkCredit()){
-	          return ;
-	        }
 			var investamount =$("#investamount").val();
 			var loanid =$("#loanid").val();
 			var msg =$('#investamount').siblings("span").text();
@@ -168,11 +158,10 @@ jQuery(function($) {
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="account_center_list">
-				<div class="head_part">
+				<div class="head_part" style="height:242px;">
 					<#if loanUserInfo?exists><#if loanUserInfo.lgAvatar?exists><img alt="" src="${loanUserInfo.lgAvatar!''}" class="head_img"> <#else> 	<img class="head_img" src="${app.theme}/public/other/images/icon1/acdount_head_img.png"></#if></#if>
-			
 				</div>
-				<p class="clicklink">
+				<p class="clicklink" style="height:25px;" >
 				 	 <#if loanUserInfo?exists && loanUserInfo.authEmail?exists && loanUserInfo.authEmail=='10'>
 						 <a href="javascript:value(0);" class="hover">
 						 	<img src="${app.theme}/public/other/images/icon1/info_iconemail.png"/>
@@ -196,9 +185,9 @@ jQuery(function($) {
 					 <#else> 
 					 	<a href="javascript:value(0);"><img src="${app.theme}/public/other/images/icon1/info_iconepeople01.png"/></a>
 					 </#if>
-                   
                 </p>    
 			</div>
+			<div style="height:65px"></div>
 			<div class="left_nav">
 				<!--审核记录-->
 				<div class="record_info">
@@ -288,6 +277,7 @@ jQuery(function($) {
 	                		<span class="confirm">
 								<a href="#"  class="m_btn1 bt_red a_middle mv_submit"><@messages key="invest.loan.bid" /></a>
 							</span>
+							&nbsp;&nbsp;<span id="err_msg" ></span>
 							</td>
 						</tr>
                 	</table>
@@ -335,13 +325,14 @@ jQuery(function($) {
 				<div id="tab3" class="account_right_part02 loan_myloan_sub">
 					<ul class="all_information m_tab_t">
 						<li class="active"> <#if loan.loanKind=='00'>借款人详情 <#else>债权信息 </#if></li>
-						<li>回款记录</li>
-						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>投标记录 </#if></li>  
+						<li>投标记录</li>
+						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>回款记录</#if></li>  
 					</ul>
 					<div class="m_tab_c ad_border">
 						<div style="display: block;">
 							<div class="m_tda table_mar">
 			                    <table cellpadding="0" cellspacing="0" border="0">
+			                     <#if loan.loanKind=='00'>
 			                    	<tr>
 			                            <td class="tdalign"><@messages key="model.basic.gender" /></td>
 			                            <td class="th_00 th_06 black">${loanUserInfo.genderName!''}</td>
@@ -378,14 +369,27 @@ jQuery(function($) {
 			                            <td class="tdalign"><@messages key="invest.car.mortgage.info" /></td>
 			                            <td colspan="3" class="th_00 black">${loanUserInfo.hasCarMortgage!''}</td>
 			                        </tr>
+			                        <#else>
+                			        <tr>
+			                            <td class="tdalign">产品用途</td>
+			                            <td colspan="5" class="th_00 black">${(creditInfo.purpose)!''}</td>
+			                        </tr>
+			                        <tr>
+			                            <td class="tdalign">资金用途</td>
+			                            <td colspan="5" class="th_00 black">${(loan.amountAim)!''}</td>
+			                        </tr>
+                			        </#if>
 			                    </table>
                 			</div>
 						</div>
 						<div style="display: none;">
 							<div class="m_tda table_mar">
 			                    <table cellpadding="0" cellspacing="0" border="0">
-			                        <tr><th class="th_00"><@messages key="invest.user" /></th><th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th><th>投标时间</th></tr>
-			                          <#list invests as i>  
+			                        <tr>
+			                        <th class="th_00"><@messages key="invest.user" /></th>
+			                        <th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
+			                        <th>投标时间</th></tr>
+			                        <#list invests as i>  
 									<tr>
 										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
 										<td>${i.amount?string('#,##0.00')}</td>
@@ -396,7 +400,30 @@ jQuery(function($) {
                 			</div>	
 						</div>
 						<div style="display: none;">
-							<p class="new_year">${loan.description!''}</p>
+						    <#if loan.loanKind=='00'> 
+							   <p class="new_year">${loan.description!''}</p>
+							<#else>
+							   <div class="m_tda table_mar">
+			                    <table cellpadding="0" cellspacing="0" border="0">
+			                        <tr>
+				                        <th class="th_00">应收日期</th>
+				                        <th>应收本金(<@messages key="common.unit.cny" />)</th>
+				                        <th>应收利息(<@messages key="common.unit.cny" />)</th>
+				                        <th>应收金额(<@messages key="common.unit.cny" />)</th>
+			                        </tr>
+			                        <#if creditRepayList??>
+				                        <#list creditRepayList as l>  
+										<tr>
+											<td class="th_00">${(l.repayPlanTime?string('yyyy-MM-dd'))!''}</td>
+											<td>${l.repayPrincipal?string('#,##0.00')}</td>
+											<td>${l.repayInterest}</td>
+											<td>${l.repayAllmount}</td>
+										</tr>
+										</#list>
+									</#if>
+			                    </table>
+                			</div>	
+							</#if>
 						</div>
 					</div>
 				</div>

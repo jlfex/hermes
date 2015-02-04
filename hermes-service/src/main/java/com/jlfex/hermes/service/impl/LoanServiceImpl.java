@@ -354,223 +354,229 @@ public class LoanServiceImpl implements LoanService {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.LoanService#audit(java.lang.String,
-	 * java.lang.String, java.math.BigDecimal, boolean)
-	 */
 	@Override
 	public Loan audit(String id, String remark, BigDecimal amount, boolean isPass) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.LoanService#loanOut(java.lang.String,
-	 * java.lang.String, boolean)
-	 */
+    /**
+     * 满标处理
+     */
 	@Override
-	public Loan loanOut(String id, String remark, boolean isPass) {
+	public Loan loanOut(String id, String remark, boolean isPass) throws Exception {
+		Logger.info("满标处理开始：loan_id ="+id+", 处理方式：isPass="+isPass+",remark="+remark);
 		Loan loan = loanRepository.findOne(id);
-		if (isPass) {
-			// 借款状态从满标更新为还款中
-			int success = loanNativeRepository.updateStatus(id, Status.FULL, Status.REPAYING);
-			// 更新状态成功，则可以继续执行
+		if (isPass){
+			int success = loanNativeRepository.updateStatus(id, Status.FULL, Status.REPAYING); // 借款状态更新: 满标 to 还款中
 			if (success > 0) {
-				Date date = new Date();
 				Map<String, String> map = new HashMap<String, String>();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				map.put("lendingDate", sdf.format(date));
-				List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
+				map.put("lendingDate", Calendars.format("yyyy-MM-dd", new Date()));
 				List<Invest> investList = new ArrayList<Invest>();
-				;
 				List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
-				if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
-					// 获取借款的还款计划列表
-					loanRepayList = repayServiceImpl.getRepayMethod(loan.getRepay().getId()).generatePlan(loan, map);
-					// 生成借款还款计划
-					loanRepayRepository.save(loanRepayList);
-					// 生成理财收益计划
-					investList = investRepository.findByLoan(loan);
-					InvestProfit investProfit = null;
-					for (Invest invest : investList) {
-						invest.setStatus(Invest.Status.COMPLETE);
-						// 解冻
-						transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "放款解冻投标金额");
-						// 转账
-						transactionService.transact(Transaction.Type.OUT, invest.getUser(), loan.getUser(), invest.getAmount(), invest.getId(), "放款理财人到借款人");
-						for (LoanRepay loanRepay : loanRepayList) {
-							investProfit = new InvestProfit();
-							investProfit.setUser(invest.getUser());
-							investProfit.setInvest(invest);
-							investProfit.setLoanRepay(loanRepay);
-							investProfit.setDate(loanRepay.getPlanDatetime());
-							investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setStatus(InvestProfit.Status.WAIT);
-							investProfitList.add(investProfit);
-						}
+				if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+					Map<String,List> resultMap =  normalLoanDeal(loan, map);
+					if(resultMap == null){
+						throw new Exception("满标处理:普通标loanid="+loan.getId()+", 处理异常");
 					}
-				} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-					CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
-					creditInfo.setStatus(CrediteInfo.Status.REPAYING); //更新还款中
-					creditInfo = creditInfoRepository.save(creditInfo);
-					List<CreditRepayPlan> creditRepayPlanList = creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
-					// 生成借款还款计划
-					for (CreditRepayPlan plan : creditRepayPlanList) {
-						LoanRepay loanRepay = new LoanRepay();
-						loanRepay.setLoan(loan);
-						loanRepay.setSequence(plan.getPeriod());
-						loanRepay.setPlanDatetime(plan.getRepayPlanTime());
-						loanRepay.setAmount(plan.getRepayAllmount());
-						loanRepay.setPrincipal(plan.getRepayPrincipal());
-						loanRepay.setInterest(plan.getRepayInterest());
-						loanRepay.setOtherAmount(BigDecimal.ZERO); // 月缴管理费
-						loanRepay.setOverdueDays(0);
-						loanRepay.setOverdueInterest(BigDecimal.ZERO);
-						loanRepay.setOverduePenalty(BigDecimal.ZERO);
-						loanRepay.setStatus(LoanRepay.RepayStatus.WAIT);
-						loanRepayList.add(loanRepay);
+					investList = resultMap.get("resultMap");
+					investProfitList = resultMap.get("investProfitList");
+				}else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+					Map<String,List> resultMap =  outCreditDeal(loan);
+					if(resultMap == null){
+						throw new Exception("满标处理:债权标loanid="+loan.getId()+", 处理异常");
 					}
-					loanRepayRepository.save(loanRepayList);
-					// 生成理财收益计划
-					investList = investRepository.findByLoan(loan);
-					InvestProfit investProfit = null;
-					for (Invest invest : investList) {
-						invest.setStatus(Invest.Status.COMPLETE);
-						// 解冻
-						transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "放款解冻投标金额");
-						// 转账
-						transactionService.transact(Transaction.Type.OUT, invest.getUser(), loan.getUser(), invest.getAmount(), invest.getId(), "放款理财人到借款人");
-						for (LoanRepay loanRepay : loanRepayList) {
-							investProfit = new InvestProfit();
-							investProfit.setUser(invest.getUser());
-							investProfit.setInvest(invest);
-							investProfit.setLoanRepay(loanRepay);
-							investProfit.setDate(loanRepay.getPlanDatetime());
-							investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-							investProfit.setStatus(InvestProfit.Status.WAIT);
-							investProfitList.add(investProfit);
-						}
-					}
-				} else {
-					throw new ServiceException("id=" + loan.getId() + ",无效的标类型：loan_kind=" + loan.getLoanKind());
+					investList = resultMap.get("resultMap");
+					investProfitList = resultMap.get("investProfitList");
+				}else{
+					throw new Exception("id=" + loan.getId() + ",无效的标类型：loan_kind=" + loan.getLoanKind());
 				}
-				// 获取借款利率对象
-				Rate rateLoan = rateRepository.findByProductAndType(loan.getProduct(), Rate.RateType.LOAN);
-				// 获取风险金 利率对象
-				Rate rateRisk = rateRepository.findByProductAndType(loan.getProduct(), Rate.RateType.RISK);
-				BigDecimal loanFee = BigDecimal.ZERO;
-				BigDecimal riskFee = BigDecimal.ZERO;
-
-				if (rateLoan != null) {
-					loanFee = (loan.getAmount().multiply(rateLoan.getRate())).setScale(2, RoundingMode.HALF_UP);
-					// 借款手续费扣除给公司账户
-					transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_FEE, loanFee, loan.getId(), "借款手续费扣除");
-				} else {
-					throw new ServiceException("rateLoan is null!Please set RateType loan in Hm_Rate table");
-				}
-				if (rateRisk != null) {
-					riskFee = (loan.getAmount().multiply(rateRisk.getRate())).setScale(2, RoundingMode.HALF_UP);
-					// 风险金 扣除给公司账户
-					transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.RISK, riskFee, loan.getId(), "风险金管理费扣除");
-
-				} else {
-					throw new ServiceException("rateRisk is null!Please set RateType Risk in Hm_Rate table");
-				}
-
-				// 记录借款日志--放款
-
-				LoanLog loanLog = new LoanLog();
-				loanLog.setUser(loan.getUser().getId());
-				loanLog.setLoan(loan);
-				loanLog.setDatetime(date);
-				loanLog.setType(Type.LOAN);
-				loanLog.setAmount(loan.getAmount());
-				loanLog.setRemark("借款金额 :" + loan.getAmount() + ",借款手续费  :" + loanFee + ",风险金管理费  :" + riskFee);
-				loanLogRepository.save(loanLog);
-				// 记录借款日志--满标
-				// LoanLog loanFullLog = new LoanLog();
-				// loanFullLog.setUser(loan.getUser().getId());
-				// loanFullLog.setLoan(loan);
-				// loanFullLog.setDatetime(date);
-				// loanFullLog.setType(Type.FULL);
-				// loanFullLog.setAmount(loan.getAmount());
-				// loanLogRepository.save(loanFullLog);
+				Map<String,String> resultMap = loanOutfeeToPlat(loan);
+				String remark_loan = "借款金额 :" + loan.getAmount() + ",借款手续费  :" + resultMap.get("loanFee") + ",风险金管理费  :" +resultMap.get("riskFee") ;
+				recordOutLoanLog(loan, LoanLog.Type.LOAN, remark_loan);
 				investProfitRepository.save(investProfitList);
 				investRepository.save(investList);
 			} else {
-				// 放款失败
-				throw new ServiceException("loan out fail!");
+				throw new ServiceException("借款状态更新: 满标 to还款中异常"); 
 			}
-		} else {
-			// 借款状态从满标更新为满标流标
+		}else {
+			// 借款状态： 满标 to 满标流标
 			int success = loanNativeRepository.updateStatus(id, Status.FULL, Status.FAILURE_FULL);
-			// 更新状态成功，则可以继续执行
 			if (success > 0) {
 				// 记录借款日志--满标流标
-				Date date = new Date();
-				LoanLog loanLog = new LoanLog();
-				loanLog.setUser(loan.getUser().getId());
-				loanLog.setLoan(loan);
-				loanLog.setDatetime(date);
-				loanLog.setType(Type.FULL_FAILURE);
-				loanLog.setAmount(loan.getAmount());
-				loanLogRepository.save(loanLog);
+				recordOutLoanLog(loan, LoanLog.Type.FULL_FAILURE, "满标流标");
 				List<Invest> investList = investRepository.findByLoan(loan);
+				// 解冻
 				for (Invest invest : investList) {
 					invest.setStatus(Invest.Status.FAILURE);
-					// 解冻
 					transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "满标流标解冻投标金额");
 				}
 				investRepository.save(investList);
 			} else {
-				// 满标流标失败
-				throw new ServiceException("full failure out fail!");
+				throw new ServiceException("满标流标失败");
 			}
 		}
 		return loan;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.LoanService#demand(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	/**
+	 * 普通标满标: 生成还款计划、收益计划、转账
+	 * @param loan
+	 * @param paramMap
+	 * @return
 	 */
+	public Map<String,List>  normalLoanDeal(Loan loan, Map<String,String> paramMap){
+		Map<String,List> resultMap=new  HashMap<String,List>();
+		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
+		List<Invest> investList = new ArrayList<Invest>();
+		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
+		//1:  生成借款还款计划
+		loanRepayList = repayServiceImpl.getRepayMethod(loan.getRepay().getId()).generatePlan(loan, paramMap);
+		loanRepayRepository.save(loanRepayList);
+		//2: 生成理财收益计划
+		investList = investRepository.findByLoan(loan);
+		InvestProfit investProfit = null;
+		for (Invest invest : investList) {
+			invest.setStatus(Invest.Status.COMPLETE);
+			// 解冻
+			transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "放款解冻投标金额");
+			// 转账
+			transactionService.transact(Transaction.Type.OUT, invest.getUser(), loan.getUser(), invest.getAmount(), invest.getId(), "放款理财人到借款人");
+			for (LoanRepay loanRepay : loanRepayList) {
+				investProfit = new InvestProfit();
+				investProfit.setUser(invest.getUser());
+				investProfit.setInvest(invest);
+				investProfit.setLoanRepay(loanRepay);
+				investProfit.setDate(loanRepay.getPlanDatetime());
+				investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+				investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+				investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+				investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+				investProfit.setStatus(InvestProfit.Status.WAIT);
+				investProfitList.add(investProfit);
+			}
+		}
+		resultMap.put("investProfitList", investProfitList);
+		resultMap.put("investList", investList);
+		return  resultMap;
+	}
+	/**
+	 * 债权标满标: 生成还款计划、收益计划、转账
+	 * @param loan
+	 * @return
+	 */
+	public Map<String,List> outCreditDeal(Loan loan) {
+		Map<String,List> resultMap=new  HashMap<String,List>();
+		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
+		List<Invest> investList = new ArrayList<Invest>();
+		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
+		CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+		creditInfo.setStatus(CrediteInfo.Status.REPAYING); //更新还款中
+		creditInfo = creditInfoRepository.save(creditInfo);
+		List<CreditRepayPlan> creditRepayPlanList = creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
+		//1: 生成借款还款计划
+		for (CreditRepayPlan plan : creditRepayPlanList) {
+			LoanRepay loanRepay = new LoanRepay();
+			loanRepay.setLoan(loan);
+			loanRepay.setSequence(plan.getPeriod());
+			loanRepay.setPlanDatetime(plan.getRepayPlanTime());
+			loanRepay.setAmount(plan.getRepayAllmount());
+			loanRepay.setPrincipal(plan.getRepayPrincipal());
+			loanRepay.setInterest(plan.getRepayInterest());
+			loanRepay.setOtherAmount(BigDecimal.ZERO); // 月缴管理费
+			loanRepay.setOverdueDays(0);
+			loanRepay.setOverdueInterest(BigDecimal.ZERO);
+			loanRepay.setOverduePenalty(BigDecimal.ZERO);
+			loanRepay.setStatus(plan.getStatus());
+			loanRepayList.add(loanRepay);
+		}
+		loanRepayRepository.save(loanRepayList);
+		// 2:生成理财收益计划
+		investList = investRepository.findByLoan(loan);
+		InvestProfit investProfit = null;
+		for (Invest invest : investList) {
+			invest.setStatus(Invest.Status.COMPLETE);
+			// 解冻
+			transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "放款解冻投标金额");
+			// 转账
+			transactionService.transact(Transaction.Type.OUT, invest.getUser(), loan.getUser(), invest.getAmount(), invest.getId(), "放款理财人到借款人");
+			for (LoanRepay loanRepay : loanRepayList) {
+				if(LoanRepay.RepayStatus.WAIT.equals(loanRepay.getStatus())){
+					investProfit = new InvestProfit();
+					investProfit.setUser(invest.getUser());
+					investProfit.setInvest(invest);
+					investProfit.setLoanRepay(loanRepay);
+					investProfit.setDate(loanRepay.getPlanDatetime());
+					investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+					investProfit.setStatus(InvestProfit.Status.WAIT);
+					investProfitList.add(investProfit);
+				}
+			}
+		}
+		resultMap.put("investProfitList", investProfitList);
+		resultMap.put("investList", investList);
+		return resultMap;
+	}
+	/**
+	 * 满标：平台收取 借款手续费 、风险金
+	 * @param loan
+	 */
+	public Map<String,String>  loanOutfeeToPlat(Loan loan) {
+		// 获取: 借款利率 、风险金
+		Map<String,String> resultMap = new HashMap<String,String>();
+		Rate rateLoan = rateRepository.findByProductAndType(loan.getProduct(), Rate.RateType.LOAN);
+		Rate rateRisk = rateRepository.findByProductAndType(loan.getProduct(), Rate.RateType.RISK);
+		BigDecimal loanFee = BigDecimal.ZERO;
+		BigDecimal riskFee = BigDecimal.ZERO;
+		// 平台账户 收取 借款手续费
+		if(rateLoan == null){
+			throw new ServiceException("借款手续费为空");
+		}
+		if (rateRisk == null) {
+			throw new ServiceException("风险金费用为空");
+		}
+		loanFee = (loan.getAmount().multiply(rateLoan.getRate())).setScale(2, RoundingMode.HALF_UP);
+		riskFee = (loan.getAmount().multiply(rateRisk.getRate())).setScale(2, RoundingMode.HALF_UP);
+		// 平台账户 收取 借款手续费
+		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_FEE, loanFee, loan.getId(), "借款手续费扣除");
+		// 平台账户 收取 风险金费用
+		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.RISK, riskFee, loan.getId(), "风险金管理费扣除");
+		resultMap.put("loanFee", loanFee.toString());
+		resultMap.put("riskFee", riskFee.toString());
+		return resultMap;
+	}
+	/**
+	 * 满标：记录 日志
+	 * @param loan
+	 * @param loanFee
+	 * @param riskFee
+	 */
+	public void recordOutLoanLog(Loan loan, String status, String remark){
+		LoanLog loanLog = new LoanLog();
+		loanLog.setUser(loan.getUser().getId());
+		loanLog.setLoan(loan);
+		loanLog.setDatetime(new Date());
+		loanLog.setType(status);
+		loanLog.setAmount(loan.getAmount());
+		loanLog.setRemark(remark);
+		loanLogRepository.save(loanLog);
+	}
+	
 	@Override
 	public Loan demand(String id, String date, String type, String remark) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.LoanService#findLogByLoanId(java.lang.String)
-	 */
+	
 	@Override
 	public List<LoanLog> findLogByLoanId(String loanId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.LoanService#findLogByLoanIdAndType(java.lang
-	 * .String[])
-	 */
+	
 	@Override
 	public List<LoanLog> findLogByLoanIdAndType(String... type) {
 		// TODO Auto-generated method stub
@@ -621,7 +627,6 @@ public class LoanServiceImpl implements LoanService {
 			// 将产品逾期信息转换后绑定到借款逾期信息上
 			loanOverdueRepository.save(loanOverdueList);
 		}
-
 		// 记录借款日志
 		LoanLog loanLog = new LoanLog();
 		loanLog.setUser(loan.getUser().getId());
@@ -756,41 +761,41 @@ public class LoanServiceImpl implements LoanService {
 
 	/**
 	 * 生成借款编号
-	 * 
 	 * @return
 	 */
 	public synchronized String generateLoanNo() {
-		// 初始化
+		String maxLoanNo = null;
 		String date = Calendars.format("yyyyMMdd");
-		// 判断缓存序列是否存在
-		// 若不存在则初始化
-		if (Caches.get(CACHE_LOAN_SEQUENCE) == null || today == null) {
-			List<Loan> loanList = loanRepository.findAllOrderByLoanNo();
-			String maxLoanNo = null;
-			if (loanList != null && loanList.size() > 0) {
-				maxLoanNo = loanList.get(0).getLoanNo();
-			}
-			if (maxLoanNo != null && maxLoanNo.length() == 12) {
+		List<Loan> loanList = loanRepository.findAllOrderByLoanNo();
+		if(loanList !=null && loanList.size() > 0){
+			maxLoanNo = loanList.get(0).getLoanNo();
+			Logger.info("当前数据库中最大编号：loanNo=%s", Long.valueOf(maxLoanNo));
+			if(!Strings.empty(maxLoanNo) && maxLoanNo.length() == 12){
 				today = maxLoanNo.substring(0, 8);
 				maxLoanNo = maxLoanNo.substring(8);
 				Caches.set(CACHE_LOAN_SEQUENCE, Long.valueOf(maxLoanNo));
-				Logger.info("set loanNo sequence '{}' from database!", Long.valueOf(maxLoanNo));
 			}
 		}
-		// 判断日期是否与当前日期匹配
-		// 若未匹配则重置序列编号
-		if (!date.equals(today)) {
+		if(maxLoanNo == null){
 			today = date;
 			Caches.set(CACHE_LOAN_SEQUENCE, 0);
-			Logger.info("charge date to '{}', recount sequence!", date);
+		}else{
+			Date dbDate= null,nowDate=null;
+			try {
+				dbDate = Calendars.parse("yyyyMMdd", today);
+				nowDate = Calendars.parse("yyyyMMdd", date);
+				if(dbDate.before(nowDate)){
+					today = date;
+					Caches.set(CACHE_LOAN_SEQUENCE, 0);
+				}
+			} catch (ParseException e) {
+				Logger.error("生成loanNo时：格式化时间异常：dbDate="+dbDate+",nowDate="+date);
+				today = date;
+			}
 		}
-
-		// 递增缓存数据
-		Long seq = Caches.incr(CACHE_LOAN_SEQUENCE, 1);
-		String loanNo = String.format("%s%04d", today, seq);
-
-		// 返回结果
-		return loanNo;
+		Long seq = Caches.incr(CACHE_LOAN_SEQUENCE, 1); // 递增缓存数据
+		Logger.info("新创建的债权编号：loanNo=%s", String.format("%s%04d", today, seq));
+		return String.format("%s%04d", today, seq);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import com.jlfex.hermes.repository.LoanLogRepository;
 import com.jlfex.hermes.service.RepayService;
 
 /**
- * @author 陈琪 自动还款，假如金额不足改还款状态为逾期
+ * @author 自动还款，假如金额不足改还款状态为逾期
  */
 @Component("autoRepayJob")
 public class AutoRepayJob extends Job {
@@ -35,9 +35,10 @@ public class AutoRepayJob extends Job {
 	 */
 	@Override
 	public Result run() {
+		String var = "自动还款JOB";
 		try {
 			long beginTime = System.currentTimeMillis();
-			Logger.info("batch autoRepayJob start.");
+			Logger.info(var+"开始....");
 			Date now = new Date();
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(now);
@@ -78,10 +79,10 @@ public class AutoRepayJob extends Job {
 					loanLogRepository.save(loanLog);
 					failureCount++;
 					failureRemark.append("编号:" + loanRepay.getLoan().getLoanNo() + ",还款失败\r\n");
-					Logger.error(ex.getMessage(), ex);
+					Logger.error("自动还款异常:", ex);
 				}
 			}
-			Logger.info("batch autoRepayJob finished. take %s millisecond.", (System.currentTimeMillis() - beginTime));
+			Logger.info(var+"完成. 耗时 %s millisecond.", (System.currentTimeMillis() - beginTime));
 			StringBuilder remarks = new StringBuilder();
 			String remark = String.format("%s,共跑 %s笔借款,成功还款%s笔,失败还款%s笔", Calendars.date(), loanRepayList.size(), successCount, failureCount);
 			remarks.append(remark);

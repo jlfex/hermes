@@ -327,10 +327,8 @@ public class LoanController {
 	@RequestMapping("/firstaudit")
 	@ResponseBody
 	public Result firstaudit(String loanId, String status, String remark, String fixAmount, Model model) {
-
 		Result result = new Result();
 		BigDecimal finalFixAmount = BigDecimal.ZERO;
-
 		Loan loan = loanService.loadById(loanId);
 		if (Strings.empty(fixAmount)) {
 			finalFixAmount = loan.getAmount();
@@ -385,29 +383,35 @@ public class LoanController {
 		}
 		return result;
 	}
-
+   /**
+    * 满标处理
+    * @param loanId
+    * @param status
+    * @param remark
+    * @return
+    */
 	@RequestMapping("/fullaudit")
 	@ResponseBody
 	public Result fullaudit(String loanId, String status, String remark) {
 		Result result = new Result();
-
 		Logger.info("loanId:" + loanId + ",status:" + status + ",remark :" + remark);
-
 		Loan loanResult = null;
-		// 满标放款
-		if (Strings.equals(status, "00")) {
-			loanResult = loanService.loanOut(loanId, remark, true);
-			// 满标流标
-		} else if (Strings.equals(status, "01")) {
-			loanResult = loanService.loanOut(loanId, remark, false);
-		}
-		if (loanResult != null) {
-			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-		} else {
+		try {
+			if(Strings.equals(status, "00")) { // 满标放款
+				loanResult = loanService.loanOut(loanId, remark, true);
+			}else if (Strings.equals(status, "01")) {// 满标流标
+				loanResult = loanService.loanOut(loanId, remark, false);
+			}
+			if (loanResult != null) {
+				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+			}else{
+				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			}
+		} catch (Exception e) {
+			Logger.error("满标处理异常：",e);
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 		}
 		return result;
-
 	}
 
 	// /**

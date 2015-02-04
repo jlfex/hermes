@@ -9,8 +9,6 @@
 <script type="text/javascript" charset="utf-8">
 	window.ctxforcontent = '${app.js}';
 </script>
-<script type="text/javascript" charset="utf-8" src="${app.js}/ueditor.config.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.js}/editor_api.js"></script>
 </head>
 <body>
 

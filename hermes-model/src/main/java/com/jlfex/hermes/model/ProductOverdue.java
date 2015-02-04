@@ -31,11 +31,11 @@ public class ProductOverdue extends Model {
 	private Integer rank;
 	
 	/** 罚息 */
-	@Column(name = "interest")
+	@Column(name = "interest", precision=16, scale=8,nullable=false)
 	private BigDecimal interest;
 	
 	/** 违约金 */
-	@Column(name = "penalty")
+	@Column(name = "penalty", precision=16, scale=8,nullable=false)
 	private BigDecimal penalty;
 
 	/**

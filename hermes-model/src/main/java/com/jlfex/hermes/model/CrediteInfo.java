@@ -4,14 +4,12 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
@@ -91,7 +89,7 @@ public class CrediteInfo extends Model {
 	private String amountAim;
 	// 产品介绍
 	@Column(name = "product_desc")
-	private String produnctDesc;
+	private String productDesc;
 	// 担保方式
 	@Column(name = "assure_type")
 	private String assureType;
@@ -267,13 +265,12 @@ public class CrediteInfo extends Model {
 	public void setAmountAim(String amountAim) {
 		this.amountAim = amountAim;
 	}
-
-	public String getProdunctDesc() {
-		return produnctDesc;
+	public String getProductDesc() {
+		return productDesc;
 	}
 
-	public void setProdunctDesc(String produnctDesc) {
-		this.produnctDesc = produnctDesc;
+	public void setProductDesc(String productDesc) {
+		this.productDesc = productDesc;
 	}
 
 	public String getAssureType() {
@@ -391,13 +388,11 @@ public class CrediteInfo extends Model {
 		c1.set(Calendar.SECOND, 0);
 		c1.set(Calendar.HOUR_OF_DAY, 0);
 		c1.set(Calendar.MILLISECOND, 0);
-
 		Calendar c2 = Calendar.getInstance();
-		c1.set(Calendar.MINUTE, 0);
-		c1.set(Calendar.SECOND, 0);
-		c1.set(Calendar.HOUR_OF_DAY, 0);
-		c1.set(Calendar.MILLISECOND, 0);
-
+		c2.set(Calendar.MINUTE, 0);
+		c2.set(Calendar.SECOND, 0);
+		c2.set(Calendar.HOUR_OF_DAY, 0);
+		c2.set(Calendar.MILLISECOND, 0);
 		return c1.getTimeInMillis() < c2.getTimeInMillis();
 
 	}

@@ -12,7 +12,7 @@ import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.service.RepayService;
 
 /**
- * @author 陈琪 自动预期计算，更新loan_repay的状态为逾期的各个逾期费用的计算
+ * @author 自动逾期计算，更新loan_repay的状态为逾期的各个逾期费用的计算
  */
 @Component("autoOverdueCalcJob")
 public class AutoOverdueCalc extends Job {
@@ -24,9 +24,10 @@ public class AutoOverdueCalc extends Job {
 
 	@Override
 	public Result run() {
+		String var ="自动逾期计算JOB";
 		try {
 			long beginTime = System.currentTimeMillis();
-			Logger.info("batch autoOverdueCalcJob start.");
+			Logger.info(var+"开始.....");
 			List<LoanRepay> loanRepayList = repayService.findByStatus(LoanRepay.RepayStatus.OVERDUE);
 			boolean isUpdateData = false;
 			StringBuilder remarks = new StringBuilder();
@@ -50,7 +51,7 @@ public class AutoOverdueCalc extends Job {
 					Logger.error(ex.getMessage(), ex);
 				}
 			}
-			Logger.info("batch autoOverdueCalcJob finished. take %s millisecond.", (System.currentTimeMillis() - beginTime));
+			Logger.info(var+"完成. 耗时  %s millisecond.", (System.currentTimeMillis() - beginTime));
 			if (isUpdateData) {
 				return new Result(true, true, remarks.toString());
 			} else {
