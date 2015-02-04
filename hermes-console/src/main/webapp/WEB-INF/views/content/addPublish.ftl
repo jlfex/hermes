@@ -11,6 +11,7 @@
 <script type="text/javascript" src="${app.js}/bootstrap-wysiwyg.js" charset="utf-8"></script>
 </head>
 <body>
+
  <#if msg??>
 	<div class="alert alert-danger alert-dismissible fade in" role="alert">
 		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>

@@ -46,6 +46,7 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public ArticleCategory findCategoryByNameAndLevel(String name, String level) {
+
 		return articleCategoryRepository.findOneByNameAndLevel(name, level);
 	}
 
