@@ -96,7 +96,7 @@ public class AutoRepayJob extends Job {
 					Logger.error("自动还款异常:", ex);
 				}
 			}
-			Logger.info(var+"完成. 耗耗时%s millisecond.", (System.currentTimeMillis() - beginTime));
+			Logger.info(var+"完成. 耗时%s millisecond.", (System.currentTimeMillis() - beginTime));
 			StringBuilder remarks = new StringBuilder();
 			String remark = String.format("%s,共跑 %s笔借款,成功还款%s笔,失败还款%s笔", Calendars.date(), loanRepayList.size(), successCount, failureCount);
 			remarks.append(remark);
