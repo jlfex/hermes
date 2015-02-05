@@ -64,14 +64,20 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	@Override
 	public Map<String ,Object> calculateRemainAmountAndPeriod(CrediteInfo creditInfo,List<CreditRepayPlan> planList) throws Exception { 
 		Map<String,Object>  map = new HashMap<String,Object>();
+		if(planList == null || planList.size() == 0){
+			map.put("remainPeriod", 0); //剩余期数
+		    map.put("remainAmount", 0); //剩余金额
+			return map;
+		}
 		int allPeriod = (planList!=null)?planList.size():0;
+		int  remainDays = 0;                       //剩余天数
+		int  remainPeriod = 0;                     //剩余期数
+		BigDecimal remainAmount = BigDecimal.ZERO; //剩余本金
 		Collections.sort(planList, new Comparator<CreditRepayPlan>() {
 	           public int compare(CreditRepayPlan obj1, CreditRepayPlan obj2) {
 	            	return (""+obj1.getPeriod()).compareTo(""+obj2.getPeriod());
 	           }
 	    }); 
-	    BigDecimal remainAmount = BigDecimal.ZERO; //剩余本金
-	    int  remainPeriod = 0;                     //剩余期数
 	    String current_date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	    Date   endNowDate = Calendars.add(Calendars.parseDate(current_date), "1d");
 	    List<CreditRepayPlan> expireList = new ArrayList<CreditRepayPlan>(); 
@@ -89,20 +95,12 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    }else{
 	    	int expireSize = expireList.size();
 	    	remainPeriod = (allPeriod>expireSize)?(allPeriod-expireSize):0;
-	    	BigDecimal maxAmount = BigDecimal.ZERO;
-	    	for(CreditRepayPlan plan : expireList){
-	    		if(plan!=null && (plan.getRemainPrincipal()!=null) && remainPeriod> 0){
-	    			if(maxAmount.compareTo(plan.getRemainPrincipal()) != 1 ){
-		    			maxAmount = plan.getRemainPrincipal();
-		    		}
-	    		}
-	    	}
-	    	remainAmount = remainAmount.add(maxAmount);
 	    	//转让价格=剩余本金+利息
 	    	BigDecimal remainInterest = BigDecimal.ZERO; //剩余本金
 	    	if(remainPeriod > 0){
 	    		CreditRepayPlan expirePayPlan = planList.get(expireSize-1);
 	    		CreditRepayPlan waitPayPlan = planList.get(expireSize);
+	    		remainAmount = expirePayPlan.getRemainPrincipal();
 	    		Date  nowDate = new Date();
 	    	    Date  lastExpireDate = expirePayPlan.getRepayPlanTime();
 	    		Date  waitPayDate =   waitPayPlan.getRepayPlanTime();
@@ -117,7 +115,11 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    	}
 	    	remainAmount = remainAmount.add(remainInterest);
 	    }
-	    map.put("remainPeriod", remainPeriod); //剩余期数
+	    if(remainPeriod>0){
+	    	remainDays = Calendars.daysBetween(new Date(), creditInfo.getBidEndTime());
+	    }
+	    map.put("remainPeriod", remainPeriod); //剩余期数 月
+	    map.put("remainDays", remainDays);    //剩余期限 天
 	    map.put("remainAmount", remainAmount); //剩余金额
 		return map;
 	}

@@ -199,9 +199,9 @@ public class CreditController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/assign")
+	@RequestMapping("/importLoan")
 	public String assign(Model model) {
-		return "credit/assign";
+		return "credit/importLoan";
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class CreditController {
 			Logger.error("债权导入列表查询异常:", e);
 			model.addAttribute("infoList", null);
 		}
-		return "credit/loandata";
+		return "credit/importLoandata";
 	}
 
 	/**
@@ -676,7 +676,7 @@ public class CreditController {
 	
 
 	/**
-	 * 查询 债权还款计划明细
+	 * 债权导入明细 查询
 	 * 
 	 * @param page
 	 * @param size
@@ -690,12 +690,20 @@ public class CreditController {
 			BigDecimal reMainCash = BigDecimal.ZERO;
 			CrediteInfo creditInfo = creditInfoService.findById(id);
 			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
-			Map<String, Object> calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
+			Map<String, Object> calculatedMap = new HashMap<String, Object>();
+			if(CrediteInfo.Status.IMP_FAIL.equals(creditInfo.getStatus()) ||
+			   CrediteInfo.Status.WAIT_ASSIGN.equals(creditInfo.getStatus())){
+				calculatedMap.put("remainAmount", "");
+				calculatedMap.put("remainDays", "");
+			}else{
+				calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
+			}
 			List<LoanLog>  operateList = creditInfoService.queryCreditLogList(creditInfo);
 			model.addAttribute("creditInfo", creditInfo);                          // 债权信息
 			model.addAttribute("repayPlanDetailList", planList);                   // 还款明细
 			model.addAttribute("operateList", operateList);                        // 债权标操作 明细
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
+			model.addAttribute("remainDays", calculatedMap.get("remainDays")); // 剩余期数
 			User user = creditInfo.getCreditor().getUser();
 			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
 			if (userAccount != null) {
@@ -707,7 +715,7 @@ public class CreditController {
 		} catch (Exception e) {
 			Logger.error("债权还款计划明细异常：", e);
 		}
-		return "credit/repayDetail";
+		return "credit/importRepayDetail";
 	}
 
 	/**
@@ -725,7 +733,7 @@ public class CreditController {
 			Map<String, Object> calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
-			model.addAttribute("remainPeriod", calculatedMap.get("remainPeriod")); // 剩余本金
+			model.addAttribute("remainDays", calculatedMap.get("remainDays")); // 剩余本金
 		} catch (Exception e) {
 			Logger.error("查询债权信息异常：id=" + id, e);
 		}
@@ -758,14 +766,13 @@ public class CreditController {
 			List<String> statuslist = new ArrayList<String>();
 			statuslist.add(CrediteInfo.Status.WAIT_ASSIGN);
 			statuslist.add(CrediteInfo.Status.BIDING);
-			statuslist.add(CrediteInfo.Status.FAIL_ASSIGNING);
 			Page<CrediteInfo> obj = creditInfoService.queryByCondition(creditInfo, page, size,statuslist);
 			model.addAttribute("infoList", obj);
 		} catch (Exception e) {
 			Logger.error("债权导入列表查询异常:", e);
 			model.addAttribute("infoList", null);
 		}
-		return "credit/selldata";
+		return "credit/sellListTable";
 	}
 
 	/**
@@ -786,10 +793,11 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getPurpose())) {
 					entity.setPurpose(creditInfo.getPurpose());
 				}
+				entity.setOriginAmount(entity.getAmount()); //借款原始金额
 				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
 					 throw new ServiceException("发售金额必须大于0");
 				}else{
-					entity.setAmount(creditInfo.getAmount());
+					entity.setAmount(creditInfo.getAmount());   //转让金额
 				}
 				if (!Strings.empty(creditInfo.getAssureType())) {
 					entity.setAssureType(creditInfo.getAssureType());
@@ -813,6 +821,8 @@ public class CreditController {
 				}else{
 					entity.setDeadLine(creditInfo.getDeadLine());
 				}
+				//转让时间
+				entity.setAssignTime(Calendars.parse("yyyy-MM-dd HH:mm:ss", Calendars.format("yyyy-MM-dd HH:mm:ss", new Date())));
 				entity.setProductDesc(creditInfo.getProductDesc());
 				if(creditInfoService.sellCredit(entity)){
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
@@ -877,6 +887,7 @@ public class CreditController {
 	 */
 	@RequestMapping("/assignProtocol")
 	public String assignProtocol() {
+		
 		return "credit/assignProtocol";
 	}
 
@@ -905,7 +916,7 @@ public class CreditController {
 		} catch (Exception e) {
 			Logger.error("查看导入明细异常：id=" + ids, e);
 		}
-		return "credit/assign";
+		return "credit/importLoan";
 	}
 
 	/**
@@ -989,4 +1000,46 @@ public class CreditController {
 		return "credit/assignedRepayDetail";
 	}
 
+	/**
+	 * 债权导入明细 查询
+	 * 
+	 * @param page
+	 * @param size
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/sellDetail/{id}")
+	public String sellDetail(@PathVariable("id") String id, Model model) {
+		try {
+			BigDecimal reMainCash = BigDecimal.ZERO;
+			CrediteInfo creditInfo = creditInfoService.findById(id);
+			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
+			Map<String, Object> calculatedMap = new HashMap<String, Object>();
+			if(CrediteInfo.Status.IMP_FAIL.equals(creditInfo.getStatus()) ||
+			   CrediteInfo.Status.WAIT_ASSIGN.equals(creditInfo.getStatus())){
+				calculatedMap.put("remainAmount", "");
+				calculatedMap.put("remainDays", "");
+			}else{
+				calculatedMap = creditRepayPlanService.calculateRemainAmountAndPeriod(creditInfo, planList);
+			}
+			List<LoanLog>  operateList = creditInfoService.queryCreditLogList(creditInfo);
+			model.addAttribute("creditInfo", creditInfo);                          // 债权信息
+			model.addAttribute("repayPlanDetailList", planList);                   // 还款明细
+			model.addAttribute("operateList", operateList);                        // 债权标操作 明细
+			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
+			model.addAttribute("remainDays", calculatedMap.get("remainDays"));   // 剩余天数
+			User user = creditInfo.getCreditor().getUser();
+			UserAccount userAccount = userInfoService.loadAccountByUserAndType(user, UserAccount.Type.CASH);
+			if (userAccount != null) {
+				if (userAccount.getBalance() != null) {
+					reMainCash = userAccount.getBalance();
+				}
+			}
+			model.addAttribute("reMainCash", reMainCash); // 账户可用余额
+		} catch (Exception e) {
+			Logger.error("债权还款计划明细异常：", e);
+		}
+		return "credit/sellDetail";
+	}
 }

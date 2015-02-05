@@ -1316,7 +1316,7 @@ public class LoanServiceImpl implements LoanService {
 			String creditInfoId = repayPlan.getCrediteInfo().getId();
 			List<Loan> waitRepayCreditlist = loanRepository.findByCreditInfoAndLoanKindAndStatus(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, Loan.Status.REPAYING);
 			if (waitRepayCreditlist == null || waitRepayCreditlist.size() == 0) {
-				throw new Exception("根据：债权id=" + creditInfoId + ", 查询到状态为：待还款 , 的债权标 为空");
+				throw new Exception("根据：债权id=" + creditInfoId + ",查询到状态为:待还款,的债权标为空,债权标当前状态： "+repayPlan.getCrediteInfo().getStatusName());
 			} else if (waitRepayCreditlist.size() > 1) {
 				throw new Exception("根据：债权id=" + creditInfoId + ", 查状到态为：待还款, 的债权标个数不唯一");
 			}
