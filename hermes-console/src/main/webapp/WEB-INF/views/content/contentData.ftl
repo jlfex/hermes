@@ -23,11 +23,11 @@
                 <td class="align-center">
                 	<input class="form-control" id="disabledInput" type="text" placeholder="6" >
                 </td> -->
-                <td class="align-center">${l.order!}</td>                
-                <td class="align-center">${l.articleTitle!}</td>
-                <td class="align-center">${l.updateTime!}</td>
-                <td class="align-center">${l.category.name!}</td>
-                <td class="align-center">${l.author!}</td>
+                <td class="align-center">${l.order!''}</td>                
+                <td class="align-center">${l.articleTitle!''}</td>
+                <td class="align-center">${l.updateTime!''}</td>
+                <td class="align-center">${(l.category.name)!''}</td>
+                <td class="align-center">${l.author!''}</td>
                 <td class="align-center">
                     <button type="button" class="btn btn-link previewBtn" rid="${l.id}">预览</button>
                     <button type="button" class="btn btn-link hm-col editBtn" id="editBtn" pid="${l.id}">编辑</button>
