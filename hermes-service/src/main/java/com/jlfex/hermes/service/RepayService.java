@@ -123,5 +123,12 @@ public interface RepayService {
 	 * @throws Exception
 	 */
 	public List<Repay> findByNameAndStatusIn(String name,String... status)  throws Exception;
+    /**
+     * 根据标 和 状态   获取还款计划明细
+     * @param loan
+     * @param status
+     * @return
+     */
+	List<LoanRepay> findByLoanAndStatus(Loan loan, String status);
 	
 }

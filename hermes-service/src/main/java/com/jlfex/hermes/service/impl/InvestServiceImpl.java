@@ -20,6 +20,7 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
@@ -32,6 +33,7 @@ import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.repository.CommonRepository;
 import com.jlfex.hermes.repository.CommonRepository.Script;
+import com.jlfex.hermes.repository.CreditInfoRepository;
 import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
@@ -92,6 +94,8 @@ public class InvestServiceImpl implements InvestService {
 	/** 用户图片信息仓库 */
 	@Autowired
 	private UserImageRepository userImageRepository;
+	@Autowired
+	private CreditInfoRepository creditInfoRepository;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -500,10 +504,13 @@ public class InvestServiceImpl implements InvestService {
 
 	@Override
 	public boolean processAutoBidFailure(Loan loan) {
-
 		// 借款表投标改为自动流标
 		int success = loanNativeRepository.updateStatus(loan.getId(), Status.BID, Status.FAILURE_AUTO);
 		if (success == 1) {
+			//债权标流标 更新债权信息 状态
+			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+				creditAutoBidDeal(loan);
+			}
 			List<Invest> investList = investRepository.findByLoan(loan);
 			for (Invest invest : investList) {
 				// 理财表冻结状态改为借款流标状态
@@ -520,6 +527,29 @@ public class InvestServiceImpl implements InvestService {
 			return false;
 		}
 
+	}
+	/**
+	 * 债权标 流标后 更新债权信息 状态
+	 * @param loan
+	 */
+	public void  creditAutoBidDeal(Loan loan){
+		try{
+			if(loan != null){
+				String status = CrediteInfo.Status.WAIT_ASSIGN;
+				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+				Date deadTime = creditInfo.getDeadTime();
+				if(deadTime!=null){
+					if(deadTime.before(new Date())){
+						status = CrediteInfo.Status.FAIL_ASSIGNING;
+					}
+				}
+				creditInfo.setStatus(status);
+			}else{
+				Logger.warn("债权标 流标后 更新债权信息状态:标信息为空");
+			}
+		}catch(Exception e){
+			Logger.error("债权标 流标更新债权信息 状态异常:", e);
+		}
 	}
 
 	/**

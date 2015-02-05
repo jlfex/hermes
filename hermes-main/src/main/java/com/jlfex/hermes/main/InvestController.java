@@ -379,7 +379,12 @@ public class InvestController {
 		model.addAttribute("loanauths", loanAuthlist);
 		model.addAttribute("nav", "invest");
 		// 读取投标金额倍数设置
-		String investBidMultiple = ""+loan.getProduct().getStartingAmt().intValue();
+		String investBidMultiple = "0";
+		try{
+			investBidMultiple = ""+loan.getProduct().getStartingAmt().intValue();
+		}catch(Exception e){
+			Logger.error("获取产品起投金额:异常" ,e);
+		}
 		model.addAttribute("investBidMultiple", investBidMultiple);
 		model.addAttribute("validFlag",  bidAuthentication); //投标是否有效标识
 		return "invest/info";

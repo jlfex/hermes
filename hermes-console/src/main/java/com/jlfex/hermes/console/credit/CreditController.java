@@ -296,6 +296,18 @@ public class CreditController {
 					entitLoanPayList.add(initCreditRepayPlanEntity(vo, repayPlan));
 				}
 				List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.saveBatch(entitLoanPayList);
+				//如果债权还款明细都过期  更新债权状态已过期
+				for(CreditRepayPlan plan :creditRepayPlanList){
+					 if(plan == null){
+						 continue;
+					 }
+					 CrediteInfo obj = plan.getCrediteInfo();
+					 List<CreditRepayPlan> list = creditRepayPlanService.queryByCreditInfoAndStatus(obj, CreditRepayPlan.Status.WAIT_PAY);
+					 if(list == null || list.size() ==0){
+						 obj.setStatus(CrediteInfo.Status.FAIL_ASSIGNING);
+						 creditInfoService.save(obj);
+					 }
+				}
 				if (creditRepayPlanList == null || creditRepayPlanList.size() == 0) {
 					sheet2SucNum = 0;
 					Logger.info(fileName+"：还款计划表保存失败");

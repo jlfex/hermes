@@ -86,9 +86,9 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    	remainPeriod = allPeriod;
 	    	BigDecimal maxAmount = BigDecimal.ZERO;
 	    	for(CreditRepayPlan plan : planList){
-	    		if(plan!=null && (plan.getRepayPrincipal()!=null)){
-	    			if(maxAmount.compareTo(plan.getRepayPrincipal()) != 1 ){
-		    			maxAmount = plan.getRepayPrincipal();
+	    		if(plan!=null && (plan.getRemainPrincipal()!=null)){
+	    			if(maxAmount.compareTo(plan.getRemainPrincipal()) != 1 ){
+		    			maxAmount = plan.getRemainPrincipal();
 		    		}
 	    		}
 	    	}
@@ -129,12 +129,9 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		return map;
 	}
 
-	
-	
-
-
-	
-	
-	
+	@Override
+	public List<CreditRepayPlan> queryByCreditInfoAndStatus(CrediteInfo creditInfo,String status) throws Exception {
+		return  creditorRepayPlanRepository.findByCrediteInfoAndStatus(creditInfo, status);
+	}
     
 }
