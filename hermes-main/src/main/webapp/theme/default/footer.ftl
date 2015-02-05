@@ -1,17 +1,15 @@
 <!-- foot start-->
 <div class="footer">
     <div class="footcenter">
-        <!--<div class="companyinfo clearfix">
+        <div class="companyinfo clearfix">
             <h4>公司介绍</h4>
             <ul>
-                <li><a href="javascript:value(0);">平台原理</a></li>
-                <li><a href="javascript:value(0);">安全保障</a></li>
-                <li><a href="javascript:value(0);">媒体报道</a></li>
-                <li><a href="javascript:value(0);">联系我们</a></li>
+            	<#list companyIntroductions as m>
+               	 <li><a href="${app}/help-center/${m.id}">${(m.name)!}</a></li>
+                </#list>
             </ul>
 
-        </div>-->
-		<img src="${app.theme}/public/images/footerline.png" alt="" />
+        </div>
         <div class="links clearfix">
             <h4>友情链接</h4>
             <ul>
