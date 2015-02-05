@@ -251,7 +251,7 @@ jQuery(function($) {
                 	</table>
                 	<table>
                 		<tr>
-                			<td  colspan="3" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money50">&nbsp;&nbsp;
+                			<td  colspan="3" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money_loan">&nbsp;&nbsp;
 							<span class="mv_msg"></span></td>
                 		<tr>
                 		<td colspan="3" class="td_ht1"><span class="lighrgray"><@messages key="account.info.user.cash" />：</span><span class="yellow">
@@ -371,12 +371,12 @@ jQuery(function($) {
 			                        </tr>
 			                        <#else>
                 			        <tr>
-			                            <td class="tdalign">产品用途</td>
-			                            <td colspan="5" class="th_00 black">${(creditInfo.purpose)!''}</td>
+			                            <td class="tdalign">产品介绍</td>
+			                            <td colspan="5" class="th_00 black">${(creditInfo.productDesc)!''}</td>
 			                        </tr>
 			                        <tr>
 			                            <td class="tdalign">资金用途</td>
-			                            <td colspan="5" class="th_00 black">${(loan.amountAim)!''}</td>
+			                            <td colspan="5" class="th_00 black">${(creditInfo.amountAim)!''}</td>
 			                        </tr>
                 			        </#if>
 			                    </table>

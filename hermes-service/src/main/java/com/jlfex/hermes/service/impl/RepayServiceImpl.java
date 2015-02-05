@@ -507,11 +507,20 @@ public class RepayServiceImpl implements RepayService {
 		BigDecimal principal = BigDecimal.ZERO; // 总本金
 		BigDecimal interest = BigDecimal.ZERO; // 总利息
 		// 还月缴管理费
-		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_MONTHLY_FEE, loanRepay.getOtherAmount(), loanRepay.getId(), "自动还款_缴纳公司月缴管理费");
+		transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.LOAN_MONTHLY_FEE, loanRepay.getOtherAmount(), loanRepay.getId(), "自动还款_缴纳月缴管理费");
 		// 如果状态为等待还款，为正常还款
-		if (Strings.equals(loanRepay.getStatus(), RepayStatus.WAIT)) {
+		String status = loanRepay.getStatus();
+		if (RepayStatus.WAIT.equals(status) || RepayStatus.OVERDUE.equals(status)) {
 			List<InvestProfit> investProfitList = investProfitRepository.findByLoanRepay(loanRepay);
+			// 还逾期违约金
+			if(RepayStatus.OVERDUE.equals(status)){
+				transactionService.toCropAccount(Transaction.Type.OUT, loan.getUser(), UserAccount.Type.OVERDUE_FEE, loanRepay.getOverduePenalty(), loanRepay.getId(), "自动还款_还逾期违约金");
+			}
 			for (InvestProfit investProfit : investProfitList) {
+				// 还逾期罚息
+				if(RepayStatus.OVERDUE.equals(status)){
+					transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), loanRepay.getOverdueInterest(), investProfit.getId(), "自动还款_还逾期罚息");
+				}
 				// 还本金
 				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "自动还款_正常还本金");
 				principal = principal.add(investProfit.getPrincipal());
@@ -519,6 +528,9 @@ public class RepayServiceImpl implements RepayService {
 				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "自动还款_正常还利息");
 				interest = interest.add(investProfit.getInterest());
 				// 更新理财收益表
+				if(RepayStatus.OVERDUE.equals(status)){
+					investProfit.setOverdueInterest(loanRepay.getOverdueInterest());
+				}
 				investProfit.setStatus(InvestProfit.Status.ALREADY);
 				investProfitRepository.save(investProfit);
 			}
@@ -528,9 +540,13 @@ public class RepayServiceImpl implements RepayService {
 			loanRepay.setAmount(amount);
 			loanRepay.setPrincipal(principal);
 			loanRepay.setInterest(interest);
-			loanRepay.setStatus(RepayStatus.NORMAL);
+			if(RepayStatus.WAIT.equals(status)){
+				loanRepay.setStatus(RepayStatus.NORMAL);
+			}else{
+				loanRepay.setStatus(RepayStatus.OVERDUE_REPAY);
+			}
 			// 更新还款计划表状态，从待还款 至 正常还款
-			success = loanRepayNativeRepository.updateStatus(loanRepay, RepayStatus.WAIT);
+			success = loanRepayNativeRepository.updateStatus(loanRepay,status);
 			if (success != 1) {
 				throw new ServiceException("auto normal repay fail!");
 				// 未成功执行，回滚
@@ -557,5 +573,12 @@ public class RepayServiceImpl implements RepayService {
 	@Override
 	public List<Repay> findByNameAndStatusIn(String name, String... status) throws Exception {
 		return repayRepository.findByNameAndStatusIn(name, Arrays.asList(status));
+	}
+	/**
+	 * 根据标 和 状态   获取还款计划明细
+	 */
+	@Override
+	public List<LoanRepay> findByLoanAndStatus(Loan loan, String status) {
+		return loanRepayRepository.findByLoanAndStatus(loan, status);
 	}
 }
