@@ -2,6 +2,7 @@ package com.jlfex.hermes.service.web;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -18,6 +19,8 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
+import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
@@ -32,6 +35,7 @@ import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
  */
 @Component
 public class PropertiesFilter implements Filter {
+	private static String companyIntroductionCode = "company_introduction";
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -42,6 +46,9 @@ public class PropertiesFilter implements Filter {
 
 	@Autowired
 	private FriendLinkService friendLinkService;
+
+	@Autowired
+	private ArticleCategoryRepository articleCategoryRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -72,7 +79,10 @@ public class PropertiesFilter implements Filter {
 			App.config(propertiesService.loadFromDatabase());
 			Logger.info("properties rebuild completed.");
 		}
+		ArticleCategory articleCategory = articleCategoryRepository.findByCode(companyIntroductionCode);
+		List<ArticleCategory> articleCategoryList = articleCategoryRepository.findByParent(articleCategory);
 		req.setAttribute("friendlinkData", friendLinkService.findTop10());
+		req.setAttribute("companyIntroductions", articleCategoryList);
 		chain.doFilter(req, resp);
 	}
 
