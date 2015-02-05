@@ -84,15 +84,8 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    }
 	    if(expireList.size() == 0){
 	    	remainPeriod = allPeriod;
-	    	BigDecimal maxAmount = BigDecimal.ZERO;
-	    	for(CreditRepayPlan plan : planList){
-	    		if(plan!=null && (plan.getRemainPrincipal()!=null)){
-	    			if(maxAmount.compareTo(plan.getRemainPrincipal()) != 1 ){
-		    			maxAmount = plan.getRemainPrincipal();
-		    		}
-	    		}
-	    	}
-	    	remainAmount = remainAmount.add(maxAmount);
+	    	CreditRepayPlan firstRepayPlan = planList.get(0);
+	    	remainAmount = remainAmount.add(firstRepayPlan.getRemainPrincipal()).add(firstRepayPlan.getRepayPrincipal());
 	    }else{
 	    	int expireSize = expireList.size();
 	    	remainPeriod = (allPeriod>expireSize)?(allPeriod-expireSize):0;
@@ -124,8 +117,8 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    	}
 	    	remainAmount = remainAmount.add(remainInterest);
 	    }
-	    map.put("remainPeriod", remainPeriod);
-	    map.put("remainAmount", remainAmount);
+	    map.put("remainPeriod", remainPeriod); //剩余期数
+	    map.put("remainAmount", remainAmount); //剩余金额
 		return map;
 	}
 
