@@ -73,3 +73,4 @@ insert into `hm_navigation` (`id`, `parent`, `type`, `name`, `subname`, `code`, 
 
 
 insert into `hm_tmp_notice` (`id`,`update_time`,`version`,`content`,`end_date`,`start_date`,`status`,`title`)values('1','2015-01-21 09:42:31',0,'发版了发版了','2015-01-19 09:42:31','2015-01-12 09:42:31','00','升级了');
+insert into `hm_article_category` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `level`, `name`, `status`, `parent`) values('8b0c83b1-5a37-424c-8cb7-2a96dda948b2','2015-02-04 15:10:05','e74428d8-7fb4-11e3-ae10-6cae8b21aeaa','2015-02-04 15:10:05','e74428d8-7fb4-11e3-ae10-6cae8b21aeaa','0','company_introduction','二级','公司介绍','00','d82d503c-9efe-11e4-aae2-1f2b79deec07');
