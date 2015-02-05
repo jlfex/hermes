@@ -41,6 +41,11 @@ public interface CreditorRepayPlanRepository extends JpaRepository<CreditRepayPl
 	public List<CreditRepayPlan>  findByCreditInfoAscPeriod(CrediteInfo crediteInfo);
 	
 	
-	
+	/**
+	 * 根据状态 查询当前债权明细 
+	 * @param crediteInfo
+	 * @return
+	 */
+	public List<CreditRepayPlan> findByCrediteInfoAndStatus(CrediteInfo crediteInfo,String status) ;
 	
 }

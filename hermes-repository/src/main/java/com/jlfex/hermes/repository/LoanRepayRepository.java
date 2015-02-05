@@ -63,4 +63,11 @@ public interface LoanRepayRepository extends JpaRepository<LoanRepay, String> {
 	 * @return
 	 */
 	public List<LoanRepay> findByStatus(String status);
+	/**
+	 * 根据标+状态 获取还款计划
+	 * @param loan
+	 * @param status
+	 * @return
+	 */
+	public List<LoanRepay> findByLoanAndStatus(Loan loan, String status);
 }

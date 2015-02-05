@@ -408,7 +408,7 @@ public class CrediteInfo extends Model {
 		public static final String REPAY_FIINISH = "03";
 		@Element("验证失败")
 		public static final String IMP_FAIL = "04";
-		@Element("转让失败")
+		@Element("已过期")
 		public static final String FAIL_ASSIGNING = "05";
 	}
 
