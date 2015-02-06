@@ -967,12 +967,18 @@ public class CreditController {
 		List<Loan> loanList = creditInfoService.queryLoanByCredit(id);
 		for(Loan loan : loanList){
 			if(loan!=null){ 
-				// 债权标是 全额投标: 状态是满标
-				LoanLog loanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.FULL);
-				if(loanLog != null){
-					User user = creditInfoService.queryUserByID(loanLog.getUser());
-					loanLog.setUser(user.getAccount());
-					loanLogList.add(loanLog); 
+				List<String> typeList = new ArrayList<String>();
+				typeList.add(LoanLog.Type.INVEST);
+				List<LoanLog> loanLogRecordsList = loanService.loadLogByLoanIdAndTypeIn(loan, typeList );
+				if(loanLogRecordsList != null && loanLogRecordsList.size() > 0){
+					for(LoanLog loanLog : loanLogRecordsList){
+						if(loanLog == null){
+							continue;
+						}
+						User user = creditInfoService.queryUserByID(loanLog.getUser());
+						loanLog.setUser(user.getAccount());
+						loanLogList.add(loanLog);
+					}
 				}
 			}
 		}
