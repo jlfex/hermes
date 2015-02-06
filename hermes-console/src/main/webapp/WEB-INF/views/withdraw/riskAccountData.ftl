@@ -5,6 +5,7 @@
 				<th width="30%" class="align-center">时间</th>
 				<th width="10%" class="align-center">转入</th>
 				<th width="10%" class="align-center">转出</th>
+				<th width="10%" class="align-center">对象</th>
 				<th width="30%" class="align-center">备注</th>
 		</tr>
 	</thead>
@@ -25,7 +26,8 @@
 			         <td class="align-center">${l.amount}</td>
 			         <td class="align-center"></td>
 			       </#if>
-			       <td class="align-center">测试</td>
+			        <td class="align-center">${(l.targetUserAccount.user.account)!''}</td>
+			       <td class="align-center"> <@risk val="${l.reference}" />   </td>
 		        </tr>
 		    </#list>
 	 </#if>

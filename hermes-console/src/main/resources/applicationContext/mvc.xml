@@ -44,6 +44,7 @@
 			<map>
 				<entry key="messages"><bean class="com.jlfex.hermes.common.support.freemarker.MessagesDirective" /></entry>
 				<entry key="config"><bean class="com.jlfex.hermes.common.support.freemarker.ConfigDirective" /></entry>
+				<entry key="risk"><bean class="com.jlfex.hermes.console.freemark.RiskDirective" /></entry>
 			</map>
 		</property>
 	</bean>
