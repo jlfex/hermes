@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +16,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.jlfex.hermes.common.utils.ByteUtils;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.HermesConstants;
+import com.jlfex.hermes.model.ImageManage;
 import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.ArticleRepository;
 import com.jlfex.hermes.repository.FriendLinkRepository;
+import com.jlfex.hermes.repository.ImageManageRepository;
 import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.common.Pageables;
@@ -43,6 +48,8 @@ public class ContentServiceImpl implements ContentService {
 	private FriendLinkRepository friendLinkRepository;
 	@Autowired
 	private TmpNoticeRepository tmpNoticeRepository;
+	@Autowired
+	private ImageManageRepository imageManageRepository;
 
 	@Override
 	public ArticleCategory findCategoryByNameAndLevel(String name, String level) {
@@ -168,6 +175,16 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ArticleCategory findOne(String id) {
 		return articleCategoryRepository.findOne(id);
+	}
+
+	/**
+	 * 根据id找到某条图片管理记录
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage findOneImageManage(String id) {
+		return imageManageRepository.findOne(id);
 	}
 
 	/**
@@ -315,6 +332,16 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
+	 * 查询图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public Page<ImageManage> findAllImageManage(int page, int size) {
+		return imageManageRepository.findAll(new PageRequest(page, size));
+	}
+
+	/**
 	 * 新增友情链接
 	 * 
 	 * @author lishunfeng
@@ -330,6 +357,27 @@ public class ContentServiceImpl implements ContentService {
 		friendLink.setStatus("10");
 		friendLinkRepository.save(friendLink);
 		return friendLink;
+	}
+
+	/**
+	 * 新增友情链接
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@Override
+	public ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file) {
+		ImageManage imageManage = new ImageManage();
+		try {
+			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
+			imageManage.setType(type);
+			imageManage.setName(name);
+			imageManage.setLink(link);
+			imageManage.setOrder(order);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return imageManageRepository.save(imageManage);
 	}
 
 	/**
