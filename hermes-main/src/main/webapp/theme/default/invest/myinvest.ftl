@@ -47,7 +47,7 @@ jQuery(function($) {
 			<tbody>
 			  <#list invests as i>  
 				<tr>
-					<td><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose}</a>
+					<td><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose!''}</a>
 					</td>
 					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
 					<td class="right">${i.rate}</td>
