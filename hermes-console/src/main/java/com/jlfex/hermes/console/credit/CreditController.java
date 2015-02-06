@@ -794,11 +794,10 @@ public class CreditController {
 				if (!Strings.empty(creditInfo.getPurpose())) {
 					entity.setPurpose(creditInfo.getPurpose());
 				}
-				entity.setOriginAmount(entity.getAmount()); //借款原始金额
-				if(creditInfo.getAmount().compareTo(BigDecimal.ZERO) != 1){
+				if(creditInfo.getSellAmount().compareTo(BigDecimal.ZERO) != 1){
 					 throw new ServiceException("发售金额必须大于0");
 				}else{
-					entity.setAmount(creditInfo.getAmount());   //转让金额
+					entity.setSellAmount(creditInfo.getSellAmount());
 				}
 				if (!Strings.empty(creditInfo.getAssureType())) {
 					entity.setAssureType(creditInfo.getAssureType());
