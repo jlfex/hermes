@@ -1374,5 +1374,11 @@ public class LoanServiceImpl implements LoanService {
 		transactionService.cropAccountToCreditorOutline(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT, addAmount, "债权人线下充值", "债权人线下充值");
 		return userAccountRepository.findOne(accountId);
 	}
-	
+	/**
+	 * 根据状态 获取操作日志
+	 */
+	@Override
+	public List<LoanLog> loadLogByLoanIdAndTypeIn(Loan loan , List<String> typeList) {
+		return loanLogRepository.findByLoanAndTypeIn(loan, typeList);
+	}
 }

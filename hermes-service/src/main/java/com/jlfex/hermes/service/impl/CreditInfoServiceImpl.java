@@ -241,7 +241,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		Loan loan = new Loan();
 		loan.setProduct(generateVirtualProduct(repay));
 		loan.setRepay(repay);
-		loan.setAmount(entity.getAmount());
+		loan.setAmount(entity.getSellAmount());
 		loan.setPeriod(entity.getDeadLine());
 		loan.setRate(entity.getRate());
 		loan.setPurpose(entity.getPurpose());

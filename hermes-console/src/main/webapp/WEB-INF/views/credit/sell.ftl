@@ -13,7 +13,7 @@
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>发售价格</label>
                     <div class="col-xs-2">
-                      <input type="text" name="amount" readonly="true" class="form-control" id="amount"  value="${remainAmount!'0'}">
+                      <input type="text" name="sellAmount" readonly="true" class="form-control" id="sellAmount"  value="${remainAmount!'0'}">
                     </div>
                   </div>
 
