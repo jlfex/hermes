@@ -33,6 +33,9 @@
 								<@messages key="model.loan.period" />：&nbsp;
 								${loan.period}<#if loan.loanKind=='00'>个月 <#else>天</#if>&nbsp;<#t>
 							</div>
+							<div class="col-xs-3 hm-col form-group">
+							       编号：&nbsp;${loan.loanNo}&nbsp;<#t>
+							</div>
 						</div>
 					</p>
 				</div>
