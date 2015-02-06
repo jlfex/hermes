@@ -97,6 +97,6 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 * @param status
 	 * @return
 	 */
-	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2  ")
+	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2  and t.status !='30' ")
 	public List<Loan> findByCreditInfoAndLoanKind(String creditInfoId, String loanKind );
 }

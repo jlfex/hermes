@@ -48,7 +48,6 @@ import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
-import com.jlfex.hermes.service.impl.CreditRepayPlanServiceImpl;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
 
