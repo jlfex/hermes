@@ -115,8 +115,10 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    	}
 	    	remainAmount = remainAmount.add(remainInterest);
 	    }
-	    if(remainPeriod>0){
-	    	remainDays = Calendars.daysBetween(new Date(), creditInfo.getBidEndTime());
+	    if(remainPeriod>0 ){
+	    	if(creditInfo.getBidEndTime() != null){
+	    		remainDays = Calendars.daysBetween(new Date(), creditInfo.getBidEndTime());
+	    	}
 	    }
 	    map.put("remainPeriod", remainPeriod); //剩余期数 月
 	    map.put("remainDays", remainDays);    //剩余期限 天
