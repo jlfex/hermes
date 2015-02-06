@@ -1,9 +1,12 @@
 package com.jlfex.hermes.console;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +15,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.ImageManage;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
@@ -482,16 +490,64 @@ public class ContentController {
 		return "/content/preview";
 	}
 
-	@RequestMapping("/banner")
-	public String banner(Model model) {
-
-		return "/content/banner";
+	/**
+	 * 图片管理结果页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/imageIndex")
+	public String imageData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("imageManages", contentService.findAllImageManage(page, size));
+		return "/content/imageManageIndex";
 	}
 
-	@RequestMapping("/addBanner")
-	public String addBanner(Model model) {
+	/**
+	 * 新增图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addImageManage")
+	public String addImageManage(Model model) {
+		return "/content/addImageManage";
+	}
 
-		return "/content/addBanner";
+	/**
+	 * 添加图片管理处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerAddImageManage")
+	public String handerAddImageManage(MultipartHttpServletRequest request, ImageManage imageManage, RedirectAttributes attr) {
+		try {
+			String type = request.getParameter("type");
+			String name = request.getParameter("name");
+			String link = request.getParameter("link");
+			int order = Integer.parseInt(request.getParameter("order"));
+			MultipartFile file = request.getFile("file");
+			contentService.addImageManage(type, name, link, order, file);
+			attr.addFlashAttribute("msg", "添加图片成功");
+			return "redirect:/content/imageManageIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加图片失败");
+			Logger.error("添加链接失败：", e);
+			return "redirect:/content/addImageManage";
+		}
+	}
+
+	/**
+	 * @description:图片查看
+	 */
+	@RequestMapping(value = "/picture/{id}", method = RequestMethod.GET)
+	public void picture(HttpServletResponse response, @PathVariable String id) {
+		ImageManage imageManage = contentService.findOneImageManage(id);
+		try {
+			response.setContentType("image/jpeg");
+			if (imageManage.getImage() != null) {
+				response.getOutputStream().write(imageManage.getImage());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
