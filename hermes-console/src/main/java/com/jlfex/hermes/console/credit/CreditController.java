@@ -957,9 +957,10 @@ public class CreditController {
 	 * @param ids
 	 * @param model
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping("/bidDetail/{id}")
-	public String bidDetail(@PathVariable("id") String id, Model model) {
+	public String bidDetail(@PathVariable("id") String id, Model model) throws Exception {
 		if (Strings.empty(id)) {
 			Logger.error("查看投标明细 参数:id为空");
 		}
