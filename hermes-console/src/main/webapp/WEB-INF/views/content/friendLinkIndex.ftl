@@ -55,8 +55,7 @@ jQuery(function($) {
 			$('#page').val(elem.data().page);
 			$('#searchForm').trigger('submit');
 		}
-
-});
+    });
 	//点击新增分类按钮
 	$("#addBtn").on("click",function(){
 		$.link.html(null, {
@@ -79,8 +78,7 @@ jQuery(function($) {
 			url: '${app}/content/deleteFriendLink?id='+cid,
 			target: 'main'
 		});
-});				
-	
+     });				
 });
 //-->
 </script>

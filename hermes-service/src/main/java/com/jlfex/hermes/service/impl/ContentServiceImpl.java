@@ -178,16 +178,6 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
-	 * 根据id找到某条图片管理记录
-	 * 
-	 * @author lishunfeng
-	 */
-	@Override
-	public ImageManage findOneImageManage(String id) {
-		return imageManageRepository.findOne(id);
-	}
-
-	/**
 	 * 根据id找到某条内容
 	 * 
 	 * @author lishunfeng
@@ -332,16 +322,6 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
-	 * 查询图片管理
-	 * 
-	 * @author lishunfeng
-	 */
-	@Override
-	public Page<ImageManage> findAllImageManage(int page, int size) {
-		return imageManageRepository.findAll(new PageRequest(page, size));
-	}
-
-	/**
 	 * 新增友情链接
 	 * 
 	 * @author lishunfeng
@@ -357,27 +337,6 @@ public class ContentServiceImpl implements ContentService {
 		friendLink.setStatus("10");
 		friendLinkRepository.save(friendLink);
 		return friendLink;
-	}
-
-	/**
-	 * 新增友情链接
-	 * 
-	 * @author lishunfeng
-	 */
-
-	@Override
-	public ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file) {
-		ImageManage imageManage = new ImageManage();
-		try {
-			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
-			imageManage.setType(type);
-			imageManage.setName(name);
-			imageManage.setLink(link);
-			imageManage.setOrder(order);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return imageManageRepository.save(imageManage);
 	}
 
 	/**
@@ -419,6 +378,17 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
+	 * 新增临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@Override
+	public TmpNotice addTmpNotice(TmpNotice tmpNotice) {
+		return tmpNoticeRepository.save(tmpNotice);
+	}
+
+	/**
 	 * 根据id找到某条临时公告
 	 * 
 	 * @author lishunfeng
@@ -444,6 +414,90 @@ public class ContentServiceImpl implements ContentService {
 		tmpNotice.setEndDate(tnVo.getEndDate());
 		tmpNoticeRepository.save(tmpNotice);
 		return tmpNotice;
+	}
+
+	/**
+	 * 删除临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@Override
+	public void deleteTmpNotice(String id) {
+		TmpNotice tmpNotice = tmpNoticeRepository.findOne(id);
+		tmpNoticeRepository.delete(tmpNotice);
+	}
+
+	/**
+	 * 查询图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public Page<ImageManage> findAllImageManage(int page, int size) {
+		return imageManageRepository.findAll(new PageRequest(page, size));
+	}
+
+	/**
+	 * 新增图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file) {
+		ImageManage imageManage = new ImageManage();
+		try {
+			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
+			imageManage.setType(type);
+			imageManage.setName(name);
+			imageManage.setLink(link);
+			imageManage.setOrder(order);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return imageManageRepository.save(imageManage);
+	}
+
+	/**
+	 * 根据id找到某条图片管理记录
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage findOneImageManage(String id) {
+		return imageManageRepository.findOne(id);
+	}
+
+	/**
+	 * 编辑图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage updateImageManage(String id, String type, String name, String link, int order, MultipartFile file) {
+		ImageManage imageManage = imageManageRepository.findOne(id);
+		try {
+			imageManage.setName(name);
+			imageManage.setLink(link);
+			imageManage.setOrder(order);
+			imageManage.setType(type);
+			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
+			imageManageRepository.save(imageManage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return imageManage;
+	}
+
+	/**
+	 * 删除图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public void deleteImageManage(String id) {
+		ImageManage imageManage = imageManageRepository.findOne(id);
+		imageManageRepository.delete(imageManage);
 	}
 
 }

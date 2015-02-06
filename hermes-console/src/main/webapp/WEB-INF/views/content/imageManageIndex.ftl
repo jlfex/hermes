@@ -63,6 +63,22 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
+	//点击编辑按钮
+	$(".editBtn").on("click",function(){
+		var pid = $(this).attr("pid");
+		$.link.html(null, {
+			url: '${app}/content/editImageManage?id='+pid,
+			target: 'main'
+		});
+	});	
+    //点击删除按钮
+	$(".deleteBtn").on("click",function(){
+		var cid = $(this).attr("cid");
+		$.link.html(null, {
+			url: '${app}/content/deleteImageManage?id='+cid,
+			target: 'main'
+		});
+	});
 });
 //-->
 </script>
