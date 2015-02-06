@@ -56,12 +56,12 @@ public class CrediteInfo extends Model {
 	// 城市
 	@Column(name = "city")
 	private String city;
-	// 借款金额 
+	//原始  借款金额 
 	@Column(name = "amount")
 	private BigDecimal amount;
-	// 原始 借款金额 
-	@Column(name = "origin_amount")
-	private BigDecimal originAmount;
+	//转让 金额 
+	@Column(name = "sell_amount")
+	private BigDecimal sellAmount;
 	// 年利率
 	@Column(name = "rate")
 	private BigDecimal rate;
@@ -369,14 +369,14 @@ public class CrediteInfo extends Model {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public BigDecimal getOriginAmount() {
-		return originAmount;
+	public BigDecimal getSellAmount() {
+		return sellAmount;
 	}
 
-	public void setOriginAmount(BigDecimal originAmount) {
-		this.originAmount = originAmount;
+	public void setSellAmount(BigDecimal sellAmount) {
+		this.sellAmount = sellAmount;
 	}
-	
+
 	public Date getAssignTime() {
 		return assignTime;
 	}

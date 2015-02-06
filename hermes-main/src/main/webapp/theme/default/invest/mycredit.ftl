@@ -37,7 +37,7 @@ jQuery(function($) {
 					<th>债权名称</th>
 					<th>投标金额(<@messages key="common.unit.cny" />)</th>
 					<th>年利率</th>
-					<th>期限</th>
+					<th>期限(天)</th>
 					<th>应收本息(<@messages key="common.unit.cny" />)</th>
 					<th>已收本息(<@messages key="common.unit.cny" />)</th>
 					<th>代收本息(<@messages key="common.unit.cny" />)</th>
@@ -51,7 +51,7 @@ jQuery(function($) {
 					</td>
 					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
 					<td class="right">${i.rate}</td>
-					<td class="right">${i.period}<@messages key="common.unit.month" /></td>
+					<td class="right">${i.period}</td>
 					<td class="right">${i.shouldReceivePI}</td>
 					<td class="right">${i.receivedPI}</td>
 					<td class="right">${i.waitReceivePI}</td>
