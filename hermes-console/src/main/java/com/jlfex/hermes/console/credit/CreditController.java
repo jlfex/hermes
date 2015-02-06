@@ -734,6 +734,7 @@ public class CreditController {
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("remainAmount", calculatedMap.get("remainAmount")); // 剩余本金
 			model.addAttribute("remainDays", calculatedMap.get("remainDays")); // 剩余本金
+			model.addAttribute("remainPeriod", calculatedMap.get("remainPeriod")); // 剩余期数
 		} catch (Exception e) {
 			Logger.error("查询债权信息异常：id=" + id, e);
 		}
