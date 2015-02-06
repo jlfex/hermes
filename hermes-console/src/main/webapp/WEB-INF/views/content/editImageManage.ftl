@@ -9,6 +9,7 @@
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" id="addForm" method="post"  enctype="multipart/form-data">
+              <input type="hidden" value="${(imageManage.id)!}" name="id" id="imageManageId"/>          
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
@@ -17,7 +18,7 @@
 					  <option value="首页—我要理财">首页—我要理财</option>
 					  <option value="首页—我要借款">首页—我要借款</option>
 					  <option value="登录界面">登录界面</option>
-					  <option value="注册界面">注册界面</option>					  
+					  <option value="注册界面">注册界面</option>				  
                    </select>
                 </div>
 		        <div class="col-xs-2">
@@ -27,7 +28,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>图片名称</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="name"  name="name" placeholder="图片名称">
+                  <input type="text" class="form-control" id="name"  name="name" value="${imageManage.name}">
                 </div>
 				<div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，汉字限定为8个字</span>
@@ -36,7 +37,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label">图片地址</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="link" name="link" placeholder="图片地址">
+                  <input type="text" class="form-control" id="link" name="link"  value="${imageManage.link}">
                 </div>
 		        <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，请输入合法的地址</span>
@@ -45,7 +46,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>排序</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="order" name="order">
+                  <input type="text" class="form-control" id="order" name="order" value="${imageManage.order}">
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，只能输入数字</span>
@@ -65,17 +66,17 @@
                   </div>
                   
                   <div class="form-group" id="localImag" style="margin-left:220px;">
-                    	<img src="" id='preview' onclick="over(preview,divImage,imgbig);" width="200" height="120">
+                    	<img src="${app}/content/picture/${imageManage.id}"" id='preview' onclick="over(preview,divImage,imgbig);" width="200" height="120">
                   </div>
                   <!--
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <a class="hm-link" href="#" data-url="" data-target="data">预览大图</a>
                     </div>
-                  </div>   -->           
+                  </div>     -->         
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="addImageManage">添加</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="updateImageManage">保存</button></div>
                   <div class="col-xs-3"><button type="button" class="btn btn-default btn-block" id="cancelImageManage">取消</button></div>
                 </div>
               </div>
@@ -185,22 +186,27 @@
     }
 
 jQuery(function($) {
-    $('#addImageManage').on('click', function(e) { 
-        upload($(this).get(0).files); 
+    $('#updateImageManage').on('click', function(e) { 
+    alert(222);
+        upload($(this).get(0).files);
     });
 	// 异步上传
 	function upload(files) {
+
 	    var files = $('input[name="file"]').prop('files');
 		$.each(files, function(i, file) {
+		alert(333);
 		    var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
-		    var type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
+		    var id=$('#imageManageId').val(),type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
 		    reader.readAsDataURL(file);
+		    formData.append('id', id);		    
 			formData.append('type', type);
 			formData.append('name', name);
 			formData.append('link', link);
 			formData.append('order', order);		    
 			formData.append('file', file);
-			xhr.open('POST', '${app}/content/handerAddImageManage');
+			alert(111);
+			xhr.open('POST', '${app}/content/handerEditImageManage');
 			xhr.send(formData);
 		});
 	}
@@ -211,5 +217,7 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
+	
+	$("#type").val("${(imageManage.type)!}");
 });
 </script>
