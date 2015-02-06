@@ -32,7 +32,8 @@
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
                    <select id="type" name="type" class="form-control">
-                      <option value="${friendLink.type}">${friendLink.type}</option>
+                   	  <option value="友情链接">友情链接</option>
+					  <option value="合作机构">合作机构</option>
                    </select>
                 </div>
 		        <div class="col-xs-2">
@@ -76,6 +77,6 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
-	
+    $("#type").val("${(friendLink.type)!}");
 });
 </script>       
