@@ -2,15 +2,15 @@
 	<thead>
 		              <tr>
 		                <th class="align-center">债权人名称</th>
-                        <th class="align-center">债权人编号</th>
-                        <th class="align-center">债权人名称</th>
                         <th class="align-center">债权编号</th>
-                        <th class="align-center">产品名称</th>
-                        <th class="align-center">发售价格</th>
+                        <th class="align-center">原始借款金额</th>
                         <th class="align-center">年利率</th>
                         <th class="align-center">期限(月)</th>
+                        <th class="align-center">产品名称</th>
+                        <th class="align-center">转让价格</th>
+                        <th class="align-center">转让年利率</th>
+                        <th class="align-center">转让期限(天)</th>
                         <th class="align-center">转让日期</th>
-                        <th class="align-center">到期日期</th>
                         <th class="align-center">还款方式</th>
                         <th class="align-center">状态</th>
                         <th class="align-center">投标管理</th>
@@ -25,22 +25,26 @@
 		<#list (assignedList.content)?sort_by("createTime")?reverse as l>  
 			 <tr>
 			   <td class="align-center">${(l.creditor.creditorName)!''}</td> 
-			   <td class="align-center">${(l.creditor.creditorNo)!''}</td>
-               <td class="align-center">${(l.creditor.creditorName)!''}</td>  
-               <td class="align-center">${l.crediteCode!''}</td> 
+			   <td class="align-center">${l.crediteCode!''}</td> 
+               <td class="align-center">${(l.originAmount)!''}</td>  
+               <td class="align-center">${(l.rate!0)?string.percent}</td>
+               <td class="align-center">${l.period!''}</td>
                <td class="align-center">${l.purpose!''}</td> 
                <td class="align-center">${l.amount!''}</td> 
                <td class="align-center">${(l.rate!0)?string.percent}</td> 
-               <td class="align-center">${l.period!''}</td>
-               <td class="align-center">${l.updateTime!''}</td>
-               <td class="align-center">${(l.deadTime)?string('yyyy-MM-dd')}</td> 
+               <td class="align-center">${(l.deadLine)!''}</td>
+               <td class="align-center">${l.assignTime!''}</td>
                <td class="align-center">${l.payType}</td> 
                <td class="align-center">${l.statusName}</td>
                <td class="align-center">
-                         <a href="#" data-url="${app}/credit/bidDetail/${l.id}" data-target="dataDetail">投标明细</a>
+	                <span class="bidDetailView" data-val="${app}/credit/bidDetail/${l.id}">
+				      <span class="btn-link" style="color:#428bca;">投标明细</span>
+			        </span>
                 </td>
                <td class="align-center">
-                         <a href="#" data-url="${app}/credit/repayDetail/${l.id}" data-target="dataDetail">查看回款详情</a>
+                    <span class="repayDetailView" data-val="${app}/credit/repayDetail/${l.id}">
+				      <span class="btn-link" style="color:#428bca;">查看回款详情</span>
+			        </span>
                </td>    
              </tr>
 		</#list>
@@ -60,6 +64,29 @@ jQuery(function($) {
 			$('#searchForm').trigger('submit');
 		}
 	});
+	
+	$('.bidDetailView').click(function(){
+	    var url = $(this).attr("data-val"); 
+		var win = openwindow(url,"",800,500);
+	});
+	$('.repayDetailView').click(function(){
+	    var url = $(this).attr("data-val"); 
+		var win = openwindow(url,"",800,500);
+	});
+    function openwindow(url,name,iWidth,iHeight)
+	{
+		var url; //转向网页的地址;
+		var name; //网页名称，可为空;
+		var iWidth; //弹出窗口的宽度;
+		var iHeight; //弹出窗口的高度;
+		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+	}  
+	
+	
+	
+    
 });
 //-->
 </script>
