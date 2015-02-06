@@ -80,7 +80,7 @@ InputSuggest.prototype = {
             opacity = this.opacity,
             container = this.container;
         container.style.cssText =
-            'position:absolute;overflow:hidden;left:' 
+            'background:#F0F8FF;position:absolute;overflow:hidden;left:' 
             + pos[0] + 'px;top:'
             + (pos[1]+input.offsetHeight) + 'px;width:'
             // IE6/7/8/9/Chrome/Safari input[type=text] border默认为2，Firefox为1，因此取offsetWidth-2保证与FF一致

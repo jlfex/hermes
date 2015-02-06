@@ -11,6 +11,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/email.js"></script>
 <style type="text/css">
   table th{text-align:center;}
 .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
@@ -58,6 +59,19 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
+ 
+    //邮箱补全
+	var inputSuggest = new InputSuggest({
+		input: document.getElementById('email'),
+		data: ['sina.com','sina.cn','163.com','qq.com','126.com','sohu.com','hotmail.com','gmail.com','139.com','189.com']
+	});
+	$('#email').keyup(function(){
+			var obj = $("#email").val();
+			if(obj.indexOf('@')!=-1){
+				//TODO 补全email
+			}
+	}); 
+  
 	// 绑定输入框事件
 	$('input').on('blur', function() {
 		if ($(this).val() === '') {
