@@ -6,6 +6,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading clearfix">
 				      <h5 class="control-label pull-left">${label.name}	</h5>
+				       <input id="label${label.id}" name="label" type="hidden" value="${label.id}" class="label"/>
 				       <div class="pull-right">
 				        	<a href="#" data-toggle="collapse" data-parent="#accordion" data-target="#collapse${label_index}" >
 				       			 <i class="fa fa-angle-double-up" style="font-size:1.5em;"></i>
@@ -110,7 +111,7 @@ jQuery(function($) {
 		} else {
 			$(this).removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
 			var labelId=$(this).closest('.panel').find('.label').val();
-			var content=$(this).closest('.panel').find('.row');
+			var content=$(this).closest('.panel').find('.row'); 
 			$.ajax({
 			     url: "${app}/loan/loadPicture/${loanUserId}/"+labelId,
 			     success:function(data) {
