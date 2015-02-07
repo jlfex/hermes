@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.repository.LoanRepository;
+import com.jlfex.hermes.service.DictionaryService;
+
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
@@ -23,6 +25,8 @@ public class RiskDirective implements TemplateDirectiveModel {
    
 	@Autowired
 	private LoanRepository loanRepository;
+	@Autowired
+	private DictionaryService dictionaryService;
 	private static final String PARAM_NAME_KEY	= "val";
 	
 	/* (non-Javadoc)
@@ -38,7 +42,11 @@ public class RiskDirective implements TemplateDirectiveModel {
 		String referenceId = params.get(PARAM_NAME_KEY).toString();
 		Loan  loan = loanRepository.findOne(referenceId);
 		if(loan!=null){
-			loanNameAndCode = loan.getPurpose()+"("+loan.getLoanNo()+")";
+			String purpose = loan.getPurpose();
+			if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
+				purpose = dictionaryService.loadById(loan.getPurpose()).getName(); 
+			}
+			loanNameAndCode = purpose+"("+loan.getLoanNo()+")";
 		}
 		env.getOut().write(loanNameAndCode);
 	}
