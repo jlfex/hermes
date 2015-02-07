@@ -70,9 +70,12 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ResultVo deleteCategory(String id) {
 		ArticleCategory articleCategory = articleCategoryRepository.findOne(id);
+		List<Article> articleList = articleRepository.findByCategory(articleCategory);
 		List<ArticleCategory> articleCategorys = articleCategory.getChildren();
 		if (articleCategorys.size() > 0) {
 			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "请先删除子分类再做分类删除");
+		} else if (articleList.size() > 0) {
+			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "此分类已有关联的文章，不能删除");
 		} else {
 			articleCategoryRepository.delete(articleCategory);
 		}
