@@ -1,11 +1,14 @@
 <div>
 	<div class="row">
 		<#list houses as house>
-			<div class="col-sm-6 col-md-6">
+			<div class="col-sm-6 col-md-6" id="${house.id}">
 				<div class="panel panel-info ">
 					<div class="panel-heading clearfix">
 						<h6 class="pull-left"><@messages key="model.house.info"/></h6>
-						<div class="pull-right" ><a href="#" onclick="modifyHouse('${house.id}')"><i class="fa fa-pencil-square-o" style="font-size:2em;"></i></a></div>
+						<div class="pull-right" >
+						<a href="#" onclick="modifyHouse('${house.id}')"><i class="fa fa-pencil-square-o" style="font-size:2em;"></i></a>
+						<a href="#" onclick="reMoveHouse('${house.id}',this)"><i class="fa fa-times-circle" style="font-size:2em;"></i></a>
+						</div>
 					</div>
 					<div class="panel-body">
 						<form class="form-horizontal" role="form"  id="houseForm">
@@ -71,5 +74,17 @@ function modifyHouse(houseId){
 		}
 	})
 }
+
+function reMoveHouse(houseId,obj){
+   $.ajax({
+		url: '${app}/account/delHouseDetail/'+houseId,
+		success:function(data) {
+			 if(data == '00'){
+			     $(obj).parent().parent().parent().parent().hide(); 
+			 }
+		}
+	});
+}
+
 //-->
 </script>

@@ -234,16 +234,28 @@ public class AccountPersonalController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		userJob.setUser(user);
-		userInfoService.saveJobInfo(userJob);
+		if(userJob == null || Strings.empty(userJob.getId())){
+			userInfoService.saveJobInfo(userJob);
+		}else{
+			UserJob entity = userInfoService.loanUserJobByJobId(userJob.getId());
+			entity.setType(userJob.getType());
+			entity.setName(userJob.getName());
+			entity.setProperties(userJob.getProperties());
+			entity.setScale(userJob.getScale());
+			entity.setAddress(userJob.getAddress());
+			entity.setPhone(userJob.getPhone());
+			entity.setPosition(userJob.getPosition());
+			entity.setAnnualSalary(userJob.getAnnualSalary());
+			entity.setLicense(userJob.getLicense());
+			entity.setRegisteredCapital(userJob.getRegisteredCapital());
+			userInfoService.saveJobInfo(entity);
+		}
 		List<UserJob> jobs = userInfoService.findJobByUserId(user);
 		model.addAttribute("jobs", jobs);
-
 		Map<Object, String> enterpriseMap = Dicts.elements(Enterprise.class);
 		model.addAttribute("enterpriseMap", enterpriseMap);
-
 		Map<Object, String> scaleMap = Dicts.elements(Scale.class);
 		model.addAttribute("scaleMap", scaleMap);
-
 		Map<Object, String> typeMap = Dicts.elements(com.jlfex.hermes.model.UserJob.Type.class);
 		model.addAttribute("typeMap", typeMap);
 		return "account/job";
@@ -524,5 +536,96 @@ public class AccountPersonalController {
 		String avatar_lg = map.get("avatar_lg");
 		userInfoService.saveImage(user, avatar, com.jlfex.hermes.model.UserImage.Type.AVATAR, "");
 		userInfoService.saveImage(user, avatar_lg, com.jlfex.hermes.model.UserImage.Type.AVATAR_LG, "");
+	}
+	
+	/**
+	 * 删除  工作信息
+	 * @param jobid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/delJobDetail/{jobid}")
+	@ResponseBody
+	public String delJobDetail(@PathVariable("jobid") String jobid, Model model) {
+		String flag = "99";
+		Logger.info("进行工作信息删除操作：jobid="+jobid);
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		if (!Strings.empty(jobid)){
+			try{
+			   userInfoService.delUserJobByJobId(jobid);
+			   flag = "00";
+			}catch(Exception e){
+				Logger.error("删除工作信息异常：", e);
+			}
+		}
+		return flag;
+	}
+	/**
+	 * 删除 房屋信息
+	 * @param jobid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/delHouseDetail/{houseId}")
+	@ResponseBody
+	public String delHourseDetail(@PathVariable("houseId") String houseId, Model model) {
+		String flag = "99";
+		Logger.info("进行房屋信息删除操作：houseId="+houseId);
+		App.checkUser();
+		if (!Strings.empty(houseId)){
+			try{
+			   userInfoService.delUserHouseById(houseId);
+			   flag = "00";
+			}catch(Exception e){
+				Logger.error("删除房屋信息异常：", e);
+			}
+		}
+		return flag;
+	}
+	
+	/**
+	 * 删除 联系人信息
+	 * @param jobid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/delContacterDetail/{contacterId}")
+	@ResponseBody
+	public String delContacterDetail(@PathVariable("contacterId") String contacterId, Model model) {
+		String flag = "99";
+		Logger.info("进行联系人信息删除操作：contacterId="+contacterId);
+		App.checkUser();
+		if (!Strings.empty(contacterId)){
+			try{
+			   userInfoService.delUserContacterById(contacterId);
+			   flag = "00";
+			}catch(Exception e){
+				Logger.error("删除联系人信息异常：", e);
+			}
+		}
+		return flag;
+	}
+	/**
+	 * 删除车辆信息
+	 * @param carId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/delCarDetail/{carId}")
+	@ResponseBody
+	public String delCarDetail(@PathVariable("carId") String carId, Model model) {
+		String flag = "99";
+		Logger.info("进行车辆信息删除操作：carId="+carId);
+		App.checkUser();
+		if (!Strings.empty(carId)){
+			try{
+			   userInfoService.delUserCarById(carId);
+			   flag = "00";
+			}catch(Exception e){
+				Logger.error("删除车辆信息异常：", e);
+			}
+		}
+		return flag;
 	}
 }
