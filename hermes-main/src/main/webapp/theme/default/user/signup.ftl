@@ -10,6 +10,7 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/email.js"></script>
 <style type="text/css">
 	 .ml_180{ margin-left:185px;}
      .mr_10{margin-right:10px;}
@@ -18,6 +19,19 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
+  
+    //邮箱补全
+	var inputSuggest = new InputSuggest({
+		input: document.getElementById('email'),
+		data: ['sina.com','sina.cn','163.com','qq.com','126.com','sohu.com','hotmail.com','gmail.com','139.com','189.com']
+	});
+	$('#email').keyup(function(){
+			var obj = $("#email").val();
+			if(obj.indexOf('@')!=-1){
+				//TODO 补全email
+			}
+	}); 
+
    function openwindow(url,name,iWidth,iHeight)
 		{
 			var url; 
