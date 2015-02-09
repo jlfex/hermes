@@ -1,5 +1,8 @@
 package com.jlfex.hermes.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.model.Article;
+import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.Loan;
-import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ArticleService;
+import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
@@ -35,6 +40,9 @@ public class IndexController {
 	private LoanService loanService;
 
 	@Autowired
+	private ContentService contentService;
+
+	@Autowired
 	private TmpNoticeRepository tmpNoticeRepository;
 
 	/**
@@ -46,9 +54,21 @@ public class IndexController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
-		model.addAttribute("notices", tmpNoticeRepository.findByStatus(TmpNotice.Status.ENABLED));
 		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
 		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
+		model.addAttribute("bannerPicture", contentService.findOneByCode(HermesConstants.INDEX_BANNER));
+		model.addAttribute("investPicture", contentService.findOneByCode(HermesConstants.INDEX_INVEST));
+		model.addAttribute("loanPicture", contentService.findOneByCode(HermesConstants.INDEX_LOAN));
+		List<Article> articleList = contentService.findArticleByCode(HermesConstants.NOTICE_CODE);
+		List<Article> newlist = new ArrayList<>();
+		if (articleList.size() > 5) {
+			for (int i = 0; i < 5; i++) {
+				newlist.add(articleList.get(i));
+			}
+			model.addAttribute("notices", newlist);
+		} else {
+			model.addAttribute("notices", articleList);
+		}
 		return "index";
 	}
 

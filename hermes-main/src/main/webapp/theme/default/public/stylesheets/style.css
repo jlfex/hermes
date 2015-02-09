@@ -55,7 +55,7 @@ h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 .sign-form p.error-message { display:none; color:#b94a48; }
 
 .content {}
-.content .banner { height:390px; background-image:url("../images/hermes-banner.jpg"); background-position:center; background-repeat:no-repeat; }
+.content .banner { height:390px;  background-position:center; background-repeat:no-repeat; }
 .content .sign { width:300px; height:300px; margin-top:45px; padding:20px; background-color:rgba(0,0,0,0.5); border-radius:8px; color:#ffffff; }
 .content .sign h3 { margin:0 0 20px 0; padding:0 0 20px 0; border-bottom:1px solid #d0d0d0; color:#d0d0d0; }
 .content .sign p { text-align:center; color:#d0d0d0; }
@@ -72,18 +72,19 @@ h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 
 .shortcut { margin:40px 0; }
 .shortcut .item { border:1px solid #c2c2c2; border-radius:5px; }
-.shortcut .item .icon { display:block; width:140px; height:117px; margin:-1px; background-image:url("../images/icons.png"); background-repeat:no-repeat; }
+.shortcut .item .iconleft { display:block; width:140px; height:117px; margin:-1px; background-repeat:no-repeat; }
+.shortcut .item .iconright { display:block; width:140px; height:117px; margin:-1px; background-repeat:no-repeat; }
 .shortcut .item .text { padding:20px; }
 .shortcut .item .text p { margin-bottom:15px; }
 .shortcut .item .text a { text-decoration:none; font-size:16px; font-weight:bold; }
 .shortcut .item .text a:hover { text-decoration:underline; }
-.shortcut .invest .icon { background-position:0 -23px; }
+/*.shortcut .invest .icon { background-position:0 -23px; }*/
 .shortcut .invest a { color:#fe5331; }
-.shortcut .loan .icon { background-position:0 -141px; }
+/*.shortcut .loan .icon { background-position:0 -141px; }*/
 .shortcut .loan a { color:#12afe3; }
 
 .loans {}
-.loans h3 { line-height:21px; margin:0; margin-bottom:20px; padding:0; padding-left:20px; background-image:url("../images/icons.png"); background-position:0 0; background-repeat:no-repeat; font-size:16px; font-weight:bold; }
+.loans h3 { line-height:21px; margin:0; margin-bottom:20px; padding:0; padding-left:20px;background-position:0 0; background-repeat:no-repeat; font-size:16px; font-weight:bold; }
 .loans .table { border-bottom:1px solid #dddddd; }
 .loans .table td { line-height:46px; }
 .loans .table .center { text-align:center; }

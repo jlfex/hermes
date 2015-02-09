@@ -86,6 +86,58 @@
       </div>
 
 <script type="text/javascript">
+jQuery(function($) {
+	$("#order,#name").on('blur',function(i,item){
+		checkInput(this);
+	});
+	//对输入元素进行校验
+	function checkInput(e){
+		var $this = $(e);
+		var val = $this.val();
+		if($this.val()==''||(e.id == 'order' && !/^[0-9]+$/.test(val))		    
+		    ){
+			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
+			$this.parent().parent().find(".alert-danger:eq(0)").show();
+			return false;
+		}else{
+			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
+			if(e_id=='' || e_id==e.id){
+				$this.parent().parent().find(".alert-danger:eq(0)").hide();
+			}
+			return true;
+		}
+	}
+	//元素失去焦点时，触发数据校验事件
+	function checkAll(){
+		$("#order,#name").each(function(i,item){
+			checkInput(this);
+		});
+		return $("span.alert-danger:visible").length==0;
+	}
+    $('#updateImageManage').on('click', function(e) { 
+      if(checkAll()){
+        upload($(this).get(0).files);
+      };
+    });
+	// 异步上传
+	function upload(files) {
+
+	    var files = $('input[name="file"]').prop('files');
+		$.each(files, function(i, file) {
+		    var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
+		    var id=$('#imageManageId').val(),type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
+		    reader.readAsDataURL(file);
+		    formData.append('id', id);		    
+			formData.append('type', type);
+			formData.append('name', name);
+			formData.append('link', link);
+			formData.append('order', order);		    
+			formData.append('file', file);
+			xhr.open('POST', '${app}/content/handerEditImageManage');
+			xhr.send(formData);
+		});
+	}
+	
 	function check(v){
 	    var outerDiv= $("#outerDivId"); 
 	    if(v=='首页banner广告'){
@@ -99,7 +151,30 @@
 	 //检查图片的格式是否正确,同时实现预览
     function setImagePreview(obj, localImagId, imgObjPreview) {
         var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型        
-    	var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小 
+    	var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小
+    	imgWidth=obj.width;  
+        imgHeight=obj.height;
+        alert(imgWidth);
+        var typeName = $("#type").val("${(imageManage.type)!}";
+    	if(typeName == '首页banner广告'){
+    	    allowImgWidth =1920;
+    	    allowImgHeight =390;
+    	    if((allowImgWidth!=0 && allowImgWidth != imgWidth) &&　(allowImgHeight!=0 && allowImgHeight != imgHeight)){
+    	        alert("请上传尺寸大小为1920*390的图片!");
+    	    }  	    
+    	}else if(typeName == '首页—我要理财' || v=='首页—我要借款'){
+    	    allowImgWidth =132;
+    	    allowImgHeight =117;
+    	    if((allowImgWidth!=0 && allowImgWidth != imgWidth) &&　(allowImgHeight!=0 && allowImgHeight != imgHeight)){
+    	        alert("请上传尺寸大小为132*117的图片!");
+    	    }  	        	    
+    	}else if(typeName == '登录界面' || v=='注册界面'){
+    	    allowImgWidth =440;
+    	    allowImgHeight =250;
+    	    if((allowImgWidth!=0 && allowImgWidth != imgWidth) &&　(allowImgHeight!=0 && allowImgHeight != imgHeight)){
+    	        alert("请上传尺寸大小为440*250的图片!");
+    	    }  	        	    
+    	}
     	if(imgFileSize>300){
     		$('#preview').attr({src:''}); 
             $('#logo').val(''); 
@@ -185,31 +260,7 @@
         }
     }
 
-jQuery(function($) {
-    $('#updateImageManage').on('click', function(e) { 
-    alert(222);
-        upload($(this).get(0).files);
-    });
-	// 异步上传
-	function upload(files) {
-
-	    var files = $('input[name="file"]').prop('files');
-		$.each(files, function(i, file) {
-		alert(333);
-		    var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
-		    var id=$('#imageManageId').val(),type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
-		    reader.readAsDataURL(file);
-		    formData.append('id', id);		    
-			formData.append('type', type);
-			formData.append('name', name);
-			formData.append('link', link);
-			formData.append('order', order);		    
-			formData.append('file', file);
-			alert(111);
-			xhr.open('POST', '${app}/content/handerEditImageManage');
-			xhr.send(formData);
-		});
-	}
+	
     //点击取消按钮
 	$("#cancelImageManage").on("click",function(){
 		$.link.html(null, {

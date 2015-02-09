@@ -1,6 +1,5 @@
 package com.jlfex.hermes.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.jlfex.hermes.common.utils.ByteUtils;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
@@ -256,6 +253,9 @@ public class ContentServiceImpl implements ContentService {
 		} else if (StringUtils.isNotEmpty(pcVo.getLevelThree())) {
 			articleCategory = articleCategoryRepository.findOne(pcVo.getLevelThree());
 		}
+		if (articleCategory.getId().equals("1f37572b-b006-11e4-b1e0-3adca39d28f0")) {
+			article.setCode("01");
+		}
 		article.setCategory(articleCategory);
 		article.setOrder(pcVo.getOrder());
 		article.setStatus("10");
@@ -447,17 +447,24 @@ public class ContentServiceImpl implements ContentService {
 	 * @author lishunfeng
 	 */
 	@Override
-	public ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file) {
+	public ImageManage addImageManage(String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = new ImageManage();
-		try {
-			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
-			imageManage.setType(type);
-			imageManage.setName(name);
-			imageManage.setLink(link);
-			imageManage.setOrder(order);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (type.equals(HermesConstants.INDEX_BANNER)) {
+			imageManage.setCode("banner");
+		} else if (type.equals(HermesConstants.INDEX_INVEST)) {
+			imageManage.setCode("invest");
+		} else if (type.equals(HermesConstants.INDEX_LOAN)) {
+			imageManage.setCode("loan");
+		} else if (type.equals(HermesConstants.INDEX_LOGIN)) {
+			imageManage.setCode("login");
+		} else if (type.equals(HermesConstants.INDEX_REGISTER)) {
+			imageManage.setCode("register");
 		}
+		imageManage.setImage(imgStr);
+		imageManage.setType(type);
+		imageManage.setName(name);
+		imageManage.setLink(link);
+		imageManage.setOrder(order);
 		return imageManageRepository.save(imageManage);
 	}
 
@@ -472,23 +479,40 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
+	 * 根据code找到某条图片管理记录
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage findOneByCode(String code) {
+		return imageManageRepository.findOneByCode(code);
+	}
+
+	/**
 	 * 编辑图片管理
 	 * 
 	 * @author lishunfeng
 	 */
 	@Override
-	public ImageManage updateImageManage(String id, String type, String name, String link, int order, MultipartFile file) {
+	public ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = imageManageRepository.findOne(id);
-		try {
-			imageManage.setName(name);
-			imageManage.setLink(link);
-			imageManage.setOrder(order);
-			imageManage.setType(type);
-			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
-			imageManageRepository.save(imageManage);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (type.equals(HermesConstants.INDEX_BANNER)) {
+			imageManage.setCode("banner");
+		} else if (type.equals(HermesConstants.INDEX_INVEST)) {
+			imageManage.setCode("invest");
+		} else if (type.equals(HermesConstants.INDEX_LOAN)) {
+			imageManage.setCode("loan");
+		} else if (type.equals(HermesConstants.INDEX_LOGIN)) {
+			imageManage.setCode("login");
+		} else if (type.equals(HermesConstants.INDEX_REGISTER)) {
+			imageManage.setCode("register");
 		}
+		imageManage.setName(name);
+		imageManage.setLink(link);
+		imageManage.setOrder(order);
+		imageManage.setType(type);
+		imageManage.setImage(imgStr);
+		imageManageRepository.save(imageManage);
 		return imageManage;
 	}
 
@@ -503,4 +527,8 @@ public class ContentServiceImpl implements ContentService {
 		imageManageRepository.delete(imageManage);
 	}
 
+	@Override
+	public List<Article> findArticleByCode(String code) {
+		return articleRepository.findByCode(code);
+	}
 }

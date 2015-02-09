@@ -30,7 +30,7 @@
                   <input type="text" class="form-control" id="name"  name="name" placeholder="图片名称">
                 </div>
 				<div class="col-xs-2">
-					<span class="alert-danger" style="display:none;background:none">必填项，汉字限定为8个字</span>
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
 				</div>                
               </div>
               <div class="form-group">
@@ -52,7 +52,7 @@
 				</div>                                
               </div>
                   <div class="form-group">
-                        <label for="inputName" class="col-sm-2 control-label">上传图片</label>
+                        <label for="inputName" class="col-sm-2 control-label"><span style="color:red;">* </span>上传图片</label>
                         <div class="col-sm-5">
                             <input type="file" class="form-control" id='file' name="file" multiple="multiple" value="选择文件"  onchange="javascript:setImagePreview(this,localImag,preview);"/>
                         </div>
@@ -95,10 +95,12 @@
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为440*250</span>");            
 	    }	
 	}
-	 //检查图片的格式是否正确,同时实现预览
+
+	
+	//检查图片的格式是否正确,同时实现预览
     function setImagePreview(obj, localImagId, imgObjPreview) {
         var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型        
-    	var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小 
+    	var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小     	
     	if(imgFileSize>300){
     		$('#preview').attr({src:''}); 
             $('#logo').val(''); 
@@ -183,12 +185,8 @@
             img.height = maxheight;
         }
     }
-
-jQuery(function($) {
-    $('#addImageManage').on('click', function(e) { 
-        upload($(this).get(0).files); 
-    });
-	// 异步上传
+    
+    	// 异步上传
 	function upload(files) {
 	    var files = $('input[name="file"]').prop('files');
 		$.each(files, function(i, file) {
@@ -204,6 +202,41 @@ jQuery(function($) {
 			xhr.send(formData);
 		});
 	}
+</script>
+<script type="text/javascript">    
+jQuery(function($) {
+	$("#order,#name").on('blur',function(i,item){
+		checkInput(this);
+	});
+	//对输入元素进行校验
+	function checkInput(e){
+		var $this = $(e);
+		var val = $this.val();
+		if($this.val()==''||(e.id == 'order' && !/^[0-9]+$/.test(val))		    
+		    ){
+			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
+			$this.parent().parent().find(".alert-danger:eq(0)").show();
+			return false;
+		}else{
+			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
+			if(e_id=='' || e_id==e.id){
+				$this.parent().parent().find(".alert-danger:eq(0)").hide();
+			}
+			return true;
+		}
+	}
+	//元素失去焦点时，触发数据校验事件
+	function checkAll(){
+		$("#order,#name").each(function(i,item){
+			checkInput(this);
+		});
+		return $("span.alert-danger:visible").length==0;
+	}
+    $('#addImageManage').on('click', function(e) { 
+      if(checkAll()){
+        upload($(this).get(0).files); 
+      };
+    });	
     //点击取消按钮
 	$("#cancelImageManage").on("click",function(){
 		$.link.html(null, {
@@ -212,4 +245,5 @@ jQuery(function($) {
 		});
 	});
 });
+
 </script>
