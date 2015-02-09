@@ -165,7 +165,7 @@ $(function(){
 <!-- middle start-->
 <div class="m_con m_rg">
 	<div class="m_rg_l">
-		<img src="${app.theme}/public/other/images/m/image1/img1.jpg" />
+		<img src="${(registerPicture.image)!}" />		
 	</div>
 	<div class="m_rg_r" id="register">
 		<form id="regForm" name="regForm" action="${app}/userIndex/signUp" method="post" >

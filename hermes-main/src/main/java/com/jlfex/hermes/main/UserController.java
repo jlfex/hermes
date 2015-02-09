@@ -23,7 +23,9 @@ import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
+import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.UserService;
 
 @Controller
@@ -35,6 +37,8 @@ public class UserController {
 	private Producer captchaProducer;
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private ContentService contentService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
@@ -47,7 +51,8 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("skipSignIn")
-	public String skipSignIn() {
+	public String skipSignIn(Model model) {
+		model.addAttribute("loginPicture", contentService.findOneByCode(HermesConstants.INDEX_LOGIN));
 		return "user/sign-in";
 	}
 
@@ -57,7 +62,8 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("regNow")
-	public String regNow() {
+	public String regNow(Model model) {
+		model.addAttribute("registerPicture", contentService.findOneByCode(HermesConstants.INDEX_REGISTER));
 		return "user/signup";
 	}
 

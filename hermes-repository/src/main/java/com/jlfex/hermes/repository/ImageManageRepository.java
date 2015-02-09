@@ -6,5 +6,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.jlfex.hermes.model.ImageManage;
 
 public interface ImageManageRepository extends PagingAndSortingRepository<ImageManage, String>, JpaSpecificationExecutor<ImageManage> {
-
+	ImageManage findOneByCode(String code);
 }

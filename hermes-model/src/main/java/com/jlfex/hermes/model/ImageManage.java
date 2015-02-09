@@ -27,7 +27,8 @@ public class ImageManage extends Model {
 
 	/** 图片 */
 	@Column(name = "image")
-	private byte[] image;
+	@Lob
+	private String image;
 
 	/** 顺序 */
 	@Column(name = "order_")
@@ -39,6 +40,9 @@ public class ImageManage extends Model {
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
+	/** 代码 */
+	@Column(name = "code")
+	private String code;
 
 	/**
 	 * 读取名称
@@ -87,18 +91,18 @@ public class ImageManage extends Model {
 	 * @see #image
 	 */
 	@Lob
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
 
 	/**
 	 * 设置图片
 	 * 
-	 * @param image
+	 * @param imgStr
 	 * @see #image
 	 */
-	public void setImage(byte[] image) {
-		this.image = image;
+	public void setImage(String imgStr) {
+		this.image = imgStr;
 	}
 
 	/**
@@ -129,6 +133,14 @@ public class ImageManage extends Model {
 	 */
 	public String getStatus() {
 		return status;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**
