@@ -8,6 +8,6 @@
 <link rel="stylesheet" href="${app.css}/jquery-ui.css">
 </head>
 <body>
-  <h1>超出上传文件限制，文件上传失败!<h1>
+  <b>超出上传文件限制，文件上传失败!</b>
 <body>
 </html>
