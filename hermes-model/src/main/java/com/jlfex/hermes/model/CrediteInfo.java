@@ -56,9 +56,12 @@ public class CrediteInfo extends Model {
 	// 城市
 	@Column(name = "city")
 	private String city;
-	// 借款金额
+	//原始  借款金额 
 	@Column(name = "amount")
 	private BigDecimal amount;
+	//转让 金额 
+	@Column(name = "sell_amount")
+	private BigDecimal sellAmount;
 	// 年利率
 	@Column(name = "rate")
 	private BigDecimal rate;
@@ -96,6 +99,9 @@ public class CrediteInfo extends Model {
 	// 招标结束日期
 	@Column(name = "bid_end_time")
 	private Date bidEndTime;
+	// 转让日期
+	@Column(name = "assign_time")
+	private Date assignTime;
 	// 备注
 	@Column(name = "remark")
 	private String remark;
@@ -363,6 +369,21 @@ public class CrediteInfo extends Model {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+	public BigDecimal getSellAmount() {
+		return sellAmount;
+	}
+
+	public void setSellAmount(BigDecimal sellAmount) {
+		this.sellAmount = sellAmount;
+	}
+
+	public Date getAssignTime() {
+		return assignTime;
+	}
+
+	public void setAssignTime(Date assignTime) {
+		this.assignTime = assignTime;
+	}
 
 	/**
 	 * 读取当前用户名称
@@ -408,7 +429,7 @@ public class CrediteInfo extends Model {
 		public static final String REPAY_FIINISH = "03";
 		@Element("验证失败")
 		public static final String IMP_FAIL = "04";
-		@Element("转让失败")
+		@Element("已过期")
 		public static final String FAIL_ASSIGNING = "05";
 	}
 

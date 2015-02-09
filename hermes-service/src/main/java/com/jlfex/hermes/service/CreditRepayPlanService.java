@@ -47,7 +47,13 @@ public interface CreditRepayPlanService {
 	 * @throws Exception
 	 */
 	public Map<String ,Object> calculateRemainAmountAndPeriod(CrediteInfo creditInfo,List<CreditRepayPlan> planList) throws Exception;
-	
-	
+	/**
+	 * 根据状态 和 债权信息 获取  债权还款明细
+	 * @param creditInfo
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	public List<CreditRepayPlan> queryByCreditInfoAndStatus(CrediteInfo creditInfo,String status) throws Exception;
 	
 }

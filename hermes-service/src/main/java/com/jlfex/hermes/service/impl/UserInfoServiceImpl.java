@@ -463,4 +463,34 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		account.setBalance(account.getBalance().add(new BigDecimal(amount)));
 		return userAccountRepository.save(account);
 	}
+	/**
+	 * 删除工作 信息
+	 */
+	@Override
+	public void delUserJobByJobId(String jobId) {
+		 userJobRepository.delete(jobId);
+	}
+	
+	/**
+	 * 删除房屋 信息
+	 */
+	@Override
+	public void delUserHouseById(String houseId) {
+		userHouseRepository.delete(houseId);
+	}
+	
+	/**
+	 * 删除联系人 信息
+	 */
+	@Override
+	public void delUserContacterById(String contactorId) {
+		userContacterRepository.delete(contactorId);
+	}
+   /**
+    * 删除车辆信息
+    */
+	@Override
+	public void delUserCarById(String carId) {
+		userCarRepository.delete(carId);
+	}
 }

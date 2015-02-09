@@ -94,9 +94,9 @@ function upload(files) {
 	$.each(files, function(i, file) {
 		// 初始化
 		var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
-		var entry = $('#addImage'+labelId);
+		//var entry = $('#addImage'+labelId);
 		// 定义加载事件
-		reader.onload = function(e) { $(['<div class="col-sm-6 col-md-3"><div class="thumbnail"><img alt="', file.name, '" src="', e.target.result, '" /></div></div>'].join('')).insertBefore(entry);};
+		//reader.onload = function(e) { $(['<div class="col-sm-6 col-md-3"><div class="thumbnail"><img alt="', file.name, '" src="', e.target.result, '" /></div></div>'].join('')).insertBefore(entry);};
 		reader.readAsDataURL(file);
 		// 异步上传
 		formData.append('file', file);

@@ -3,10 +3,12 @@ package com.jlfex.hermes.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
+import com.jlfex.hermes.model.ImageManage;
 import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
@@ -64,6 +66,20 @@ public interface ContentService {
 
 	Page<TmpNotice> findAllTmpNotices(int page, int size);
 
+	public TmpNotice addTmpNotice(TmpNotice tmpNotice);
+
 	TmpNotice findOneByTmpNoticeId(String id);
+
+	void deleteTmpNotice(String id);
+
+	Page<ImageManage> findAllImageManage(int page, int size);
+
+	ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file);
+
+	ImageManage findOneImageManage(String id);
+
+	void deleteImageManage(String id);
+
+	ImageManage updateImageManage(String id, String type, String name, String link, int order, MultipartFile file);
 
 }

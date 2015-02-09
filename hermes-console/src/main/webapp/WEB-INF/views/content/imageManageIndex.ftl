@@ -7,7 +7,7 @@
 
 <div class="row panel-body">
 	<div class="col-xs-1">
-		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal">+ 添加链接</button>
+		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal">+ 添加图片</button>
 		<input id="page" name="page" type="hidden" value="0"/>
     </div>
 </div>
@@ -17,23 +17,24 @@
         <thead>
             <tr>
             <th class="align-center">排序</th>
-            <th class="align-center">网站名称</th>
-            <th class="align-center">网站地址</th>
+            <th class="align-center">图片名称</th>
+            <th class="align-center">图片地址</th>
+            <th class="align-center">图片</th>            
             <th class="align-center">所属分类</th>
             <th class="align-center">操作</th>
         	</tr>
         </thead>
-    <#if friendLinks.numberOfElements == 0>
+    <#if imageManages.numberOfElements == 0>
             <tr>
 	            <td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
             </tr>
             <#else>
-            <#list friendLinks.content as l>                            
+            <#list imageManages.content as l>                            
         <tr>
-            <#-- <td class="align-center">00001</td>-->
-            <td class="align-center">${l.order!}</td>
-            <td class="align-center">${l.name!}</td>
-            <td class="align-center">${l.link!}</td>
+            <td class="align-center" style="">${(l.order)!}</td>
+            <td class="align-center">${(l.name)!}</td>
+            <td class="align-center">${(l.link)!}</td>
+            <td class="align-center"><img src="${app}/content/picture/${l.id}" height=80px/></td>            
             <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
                 <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
@@ -43,10 +44,8 @@
             </#list>
      </#if>                    
     </table>
-          <ul class="pagination" data-number="${friendLinks.number}" data-total-pages="${friendLinks.totalPages}"></ul>  
-    
+          <ul class="pagination" data-number="${imageManages.number}" data-total-pages="${imageManages.totalPages}"></ul>      
 </div>
-
 <script type="text/javascript">
 <!--
 jQuery(function($) {
@@ -55,30 +54,31 @@ jQuery(function($) {
 			$('#page').val(elem.data().page);
 			$('#searchForm').trigger('submit');
 		}
-    });
+
+});
 	//点击新增分类按钮
 	$("#addBtn").on("click",function(){
 		$.link.html(null, {
-			url: '${app}/content/addFriendLink',
+			url: '${app}/content/addImageManage',
 			target: 'main'
 		});
 	});
-   //点击编辑按钮
+	//点击编辑按钮
 	$(".editBtn").on("click",function(){
 		var pid = $(this).attr("pid");
 		$.link.html(null, {
-			url: '${app}/content/editFriendLink?id='+pid,
+			url: '${app}/content/editImageManage?id='+pid,
 			target: 'main'
 		});
-	});
-	//点击删除按钮
+	});	
+    //点击删除按钮
 	$(".deleteBtn").on("click",function(){
 		var cid = $(this).attr("cid");
 		$.link.html(null, {
-			url: '${app}/content/deleteFriendLink?id='+cid,
+			url: '${app}/content/deleteImageManage?id='+cid,
 			target: 'main'
 		});
-     });				
+	});
 });
 //-->
 </script>

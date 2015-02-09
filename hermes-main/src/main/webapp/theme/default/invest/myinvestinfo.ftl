@@ -30,7 +30,11 @@
 								<@messages key="model.loan.repay" />：&nbsp;${repay.name}&nbsp;<#t>
 							</div>
 							<div class="col-xs-3 hm-col form-group">
-								<@messages key="model.loan.period" />：&nbsp;${loan.period}个月&nbsp;<#t>
+								<@messages key="model.loan.period" />：&nbsp;
+								${loan.period}<#if loan.loanKind=='00'>个月 <#else>天</#if>&nbsp;<#t>
+							</div>
+							<div class="col-xs-3 hm-col form-group">
+							       编号：&nbsp;${loan.loanNo}&nbsp;<#t>
 							</div>
 						</div>
 					</p>

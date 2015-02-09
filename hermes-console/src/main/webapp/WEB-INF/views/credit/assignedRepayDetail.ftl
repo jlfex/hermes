@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><@messages key="app.title" /></title>
+<link rel="shortcut icon" type="image/png" href="${app.img}/favicon.png">
+<link rel="stylesheet" href="${app.css}/style.css">
+<link rel="stylesheet" href="${app.css}/jquery-ui.css">
+</head>
+<body>
+<div id="main" style="margin-left:50px;margin-right:50px;margin-top:5px;">
 <div class="panel panel-primary">
         <div class="panel-heading">回款明细</div>  </div>
  <table id="creditRepayPlanDetail" class="table table-bordered table-hover">
@@ -40,6 +51,18 @@
                            </#if>
                         </tbody>
                     </table>
+</div>
+<script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap3-validation.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/jquery-ui.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery.ui.datepicker-zh-CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/hermes.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/hermes-page.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/sco.modal.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/sco.confirm.js"></script>
+<body>
+</html>
   <script type="text/javascript" charset="utf-8">
    $('#creditRepayPlanDetail .btn-primary').click(function() {
    	    $.link.html(null, {
@@ -48,5 +71,5 @@
 		});
      });
      	     
- </script>         
+ </script>        
                     

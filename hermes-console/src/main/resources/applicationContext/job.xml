@@ -43,7 +43,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 0 */1 * * ?" />
+		<property name="cronExpression" value="0 0 2 * * ?" />
 	</bean>
 	
 	<!-- autoBidFailureJob job  -->
@@ -64,7 +64,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 */30 * * * ?" />
+		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
 	
 </beans>

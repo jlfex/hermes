@@ -27,13 +27,14 @@ public abstract class Job {
 			
 			// 判断结果并进行处理
 			if (!result.isSuccess()) throw new ServiceException(result.getMessage());
-			if (result.isSendMail()) {
-				Logger.info("sending mail...");
-				Mailer mailer = new Mailer();
-				mailer.setSubject("自动任务执行成功");
-				mailer.setText("自动任务执行成功，任务名称：" + this.getClass().getSimpleName() + "，任务消息：" + result.getMessage());
-				for (String address: App.config("address.job.notice").split(",")) mailer.addTo(address);
-				mailer.send();
+			if (result.isSendMail()){
+				// 发送邮件 暂时屏蔽 后期改造
+//				Logger.info("sending mail...");
+//				Mailer mailer = new Mailer();
+//				mailer.setSubject("自动任务执行成功");
+//				mailer.setText("自动任务执行成功，任务名称：" + this.getClass().getSimpleName() + "，任务消息：" + result.getMessage());
+//				for (String address: App.config("address.job.notice").split(",")) mailer.addTo(address);
+//				mailer.send();
 			}
 			
 			// 打印结束日志
@@ -43,12 +44,12 @@ public abstract class Job {
 			ServiceException se = (e instanceof ServiceException) ? ServiceException.class.cast(e) : new ServiceException(e.getMessage(), e);
 			Logger.error(se.getMessage(), se);
 			
-			// 发送邮件
-			Mailer mailer = new Mailer();
-			mailer.setSubject("自动任务执行失败");
-			mailer.setText("自动任务执行失败，任务名称：" + this.getClass().getSimpleName() + "，异常代码：" + se.getCode() + "，任务消息：" + se.getMessage());
-			for (String address: App.config("address.job.notice").split(",")) mailer.addTo(address);
-			mailer.send();
+			// 发送邮件 暂时屏蔽 后期改造
+//			Mailer mailer = new Mailer();
+//			mailer.setSubject("自动任务执行失败");
+//			mailer.setText("自动任务执行失败，任务名称：" + this.getClass().getSimpleName() + "，异常代码：" + se.getCode() + "，任务消息：" + se.getMessage());
+//			for (String address: App.config("address.job.notice").split(",")) mailer.addTo(address);
+//			mailer.send();
 			
 			// 打印结束日志
 			Logger.warn("failure do job '%s'", this.getClass().getSimpleName());

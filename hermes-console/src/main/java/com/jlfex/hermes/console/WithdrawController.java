@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.Transaction;
@@ -46,6 +47,7 @@ public class WithdrawController {
 	@Autowired
 	private UserManageService userManageServiceImpl;
 
+	private static final String CROP_USER_ID = "crop";
 	/**
 	 * 索引
 	 * 
@@ -83,15 +85,14 @@ public class WithdrawController {
 	 */
 	@RequestMapping("/riskAccount")
 	public String riskAccount(Integer page, Integer size, Model model) {
-		String userId = "crop";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
 		BigDecimal riskIn = new BigDecimal(0);
 		BigDecimal riskOut = new BigDecimal(0);
 		try {
-			UserAccount account = userManageServiceImpl.findByUserIdAndType(userId, UserAccount.Type.RISK);
-			List<Transaction> trans = transactionServiceImpl.findBySourceUserAccountAndTypeIn(userId, types);
+			UserAccount account = userManageServiceImpl.findByUserIdAndType(CROP_USER_ID, UserAccount.Type.RISK);
+			List<Transaction> trans = transactionServiceImpl.findBySourceUserAccountAndTypeIn(CROP_USER_ID, types);
 			if (trans != null && trans.size() > 0) {
 				for (Transaction tran : trans) {
 					if (Transaction.Type.IN.equals(tran.getType())) {
@@ -105,7 +106,7 @@ public class WithdrawController {
 			model.addAttribute("riskOut", riskOut);
 			model.addAttribute("riskAmount", account.getBalance());
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.info("风险金账户查询异常：", e);
 			return "redirect:/home";
 		}
 		return "withdraw/riskAccount";
@@ -113,14 +114,13 @@ public class WithdrawController {
 
 	@RequestMapping("/riskAccountData")
 	public String riskAccountData(Integer page, Integer size, Model model) {
-		String userId = "crop";
 		List<String> types = new ArrayList<String>();
 		types.add(Transaction.Type.IN);
 		types.add(Transaction.Type.OUT);
 		try {
-			model.addAttribute("transaction", transactionServiceImpl.findByUserIdAndDateType(userId, page, size, types));
+			model.addAttribute("transaction", transactionServiceImpl.findByUserIdAndDateType(CROP_USER_ID, page, size, types));
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.info("风险金账户查询异常：", e);
 			return "redirect:/home";
 		}
 		return "withdraw/riskAccountData";

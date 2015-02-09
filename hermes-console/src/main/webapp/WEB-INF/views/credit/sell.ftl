@@ -13,7 +13,7 @@
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>发售价格</label>
                     <div class="col-xs-2">
-                      <input type="text" name="amount" readonly="true" class="form-control" id="amount"  value="${remainAmount!'0'}">
+                      <input type="text" name="sellAmount" readonly="true" class="form-control" id="sellAmount"  value="${remainAmount!'0'}">
                     </div>
                   </div>
 
@@ -52,14 +52,14 @@
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">资金用途</label>
                     <div class="col-xs-2">
-                      <input type="text" name="amountAim" class="form-control" id="amountAim" placeholder="">
+                      <input type="text" name="amountAim" class="form-control" id="amountAim" >
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">产品介绍</label>
                     <div class="col-xs-2">
-                      <input type="text" name="produnctDesc" class="form-control" id="produnctDesc" placeholder="">
+                      <input type="text" name="productDesc" class="form-control" id="productDesc">
                     </div>
                   </div>
 
@@ -121,7 +121,6 @@ jQuery(function($) {
        iDays  =  parseInt(Math.abs(oDate1  -  oDate2)/1000/60/60/24);
        return  iDays  
    }  
-//-->
 </script>
 
 

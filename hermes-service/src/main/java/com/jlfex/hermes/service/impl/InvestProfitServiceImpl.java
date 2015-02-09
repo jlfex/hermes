@@ -14,6 +14,7 @@ import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
+import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanOverdue;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.repository.CommonRepository;
@@ -182,7 +183,6 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 			if (count > 0) {
 				// 获取当期未还
 				unRepay = investProfitList.get(count - 1);
-
 				Date now = new Date();
 				// 如果计划时间小于等于当前时间，为正常还款
 				if (unRepay.getLoanRepay().getPlanDatetime().getTime() <= now.getTime()) {
@@ -197,14 +197,21 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 					}
 					RepayMethod repayMethod = repayService.getRepayMethod(unRepay.getLoanRepay().getLoan().getRepay().getId());
 					// 计算借款人逾期违约金
-					// BigDecimal overduePenalty =
-					// repayMethod.getOverduePenalty(overdueDay,
-					// loan.getPeriod() -
-					// unRepay.getSequence() + 1, loan.getManageFee(),
-					// loanOverdue.getPenalty());
+					// BigDecimal overduePenalty = repayMethod.getOverduePenalty(overdueDay,loan.getPeriod() -
+					// unRepay.getSequence() + 1, loan.getManageFee(),loanOverdue.getPenalty());
 					// 计算逾期罚息
-					BigDecimal overdueInterest = repayMethod.getOverdueInterest(overdueDay, unRepay.getLoanRepay().getLoan().getPeriod() - unRepay.getLoanRepay().getSequence() + 1, unRepay
-							.getLoanRepay().getLoan().getAmount(), loanOverdue.getInterest());
+					int term = unRepay.getLoanRepay().getLoan().getPeriod() - unRepay.getLoanRepay().getSequence() + 1;
+					BigDecimal loanAmount = unRepay.getLoanRepay().getLoan().getAmount();
+					BigDecimal loanOverdueInterest = BigDecimal.ZERO;
+					if(loanOverdue != null){
+						loanOverdueInterest = loanOverdue.getInterest();
+					}
+					BigDecimal overdueInterest = repayMethod.getOverdueInterest(overdueDay, term, loanAmount , loanOverdueInterest);
+					if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(unRepay.getLoanRepay().getLoan().getLoanKind())){
+						//债权表 暂不计算逾期 后期改造
+						overdueDay = 0;
+						overdueInterest = new BigDecimal(String.valueOf(0));
+					}
 					unRepay.getLoanRepay().setOverdueDays(overdueDay);
 					unRepay.setOverdueInterest(overdueInterest);
 				}

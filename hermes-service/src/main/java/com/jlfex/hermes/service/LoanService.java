@@ -338,5 +338,12 @@ public interface LoanService {
      * @return
      */
 	public UserAccount accountCharge(String amount, String accountId);
+    /**
+     * 获取标操作日志
+     * @param loanId
+     * @param typeList
+     * @return
+     */
+	public List<LoanLog>  loadLogByLoanIdAndTypeIn(Loan loan , List<String> typeList);
     
 }

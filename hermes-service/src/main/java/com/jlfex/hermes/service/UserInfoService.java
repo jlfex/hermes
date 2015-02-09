@@ -223,4 +223,26 @@ public interface UserInfoService {
 	 * @return
 	 */
 	public UserAccount chargeUserAccount(UserAccount account, Double amount);
+	/**
+	 * 删除工作信息
+	 * @param jobId
+	 */
+	public void delUserJobByJobId(String jobId);
+	
+	/**
+	 * 删除房屋信息
+	 * @param jobId
+	 */
+	public void delUserHouseById(String houseId);
+    /**
+     * 删除联系人 信息
+     * @param contactorId
+     */
+	public void delUserContacterById(String contactorId);
+	
+	/**
+	 * 删除车辆信息
+	 * @param carId
+	 */
+	public void delUserCarById(String carId);
 }

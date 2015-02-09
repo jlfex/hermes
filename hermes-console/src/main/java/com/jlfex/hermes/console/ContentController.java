@@ -1,9 +1,12 @@
 package com.jlfex.hermes.console;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +15,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.ImageManage;
+import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
@@ -442,6 +451,34 @@ public class ContentController {
 	}
 
 	/**
+	 * 新增临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addTmpNotice")
+	public String addTmpNotice(Model model) {
+		return "/content/addTmpNotice";
+	}
+
+	/**
+	 * 新增公告处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerAddTmpNotice")
+	public String handerAddTmpNotice(TmpNotice tmpNotice, RedirectAttributes attr, Model model) {
+		try {
+			contentService.addTmpNotice(tmpNotice);
+			attr.addFlashAttribute("msg", "添加公告成功");
+			return "redirect:/content/tmpNotice";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加公告失败");
+			Logger.error("添加公告失败：", e);
+			return "redirect:/content/addTmpNotice";
+		}
+	}
+
+	/**
 	 * 编辑临时公告页面
 	 * 
 	 * @author lishunfeng
@@ -471,6 +508,24 @@ public class ContentController {
 	}
 
 	/**
+	 * 删除临时公告
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/deleteTmpNotice")
+	public String deleteTmpNotice(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+		try {
+			contentService.deleteTmpNotice(id);
+			attr.addFlashAttribute("msg", "删除临时公告成功");
+			return "redirect:/content/tmpNotice";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "删除临时公告失败");
+			Logger.error("删除临时公告失败：", e);
+			return "redirect:/content/tmpNotice";
+		}
+	}
+
+	/**
 	 * 内容管理--预览
 	 * 
 	 * @author lishunfeng
@@ -482,16 +537,117 @@ public class ContentController {
 		return "/content/preview";
 	}
 
-	@RequestMapping("/banner")
-	public String banner(Model model) {
-
-		return "/content/banner";
+	/**
+	 * 图片管理结果页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/imageIndex")
+	public String imageData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+		model.addAttribute("imageManages", contentService.findAllImageManage(page, size));
+		return "/content/imageManageIndex";
 	}
 
-	@RequestMapping("/addBanner")
-	public String addBanner(Model model) {
+	/**
+	 * 新增图片管理
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addImageManage")
+	public String addImageManage(Model model) {
+		return "/content/addImageManage";
+	}
 
-		return "/content/addBanner";
+	/**
+	 * 添加图片管理处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerAddImageManage")
+	public String handerAddImageManage(MultipartHttpServletRequest request, RedirectAttributes attr) {
+		try {
+			String type = request.getParameter("type");
+			String name = request.getParameter("name");
+			String link = request.getParameter("link");
+			int order = Integer.parseInt(request.getParameter("order"));
+			MultipartFile file = request.getFile("file");
+			contentService.addImageManage(type, name, link, order, file);
+			attr.addFlashAttribute("msg", "添加图片成功");
+			return "redirect:/content/imageIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加图片失败");
+			Logger.error("添加链接失败：", e);
+			return "redirect:/content/addImageManage";
+		}
+	}
+
+	/**
+	 * @description:图片查看
+	 */
+	@RequestMapping(value = "/picture/{id}", method = RequestMethod.GET)
+	public void picture(HttpServletResponse response, @PathVariable String id) {
+		ImageManage imageManage = contentService.findOneImageManage(id);
+		try {
+			response.setContentType("image/jpeg");
+			if (imageManage.getImage() != null) {
+				response.getOutputStream().write(imageManage.getImage());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 图片管理删除
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/deleteImageManage")
+	public String deleteImageManage(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+		try {
+			contentService.deleteImageManage(id);
+			attr.addFlashAttribute("msg", "删除图片管理成功");
+			return "redirect:/content/imageIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "删除图片管理失败");
+			Logger.error("删除图片管理失败：", e);
+			return "redirect:/content/imageIndex";
+		}
+	}
+
+	/**
+	 * 图片管理编辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/editImageManage")
+	public String editImageManage(@RequestParam(value = "id", required = true) String id, Model model) {
+		model.addAttribute("imageManage", contentService.findOneImageManage(id));
+		return "/content/editImageManage";
+	}
+
+	/**
+	 * 点击编辑图片管理页面保存按钮处理逻辑
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerEditImageManage")
+	public String handerEditImageManage(MultipartHttpServletRequest request, RedirectAttributes attr, Model model) {
+		try {
+			String id = request.getParameter("id");
+			String type = request.getParameter("type");
+			String name = request.getParameter("name");
+			String link = request.getParameter("link");
+			int order = Integer.parseInt(request.getParameter("order"));
+			MultipartFile file = request.getFile("file");
+			contentService.updateImageManage(id, type, name, link, order, file);
+			attr.addFlashAttribute("msg", "添加图片成功");
+			return "redirect:/content/imageIndex";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加图片失败");
+			Logger.error("添加链接失败：", e);
+			return "redirect:/content/addImageManage";
+		}
 	}
 
 }

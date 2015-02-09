@@ -1,10 +1,13 @@
 <div class="row">
 		<#list jobs as job>
-			<div class="col-sm-8 col-md-6">
+			<div class="col-sm-8 col-md-6" id="${job.id}">
 				<div class="panel panel-info ">
 					<div class="panel-heading clearfix">
 						<h6 class="pull-left"><@messages key="model.job.info"/></h6>
-						<div class="pull-right" ><a href="#" onclick="modifyJob('${job.id}')"><i class="fa fa-pencil-square-o" style="font-size:2em;"></i></a></div>
+						<div class="pull-right" >
+						<a href="#" onclick="modifyJob('${job.id}')"><i class="fa fa-pencil-square-o" style="font-size:2em;"></i></a> &nbsp;&nbsp;
+						<a href="#" onclick="reMoveJob('${job.id}',this)"><i class="fa fa-times-circle" style="font-size:2em;"></i></a>
+						</div>
 					</div>
 					<div class="panel-body">
 						<form class="form-horizontal" role="form"  id="jobForm${job_index}">
@@ -78,6 +81,9 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
+  
+   
+ 
 });
 function addJob(){
 	var jobid=null;
@@ -95,6 +101,17 @@ function modifyJob(jobid){
 			 $("#jobInfo").html(data); // 内容装入div中
 		}
 	})
+}
+
+function reMoveJob(jobid,obj){
+   $.ajax({
+		url: '${app}/account/delJobDetail/'+jobid,
+		success:function(data) {
+			 if(data == '00'){
+			     $(obj).parent().parent().parent().parent().hide(); 
+			 }
+		}
+	});
 }
 //-->
 </script>
