@@ -33,6 +33,7 @@ $(function(){
 	<div class="banner">	
 		<div class="u-container">
 			<#if cuser??>
+			   <input id="email" name="email" type="hidden" >
 			<#else>
 			<form id="signInForm" method="post" action="#">
 				<div class="sign pull-right">
