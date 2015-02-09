@@ -25,7 +25,7 @@
 <div id="content" class="content">
 	<div class="u-container row" style=" margin-top:100px;">
 		<div class="col-xs-8">
-			<img alt="" src="${app.theme}/public/images/sign.jpg">
+			<img src="${(loginPicture.image)!}">
 		</div>
 		<div class="col-xs-4">
 			<form id="signInForm" method="post" action="#" class="sign-form">

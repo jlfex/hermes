@@ -53,6 +53,9 @@ public class Article extends Model {
 	/** 作者 */
 	@Column(name = "author")
 	private String author;
+	/** 唯一标识 */
+	@Column(name = "code")
+	private String code;
 
 	// /** 日期 */
 	// @Column(name = "datetime")
@@ -257,6 +260,14 @@ public class Article extends Model {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**

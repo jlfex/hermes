@@ -34,7 +34,7 @@
             <td class="align-center" style="">${(l.order)!}</td>
             <td class="align-center">${(l.name)!}</td>
             <td class="align-center">${(l.link)!}</td>
-            <td class="align-center"><img src="${app}/content/picture/${l.id}" height=80px/></td>            
+            <td class="align-center"><img alt="" src="${l.image}" style="height:100px;" /></td>            
             <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
                 <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
