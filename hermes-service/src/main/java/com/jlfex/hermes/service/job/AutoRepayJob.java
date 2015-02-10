@@ -55,7 +55,7 @@ public class AutoRepayJob extends Job {
 			StringBuilder successRemark = new StringBuilder();
 			int failureCount = 0;
 			StringBuilder failureRemark = new StringBuilder();
-			for (int i = 0; i < loanRepayList.size(); i++) {
+			for(int i = 0; i < loanRepayList.size(); i++) {
 				LoanRepay loanRepay = loanRepayList.get(i);
 				try {
 					Loan loan = loanRepay.getLoan();
@@ -68,11 +68,13 @@ public class AutoRepayJob extends Job {
 					if(overdueLoanRepayList != null && overdueLoanRepayList.size() > 0){
 						for(LoanRepay overdueObj :overdueLoanRepayList){
 							boolean flag = repayService.autoRepayment(overdueObj.getId());
-							Logger.info("自动还款JOB--优先处理逾期：逾期还款:"+(flag?"成功":"失败")+",loanRepayId = "+overdueObj.getId()+",还款时间="+overdueObj.getPlanDatetime());
+							if(!flag){
+								throw new Exception("自动还款JOB--优先处理逾期：逾期还款:"+(flag?"成功":"失败")+",loanRepayId = "+overdueObj.getId()+",还款时间="+overdueObj.getPlanDatetime());
+							}
 						}
 					}
 					boolean success = repayService.autoRepayment(loanRepay.getId());
-					if (success) {
+					if (success){
 						LoanLog loanLog = new LoanLog();
 						loanLog.setUser(loanRepay.getLoan().getUser().getId());
 						loanLog.setLoan(loanRepay.getLoan());
