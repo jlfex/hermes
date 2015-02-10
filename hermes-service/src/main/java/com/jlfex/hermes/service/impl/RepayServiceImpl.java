@@ -518,8 +518,9 @@ public class RepayServiceImpl implements RepayService {
 			}
 			for (InvestProfit investProfit : investProfitList) {
 				// 还逾期罚息
-				if(RepayStatus.OVERDUE.equals(status)){
-					transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), loanRepay.getOverdueInterest(), investProfit.getId(), "自动还款_还逾期罚息");
+				if(RepayStatus.OVERDUE.equals(status)){ 
+					BigDecimal overInerest = investProfit.getInvest().getRatio().multiply(loanRepay.getOverdueInterest()) ;
+					transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), overInerest, investProfit.getId(), "自动还款_还逾期罚息");
 				}
 				// 还本金
 				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "自动还款_正常还本金");

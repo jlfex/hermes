@@ -39,7 +39,7 @@ public class AutoRepayJob extends Job {
 	 */
 	@Override
 	public Result run() {
-		String var = "自动还款JOB";
+		String var = "自动还款JOB....";
 		try {
 			long beginTime = System.currentTimeMillis();
 			Logger.info(var+"开始....");
@@ -60,7 +60,7 @@ public class AutoRepayJob extends Job {
 				try {
 					Loan loan = loanRepay.getLoan();
 					if(loan!= null && Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
-						continue;
+						continue; 
 					}
 					//自动还款 判断之前是否有逾期
 					List<LoanRepay> overdueLoanRepayList = overdueCheck(loan); 
@@ -105,6 +105,7 @@ public class AutoRepayJob extends Job {
 			StringBuilder remarks = new StringBuilder();
 			String remark = String.format("%s,共跑 %s笔借款,成功还款%s笔,失败还款%s笔", Calendars.date(), loanRepayList.size(), successCount, failureCount);
 			remarks.append(remark);
+			Logger.info(remark);
 			if (successRemark.length() > 0) {
 				remarks.append(successRemark.toString());
 			}
