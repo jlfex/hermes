@@ -50,7 +50,7 @@ box-sizing: content-box;
 				<div class="content_index">
 					<ul style="min-height:300px;">
 						<#list aeli.content as l>
-							<li><a href="${app}/help-center/${sel.id}/${l.id}" style="display: inline-block;line-height: 35px;margin-left: 8px;text-decoration: none;">${(l.articleTitle)!}</a>
+							<li><a href="${app}/notice/${sel.id}/${l.id}" style="display: inline-block;line-height: 35px;margin-left: 8px;text-decoration: none;">${(l.articleTitle)!}</a>
                                 <span style="float: right;margin-right: 10px;line-height: 35px;color: #ccc;">${(l.updateTime)!}</span>
                             </li>
 						</#list>

@@ -9,7 +9,7 @@
            		<form class="form-horizontal" role="form" id="addForm">
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">分类名称</label>
-                    <div class="col-sm-10">
+                    <div class="col-xs-5 hm-col">
                       <input type="text" class="form-control" id="inputName" name = "inputName" placeholder="分类名称">
                     </div>
                   </div>

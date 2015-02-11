@@ -194,7 +194,7 @@
 			xhr.open('POST', '${app}/content/handerAddImageManage');
 			xhr.send(formData);		
 	 }
-		//回调函数    
+	//回调函数    
     function zswFun(){   
 	    if(xhr.readyState == 4 && xhr.status == 200){    
 	        var b = xhr.responseText;
