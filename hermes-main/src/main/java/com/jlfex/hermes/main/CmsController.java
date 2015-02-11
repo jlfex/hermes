@@ -54,4 +54,27 @@ public class CmsController {
 		model.addAttribute("sel", articleCategoryRepository.findOne(cid));
 		return "cms/template_ae";
 	}
+
+	@RequestMapping("notice/{cid}")
+	public String noticeArticleCategory(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, @PathVariable String cid, Model model) {
+		Pageable pageable = new PageRequest(page, size, new Sort(Direction.DESC, "order", "updateTime"));
+		Page<Article> dataBox = articleService.find(cid, pageable);
+		if (dataBox.getContent().size() == 1) {
+			return "redirect:/notice/" + cid + "/" + dataBox.getContent().get(0).getId();
+		} else {
+			model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
+			model.addAttribute("sel", articleCategoryRepository.findOne(cid));
+			model.addAttribute("aeli", dataBox);
+			return "cms/notice_li";
+		}
+	}
+
+	@RequestMapping("notice/{cid}/{aid}")
+	public String noticeArticle(@PathVariable String cid, @PathVariable String aid, Model model) {
+		model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
+		model.addAttribute("ae", articleService.loadByIdWithText(aid));
+		model.addAttribute("sel", articleCategoryRepository.findOne(cid));
+		return "cms/notice_ae";
+	}
+
 }

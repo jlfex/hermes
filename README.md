@@ -1,6 +1,10 @@
-[![Build Status](https://travis-ci.org/jlfex/hermes.svg)](https://travis-ci.org/jlfex/hermes)
+[![Build Status](https://travis-ci.org/jlfex/hermes.svg?branch=master)](https://travis-ci.org/jlfex/hermes)
 ## 项目介绍
-[**hermes**为快速搭建专业的P2P平台提供完美解决方案](https://github.com/jlfex/hermes)
+[开源p2p软件](https://github.com/jlfex/hermes)
+### Hermes为快速搭建专业的P2P平台提供完美解决方案。
+- 支持企业快速搭建网络投融资平台
+- 完全覆盖发标、审核、投标、放款、还款、转让等投融资业务全流程
+- 支持企业快速导入外部债权
 
 ##系统要求
 - Java6+
@@ -38,3 +42,5 @@
 ##如何贡献
 * [编码规范](https://github.com/jlfex/hermes/wiki/编码规范)
 * [贡献步骤](https://github.com/jlfex/hermes/wiki/如何贡献)
+
+![test](https://github.com/jlfex/hermes/wiki/images/logo.png)

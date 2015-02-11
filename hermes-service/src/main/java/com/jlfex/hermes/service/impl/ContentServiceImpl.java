@@ -448,17 +448,20 @@ public class ContentServiceImpl implements ContentService {
 	 */
 	@Override
 	public ImageManage addImageManage(String type, String name, String link, int order, String imgStr) {
-		ImageManage imageManage = new ImageManage();
-		if (type.equals(HermesConstants.BANNER)) {
-			imageManage.setCode("banner");
-		} else if (type.equals(HermesConstants.INVEST)) {
-			imageManage.setCode("invest");
-		} else if (type.equals(HermesConstants.LOAN)) {
-			imageManage.setCode("loan");
-		} else if (type.equals(HermesConstants.LOGIN)) {
-			imageManage.setCode("login");
-		} else if (type.equals(HermesConstants.REGISTER)) {
-			imageManage.setCode("register");
+		List<ImageManage> imageList = imageManageRepository.findOneByType(type);
+		ImageManage imageManage = imageList.get(0);
+		if (imageList.size() == 0) {
+			if (type.equals(HermesConstants.BANNER)) {
+				imageManage.setCode("banner");
+			} else if (type.equals(HermesConstants.INVEST)) {
+				imageManage.setCode("invest");
+			} else if (type.equals(HermesConstants.LOAN)) {
+				imageManage.setCode("loan");
+			} else if (type.equals(HermesConstants.LOGIN)) {
+				imageManage.setCode("login");
+			} else if (type.equals(HermesConstants.REGISTER)) {
+				imageManage.setCode("register");
+			}
 		}
 		imageManage.setImage(imgStr);
 		imageManage.setType(type);
@@ -496,17 +499,6 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = imageManageRepository.findOne(id);
-		if (type.equals(HermesConstants.BANNER)) {
-			imageManage.setCode("banner");
-		} else if (type.equals(HermesConstants.INVEST)) {
-			imageManage.setCode("invest");
-		} else if (type.equals(HermesConstants.LOAN)) {
-			imageManage.setCode("loan");
-		} else if (type.equals(HermesConstants.LOGIN)) {
-			imageManage.setCode("login");
-		} else if (type.equals(HermesConstants.REGISTER)) {
-			imageManage.setCode("register");
-		}
 		imageManage.setName(name);
 		imageManage.setLink(link);
 		imageManage.setOrder(order);

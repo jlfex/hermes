@@ -698,4 +698,16 @@ public class ContentController {
 		}
 	}
 
+	/**
+	 * 图片管理--预览大图
+	 * 
+	 * @author lishunfeng
+	 */
+
+	@RequestMapping("/previewImage")
+	public String previewImage(@RequestParam("id") String id, Model model) {
+		model.addAttribute("imageManage", contentService.findOneImageManage(id));
+		return "/content/previewImage";
+	}
+
 }

@@ -101,14 +101,7 @@
 	}
 	//检查图片的格式是否正确,同时实现预览
     function setImagePreview(obj, localImagId, imgObjPreview) {
-        var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
-        var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小            	
-    	if(imgFileSize>300){
-    		$('#preview').attr({src:''}); 
-            $('#file').val(''); 
-    		alert("请选择300K以下的图片！");
-    		return false;
-    	}  else {
+            var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
             var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用 
             //布尔型变量
             var isExists = false;
@@ -153,7 +146,6 @@
             }
             return false;
         }
-    }
     //显示图片  
     function over(imgid, obj, imgbig) {
         //大图显示的最大尺寸  4比3的大小  400 300  
@@ -202,7 +194,7 @@
 			xhr.open('POST', '${app}/content/handerAddImageManage');
 			xhr.send(formData);		
 	 }
-		//回调函数    
+	//回调函数    
     function zswFun(){   
 	    if(xhr.readyState == 4 && xhr.status == 200){    
 	        var b = xhr.responseText;
