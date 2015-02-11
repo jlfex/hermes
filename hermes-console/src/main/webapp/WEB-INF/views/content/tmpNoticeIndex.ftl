@@ -5,8 +5,8 @@
 	</div>
 </#if>
 <div class="row panel-body">
-	<div class="col-xs-1">
-		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal">+ 添加公告</button>
+	<div class="col-xs-2">
+		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加公告</button>
 		<input id="page" name="page" type="hidden" value="0"/>
     </div>
 </div>

@@ -113,7 +113,7 @@ public interface RepayService {
 	 * 
 	 * @param id
 	 */
-	public boolean autoRepayment(String id);
+	public boolean autoRepayment(String id) throws Exception;
 	
 	/**
 	 * 根据名称 和 状态   获取还款方式
