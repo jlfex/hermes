@@ -449,15 +449,15 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageManage addImageManage(String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = new ImageManage();
-		if (type.equals(HermesConstants.INDEX_BANNER)) {
+		if (type.equals(HermesConstants.BANNER)) {
 			imageManage.setCode("banner");
-		} else if (type.equals(HermesConstants.INDEX_INVEST)) {
+		} else if (type.equals(HermesConstants.INVEST)) {
 			imageManage.setCode("invest");
-		} else if (type.equals(HermesConstants.INDEX_LOAN)) {
+		} else if (type.equals(HermesConstants.LOAN)) {
 			imageManage.setCode("loan");
-		} else if (type.equals(HermesConstants.INDEX_LOGIN)) {
+		} else if (type.equals(HermesConstants.LOGIN)) {
 			imageManage.setCode("login");
-		} else if (type.equals(HermesConstants.INDEX_REGISTER)) {
+		} else if (type.equals(HermesConstants.REGISTER)) {
 			imageManage.setCode("register");
 		}
 		imageManage.setImage(imgStr);
@@ -496,15 +496,15 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = imageManageRepository.findOne(id);
-		if (type.equals(HermesConstants.INDEX_BANNER)) {
+		if (type.equals(HermesConstants.BANNER)) {
 			imageManage.setCode("banner");
-		} else if (type.equals(HermesConstants.INDEX_INVEST)) {
+		} else if (type.equals(HermesConstants.INVEST)) {
 			imageManage.setCode("invest");
-		} else if (type.equals(HermesConstants.INDEX_LOAN)) {
+		} else if (type.equals(HermesConstants.LOAN)) {
 			imageManage.setCode("loan");
-		} else if (type.equals(HermesConstants.INDEX_LOGIN)) {
+		} else if (type.equals(HermesConstants.LOGIN)) {
 			imageManage.setCode("login");
-		} else if (type.equals(HermesConstants.INDEX_REGISTER)) {
+		} else if (type.equals(HermesConstants.REGISTER)) {
 			imageManage.setCode("register");
 		}
 		imageManage.setName(name);
