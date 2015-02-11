@@ -530,7 +530,8 @@ public class RepayServiceImpl implements RepayService {
 				interest = interest.add(investProfit.getInterest());
 				// 更新理财收益表
 				if(RepayStatus.OVERDUE.equals(status)){
-					investProfit.setOverdueInterest(loanRepay.getOverdueInterest());
+					BigDecimal overInerest = investProfit.getInvest().getRatio().multiply(loanRepay.getOverdueInterest()) ;
+					investProfit.setOverdueInterest(overInerest);
 				}
 				investProfit.setStatus(InvestProfit.Status.ALREADY);
 				investProfitRepository.save(investProfit);
