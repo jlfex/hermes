@@ -97,7 +97,7 @@ jQuery(function($) {
 			  			dataType: "json",
 			  			async:false});
 				//console.log(htmlobj.responseText);
-				$("#maturegain").html(htmlobj.responseText);
+				$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
 			}
 			else
 			{
@@ -254,6 +254,7 @@ jQuery(function($) {
                 			<td  colspan="3" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money_loan">&nbsp;&nbsp;
 							<span class="mv_msg"></span></td>
                 		<tr>
+                		<tr><td class="td_height"><@messages key="invest.yield.to.maturity" />：<span id="maturegain"></span></td><td colspan="2">&nbsp;</td></tr>
                 		<td colspan="3" class="td_ht1"><span class="lighrgray"><@messages key="account.info.user.cash" />：</span><span class="yellow">
                 			<#if (loanUserInfo.balance)??>
 								${loanUserInfo.balance}
@@ -262,8 +263,12 @@ jQuery(function($) {
 							</#if>
 							<@messages key="common.unit.cny" /></span><a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a></td>
                 		</tr>
-                		<tr><td class="td_height"><@messages key="invest.yield.to.maturity" />：<span id="maturegain"></span></td><td colspan="2">&nbsp;</td></tr>
-                		<tr class="mv_checked"><td colspan="3" class="td_height"><@messages key="invest.occurred.late" />：<input type="radio"name="otherrepay" value="00" />  <@messages key="invest.occurred.late.advance" />&nbsp;&nbsp;<input type="radio" name="otherrepay"  value="01" checked="true"> <@messages key="invest.occurred.late.noadvance" /><span class="mv_msg" data-msg='请选择逾期垫付方式！'></span></td></tr>
+                		<tr class="mv_checked"><td colspan="3" class="td_height">担保方式：
+                		<input type="radio"name="otherrepay" value="00" /> 
+                		  <#if guaranteeType??>${guaranteeType!''} <#else>  <@messages key="invest.occurred.late.advance" /></#if>
+                		&nbsp;&nbsp;
+                		<input type="radio" name="otherrepay"  value="01" checked="true"> <@messages key="invest.occurred.late.noadvance" />
+                		<span class="mv_msg" data-msg='请选择逾期垫付方式！'></span></td></tr>
                 		<tr><td colspan="3" class="td_deal">
                             <div class="commonChecked">
                             <p class="mv_checked">
