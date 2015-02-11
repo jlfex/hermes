@@ -5,7 +5,7 @@
 	</div>
 </#if>
  <div class="panel panel-primary">
-        <div class="panel-heading">添加图片</div>
+        <div class="panel-heading">编辑图片</div>
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" id="addForm" method="post"  enctype="multipart/form-data">
@@ -13,7 +13,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
-                   <select id="type" name="type" class="form-control" disabled="disabled" onchange=check(this.value)>
+                   <select id="type" name="type" class="form-control" disabled="disabled">
                    	  <option value="首页banner广告">首页banner广告</option>
 					  <option value="首页—我要理财">首页—我要理财</option>
 					  <option value="首页—我要借款">首页—我要借款</option>
@@ -64,19 +64,18 @@
                   
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10" id="outerDivId">
-                    	<span class="help-block">图片尺寸大小必须为1920*390</span>   
+                    	   
                     </div>
                   </div>
                   
                   <div class="form-group" id="localImag" style="margin-left:220px;">
                     	<img src="${imageManage.image}" id='preview' onclick="over(preview,divImage,imgbig);" width="200" height="120">
-                  </div>
-                  <!--
+                  </div>             
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <a class="hm-link" href="#" data-url="" data-target="data">预览大图</a>
+                        <button type="button" class="btn btn-link previewBtn" rid="${imageManage.id}">预览大图</button>
                     </div>
-                  </div>     -->         
+                  </div>         
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="updateImageManage">保存</button></div>
@@ -89,16 +88,16 @@
       </div>
 
 <script type="text/javascript">
-	function check(v){
 	    var outerDiv= $("#outerDivId"); 
-	    if(v=='首页banner广告'){
+	    var type = '${(imageManage.type)!}';
+	    if(type == '首页banner广告'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为1920*390</span>");
-	    }else if(v=='首页—我要理财' || v=='首页—我要借款'){
+	    }else if(type == '首页—我要理财' || type =='首页—我要借款'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为132*117</span>");        
-	    }else if(v=='登录界面' || v=='注册界面'){
+	    }else if(type == '登录界面' || type == '注册界面'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为440*250</span>");            
 	    }	
-	}
+	
 	//检查图片的格式是否正确,同时实现预览
     function setImagePreview(obj, localImagId, imgObjPreview) {  
              var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
@@ -258,6 +257,12 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
+	//点击预览按钮
+	$(".previewBtn").on("click",function(){
+		var rid = $(this).attr("rid");
+		window.open('${app}/content/previewImage?id='+rid);
+	
+	});	
 	
 	$("#type").val("${(imageManage.type)!}");
 	
