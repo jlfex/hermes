@@ -1,9 +1,12 @@
 package com.jlfex.hermes.console;
 
+import java.awt.image.BufferedImage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Images;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.TmpNotice;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
@@ -560,21 +564,52 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/handerAddImageManage")
-	public String handerAddImageManage(MultipartHttpServletRequest request, RedirectAttributes attr) {
+	@ResponseBody
+	public ResultVo handerAddImageManage(MultipartHttpServletRequest request, RedirectAttributes attr) {
 		try {
 			String type = request.getParameter("type");
 			String name = request.getParameter("name");
 			String link = request.getParameter("link");
 			int order = Integer.parseInt(request.getParameter("order"));
+			String imgStr = "";
 			MultipartFile file = request.getFile("file");
-			String imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+			BufferedImage buffImage = ImageIO.read(file.getInputStream());
+			if (type.equals(HermesConstants.BANNER)) {
+				if (buffImage.getWidth() < 1920 || buffImage.getHeight() < 390) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过小，标准尺寸为1920*390!");
+				} else if (buffImage.getWidth() > 1920 || buffImage.getHeight() > 390) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为1920*390，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 1920, 390);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			} else if (type.equals(HermesConstants.INVEST) || type.equals(HermesConstants.LOAN)) {
+				if (buffImage.getWidth() < 132 || buffImage.getHeight() < 117) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过大，标准尺寸为132*117!");
+				} else if (buffImage.getWidth() > 132 || buffImage.getHeight() > 117) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为132*117，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 132, 117);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			} else if (type.equals(HermesConstants.LOGIN) || type.equals(HermesConstants.REGISTER)) {
+				if (buffImage.getWidth() < 440 || buffImage.getHeight() < 250) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过小，标准尺寸为440*250!");
+				} else if (buffImage.getWidth() > 440 || buffImage.getHeight() > 250) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为440*250，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 440, 250);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			}
 			contentService.addImageManage(type, name, link, order, imgStr);
-			attr.addFlashAttribute("msg", "添加图片成功");
-			return "redirect:/content/imageIndex";
+			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "添加图片成功");
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "添加图片失败");
-			Logger.error("添加链接失败：", e);
-			return "redirect:/content/addImageManage";
+			Logger.error("添加图片失败：", e);
+			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "添加图片失败");
 		}
 	}
 
@@ -613,22 +648,53 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/handerEditImageManage")
-	public String handerEditImageManage(MultipartHttpServletRequest request, RedirectAttributes attr, Model model) {
+	@ResponseBody
+	public ResultVo handerEditImageManage(MultipartHttpServletRequest request, RedirectAttributes attr, Model model) {
 		try {
 			String id = request.getParameter("id");
 			String type = request.getParameter("type");
 			String name = request.getParameter("name");
 			String link = request.getParameter("link");
 			int order = Integer.parseInt(request.getParameter("order"));
+			String imgStr = "";
 			MultipartFile file = request.getFile("file");
-			String imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+			BufferedImage buffImage = ImageIO.read(file.getInputStream());
+			if (type.equals(HermesConstants.BANNER)) {
+				if (buffImage.getWidth() < 1920 || buffImage.getHeight() < 390) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过小，标准尺寸为1920*390!");
+				} else if (buffImage.getWidth() > 1920 || buffImage.getHeight() > 390) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为1920*390，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 1920, 390);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			} else if (type.equals(HermesConstants.INVEST) || type.equals(HermesConstants.LOAN)) {
+				if (buffImage.getWidth() < 132 || buffImage.getHeight() < 117) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过大，标准尺寸为132*117!");
+				} else if (buffImage.getWidth() > 132 || buffImage.getHeight() > 117) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为132*117，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 132, 117);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			} else if (type.equals(HermesConstants.LOGIN) || type.equals(HermesConstants.REGISTER)) {
+				if (buffImage.getWidth() < 440 || buffImage.getHeight() < 250) {
+					return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您上传的图片尺寸过小，标准尺寸为440*250!");
+				} else if (buffImage.getWidth() > 440 || buffImage.getHeight() > 250) {
+					// new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR,
+					// "您上传的图片尺寸过大，标准尺寸为440*250，将为您压缩后继续上传！");
+					imgStr = Images.resizeImageToBase64(file, 0, 0, 440, 250);
+				} else {
+					imgStr = Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes());
+				}
+			}
 			contentService.updateImageManage(id, type, name, link, order, imgStr);
-			attr.addFlashAttribute("msg", "添加图片成功");
-			return "redirect:/content/imageIndex";
+			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "修改图片成功");
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "添加图片失败");
-			Logger.error("添加链接失败：", e);
-			return "redirect:/content/addImageManage";
+			Logger.error("修改图片失败：", e);
+			return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS, "修改图片失败");
 		}
 	}
 
