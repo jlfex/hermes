@@ -280,54 +280,6 @@ public abstract class Images {
 	}
 
 	/**
-	 * 获取压缩图片后的 base64码
-	 * @param originalImage
-	 * @param x1
-	 * @param y1
-	 * @param width
-	 * @param height
-	 * @return
-	 */
-	public static String resizeImageToBase64(MultipartFile originalImage, int x1, int y1, int width, int height) {
-		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(originalImage.getBytes());
-			MemoryCacheImageInputStream mciis = new MemoryCacheImageInputStream(bais);
-			BufferedImage source = ImageIO.read(mciis);
-			int owidth = source.getWidth();// 图片原始宽度
-			int oheight = source.getHeight();// 图片原始长度
-			int imgWidth = source.getWidth();
-			int imgHeight = source.getHeight();
-			double ratioW = (double) width / imgWidth; // 原始图片与前台图片显示宽度的比例
-			double ratioH = (double) height / imgHeight;
-			if(ratioW >= 1){
-				ratioW = 1;
-			}
-			if(ratioH >= 1){
-				ratioH = 1;
-			}
-			int cutW = (int) (owidth * ratioW);// 裁剪图片的真实宽度
-			int cutH = (int) (oheight * ratioH);
-			double ratioX = (double) x1 / imgWidth; // x坐标所在位置的比例
-			double ratioY = (double) y1 / imgHeight;
-			int xo = (int) (owidth * ratioX);// 图片裁剪开始的真实X坐标
-			int yo = (int) (oheight * ratioY);
-			BufferedImage dest = new BufferedImage(cutW, cutH, BufferedImage.TYPE_INT_RGB);
-			Image croppedImage = source.getSubimage(xo, yo, cutW, cutH);
-			Graphics graphics = dest.getGraphics();
-			graphics.setColor(Color.WHITE);
-			graphics.fillRect(0, 0, cutW, cutH);
-			graphics.drawImage(croppedImage, 0, 0, null);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(dest, Files.getExt(originalImage.getOriginalFilename()), baos);
-			byte[] bytes = baos.toByteArray();
-			return String.format(BASE64, Files.getMimeType(originalImage.getOriginalFilename()), new String(Base64.encodeBase64(bytes)));
-		} catch (Exception e) {
-			Logger.error("压缩图片异常：",e);
-			throw new RuntimeException(e);
-		}
-
-	}
-	/**
 	 * @param args
 	 */
 	public static void main(String... args) {

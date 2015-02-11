@@ -201,7 +201,7 @@
 			formData.append('order', order);		    
 			formData.append('file', file);			
 		});
-		xhr.open('POST', '${app}/content/handerEditImageManage);
+		xhr.open('POST', '${app}/content/handerEditImageManage');
 		xhr.send(formData);
 	 }
 		//回调函数    
@@ -258,7 +258,7 @@ jQuery(function($) {
     $('#updateImageManage').on('click', function(e) {
        if(checkAll()){ 
          upload($(this).get(0).files); 
-       }
+       };
     });	
     //点击取消按钮
 	$("#cancelImageManage").on("click",function(){
@@ -267,6 +267,8 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
+	
+	$("#type").val("${(imageManage.type)!}");
 });
 
 </script>
