@@ -1,15 +1,12 @@
 package com.jlfex.hermes.service.job;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -34,7 +31,6 @@ public class AutoRepayJob extends Job {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see com.jlfex.hermes.service.job.Job#run()
 	 */
 	@Override
