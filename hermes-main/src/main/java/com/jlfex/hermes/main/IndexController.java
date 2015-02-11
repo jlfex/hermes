@@ -90,18 +90,18 @@ public class IndexController {
 		return "/system/notices";
 	}
 
-	/**
-	 * 公告内容
-	 * 
-	 * @param id
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/notice/{id}")
-	public String notice(@PathVariable("id") String id, Model model) {
-		model.addAttribute("article", articleService.loadByIdWithText(id));
-		return "/system/notice";
-	}
+//	/**
+//	 * 公告内容
+//	 * 
+//	 * @param id
+//	 * @param model
+//	 * @return
+//	 */
+//	@RequestMapping("/notice/{id}")
+//	public String notice(@PathVariable("id") String id, Model model) {
+//		model.addAttribute("article", articleService.loadByIdWithText(id));
+//		return "/system/notice";
+//	}
 
 	/**
 	 * 清空缓存

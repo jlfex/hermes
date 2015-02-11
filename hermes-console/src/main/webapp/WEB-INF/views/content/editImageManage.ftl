@@ -13,7 +13,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
-                   <select id="type" name="type" class="form-control" onchange=check(this.value)>
+                   <select id="type" name="type" class="form-control" disabled="disabled" onchange=check(this.value)>
                    	  <option value="首页banner广告">首页banner广告</option>
 					  <option value="首页—我要理财">首页—我要理财</option>
 					  <option value="首页—我要借款">首页—我要借款</option>
@@ -100,16 +100,8 @@
 	    }	
 	}
 	//检查图片的格式是否正确,同时实现预览
-    function setImagePreview(obj, localImagId, imgObjPreview) {
-  
-        var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
-        var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小    
-    	if(imgFileSize>300){
-    		$('#preview').attr({src:''}); 
-            $('#file').val(''); 
-    		alert("请选择300K以下的图片！");
-    		return false;
-    	}  else {
+    function setImagePreview(obj, localImagId, imgObjPreview) {  
+            var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
             var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用 
             //布尔型变量
             var isExists = false;
@@ -154,7 +146,7 @@
             }
             return false;
         }
-    }
+
     //显示图片  
     function over(imgid, obj, imgbig) {
         //大图显示的最大尺寸  4比3的大小  400 300  
