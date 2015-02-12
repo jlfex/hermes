@@ -341,7 +341,7 @@ public class InvestController {
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
-		String guaranteeType = "";
+		String guaranteeType = null;
 		Loan loan = loanService.loadById(loanid);
 		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
 			CrediteInfo creditInfo = null;

@@ -51,7 +51,7 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		List<CreditRepayPlan>  list =creditorRepayPlanRepository.findByCrediteInfo(creditInfo);
 		Collections.sort(list, new Comparator<CreditRepayPlan>() {
             public int compare(CreditRepayPlan obj1, CreditRepayPlan obj2) {
-            	return (""+obj1.getPeriod()).compareTo(""+obj2.getPeriod());
+            	return obj1.getPeriod() > obj2.getPeriod()? 1:-1;
             }
         }); 
 		return  list;
@@ -75,7 +75,7 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		BigDecimal remainAmount = BigDecimal.ZERO; //剩余本金
 		Collections.sort(planList, new Comparator<CreditRepayPlan>() {
 	           public int compare(CreditRepayPlan obj1, CreditRepayPlan obj2) {
-	            	return (""+obj1.getPeriod()).compareTo(""+obj2.getPeriod());
+	            	return obj1.getPeriod()> obj2.getPeriod()? 1:-1;
 	           }
 	    }); 
 	    String current_date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

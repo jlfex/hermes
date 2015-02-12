@@ -366,6 +366,12 @@ public class CreditExcelUtil {
 							errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_STR_DATE);
 							errFlag = true;
 						}
+					}else if(cell2.getCellType() ==  XSSFCell.CELL_TYPE_NUMERIC){
+						String val = (""+cell2.getNumericCellValue()).trim();
+						if(val.contains(".")){
+							val = val.substring(0, val.indexOf("."));
+						}
+						vo.setPeriod(Integer.parseInt(val));
 					}else{
 						errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_NUMBER_OR_TXT);
 						errFlag = true;
@@ -435,9 +441,13 @@ public class CreditExcelUtil {
 						errMsg.append(cellName).append(ERROR_EMPTY);
 						errFlag = true;
 					}else if(cell7.getCellType()==XSSFCell.CELL_TYPE_NUMERIC){
-						vo.setRemainPrincipal(BigDecimal.valueOf(cell7.getNumericCellValue()));
+						String val = ""+""+cell7.getNumericCellValue();
+						if(cell7.getNumericCellValue() <0){
+							val = "0";
+						}
+						vo.setRemainPrincipal(new BigDecimal(val));
 					}else if(cell7.getCellType() == XSSFCell.CELL_TYPE_STRING){
-						vo.setRemainPrincipal(BigDecimal.valueOf(Double.parseDouble(cell7.getStringCellValue().trim())));
+						vo.setRemainPrincipal(new BigDecimal(""+Double.parseDouble(cell7.getStringCellValue().trim())));
 					}else{
 						errMsg.append(cellName).append(ERROR_KIND).append(FORMAT_NUMBER_OR_TXT);
 						errFlag = true;
