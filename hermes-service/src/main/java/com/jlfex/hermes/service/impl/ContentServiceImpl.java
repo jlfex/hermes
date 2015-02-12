@@ -449,8 +449,11 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageManage addImageManage(String type, String name, String link, int order, String imgStr) {
 		List<ImageManage> imageList = imageManageRepository.findOneByType(type);
-		ImageManage imageManage = imageList.get(0);
-		if (imageList.size() == 0) {
+		ImageManage imageManage = null;
+		if (imageList.size() > 0) {
+			imageManage = imageList.get(0);
+		} else {
+			imageManage = new ImageManage();
 			if (type.equals(HermesConstants.BANNER)) {
 				imageManage.setCode("banner");
 			} else if (type.equals(HermesConstants.INVEST)) {
@@ -499,11 +502,14 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = imageManageRepository.findOne(id);
+		// 如果imgStr为空的话，不用再去设值
+		if (StringUtils.isNotEmpty(imgStr)) {
+			imageManage.setImage(imgStr);
+		}
 		imageManage.setName(name);
 		imageManage.setLink(link);
 		imageManage.setOrder(order);
 		imageManage.setType(type);
-		imageManage.setImage(imgStr);
 		imageManageRepository.save(imageManage);
 		return imageManage;
 	}
