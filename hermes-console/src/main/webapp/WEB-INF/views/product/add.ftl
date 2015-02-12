@@ -86,7 +86,7 @@
 			</div>
 			<div class="row hm-row form-group">
 				<label for="code" class="col-xs-1 control-label"><@messages key="model.product.purpose" /></label>
-				<div class="col-xs-4">
+				<div class="col-xs-6">
 					<#list purpose as l>
 					<label class="radio-inline">
 						<input type="radio" <#if (prodtl.purpose.id)?? && prodtl.purpose.id == l.id >checked</#if> name="purposeId" value="${l.id}" />${l.name}
