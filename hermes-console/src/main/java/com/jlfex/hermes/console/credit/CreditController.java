@@ -525,7 +525,7 @@ public class CreditController {
 			}
 		}
 		if (!CreditExcelUtil.CREDIT_REPAY_WAY.contains(vo.getPayType())) { // 还款方式
-			errMsg.append(lineInfo+"还款方式错误");
+			errMsg.append("还款方式错误");
 			flag = false;
 		}
 		// 业务规则：放款日期 < 导入日期 < 债权到期日
@@ -536,20 +536,20 @@ public class CreditController {
 			 businessDate = Calendars.parse("yyyy-MM-dd", vo.getBusinessTime());i++;  
 			 deadTime =  Calendars.parse("yyyy-MM-dd", vo.getDeadTime());
 			 if (!(nowDate.after(businessDate) && nowDate.before(deadTime) && businessDate.before(deadTime))) {
-				errMsg.append(lineInfo+"日期有误：放款日期 < 导入日期 < 债权到期日 ;");
+				errMsg.append("日期有误：放款日期 < 导入日期 < 债权到期日 ;");
 				flag = false;
 			}
 		}catch(Exception e){
 			if(i <1){
-				errMsg.append(lineInfo+"放款日期"+vo.getBusinessTime()+"格式化异常;");
+				errMsg.append("放款日期,格式化异常,请输入格式(YYYY-MM-DD);");
 			}else{
-				errMsg.append(lineInfo+"债权到期日"+vo.getDeadTime()+"格式化异常;");
+				errMsg.append("放款日期,格式化异常,请输入格式(YYYY-MM-DD);");
 			}
 			flag = false;
 		}
 		//校验借款金额 必须是正整数
 		if(!CreditExcelUtil.checkNumber(vo.getAmount(),"+" ) ){
-			errMsg.append(lineInfo+"借款金额 必须是正整数：当前值: "+vo.getAmount()+";");
+			errMsg.append("借款金额 必须是正整数：当前值: "+vo.getAmount()+";");
 			flag = false;
 		}
 		//年利率 格式：10% 0--100
@@ -557,17 +557,17 @@ public class CreditController {
 		if(rateStr.contains(CreditExcelUtil.VAR_PERCENT) && 
 		   CreditExcelUtil.checkNumber(rateStr.replace(CreditExcelUtil.VAR_PERCENT, ""), "0-100")){
 		}else{
-			errMsg.append(lineInfo+"年利率 必须是百分比格式,且数值是0-100,当前值: "+rateStr+";");
+			errMsg.append("年利率 必须是百分比格式,且数值是0-100,当前值: "+rateStr+";");
 			flag = false;
 		}
 		//借款期限
 		String peroid = vo.getPeriod();
 		if(!CreditExcelUtil.checkNumber(peroid, "0-100")){
-			errMsg.append(lineInfo+"借款期限 必须是正整数且数值是0-100，当前值= "+peroid+";");
+			errMsg.append("借款期限 必须是正整数且数值是0-100，当前值= "+peroid+";");
 			flag = false;
 		}
 		resultMap.put("flag", flag ? FLAG_KIND_SUC : FLAG_KIND_ONE);
-		resultMap.put("errMsg", flag ? "" : errMsg.toString());
+		resultMap.put("errMsg", flag ? "" : lineInfo+errMsg.toString());
 		return resultMap;
 	}
 

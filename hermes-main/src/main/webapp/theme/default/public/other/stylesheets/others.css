@@ -279,17 +279,18 @@ a.m_a2:hover {
 	float: left;
 	width: 193px;
 	height: 80px;
-	margin-right: 4px;
+	margin-right: 3px;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	cursor: pointer;
 	font-family: "微软雅黑", "Microsoft YaHei";
 	background: #f1f1f1;
+	border-bottom: 2px solid #018dc8;
 }
 .m_jk_t li.active {
 	border: 2px solid #018dc8;
-	border-bottom: 0;
 	background: #fff;
+	border-bottom: 2px solid #fff;
 }
 .m_jk_t li h3 {
 	height: 35px;
@@ -308,11 +309,13 @@ a.m_a2:hover {
 }
 .m_jk_c {
 	position: relative;
+	z-index:60;
 	margin-top: 0px;
 	padding: 40px 0;
 	border: 2px solid #018dc8;
-	border-radius: 5px;
+	border-radius: 0px;
 	border-top-left-radius: 0;
+	margin-top:-1px;
 }
 .m_jk_c table {
 	width: 100%;
