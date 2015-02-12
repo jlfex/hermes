@@ -60,7 +60,7 @@ public class ProductManageController {
 	public String save(Product product, Model model) {
 		model.addAttribute("title", "新增产品");
 		model.addAttribute("guarantee", dictionaryService.findByTypeCode("product.guarantee"));
-		model.addAttribute("purpose", dictionaryService.findByTypeCode("product.purpose"));
+		model.addAttribute("purpose", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repay", repayService.findAll());
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));
 		model.addAttribute("productCode", productService.generateProductCode());
@@ -91,16 +91,16 @@ public class ProductManageController {
 				msg = "添加产品成功";
 				p = new Product();
 				p.setStatus(Product.Status.VALID);
-				//产品管理费
-			    p.setManageFee(new BigDecimal(HermesConstants.PRODUCT_MANAGE_FEE)); 
-			    p.setManageFeeType(HermesConstants.PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO); 
+				// 产品管理费
+				p.setManageFee(new BigDecimal(HermesConstants.PRODUCT_MANAGE_FEE));
+				p.setManageFeeType(HermesConstants.PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO);
 			}
 			productService.editProduct(p, product);
 
 			attr.addFlashAttribute("msg", msg);
 			return "redirect:/product/index";
 		} catch (Exception e) {
-			Logger.error("新增产品异常",e);
+			Logger.error("新增产品异常", e);
 			if (StringUtils.isNotEmpty(id)) {
 				attr.addFlashAttribute("msg", "修改产品失败");
 				return "redirect:/product/detail/" + id;
