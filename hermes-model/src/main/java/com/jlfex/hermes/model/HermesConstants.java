@@ -22,9 +22,9 @@ public final class HermesConstants {
 
 	public static final String INVEST = "首页—我要理财";
 
-	public static final String LOGIN = "首页—我要借款";
+	public static final String LOAN = "首页—我要借款";
 
-	public static final String LOAN = "登录界面";
+	public static final String LOGIN = "登录界面";
 
 	public static final String REGISTER = "注册界面";
 

@@ -181,18 +181,18 @@
 	 	xhr = new XMLHttpRequest();
 	 	xhr.onreadystatechange = zswFun;//设置回调函数		 	
 	    var files = $('input[name="file"]').prop('files');
-	    var reader = new FileReader(), formData = new FormData();		    	    	    
+	    var reader = new FileReader(), formData = new FormData();	
+	    var type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
+		formData.append('type', type);
+		formData.append('name', name);
+		formData.append('link', link);
+		formData.append('order', order);		    	    	    	    	    
 		$.each(files, function(i, file) {
-		    var type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
 		    reader.readAsDataURL(file);
-			formData.append('type', type);
-			formData.append('name', name);
-			formData.append('link', link);
-			formData.append('order', order);		    
 			formData.append('file', file);
 		});
-			xhr.open('POST', '${app}/content/handerAddImageManage');
-			xhr.send(formData);		
+		xhr.open('POST', '${app}/content/handerAddImageManage');
+		xhr.send(formData);		
 	 }
 	//回调函数    
     function zswFun(){   
