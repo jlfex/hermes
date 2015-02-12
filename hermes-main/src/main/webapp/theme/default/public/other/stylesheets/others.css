@@ -277,7 +277,7 @@ a.m_a2:hover {
 }
 .m_jk_t li {
 	float: left;
-	width: 185px;
+	width: 193px;
 	height: 80px;
 	margin-right: 4px;
 	border-top-left-radius: 5px;
@@ -308,7 +308,7 @@ a.m_a2:hover {
 }
 .m_jk_c {
 	position: relative;
-	margin-top: -2px;
+	margin-top: 0px;
 	padding: 40px 0;
 	border: 2px solid #018dc8;
 	border-radius: 5px;

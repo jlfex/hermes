@@ -67,7 +67,7 @@ public interface ProductService {
 	 */
 	public List<Product> findByStatusIn(String... status) throws Exception;
 
-	public Product editProduct(Product p, SimpleProduct product);
+	public Product editProduct(Product p, SimpleProduct product) throws Exception;
 
 	/**
 	 * 获取产品数量

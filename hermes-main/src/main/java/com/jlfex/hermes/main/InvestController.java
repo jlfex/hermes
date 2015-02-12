@@ -51,12 +51,7 @@ import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
 
-/**
- * @author chenqi
- * @version 1.0, 2013-12-23
- * @since 1.0
- * 
- */
+
 @Controller
 @RequestMapping("/invest")
 public class InvestController {
@@ -346,6 +341,7 @@ public class InvestController {
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
+		String guaranteeType = "";
 		Loan loan = loanService.loadById(loanid);
 		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
 			CrediteInfo creditInfo = null;
@@ -358,6 +354,10 @@ public class InvestController {
 			}
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("creditRepayList", creditRepayList);
+		}else{
+			// 普通标 担保方式
+			Dictionary guaranteeDic =  loan.getProduct().getGuarantee();
+			guaranteeType = guaranteeDic.getName();
 		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication =  investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
@@ -386,6 +386,7 @@ public class InvestController {
 		}
 		model.addAttribute("investBidMultiple", investBidMultiple);
 		model.addAttribute("validFlag",  bidAuthentication); //投标是否有效标识
+		model.addAttribute("guaranteeType", guaranteeType);
 		return "invest/info";
 	}
 

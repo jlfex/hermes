@@ -3,6 +3,10 @@ package com.jlfex.hermes.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,13 +22,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.model.Dictionary;
+import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.Product;
+import com.jlfex.hermes.model.ProductOverdue;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.repository.DictionaryRepository;
+import com.jlfex.hermes.repository.ProductOverdueRepository;
 import com.jlfex.hermes.repository.ProductRepository;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.repository.RepayRepository;
@@ -69,6 +78,8 @@ public class ProductServiceImpl implements ProductService {
 	private PropertiesService propertiesService;
 	@Autowired
 	private RepayService repayService;
+	@Autowired
+	private ProductOverdueRepository productOverdueRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -80,11 +91,30 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductInfo> productInfoList = new ArrayList<ProductInfo>();
 		List validState = new ArrayList();
 		validState.add(Product.Status.VALID);
+		List<Product>  sortProductList = new ArrayList<Product>();
 		Iterable<Product> productList = productRepository.findByStatusIn(validState);
+		Iterator iterator = productList.iterator();
+		while(iterator.hasNext()){
+			sortProductList.add((Product)iterator.next());
+		}
+		Collections.sort(sortProductList, new Comparator<Product>() {
+            public int compare(Product obj1, Product obj2) {
+            	return obj1.getCreateTime().before(obj2.getCreateTime())? 1:-1;
+            }
+        }); 
+		ProductInfo productInfo = null;
 		List<Repay> repayList = repayRepository.findAll();
 		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCodeAndStatus("loan_purpose", "00");
-		ProductInfo productInfo = null;
-		for (Product product : productList) {
+		int displaySequence = 1; //20150211需求：固定显示五个产品
+		int productSize = 0;
+		if(sortProductList!=null && sortProductList.size() > 0){
+			productSize = sortProductList.size();
+		}
+		for(Product product : sortProductList){
+			if(displaySequence >5){
+				break;
+			}
+			displaySequence ++;
 			productInfo = new ProductInfo();
 			productInfo.setId(product.getId());
 			productInfo.setName(product.getName());
@@ -193,53 +223,97 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product editProduct(Product p, SimpleProduct product) {
-		p.setCode(product.getCode());
-		p.setName(product.getName());
-		p.setAmount(product.getAmount());
-		p.setPeriod(product.getPeriod());
-		p.setRate(product.getRate());
-		p.setDeadline(new Integer(product.getDeadline()));
+	public Product editProduct(Product obj, SimpleProduct product) throws Exception {
+		obj.setCode(product.getCode());
+		obj.setName(product.getName());
+		obj.setAmount(product.getAmount());
+		obj.setPeriod(product.getPeriod());
+		obj.setRate(product.getRate());
+		obj.setDeadline(new Integer(product.getDeadline()));
 		if (StringUtils.isNotEmpty(product.getGuaranteeId())) {
-			p.setGuarantee(dictionaryService.loadById(product.getGuaranteeId()));
+			obj.setGuarantee(dictionaryService.loadById(product.getGuaranteeId()));
 		}
-		p.setRepay(repayService.loadById(product.getRepayId()));
-		p.setPurpose(dictionaryService.loadById(product.getPurposeId()));
-		p.setStartingAmt(new BigDecimal(product.getStartingAmt()));
-		p.setDescription(product.getDescription());
-		p.setPeriodType(product.getPeriodType());
-		p = save(p);
-
-		// 为产品添加 “借款手续费费率”，“风险金费率”
+		obj.setRepay(repayService.loadById(product.getRepayId()));
+		obj.setPurpose(dictionaryService.loadById(product.getPurposeId()));
+		obj.setStartingAmt(new BigDecimal(product.getStartingAmt()));
+		obj.setDescription(product.getDescription());
+		obj.setPeriodType(product.getPeriodType());
+		Product entity = save(obj);
+		setProductLoanRate(entity);
+		setProductRiskRate(entity);
+		setProductOverGrad(entity);
+		return entity;
+	}
+	
+	/**
+	 * 新增产品产品  设置: 借款手续费费率
+	 * @param product
+	 */
+	public void  setProductLoanRate(Product product) throws Exception{
 		Properties ploan = propertiesService.findByCode("product.rate.loan");
-
-		// 获取借款利率对象
-		Rate rateLoan = rateRepository.findByProductAndType(p, Rate.RateType.LOAN);
-		if (rateLoan == null) {
-			Rate r1 = new Rate();
-			r1.setType(Rate.RateType.LOAN);
-			r1.setProduct(p);
-			r1.setRate(new BigDecimal(ploan.getValue()));
-			rateRepository.save(r1);
-		} else {
+		if(ploan == null){
+			throw new Exception("新增产品： 借款手续费费率系统属性表 product.rate.loan 没有配置.");
+		}
+		Rate rateLoan = rateRepository.findByProductAndType(product, Rate.RateType.LOAN);
+		if(rateLoan == null){
+			Rate rate = new Rate();
+			rate.setType(Rate.RateType.LOAN);
+			rate.setProduct(product);
+			rate.setRate(new BigDecimal(ploan.getValue()));
+			rateRepository.save(rate);
+		}else{
 			rateLoan.setRate(new BigDecimal(ploan.getValue()));
 			rateRepository.save(rateLoan);
 		}
-
+	}
+	/**
+	 * 新增产品产品  设置: 风险金费率
+	 * @param product
+	 */
+	public void  setProductRiskRate(Product product) throws Exception{
 		Properties prisk = propertiesService.findByCode("product.rate.risk");
-		// 获取风险金 利率对象
-		Rate rateRisk = rateRepository.findByProductAndType(p, Rate.RateType.RISK);
+		if(prisk == null){
+			throw new Exception("新增产品： 风险金费率系统属性表 product.rate.risk 没有配置.");
+		}
+		Rate rateRisk = rateRepository.findByProductAndType(product, Rate.RateType.RISK);
 		if (rateRisk == null) {
-			Rate r2 = new Rate();
-			r2.setType(Rate.RateType.RISK);
-			r2.setProduct(p);
-			r2.setRate(new BigDecimal(prisk.getValue()));
-			rateRepository.save(r2);
+			Rate rate = new Rate();
+			rate.setType(Rate.RateType.RISK);
+			rate.setProduct(product);
+			rate.setRate(new BigDecimal(prisk.getValue().trim()));
+			rateRepository.save(rate);
 		} else {
-			rateRisk.setRate(new BigDecimal(prisk.getValue()));
+			rateRisk.setRate(new BigDecimal(prisk.getValue().trim()));
 			rateRepository.save(rateRisk);
 		}
-		return p;
+	}
+	/**
+	 * 新增产品产品  设置: 罚息梯度 
+	 * 当前:罚息设置三个梯度
+	 * 逾期：1-30 天  梯度1  31--60 梯度2   超过60天 ：梯度0
+	 * @param product
+	 */
+	public void setProductOverGrad(Product product) throws Exception{
+		List<ProductOverdue> list = new ArrayList<ProductOverdue>();
+		ProductOverdue  obj = null ;
+		for(int i=0; i<3; i++){
+			obj = new ProductOverdue();
+			obj.setCreator(App.current().getUser().getId());
+			obj.setProduct(product);
+			obj.setRank(i);
+			if(i == 0){
+				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE0));
+				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE0));
+			}else if(i == 1){
+				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE1));
+				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE1));
+			}else{
+				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE2));
+				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE2));
+			}
+			list.add(obj);
+		}
+		productOverdueRepository.save(list);
 	}
 
 	@Override
