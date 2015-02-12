@@ -341,7 +341,7 @@ public class InvestController {
 		} catch (Exception e) {
 			return "redirect:/userIndex/skipSignIn";
 		}
-		String guaranteeType = "";
+		String guaranteeType = null;
 		Loan loan = loanService.loadById(loanid);
 		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
 			CrediteInfo creditInfo = null;
@@ -357,7 +357,9 @@ public class InvestController {
 		}else{
 			// 普通标 担保方式
 			Dictionary guaranteeDic =  loan.getProduct().getGuarantee();
-			guaranteeType = guaranteeDic.getName();
+			if(guaranteeDic !=null){
+				guaranteeType = guaranteeDic.getName();
+			}
 		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication =  investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
