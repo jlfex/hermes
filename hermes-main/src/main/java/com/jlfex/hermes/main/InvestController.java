@@ -357,7 +357,9 @@ public class InvestController {
 		}else{
 			// 普通标 担保方式
 			Dictionary guaranteeDic =  loan.getProduct().getGuarantee();
-			guaranteeType = guaranteeDic.getName();
+			if(guaranteeDic !=null){
+				guaranteeType = guaranteeDic.getName();
+			}
 		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication =  investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
