@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.service.ArticleService;
+import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.TextService;
 
 @Controller
 public class CmsController {
@@ -23,6 +26,10 @@ public class CmsController {
 
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private PropertiesService propertiesService;
+	@Autowired
+	private TextService textService;
 	@Autowired
 	private ArticleCategoryRepository articleCategoryRepository;
 
@@ -40,6 +47,8 @@ public class CmsController {
 		if (dataBox.getContent().size() == 1) {
 			return "redirect:/help-center/" + cid + "/" + dataBox.getContent().get(0).getId();
 		} else {
+			Properties properties = propertiesService.findByCode("app.logo");
+			model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 			model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
 			model.addAttribute("sel", articleCategoryRepository.findOne(cid));
 			model.addAttribute("aeli", dataBox);
@@ -49,6 +58,8 @@ public class CmsController {
 
 	@RequestMapping("help-center/{cid}/{aid}")
 	public String helpCenterArticle(@PathVariable String cid, @PathVariable String aid, Model model) {
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
 		model.addAttribute("ae", articleService.loadByIdWithText(aid));
 		model.addAttribute("sel", articleCategoryRepository.findOne(cid));
@@ -62,6 +73,8 @@ public class CmsController {
 		if (dataBox.getContent().size() == 1) {
 			return "redirect:/notice/" + cid + "/" + dataBox.getContent().get(0).getId();
 		} else {
+			Properties properties = propertiesService.findByCode("app.logo");
+			model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 			model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
 			model.addAttribute("sel", articleCategoryRepository.findOne(cid));
 			model.addAttribute("aeli", dataBox);
@@ -71,6 +84,8 @@ public class CmsController {
 
 	@RequestMapping("notice/{cid}/{aid}")
 	public String noticeArticle(@PathVariable String cid, @PathVariable String aid, Model model) {
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("nav", articleCategoryRepository.findByCode(helpCenterCode));
 		model.addAttribute("ae", articleService.loadByIdWithText(aid));
 		model.addAttribute("sel", articleCategoryRepository.findOne(cid));
