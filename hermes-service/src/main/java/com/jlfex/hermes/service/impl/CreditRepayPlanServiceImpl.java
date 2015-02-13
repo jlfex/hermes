@@ -59,8 +59,6 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	}
 	/**
 	 * 转让价格=剩余本金+利息
-	 * 剩余本金: 上一个还款日正常还款后剩余本金
-	 * 利息: 当期应还利息*（当前日期-上一个还款日）/（当期计划还款日期-上一个还款日)
 	 */
 	@Override
 	public Map<String ,Object> calculateRemainAmountAndPeriod(CrediteInfo creditInfo,List<CreditRepayPlan> planList) throws Exception { 
@@ -134,7 +132,9 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	}
     /**
      * 根据 截止日期计算 发售金额
-     * 
+     * 转让价格=剩余本金+利息
+	 * 剩余本金: 上一个还款日正常还款后剩余本金
+	 * 利息: 当期应还利息 *（招标截止日期-上一个还款日）/（当期计划还款日期-上一个还款日)
      */
 	@Override
 	public Map<String ,Object> calculateRemainAmount(CrediteInfo creditInfo,List<CreditRepayPlan> planList,String bidEndTimeStr) throws Exception { 
@@ -182,11 +182,11 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 		    		int allDays =  Calendars.daysBetween(lastExpireDate, waitPayDate);
 		    		BigDecimal over_day = new BigDecimal(""+overDays);
 		    		BigDecimal all_day = new BigDecimal(""+allDays);
-		    		BigDecimal percent = over_day.divide(all_day, 2, RoundingMode.UP);
-		    		remainInterest =waitPayPlan.getRepayInterest().multiply(percent).setScale(2, RoundingMode.HALF_UP);
+		    		BigDecimal percent = over_day.divide(all_day, 5, RoundingMode.HALF_EVEN);
+		    		remainInterest =waitPayPlan.getRepayInterest().multiply(percent);
 	    		}
 	    	}
-	    	remainAmount = remainAmount.add(remainInterest);
+	    	remainAmount = remainAmount.add(remainInterest).setScale(2, RoundingMode.HALF_EVEN);
 	    }
 	    map.put("remainAmount", remainAmount); //剩余金额
 		return map;
