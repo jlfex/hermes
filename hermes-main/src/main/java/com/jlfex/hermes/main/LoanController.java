@@ -25,7 +25,6 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Product;
-import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -35,9 +34,7 @@ import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
-import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
-import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
@@ -73,10 +70,6 @@ public class LoanController {
 	private UserPropertiesRepository userPropertiesRepository;
 	@Autowired
 	private InvestService investService;
-	@Autowired
-	private PropertiesService propertiesService;
-	@Autowired
-	private TextService textService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String COMPANY_ADDRESS = "app.company.address";
@@ -266,8 +259,6 @@ public class LoanController {
 		// App.checkUser();
 		model.addAttribute("nav", "loan");
 		List<ProductInfo> productList = productService.findAll();
-		Properties properties = propertiesService.findByCode("app.logo");
-		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("products", productList);
 		model.addAttribute("productSize", productList.size());
 		return "loan/display";
