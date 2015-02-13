@@ -15,10 +15,13 @@ import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ArticleService;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.LoanService;
+import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
@@ -44,6 +47,10 @@ public class IndexController {
 
 	@Autowired
 	private TmpNoticeRepository tmpNoticeRepository;
+	@Autowired
+	private PropertiesService propertiesService;
+	@Autowired
+	private TextService textService;
 
 	/**
 	 * 索引
@@ -55,6 +62,11 @@ public class IndexController {
 	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
 		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
+		// model.addAttribute("properties",
+		// propertiesService.findByCode("app.logo"));
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
+
 		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
 		model.addAttribute("bannerPicture", contentService.findOneByCode(HermesConstants.INDEX_BANNER));
 		model.addAttribute("investPicture", contentService.findOneByCode(HermesConstants.INDEX_INVEST));
