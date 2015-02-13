@@ -34,7 +34,6 @@ import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
-import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -48,7 +47,6 @@ import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
-import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
@@ -71,8 +69,6 @@ public class InvestController {
 	/** 系统属性业务接口 */
 	@Autowired
 	private PropertiesService propertiesService;
-	@Autowired
-	private TextService textService;
 	@Autowired
 	private RepayService repayService;
 	@Autowired
@@ -150,8 +146,6 @@ public class InvestController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		String page = "0", size = "8";
-		Properties properties = propertiesService.findByCode("app.logo");
-		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);
