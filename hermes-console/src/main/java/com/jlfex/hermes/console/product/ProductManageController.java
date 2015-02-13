@@ -118,7 +118,7 @@ public class ProductManageController {
 	public String detail(@PathVariable("id") String id, Model model) {
 		model.addAttribute("title", "产品详情");
 		model.addAttribute("guarantee", dictionaryService.findByTypeCode("product.guarantee"));
-		model.addAttribute("purpose", dictionaryService.findByTypeCode("product.purpose"));
+		model.addAttribute("purpose", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repay", repayService.findAll());
 		model.addAttribute("prodtl", productService.loadById(id));
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));
