@@ -55,5 +55,26 @@ public interface CreditRepayPlanService {
 	 * @throws Exception
 	 */
 	public List<CreditRepayPlan> queryByCreditInfoAndStatus(CrediteInfo creditInfo,String status) throws Exception;
+	/**
+	 * 根据 截止日期计算 发售金额
+	 * @param creditInfo
+	 * @param planList
+	 * @param bidEndTime
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> calculateRemainAmount(CrediteInfo creditInfo,List<CreditRepayPlan> planList, String bidEndTime) throws Exception;
+	/**
+	 * 校验：债权转让 招标截止日期是否合法
+	 * 规则：
+	 *  1 存在已还款：   当天 < 招标截止日期 < 当期待还款 -2T
+	 *  2 不存在已还款：当天 < 招标截止日期 < 招标截止日期   
+	 * @param creditInfo
+	 * @param planList
+	 * @param bidEndTimeStr
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> checkBidEndTimeValid(CrediteInfo creditInfo,List<CreditRepayPlan> planList, String bidEndTimeStr) throws Exception;
 	
 }

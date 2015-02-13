@@ -9,23 +9,6 @@
                       <input type="text" name="purpose" class="form-control" id="purpose" placeholder="系统默认为借款用途，用户可修改" value="${creditInfo.purpose!''}">
                     </div>
                   </div>
-
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>发售价格</label>
-                    <div class="col-xs-2">
-                      <input type="text" name="sellAmount" readonly="true" class="form-control" id="sellAmount"  value="${remainAmount?replace(",","")}">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>年利率</label>
-                    <div class="col-xs-2">
-                     <input type="hidden" name="rate" class="form-control" id="rate"  value="${(creditInfo.rate)!'0'}">
-                      <input type="text" disabled="true" class="form-control"   value="${(creditInfo.ratePercent)!''}">
-                    </div>
-                    <div class="col-xs-2"><span class="vlight">%</span></div>
-                  </div>
-
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>招标结束日期</label>
                     <div class="col-xs-2">
@@ -33,6 +16,23 @@
                     </div>
                      <div class="col-xs-5" id="error_msg" style="color:red;"></div>
                   </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>发售价格</label>
+                    <div class="col-xs-2">
+                      <input type="text" name="sellAmount" readonly="true" class="form-control" id="sellAmount"  value="">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>年利率</label>
+                    <div class="col-xs-2">
+                      <input type="hidden" name="rate" class="form-control" id="rate"  value="${(creditInfo.rate)!'0'}">
+                      <input type="text" disabled="true" class="form-control"   value="${(creditInfo.ratePercent)!''}">
+                    </div>
+                    <div class="col-xs-2"><span class="vlight">%</span></div>
+                  </div>
+
+                 
                   <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label"><span class="color_red">*</span>剩余期限</label>
                     <div class="col-xs-2">
@@ -80,26 +80,45 @@
 <!--
 jQuery(function($) {
 	$("#beginDate").datepicker();
+	$("#beginDate").change(function(){
+	   var _id = '${creditInfo.id!'0'}';
+	   $.ajax({
+				data: "bidEndTime="+$("#beginDate").val()+"&id="+_id,
+			    url: "${app}/credit/checkEndBidTime",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){  
+                    if(data.code == '00'){
+                       calcuRemainAmount();
+                    }else{
+                        $("#error_msg").html(data.msg);
+                    }				
+				}
+	   });	
+	});
 });
 
-
- $("#beginDate").change(function (){
-     var inputBidEndTime = $(this).val();
-     var deadTime = '${creditInfo.deadTimeFormate}';
-     var inputDate = new Date(inputBidEndTime.replace(/-/g,"/"));
-     var deadDate = new Date(deadTime.replace(/-/g,"/"));
-     var nowDate = new Date();
-     if(inputDate > new Date() && inputDate < deadDate){
-         $("#error_msg").html("");
-         $("#deadLine").val(dateDiff(deadTime,inputBidEndTime));
-     }else{
-         $("#error_msg").html("招标结束日期: 必须大于当天,小于债权到期日："+deadTime);
-     }
-     
- });
+function calcuRemainAmount(){
+  var _id = '${creditInfo.id!'0'}';
+  var inputBidEndTime = $("#beginDate").val();
+  var deadTime = '${creditInfo.deadTimeFormate}';
+	   $.ajax({
+				data: "bidEndTime="+$("#beginDate").val()+"&id="+_id,
+			    url: "${app}/credit/calcuRemainAmount",
+			    type: "POST",
+			    dataType: 'json',
+				success: function(data){  
+                    if(data.code == '00'){
+                       $("#sellAmount").val(data.val);
+                       $("#deadLine").val(dateDiff(deadTime,inputBidEndTime));
+                        $("#error_msg").html("");
+                    }					
+				}
+	   });	
+}
 
 	 $("#commitSell").on("click",function(){
-	        if($("#error_msg").val().length == 0 && $("#deadLine").val().length != '' ){
+	        if($("#error_msg").val().length == 0 && $("#deadLine").val().length > 0 ){
 	            $.link.html(null, {
 				url: '${app}/credit/sell',
 				data: $("#creditorSellForm").serialize(),
