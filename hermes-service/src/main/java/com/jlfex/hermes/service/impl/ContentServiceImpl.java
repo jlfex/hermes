@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -207,7 +209,7 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public Page<Article> find(final String levelOne, final String levelTwo, final String levelThree, final String inputName, int page, int size) {
 		// 初始化
-		Pageable pageable = Pageables.pageable(page, size);
+		Pageable pageable = Pageables.pageable(page, size, new Sort(Direction.DESC,  "createTime"));
 		Page<Article> articleList = articleRepository.findAll(new Specification<Article>() {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -225,7 +227,6 @@ public class ContentServiceImpl implements ContentService {
 					p.add(cb.like(root.<String> get("articleTitle"), "%" + inputName + "%"));
 				}
 				query.where(cb.and(p.toArray(new Predicate[p.size()])));
-				query.orderBy(cb.desc(root.get("updateTime")));
 				return query.getRestriction();
 			}
 		}, pageable);
