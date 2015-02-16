@@ -204,7 +204,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>内容编辑</label>
 	                <div class="col-sm-8">
-	                  <div id="editor" style="max-height:200px;">${article.content!}</div>
+	                  <div id="editor" name="editor" style="max-height:200px;">${article.content!}</div>
 	                </div>
 	                <div class="col-xs-2">
 						<span class="alert-danger" style="display:none;background:none">必填项，限定字符1万个（汉字为5000个）</span>
@@ -237,7 +237,7 @@ jQuery(function($) {
 		$("#insertPic").click();
 	});
 
-	$("#articleTitle,#keywords,#description,#editor").on("blur",function(){
+	$("#articleTitle,#keywords,#description,#editor").on("change",function(){
 		checkInput(this);
 	});
 
@@ -260,6 +260,7 @@ jQuery(function($) {
 			if(e_id=='' || e_id==e.id){
 				$this.parent().parent().find(".alert-danger:eq(0)").hide();
 			}
+			
 			$('#content').val($("#editor").html());
 			return true;
 		}
@@ -273,6 +274,7 @@ jQuery(function($) {
 
 	//点击编辑页面中保存按钮
 	$("#editContentButton").on("click",function(){
+	$('#content').val($("#editor").html());
 		$.link.html(null, {
 			url: '${app}/content/handerEditContent',
 			data: $("#editForm").serialize(),
