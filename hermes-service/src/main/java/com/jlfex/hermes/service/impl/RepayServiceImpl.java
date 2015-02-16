@@ -492,7 +492,7 @@ public class RepayServiceImpl implements RepayService {
 	}
 
 	@Override
-	public boolean autoRepayment(String id) {
+	public boolean autoRepayment(String id) throws Exception{
 		LoanRepay loanRepay = loanRepayRepository.findOne(id);
 		// 判断假如借款还款状态为正常还款说明已经还过了，无须再还
 		if (Strings.equals(loanRepay.getStatus(), RepayStatus.NORMAL)) {
@@ -518,8 +518,9 @@ public class RepayServiceImpl implements RepayService {
 			}
 			for (InvestProfit investProfit : investProfitList) {
 				// 还逾期罚息
-				if(RepayStatus.OVERDUE.equals(status)){
-					transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), loanRepay.getOverdueInterest(), investProfit.getId(), "自动还款_还逾期罚息");
+				if(RepayStatus.OVERDUE.equals(status)){ 
+					BigDecimal overInerest = investProfit.getInvest().getRatio().multiply(loanRepay.getOverdueInterest()) ;
+					transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), overInerest, investProfit.getId(), "自动还款_还逾期罚息");
 				}
 				// 还本金
 				transactionService.transact(Transaction.Type.OUT, loan.getUser(), investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "自动还款_正常还本金");
@@ -529,7 +530,8 @@ public class RepayServiceImpl implements RepayService {
 				interest = interest.add(investProfit.getInterest());
 				// 更新理财收益表
 				if(RepayStatus.OVERDUE.equals(status)){
-					investProfit.setOverdueInterest(loanRepay.getOverdueInterest());
+					BigDecimal overInerest = investProfit.getInvest().getRatio().multiply(loanRepay.getOverdueInterest()) ;
+					investProfit.setOverdueInterest(overInerest);
 				}
 				investProfit.setStatus(InvestProfit.Status.ALREADY);
 				investProfitRepository.save(investProfit);

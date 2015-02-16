@@ -34,9 +34,7 @@
                         </div>
                         <div class="col-xs-1 hm-col form-group">
                             <label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                           <button id="downloadModelFile" type="button" class="btn  btn-default btn-block">
-                             	模板下载
-                           </button>&nbsp;
+                           <a href="#" style="display:block;margin-top:10px; margin-left:20px;" id="downloadModelFile">模板下载</a>
                         </div>
                         <div class="col-xs-1 hm-col form-group">
                             <label>&nbsp;</label>

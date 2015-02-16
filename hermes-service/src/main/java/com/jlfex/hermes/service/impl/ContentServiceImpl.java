@@ -1,6 +1,5 @@
 package com.jlfex.hermes.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.jlfex.hermes.common.utils.ByteUtils;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
@@ -210,7 +209,7 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public Page<Article> find(final String levelOne, final String levelTwo, final String levelThree, final String inputName, int page, int size) {
 		// 初始化
-		Pageable pageable = Pageables.pageable(page, size);
+		Pageable pageable = Pageables.pageable(page, size, new Sort(Direction.DESC,  "createTime"));
 		Page<Article> articleList = articleRepository.findAll(new Specification<Article>() {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -228,7 +227,6 @@ public class ContentServiceImpl implements ContentService {
 					p.add(cb.like(root.<String> get("articleTitle"), "%" + inputName + "%"));
 				}
 				query.where(cb.and(p.toArray(new Predicate[p.size()])));
-				query.orderBy(cb.desc(root.get("updateTime")));
 				return query.getRestriction();
 			}
 		}, pageable);
@@ -255,6 +253,9 @@ public class ContentServiceImpl implements ContentService {
 			articleCategory = articleCategoryRepository.findOne(pcVo.getLevelTwo());
 		} else if (StringUtils.isNotEmpty(pcVo.getLevelThree())) {
 			articleCategory = articleCategoryRepository.findOne(pcVo.getLevelThree());
+		}
+		if (articleCategory.getId().equals("1f37572b-b006-11e4-b1e0-3adca39d28f0")) {
+			article.setCode("01");
 		}
 		article.setCategory(articleCategory);
 		article.setOrder(pcVo.getOrder());
@@ -447,17 +448,30 @@ public class ContentServiceImpl implements ContentService {
 	 * @author lishunfeng
 	 */
 	@Override
-	public ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file) {
-		ImageManage imageManage = new ImageManage();
-		try {
-			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
-			imageManage.setType(type);
-			imageManage.setName(name);
-			imageManage.setLink(link);
-			imageManage.setOrder(order);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public ImageManage addImageManage(String type, String name, String link, int order, String imgStr) {
+		List<ImageManage> imageList = imageManageRepository.findOneByType(type);
+		ImageManage imageManage = null;
+		if (imageList.size() > 0) {
+			imageManage = imageList.get(0);
+		} else {
+			imageManage = new ImageManage();
+			if (type.equals(HermesConstants.BANNER)) {
+				imageManage.setCode("banner");
+			} else if (type.equals(HermesConstants.INVEST)) {
+				imageManage.setCode("invest");
+			} else if (type.equals(HermesConstants.LOAN)) {
+				imageManage.setCode("loan");
+			} else if (type.equals(HermesConstants.LOGIN)) {
+				imageManage.setCode("login");
+			} else if (type.equals(HermesConstants.REGISTER)) {
+				imageManage.setCode("register");
+			}
 		}
+		imageManage.setImage(imgStr);
+		imageManage.setType(type);
+		imageManage.setName(name);
+		imageManage.setLink(link);
+		imageManage.setOrder(order);
 		return imageManageRepository.save(imageManage);
 	}
 
@@ -472,23 +486,32 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	/**
+	 * 根据code找到某条图片管理记录
+	 * 
+	 * @author lishunfeng
+	 */
+	@Override
+	public ImageManage findOneByCode(String code) {
+		return imageManageRepository.findOneByCode(code);
+	}
+
+	/**
 	 * 编辑图片管理
 	 * 
 	 * @author lishunfeng
 	 */
 	@Override
-	public ImageManage updateImageManage(String id, String type, String name, String link, int order, MultipartFile file) {
+	public ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr) {
 		ImageManage imageManage = imageManageRepository.findOne(id);
-		try {
-			imageManage.setName(name);
-			imageManage.setLink(link);
-			imageManage.setOrder(order);
-			imageManage.setType(type);
-			imageManage.setImage(ByteUtils.getBytes(file.getInputStream()));
-			imageManageRepository.save(imageManage);
-		} catch (IOException e) {
-			e.printStackTrace();
+		// 如果imgStr为空的话，不用再去设值
+		if (StringUtils.isNotEmpty(imgStr)) {
+			imageManage.setImage(imgStr);
 		}
+		imageManage.setName(name);
+		imageManage.setLink(link);
+		imageManage.setOrder(order);
+		imageManage.setType(type);
+		imageManageRepository.save(imageManage);
 		return imageManage;
 	}
 
@@ -503,4 +526,8 @@ public class ContentServiceImpl implements ContentService {
 		imageManageRepository.delete(imageManage);
 	}
 
+	@Override
+	public List<Article> findArticleByCode(String code) {
+		return articleRepository.findByCode(code);
+	}
 }

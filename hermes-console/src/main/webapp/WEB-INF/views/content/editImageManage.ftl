@@ -5,7 +5,7 @@
 	</div>
 </#if>
  <div class="panel panel-primary">
-        <div class="panel-heading">添加图片</div>
+        <div class="panel-heading">编辑图片</div>
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" id="addForm" method="post"  enctype="multipart/form-data">
@@ -13,7 +13,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>所属分类</label>
                 <div class="col-sm-5">
-                   <select id="type" name="type" class="form-control" onchange=check(this.value)>
+                   <select id="type" name="type" class="form-control" disabled="disabled">
                    	  <option value="首页banner广告">首页banner广告</option>
 					  <option value="首页—我要理财">首页—我要理财</option>
 					  <option value="首页—我要借款">首页—我要借款</option>
@@ -53,27 +53,29 @@
 				</div>                                
               </div>
                   <div class="form-group">
-                        <label for="inputName" class="col-sm-2 control-label">上传图片</label>
+                        <label for="inputName" class="col-sm-2 control-label"><span style="color:red;">* </span>上传图片</label>
                         <div class="col-sm-5">
-                            <input type="file" class="form-control" id='file' name="file" multiple="multiple" value="选择文件"  onchange="javascript:setImagePreview(this,localImag,preview);"/>
+                            <input type="file" class="form-control" id='file' name="file" multiple="multiple" value="选择文件" onchange="javascript:setImagePreview(this,localImag,preview);"/>
                         </div>
+                        <div class="col-xs-2">
+					         <span class="alert-danger" style="display:none;background:none">请选择要上传的图片</span>
+				        </div>                                                                              
                   </div>
                   
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10" id="outerDivId">
-                    	<span class="help-block">图片尺寸大小必须为1920*390</span>   
+                    	   
                     </div>
                   </div>
                   
                   <div class="form-group" id="localImag" style="margin-left:220px;">
-                    	<img src="${app}/content/picture/${imageManage.id}"" id='preview' onclick="over(preview,divImage,imgbig);" width="200" height="120">
-                  </div>
-                  <!--
+                    	<img src="${imageManage.image}" id='preview' onclick="over(preview,divImage,imgbig);" width="200" height="120">
+                  </div>             
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <a class="hm-link" href="#" data-url="" data-target="data">预览大图</a>
+                        <button type="button" class="btn btn-link previewBtn" rid="${imageManage.id}">预览大图</button>
                     </div>
-                  </div>     -->         
+                  </div>         
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="updateImageManage">保存</button></div>
@@ -86,32 +88,20 @@
       </div>
 
 <script type="text/javascript">
-	function check(v){
 	    var outerDiv= $("#outerDivId"); 
-	    if(v=='首页banner广告'){
+	    var type = '${(imageManage.type)!}';
+	    if(type == '首页banner广告'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为1920*390</span>");
-	    }else if(v=='首页—我要理财' || v=='首页—我要借款'){
+	    }else if(type == '首页—我要理财' || type =='首页—我要借款'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为132*117</span>");        
-	    }else if(v=='登录界面' || v=='注册界面'){
+	    }else if(type == '登录界面' || type == '注册界面'){
 	        outerDiv.html("<span class='help-block'>图片尺寸大小必须为440*250</span>");            
 	    }	
-	}
-	 //检查图片的格式是否正确,同时实现预览
-    function setImagePreview(obj, localImagId, imgObjPreview) {
-        var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型        
-    	var imgFileSize=Math.ceil(obj.files[0].size/1024*100)/100;//取得图片文件的大小 
-    	if(imgFileSize>300){
-    		$('#preview').attr({src:''}); 
-            $('#logo').val(''); 
-    		alert("请选择300K以下的图片！");
-    		return false;
-    	}
-    	
-        if (obj.value == '') {
-            alert("请选择要上传的图片!");
-            return false;
-        } else {
-            var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用 
+	
+	//检查图片的格式是否正确,同时实现预览
+    function setImagePreview(obj, localImagId, imgObjPreview) {  
+             var array = new Array('jpeg', 'png', 'jpg'); //可以上传的文件类型         
+             var fileContentType = obj.value.match(/^(.*)(\.)(.{1,8})$/)[3]; //这个文件类型正则很有用 
             //布尔型变量
             var isExists = false;
             //循环判断图片的格式是否正确
@@ -149,13 +139,12 @@
             }
             if (isExists == false) {
                 $('#preview').attr({src:''}); 
-                $('#logo').val(''); 
-                alert("上传图片类型不正确!");
+                $('#file').val(''); 
+                alert("上传图片类型不正确，仅支持jpeg、png、jpg格式的图片!");
                 return false;
             }
             return false;
         }
-    }
     //显示图片  
     function over(imgid, obj, imgbig) {
         //大图显示的最大尺寸  4比3的大小  400 300  
@@ -184,32 +173,84 @@
             img.height = maxheight;
         }
     }
-
-jQuery(function($) {
-    $('#updateImageManage').on('click', function(e) { 
-    alert(222);
-        upload($(this).get(0).files);
-    });
-	// 异步上传
+    
+    // 异步上传
+    var xhr;
 	function upload(files) {
-
+	 	xhr = new XMLHttpRequest();
+	 	xhr.onreadystatechange = zswFun;//设置回调函数		 	
 	    var files = $('input[name="file"]').prop('files');
+	    var reader = new FileReader(), formData = new FormData();	    
+	    var id = $('#imageManageId').val(),type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
+    	formData.append('id', id);		    
+		formData.append('type', type);
+		formData.append('name', name);
+		formData.append('link', link);
+		formData.append('order', order);	
+				
 		$.each(files, function(i, file) {
-		alert(333);
-		    var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
-		    var id=$('#imageManageId').val(),type = $('#type').val(),name = $('#name').val(),link = $('#link').val(),order = $('#order').val(),image = $('#file').val();
 		    reader.readAsDataURL(file);
-		    formData.append('id', id);		    
-			formData.append('type', type);
-			formData.append('name', name);
-			formData.append('link', link);
-			formData.append('order', order);		    
-			formData.append('file', file);
-			alert(111);
-			xhr.open('POST', '${app}/content/handerEditImageManage');
-			xhr.send(formData);
+			formData.append('file', file);			
 		});
+		xhr.open('POST', '${app}/content/handerEditImageManage');
+		xhr.send(formData);
+	 }
+		//回调函数    
+    function zswFun(){   
+	    if(xhr.readyState == 4 && xhr.status == 200){    
+	        var b = xhr.responseText;
+	        var data = $.parseJSON(b);  
+	        if(data.code == '0'){
+	            alert(data.attachment);
+		        $.link.html(null, {
+				   url: '${app}/content/imageIndex',
+				   target: 'main'			
+		        });
+	        }else if(data.code == '1'){
+	            alert(data.attachment);
+                $.link.html(null, {
+			       url: '${app}/content/editImageManage',
+			       target: 'main'	       
+	            });
+	        } 	         
+	     }    
+     }  
+		
+</script>
+<script type="text/javascript">    
+jQuery(function($) {
+	$("#order,#name").on('blur',function(i,item){
+		checkInput(this);
+	});
+	//对输入元素进行校验
+	function checkInput(e){
+		var $this = $(e);
+		var val = $this.val();
+		if($this.val()==''||(e.id == 'order' && !/^[0-9]+$/.test(val))		    
+		    ){
+			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
+			$this.parent().parent().find(".alert-danger:eq(0)").show();
+			return false;
+		}else{
+			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
+			if(e_id=='' || e_id==e.id){
+				$this.parent().parent().find(".alert-danger:eq(0)").hide();
+			}
+			return true;
+		}
 	}
+	//元素失去焦点时，触发数据校验事件
+	function checkAll(){
+		$("#order,#name").each(function(i,item){
+			checkInput(this);
+		});
+		return $("span.alert-danger:visible").length==0;
+	}
+    $('#updateImageManage').on('click', function(e) {
+       if(checkAll()){ 
+         upload($(this).get(0).files); 
+       }
+    });	
     //点击取消按钮
 	$("#cancelImageManage").on("click",function(){
 		$.link.html(null, {
@@ -217,7 +258,16 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
+	//点击预览按钮
+	$(".previewBtn").on("click",function(){
+		var rid = $(this).attr("rid");
+		window.open('${app}/content/previewImage?id='+rid);
+	
+	});	
 	
 	$("#type").val("${(imageManage.type)!}");
+	
 });
+
 </script>
+

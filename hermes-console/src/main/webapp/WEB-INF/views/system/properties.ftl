@@ -23,7 +23,7 @@
             <span class="help-block">图片像素大小限制：168*50</span>
           </div>
           <div class="col-sm-offset-2 col-sm-10">
-            <div><img id="logoImage" src="${logo}" ></div>
+            <div id="logoNew"><img id="logoImage" src="${logo}"></div>
           </div>
         </div>
         <div class="form-group">
@@ -117,8 +117,10 @@
                 <input type="hidden" class="form-control" id="indexLoanSize" name="indexLoanSize" placeholder="" value="<@config key="index.loan.size"/>" check-type="required" required-message="不能为空">
                 <input type="hidden" class="form-control" id="emailExpire" name="emailExpire" placeholder="" value="<@config key="auth.email.expire"/>" check-type="required" required-message="不能为空">
                 <input type="hidden" class="form-control" id="smsExpire" name="smsExpire" placeholder="" value="<@config key="auth.sms.expire"/>" check-type="required" required-message="不能为空">
-                <input type="hidden" name="realnameSwitch" id="realnameSwitch0" value="0"> 
-                <input type="hidden" name="cellphoneSwitch" id="cellphoneSwitch0" value="0">
+                <input type="hidden" name="realnameSwitch" id="imgWidth" value="0"> 
+                <input type="hidden" name="cellphoneSwitch" id="imgHeight" value="0">
+                <input type="hidden" name=""  value="0">
+                <input type="hidden" name=""  value="0">
                 <button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
             </div>
           </div>
@@ -147,7 +149,29 @@ jQuery(function($) {
     reader.readAsDataURL(files[0]);
     // When loaded, set image data as background of div
     reader.onloadend = function(){
-      $("#logoImage").attr("src",this.result);
+        var files = $('input[name="logo"]').prop('files');
+		$.each(files, function(i, file) {
+		    var reader = new FileReader(), xhr = new XMLHttpRequest(), formData = new FormData();
+		    reader.readAsDataURL(file);
+			formData.append('file', file);
+			xhr.open('POST', '${app}/system/properties/show');
+			  xhr.onreadystatechange = function(){
+	       if(xhr.readyState == 4) {
+              if(xhr.status == 200 ) {
+              var base64Code = xhr.responseText;
+                  if(base64Code.indexOf('失败') > 0 ){ 
+                    $("#logoNew").html("超出上传文件限制，文件上传失败!" ); 
+                  }else{ 
+                    $("#logoNew").html("<img id=\"logoImage\" src="+xhr.responseText+" >" ); 
+                  }
+              }else{
+                 $("#logoImage").html("图片压缩失败，请重新上传");
+              }     
+           }   
+	    }; 
+		xhr.send(formData);
+		});			
+     // $("#logoImage").attr("src",this.result);
     }
   }
 });
@@ -162,11 +186,13 @@ $('#propertiesForm').submit(function(event) {
   event.preventDefault();
   if ($("#propertiesForm").valid(this,'')==false){
         return false;
-      }
+  }
+  if($("#logoNew").html().indexOf('失败') > 0){ 
+     return false;
+  }
   
 // 初始化
 var _elem = $(this);
- 
 var formData = new FormData(_elem[0]);
 // 提交异步请求
 $.ajax('${app}/system/properties/save', {

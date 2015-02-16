@@ -6,8 +6,8 @@
 </#if>
 
 <div class="row panel-body">
-	<div class="col-xs-1">
-		<button class="btn btn-primary btn-block" type="button" id="addBtn">+ 新增分类</button>
+	<div class="col-xs-2">
+		<button class="btn btn-primary btn-block" type="button" id="addBtn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增分类</button>
 		<input id="page" name="page" type="hidden" value="0"/>		
     </div>
 </div>
@@ -38,8 +38,12 @@
                 <td class="align-center">
                     <#if l.level?? && l.level == "一级">
                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button>  
-                    <#elseif l.level?? && l.name == "公司介绍">
-                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button>                                              
+                    <#elseif l.name?? && l.name == "公司介绍">
+                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button> 
+                    <#elseif l.name?? && l.name == "其他分类">
+                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button>                                                                                                               
+                    <#elseif l.name?? && l.name == "公告">
+                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn"></button>                                                                                                               
 	                <#else>
                         <button type="button" class="btn btn-link editBtn" id="editBtn" pid="${l.id}">编辑</button>   
                         <button type="button" class="btn btn-link deleteBtn" id="deleteBtn" pid="${l.id}">删除</button>                                             			  			                

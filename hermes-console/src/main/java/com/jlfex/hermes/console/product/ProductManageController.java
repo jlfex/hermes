@@ -1,5 +1,7 @@
 package com.jlfex.hermes.console.product;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.service.DictionaryService;
@@ -56,7 +60,7 @@ public class ProductManageController {
 	public String save(Product product, Model model) {
 		model.addAttribute("title", "新增产品");
 		model.addAttribute("guarantee", dictionaryService.findByTypeCode("product.guarantee"));
-		model.addAttribute("purpose", dictionaryService.findByTypeCode("product.purpose"));
+		model.addAttribute("purpose", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repay", repayService.findAll());
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));
 		model.addAttribute("productCode", productService.generateProductCode());
@@ -87,13 +91,16 @@ public class ProductManageController {
 				msg = "添加产品成功";
 				p = new Product();
 				p.setStatus(Product.Status.VALID);
+				// 产品管理费
+				p.setManageFee(new BigDecimal(HermesConstants.PRODUCT_MANAGE_FEE));
+				p.setManageFeeType(HermesConstants.PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO);
 			}
 			productService.editProduct(p, product);
 
 			attr.addFlashAttribute("msg", msg);
 			return "redirect:/product/index";
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error("新增产品异常", e);
 			if (StringUtils.isNotEmpty(id)) {
 				attr.addFlashAttribute("msg", "修改产品失败");
 				return "redirect:/product/detail/" + id;
@@ -111,7 +118,7 @@ public class ProductManageController {
 	public String detail(@PathVariable("id") String id, Model model) {
 		model.addAttribute("title", "产品详情");
 		model.addAttribute("guarantee", dictionaryService.findByTypeCode("product.guarantee"));
-		model.addAttribute("purpose", dictionaryService.findByTypeCode("product.purpose"));
+		model.addAttribute("purpose", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repay", repayService.findAll());
 		model.addAttribute("prodtl", productService.loadById(id));
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));

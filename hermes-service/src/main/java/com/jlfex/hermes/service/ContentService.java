@@ -3,7 +3,6 @@ package com.jlfex.hermes.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
@@ -48,6 +47,8 @@ public interface ContentService {
 
 	public Article findOneById(String id);
 
+	public List<Article> findArticleByCode(String code);
+
 	public FriendLink findOneBy(String id);
 
 	Article updateContent(PublishContentVo pcVo);
@@ -74,12 +75,14 @@ public interface ContentService {
 
 	Page<ImageManage> findAllImageManage(int page, int size);
 
-	ImageManage addImageManage(String type, String name, String link, int order, MultipartFile file);
-
 	ImageManage findOneImageManage(String id);
 
 	void deleteImageManage(String id);
 
-	ImageManage updateImageManage(String id, String type, String name, String link, int order, MultipartFile file);
+	ImageManage findOneByCode(String code);
+
+	ImageManage addImageManage(String type, String name, String link, int order, String imgStr);
+
+	ImageManage updateImageManage(String id, String type, String name, String link, int order, String imgStr);
 
 }

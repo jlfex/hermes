@@ -18,6 +18,11 @@
   table th{text-align:center;}
 .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 </style>
+<script type="text/javascript">
+$(function(){
+	$(".content .banner").css("background-image", "url(${(bannerPicture.image)!})");
+});
+</script>
 </head>
 <body class="index">
 
@@ -25,7 +30,7 @@
 
 <div id="content" class="content">
 	<!-- banner & signin -->
-	<div class="banner">
+	<div class="banner">	
 		<div class="u-container">
 			<#if cuser??>
 			   <input id="email" name="email" type="hidden" >
@@ -58,11 +63,15 @@
 		<div class="u-container">
 			<div class="bullhorn pull-left"><i class="fa fa-bullhorn"></i></div>
 			<ul id="notice" class="notices pull-left" data-speed="5000">
-				<li data-id="${(notices.id)!}"><span>${(notices.updateTime)!}</span>&nbsp;<a href="${app}/n/${(notices.id)!}">${(notices.title)!}</a></li>
+			<#if notices??>
+			  <#list notices as l> 
+				<li data-id="${(l.id)!}"><span>${(l.updateTime)!}</span>&nbsp;<a href="${app}/notice/1f37572b-b006-11e4-b1e0-3adca39d28f0/${(l.id)!}">${(l.articleTitle)!}</a></li>
+			  </#list> 
+			  <#else>
+			    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂无公告</li>			    
+			</#if>			  
 			</ul>
-			<!--
-			<div class="pull-right"><a href="${app}/notices"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>
-			-->
+			<div class="pull-right"><a href="${app}/notice/1f37572b-b006-11e4-b1e0-3adca39d28f0"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>			
 		</div>
 	</div>
 	<!-- /notice -->

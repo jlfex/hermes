@@ -13,7 +13,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>参数类</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="parameterType1"  name="parameterType" placeholder="参数类"  value="${parameter.type.name!}">
+                  <input type="text" class="form-control" id="parameterType1"  name="parameterType" placeholder="参数类"  disabled="disabled" value="${parameter.type.name!}">
                 </div>
               </div>
               <div class="form-group">

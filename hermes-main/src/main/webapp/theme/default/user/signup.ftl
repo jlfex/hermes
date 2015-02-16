@@ -16,6 +16,8 @@
      .mr_10{margin-right:10px;}
      .low,.middle,.high{ width:60px; height:10px; display:inline-block; border:1px solid #e4e4e4;}
      .rank_bg{ background:#e68f07;}
+     .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+     
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -165,7 +167,7 @@ $(function(){
 <!-- middle start-->
 <div class="m_con m_rg">
 	<div class="m_rg_l">
-		<img src="${app.theme}/public/other/images/m/image1/img1.jpg" />
+		<img src="${(registerPicture.image)!}" />		
 	</div>
 	<div class="m_rg_r" id="register">
 		<form id="regForm" name="regForm" action="${app}/userIndex/signUp" method="post" >

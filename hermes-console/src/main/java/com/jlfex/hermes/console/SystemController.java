@@ -1,7 +1,9 @@
 package com.jlfex.hermes.console;
 
 import java.io.IOException;
+import java.util.Map;
 
+import org.apache.poi.ss.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,9 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Images;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.service.PropertiesService;
@@ -75,12 +79,13 @@ public class SystemController {
 	@RequestMapping("/properties/save")
 	@ResponseBody
 	public Result saveProperties(MultipartHttpServletRequest request) {
-
 		MultipartFile file = request.getFile("logo");
+		int imgWidth = Integer.parseInt(Strings.empty(request.getParameter("imgWidth"), "0"));
+		int imgHeight = Integer.parseInt(Strings.empty(request.getParameter("imgHeight"), "0"));
 		Result<String> result = new Result<String>();
 		try {
 			propertiesService.saveConfigurableProperties(
-					Images.toBase64(Files.getMimeType(file.getOriginalFilename()), file.getBytes()),
+					Images.resizeImageToBase64(file, 0, 0, 168, 50),
 					request.getParameter("operationName"), request.getParameter("operationNickname"),
 					request.getParameter("website"), request.getParameter("copyright"), request.getParameter("icp"),
 					request.getParameter("serviceTel"), request.getParameter("serviceTime"),
@@ -92,7 +97,8 @@ public class SystemController {
 					request.getParameter("indexLoanSize"), request.getParameter("emailExpire"),
 					request.getParameter("smsExpire"), request.getParameter("realnameSwitch"),
 					request.getParameter("cellphoneSwitch"));
-		} catch (IOException e) {
+		} catch (Exception e) {
+			Logger.error("保存系统属性，异常：", e);
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage(e.getMessage());
 		}
@@ -124,5 +130,23 @@ public class SystemController {
 	public Text loadLogo() {
 		Properties properties = propertiesService.findByCode("app.logo");
 		return textService.loadById(properties.getValue());
+	}
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/properties/show")
+	@ResponseBody
+	public String showPicture(MultipartHttpServletRequest request) {
+		MultipartFile file = request.getFile("file");
+		int imgWidth = Integer.parseInt(Strings.empty(request.getParameter("imgWidth"), "0"));
+		int imgHeight = Integer.parseInt(Strings.empty(request.getParameter("imgHeight"), "0"));
+		try {
+			return Images.resizeImageToBase64(file, 0, 0, 168, 50);
+		} catch (Exception e) {
+			Logger.error("上传图片预览异常：", e);
+		}
+		return "";
 	}
 }

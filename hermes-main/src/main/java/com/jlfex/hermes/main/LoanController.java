@@ -372,9 +372,9 @@ public class LoanController {
 				UserProperties loanUserProperties = userInfoService.loadPropertiesByUserId(loan.getUser().getId());
 				model.addAttribute("loan", loan);
 				String purpose = "";
-				if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+				if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 					purpose = loan.getPurpose();
-				}else{
+				} else {
 					Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
 					purpose = dictionary.getName();
 				}
