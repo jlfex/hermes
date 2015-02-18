@@ -24,8 +24,11 @@ import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.HermesConstants;
+import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.ContentService;
+import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.UserService;
 
 @Controller
@@ -39,6 +42,10 @@ public class UserController {
 	private EmailService emailService;
 	@Autowired
 	private ContentService contentService;
+	@Autowired
+	private PropertiesService propertiesService;
+	@Autowired
+	private TextService textService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
@@ -53,6 +60,8 @@ public class UserController {
 	@RequestMapping("skipSignIn")
 	public String skipSignIn(Model model) {
 		model.addAttribute("loginPicture", contentService.findOneByCode(HermesConstants.INDEX_LOGIN));
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		return "user/sign-in";
 	}
 
@@ -63,6 +72,8 @@ public class UserController {
 	 */
 	@RequestMapping("regNow")
 	public String regNow(Model model) {
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("registerPicture", contentService.findOneByCode(HermesConstants.INDEX_REGISTER));
 		return "user/signup";
 	}

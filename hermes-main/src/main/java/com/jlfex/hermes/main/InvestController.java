@@ -34,6 +34,7 @@ import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -47,10 +48,10 @@ import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
+import com.jlfex.hermes.service.TextService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
-
 
 @Controller
 @RequestMapping("/invest")
@@ -71,6 +72,8 @@ public class InvestController {
 	@Autowired
 	private PropertiesService propertiesService;
 	@Autowired
+	private TextService textService;
+	@Autowired
 	private RepayService repayService;
 	@Autowired
 	private DictionaryService dictionaryService;
@@ -83,7 +86,8 @@ public class InvestController {
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
-	//private static final String INVEST_BID_MULTIPLE = "invest.bid.multiple";
+
+	// private static final String INVEST_BID_MULTIPLE = "invest.bid.multiple";
 
 	@RequestMapping("checkMoneyMore")
 	@ResponseBody
@@ -146,6 +150,8 @@ public class InvestController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		String page = "0", size = "8";
+		Properties properties = propertiesService.findByCode("app.logo");
+		model.addAttribute("logo", textService.loadById(properties.getValue()).getText());
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());
 		model.addAttribute("nav", IndexController.HomeNav.INVEST);
@@ -222,9 +228,9 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
-		//自己发布的借款 不能自己投标
-		boolean bidAuthentication =  investService.bidAuthentication(loanid, user);
-		if(!bidAuthentication){
+		// 自己发布的借款 不能自己投标
+		boolean bidAuthentication = investService.bidAuthentication(loanid, user);
+		if (!bidAuthentication) {
 			result.setType(Type.FAILURE);
 			result.setData("自己发布的借款 不能自己投标");
 			return result;
@@ -254,8 +260,10 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		return "invest/bidfull";
 	}
+
 	/**
 	 * 借款标不能自己投标
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -265,6 +273,7 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		return "invest/bidInvalid";
 	}
+
 	/**
 	 * 计算预期收益
 	 * 
@@ -343,26 +352,27 @@ public class InvestController {
 		}
 		String guaranteeType = null;
 		Loan loan = loanService.loadById(loanid);
-		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			CrediteInfo creditInfo = null;
 			List<CreditRepayPlan> creditRepayList = null;
 			try {
-			    creditInfo = creditInfoService.findById(loan.getCreditInfoId());
-			    creditRepayList = creditRepayPlanService.queryByCreditInfo(creditInfo); //获取 回款记录
-			}catch (Exception e) {
-				Logger.error("根据loan_Id=%s,获取债权信息异常：",loan.getCreditInfoId());
+				creditInfo = creditInfoService.findById(loan.getCreditInfoId());
+				creditRepayList = creditRepayPlanService.queryByCreditInfo(creditInfo); // 获取
+																						// 回款记录
+			} catch (Exception e) {
+				Logger.error("根据loan_Id=%s,获取债权信息异常：", loan.getCreditInfoId());
 			}
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("creditRepayList", creditRepayList);
-		}else{
+		} else {
 			// 普通标 担保方式
-			Dictionary guaranteeDic =  loan.getProduct().getGuarantee();
-			if(guaranteeDic !=null){
+			Dictionary guaranteeDic = loan.getProduct().getGuarantee();
+			if (guaranteeDic != null) {
 				guaranteeType = guaranteeDic.getName();
 			}
 		}
 		AppUser curUser = App.current().getUser();
-		boolean bidAuthentication =  investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
+		boolean bidAuthentication = investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -381,13 +391,13 @@ public class InvestController {
 		model.addAttribute("nav", "invest");
 		// 读取投标金额倍数设置
 		String investBidMultiple = "0";
-		try{
-			investBidMultiple = ""+loan.getProduct().getStartingAmt().intValue();
-		}catch(Exception e){
-			Logger.error("获取产品起投金额:异常" ,e);
+		try {
+			investBidMultiple = "" + loan.getProduct().getStartingAmt().intValue();
+		} catch (Exception e) {
+			Logger.error("获取产品起投金额:异常", e);
 		}
 		model.addAttribute("investBidMultiple", investBidMultiple);
-		model.addAttribute("validFlag",  bidAuthentication); //投标是否有效标识
+		model.addAttribute("validFlag", bidAuthentication); // 投标是否有效标识
 		model.addAttribute("guaranteeType", guaranteeType);
 		return "invest/info";
 	}
@@ -414,14 +424,14 @@ public class InvestController {
 			if (crediteInfo == null || crediteInfo.getDeadTime() == null) {
 				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间为空!");
 			}
-			try{
+			try {
 				creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
 				long endTime = crediteInfo.getBidEndTime().getTime();
 				long startTime = new Date().getTime();
 				if (endTime - startTime > 0) {
 					remaintime = String.valueOf(endTime - startTime);
 				}
-			}catch(Exception e){
+			} catch (Exception e) {
 				Logger.error("债权计算剩余时间异常", e);
 				remaintime = "0";
 			}
@@ -437,7 +447,7 @@ public class InvestController {
 					Caches.set(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), deadline, "7d");
 				}
 			}
-			if(Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) != null) {
+			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) != null) {
 				Date deadline = Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId(), Date.class);
 				Date start = new Date();
 				long endTime = deadline.getTime();
