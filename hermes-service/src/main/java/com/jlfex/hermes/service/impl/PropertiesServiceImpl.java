@@ -88,8 +88,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 		query.and("code like :code", "code", "%" + code + "%", !Strings.empty(code));
 		query.order("code asc");
 		Long total = commonRepository.count(query.getCount(), query.getParams());
-		List<Properties> properties = commonRepository.pageByJpql(query.getJpql(), query.getParams(),
-				pageable.getOffset(), pageable.getPageSize(), Properties.class);
+		List<Properties> properties = commonRepository.pageByJpql(query.getJpql(), query.getParams(), pageable.getOffset(), pageable.getPageSize(), Properties.class);
 
 		// 返回结果
 		Page<Properties> pageProp = new PageImpl<Properties>(properties, pageable, total);
@@ -117,8 +116,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 		} else {
 			Properties byId = propertiesRepository.findOne(properties.getId());
 			Assert.notNull(byId, "properties id is not correct. id is " + properties.getId(), "exception.properties");
-			Assert.equals(byId.getCode(), properties.getCode(), "cannot edit code " + byId.getCode() + " to "
-					+ properties.getCode(), "exception.properties.code.edit");
+			Assert.equals(byId.getCode(), properties.getCode(), "cannot edit code " + byId.getCode() + " to " + properties.getCode(), "exception.properties.code.edit");
 		}
 
 		// 清除缓存并保存数据返回
@@ -155,16 +153,16 @@ public class PropertiesServiceImpl implements PropertiesService {
 	}
 
 	@Override
-	public void saveConfigurableProperties(String logo, String operationName, String operationNickname, String website,
-			String copyright, String icp, String serviceTel, String serviceTime, String companyName,
-			String companyAddress, String companyCity, String smtpHost, String smtpPort, String smtpUsername,
-			String smtpPassword, String mailFrom, String serviceEmail, String jobNoticeEmail, String indexLoanSize,
-			String emailExpire, String smsExpire, String realnameSwitch, String cellphoneSwitch) {
+	public void saveConfigurableProperties(String logo, String operationName, String operationNickname, String website, String copyright, String icp, String serviceTel, String serviceTime, String companyName, String companyAddress, String companyCity, String smtpHost,
+			String smtpPort, String smtpUsername, String smtpPassword, String mailFrom, String serviceEmail, String jobNoticeEmail, String indexLoanSize, String emailExpire, String smsExpire, String realnameSwitch, String cellphoneSwitch) {
+
 		Properties properties = findByCode("app.logo");
 		Text text = textService.loadById(properties.getValue());
 		String source = text.getText();
-		if (!source.equals(logo) && !logo.contains("data:null")) {
-			text.setText(logo);
+		if (logo != null) {
+			if (!source.equals(logo) && !logo.contains("data:null")) {
+				text.setText(logo);
+			}
 		}
 		properties = findByCode("app.operation.name");
 		source = properties.getValue();
