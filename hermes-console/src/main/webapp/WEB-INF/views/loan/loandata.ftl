@@ -28,7 +28,7 @@
 			<td>${l.datetime?string('yyyy-MM-dd hh:mm:ss')}</td>
 			<td>${l.statusName}</td>
 			<td>
-				<a href="#" data-url="${app}/loan/loandetail/${l.id}" data-target="data">查看</a>
+				 <a href="#" data-url="${app}/loan/loandetail/${l.id}" data-target="data">查看</a>
 			</td>
 		</tr>
 		</#list>

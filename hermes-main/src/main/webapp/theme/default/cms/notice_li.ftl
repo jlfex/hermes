@@ -45,7 +45,7 @@ box-sizing: content-box;
 
 <div class="sub_main" style="margin-top:133px;">
 		<div class="account_content_right">
-		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span></div>
+		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 			<div class="content_template">
 				<div class="content_index">
 					<ul style="min-height:300px;">
