@@ -16,7 +16,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 
-.content_template{width: 980px;margin-left:265px;
+.content_template{width: 980px; margin-left:265px;
 border: 2px solid #e2e2e2;
 height: auto;
 background: #FFF;

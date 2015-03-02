@@ -26,9 +26,9 @@
 			<td class="align-center">${l.rate}</td>
 			<td>
 			  <#if (l.loanKind)?? && l.loanKind == '00'>
-			      ${l.period}<@messages key="common.unit.month" />
+			       ${l.period}<@messages key="common.unit.month" />
 			   <#else>
-			      ${l.period}天
+			       ${l.period}天
 			  </#if>
 			</td>
 			<td>${l.datetime?string('yyyy-MM-dd hh:mm:ss')}</td>

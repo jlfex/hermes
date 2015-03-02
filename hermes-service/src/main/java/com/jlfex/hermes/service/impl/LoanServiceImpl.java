@@ -1170,7 +1170,7 @@ public class LoanServiceImpl implements LoanService {
 			}
 			loanAuditInfo.setId(String.valueOf(object[3]));
 			loanAuditInfo.setStatus(String.valueOf(object[4]));
-			loanAuditInfo.setLoanKind(String.valueOf(object[10]));// 标的类型
+			loanAuditInfo.setLoanKind(String.valueOf(object[10]));// 标类型
 			loans.add(loanAuditInfo);
 		}
 		// 返回结果
