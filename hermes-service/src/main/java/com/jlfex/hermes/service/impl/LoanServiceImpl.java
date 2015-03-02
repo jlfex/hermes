@@ -1392,9 +1392,4 @@ public class LoanServiceImpl implements LoanService {
 	public List<LoanLog> loadLogByLoanIdAndTypeIn(Loan loan, List<String> typeList) {
 		return loanLogRepository.findByLoanAndTypeIn(loan, typeList);
 	}
-
-	@Override
-	public Loan findByLoanNo(String loanNo) {
-		return loanRepository.findByLoanNo(loanNo);
-	}
 }

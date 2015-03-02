@@ -32,7 +32,7 @@ public class LoanAuditInfo implements Serializable {
 	private String rate;
 	/** 借款发布日期 */
 	private Date datetime;
-	/** 标 类型 */
+	/** 标类型 */
 	private String loanKind;
 
 	public String getStatusName() {

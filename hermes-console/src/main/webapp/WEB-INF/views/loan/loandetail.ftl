@@ -29,9 +29,9 @@
 			<div class="col-xs-2">
 				<p class="form-control-static">
 				  <#if (loan.loanKind)?? && loan.loanKind == '00'>
-				     ${loan.period!''}<@messages key="common.unit.month" />
+				      ${loan.period!''}<@messages key="common.unit.month" />
 				  <#else>
-				     ${loan.period}天
+				      ${loan.period}天
 				  </#if>
 				</p>
 			</div>
