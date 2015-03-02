@@ -24,7 +24,13 @@
 			<td>${l.cellphone!''}</td>
 			<td class="align-right">${l.amount}</td>
 			<td class="align-center">${l.rate}</td>
-			<td>${l.period}<@messages key="common.unit.month" /></td>
+			<td>
+			  <#if (l.loanKind)?? && l.loanKind == '00'>
+			    ${l.period}<@messages key="common.unit.month" />
+			  <#else>
+			    ${l.period}天
+			  </#if>
+			</td>
 			<td>${l.datetime?string('yyyy-MM-dd hh:mm:ss')}</td>
 			<td>${l.statusName}</td>
 			<td>

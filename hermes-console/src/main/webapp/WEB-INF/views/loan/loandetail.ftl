@@ -27,7 +27,13 @@
 			</div>
 			<label class="col-xs-1 control-label"><@messages key="model.loan.period" /></label>
 			<div class="col-xs-2">
-				<p class="form-control-static">${loan.period!''}<@messages key="common.unit.month" /></p>
+				<p class="form-control-static">
+				  <#if (loan.loanKind)?? && loan.loanKind == '00'>
+				     ${loan.period!''}<@messages key="common.unit.month" />
+				  <#else>
+				     ${loan.period}天
+				  </#if>
+				</p>
 			</div>
 		</div>
 		<div class="form-group">

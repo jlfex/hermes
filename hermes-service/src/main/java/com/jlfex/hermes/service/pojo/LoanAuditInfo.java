@@ -32,7 +32,9 @@ public class LoanAuditInfo implements Serializable {
 	private String rate;
 	/** 借款发布日期 */
 	private Date datetime;
-	
+	/** 标 类型 */
+	private String loanKind;
+
 	public String getStatusName() {
 		return Dicts.name(status, "-", Loan.Status.class);
 	}
@@ -124,4 +126,13 @@ public class LoanAuditInfo implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public String getLoanKind() {
+		return loanKind;
+	}
+
+	public void setLoanKind(String loanKind) {
+		this.loanKind = loanKind;
+	}
+
 }
