@@ -40,7 +40,6 @@ import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
-import com.jlfex.hermes.service.common.Pageables;
 
 
 /**
@@ -350,5 +349,12 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	@Override
 	public List<CrediteInfo> findByCreditorNoAndCreditCode(String creditorNo,String creditCode) throws Exception {
 		return creditInfoRepository.findByCreditorNoAndCrediteCode(creditorNo, creditCode);
+	}
+    /**
+     *  根据债权标信息获取 债权信息
+     */
+	@Override
+	public CrediteInfo findByLoanInfo(Loan loan) throws Exception {
+		return creditInfoRepository.findOne(loan.getCreditInfoId());
 	}
 }

@@ -259,4 +259,11 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    map.put("msg",  msg);
 	    return map;
 	}
+    /**
+     * 根据债权信息 获取债权还款计划明细
+     */
+	@Override
+	public List<CreditRepayPlan> findByCreditInfoAscPeriod(CrediteInfo creditInfo) throws Exception{
+		return creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
+	}
 }

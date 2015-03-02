@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 
@@ -158,8 +159,8 @@ public class MatchingRepayMethod implements RepayMethod {
 		try {
 			lend = format.parse(lendingDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("计算还款日期列表,格式化时间异常，lendingDate="+lendingDate);
+			return null;
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(lend);
