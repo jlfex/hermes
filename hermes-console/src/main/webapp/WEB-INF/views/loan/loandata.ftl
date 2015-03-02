@@ -21,7 +21,7 @@
 		<tr>
 			<td>${l.loanNo}</td>
 			<td>${l.realName!''}</td>
-			<td>${l.cellphone}</td>
+			<td>${l.cellphone!''}</td>
 			<td class="align-right">${l.amount}</td>
 			<td class="align-center">${l.rate}</td>
 			<td>${l.period}<@messages key="common.unit.month" /></td>

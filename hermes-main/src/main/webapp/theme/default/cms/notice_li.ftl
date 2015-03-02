@@ -16,7 +16,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 
-.content_template{width: 970px;margin-left:360px;
+.content_template{width: 980px;margin-left:265px;
 border: 2px solid #e2e2e2;
 height: auto;
 background: #FFF;
@@ -33,7 +33,7 @@ border-radius: 5px;}
 box-sizing: content-box;
 }
   .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-.notice_title{ margin-left:360px;width: 970px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;}
+.notice_title{ margin-left:265px;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;}
 .notice_title span{ line-height:44px; padding-left:15px;}
 
 </style>
@@ -45,12 +45,12 @@ box-sizing: content-box;
 
 <div class="sub_main" style="margin-top:133px;">
 		<div class="account_content_right">
-		<div class="notice_title"><span>网站公告</span></div>
+		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span></div>
 			<div class="content_template">
 				<div class="content_index">
 					<ul style="min-height:300px;">
 						<#list aeli.content as l>
-							<li><a href="${app}/notice/${sel.id}/${l.id}" style="display: inline-block;line-height: 35px;margin-left: 8px;text-decoration: none;">${(l.articleTitle)!}</a>
+							<li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="${app}/notice/${sel.id}/${l.id}" style="display: inline-block;line-height: 35px;margin-left: 8px;text-decoration: none;">${(l.articleTitle)!}</a>
                                 <span style="float: right;margin-right: 10px;line-height: 35px;color: #ccc;">${(l.updateTime)!}</span>
                             </li>
 						</#list>
