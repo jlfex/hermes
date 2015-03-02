@@ -16,7 +16,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 
-.content_template{width: 980px;margin-left:265px;
+.content_template{width: 980px; margin-left:265px;
 border: 2px solid #e2e2e2;
 height: auto;
 background: #FFF;
@@ -44,7 +44,7 @@ box-sizing: content-box;
 
 <div class="sub_main" style="margin-top:133px;">
 		<div class="account_content_right">
-		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span></div>
+		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 			<div class="content_template">
 				<h2 class="title">${(ae.articleTitle)!}</h2>	
 				<div class="content_index">
