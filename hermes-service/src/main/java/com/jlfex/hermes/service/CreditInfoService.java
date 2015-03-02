@@ -130,4 +130,11 @@ public interface CreditInfoService {
 	 * @throws Exception
 	 */
 	public List<CrediteInfo>  findByCreditorNoAndCreditCode(String creditorNo, String creditCode) throws Exception;
+    /**
+     * 根据债权标信息获取 债权信息
+     * @param loan
+     * @return
+     * @throws Exception
+     */
+	public CrediteInfo findByLoanInfo(Loan loan) throws Exception;
 }
