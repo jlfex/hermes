@@ -76,5 +76,12 @@ public interface CreditRepayPlanService {
 	 * @throws Exception
 	 */
 	public Map<String, String> checkBidEndTimeValid(CrediteInfo creditInfo,List<CreditRepayPlan> planList, String bidEndTimeStr) throws Exception;
+	/**
+	 * 根据债权信息 获取债权还款计划明细
+	 * @param creditInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public List<CreditRepayPlan> findByCreditInfoAscPeriod(CrediteInfo creditInfo) throws Exception;
 	
 }

@@ -2,6 +2,7 @@ package com.jlfex.hermes.main;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -276,13 +278,38 @@ public class InvestController {
 	 */
 	@RequestMapping("/calmaturegain")
 	@ResponseBody
-	public BigDecimal calmaturegain(HttpServletRequest request) {
+	public BigDecimal calmaturegain(HttpServletRequest request)  throws Exception{
+		BigDecimal maturegain =  BigDecimal.ZERO;
 		String loanid = request.getParameter("loanid");
 		String investamount = request.getParameter("investamount");
-		Logger.info("loanid:" + loanid + "investamount:" + investamount);
+		Logger.info("计算预期收益:loanid=" + loanid + ", investamount=" + investamount);
 		Loan loan = loanService.loadById(loanid);
-		BigDecimal maturegain = repayService.getRepayMethod(loan.getRepay().getId()).getProceeds(loan, null, new BigDecimal(investamount));
+		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		     maturegain = calcuCreditProfit(new BigDecimal(investamount), loan);
+		}else{
+			 maturegain = repayService.getRepayMethod(loan.getRepay().getId()).getProceeds(loan, null, new BigDecimal(investamount));
+		}
 		return maturegain;
+	}
+	/**
+	 * 债权标： 到期收益
+	 * @param investAmount
+	 * @param loan
+	 * @return
+	 * @throws Exception
+	 */
+	public BigDecimal calcuCreditProfit(BigDecimal investAmount, Loan loan) throws Exception {
+		BigDecimal profitAmount =  BigDecimal.ZERO;
+		CrediteInfo creditInfo = creditInfoService.findByLoanInfo(loan);
+		List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.findByCreditInfoAscPeriod(creditInfo);
+		for(CreditRepayPlan plan : creditRepayPlanList) {
+			if(CreditRepayPlan.Status.ALREADY_PAY.equals(plan.getStatus())){
+				continue;
+			}
+			profitAmount = plan.getRepayAllmount().add(profitAmount);
+		}
+		BigDecimal scale = investAmount.divide(loan.getAmount(), 8, RoundingMode.HALF_DOWN);
+		return  profitAmount.multiply(scale).setScale(2, RoundingMode.HALF_UP);
 	}
 
 	/**
