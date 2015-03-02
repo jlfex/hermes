@@ -85,7 +85,7 @@ public class CreditorServiceImpl implements CreditorService {
 	@Override
 	public void save(Creditor creditor) throws Exception {
 		if (creditor != null && Strings.empty(creditor.getId())) {
-			creditor.setUser(buildAccount(creditor.getCreditorName(), creditor.getCellphone()));
+			creditor.setUser(buildAccount(creditor));
 		}
 		creditorRepository.save(creditor);
 	}
@@ -95,14 +95,14 @@ public class CreditorServiceImpl implements CreditorService {
 	 * 
 	 * @return
 	 */
-	public User buildAccount(String creatorName, String cellphone) throws Exception {
+	public User buildAccount(Creditor creditor) throws Exception {
 		User obj = new User();
-		obj.setAccount(creatorName);
+		obj.setAccount(creditor.getCreditorName());
 		obj.setType(Type.CREDIT);
 		obj.setStatus(Status.ENABLED);
 		obj.setSignPassword("");
-		obj.setRealName(creatorName);
-		obj.setCellphone(cellphone);
+		obj.setRealName(creditor.getCreditorName());
+		obj.setCellphone(creditor.getCellphone());
 		User user = userRepository.save(obj);
 
 		// 用户属性信息
