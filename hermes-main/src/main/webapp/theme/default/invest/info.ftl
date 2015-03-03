@@ -104,22 +104,8 @@ jQuery(function($) {
 				$("#maturegain").html('');
 			}
 	  });
-	  var remainDate_ = '${creditDeadTime!''}';
-	  var nowStr = (new Date()).format("yyyy-MM-dd"); 
-	  $("#credit_remainDate").html(dateDiff(remainDate_, nowStr)) ;
 });
 
-   //计算天数差  
-   function  dateDiff(sDate1,  sDate2){
-       var  aDate,  oDate1,  oDate2,  iDays  
-       aDate  =  sDate1.split("-")  
-       oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0]);
-       aDate  =  sDate2.split("-");
-       oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0]);
-       iDays  =  parseInt(Math.abs(oDate1  -  oDate2)/1000/60/60/24);
-       return  iDays  
-   }  
-   
    Date.prototype.format = function(format){ 
 		var o = { 
 		"M+" : this.getMonth()+1, //month 
@@ -233,7 +219,7 @@ jQuery(function($) {
                              <#if loan.loanKind=='00'>
                               <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
                              <#else>
-                                                     剩余期限：<span id="credit_remainDate"></span>天
+                                                     剩余期限：<span>${loan.deadline!''}</span>天
                              </#if>
                              </td>
                         </tr>
