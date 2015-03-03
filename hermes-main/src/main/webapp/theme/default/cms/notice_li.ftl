@@ -36,6 +36,7 @@ box-sizing: content-box;
 .notice_title{ margin:0 auto;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
 
+
 </style>
 </head>
 
