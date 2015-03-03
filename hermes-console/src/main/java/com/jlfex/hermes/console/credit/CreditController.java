@@ -772,8 +772,7 @@ public class CreditController {
 	 * @return
 	 */
 	@RequestMapping("/sell")
-	public String sellCredit(CrediteInfo creditInfo, Model model) {
-		try {
+	public String sellCredit(CrediteInfo creditInfo, Model model) throws Exception {
 			if (creditInfo == null || Strings.empty(creditInfo.getId())) {
 				model.addAttribute("creditInfo", creditInfo);
 				model.addAttribute("errMsg", "债权信息为空");
@@ -816,10 +815,7 @@ public class CreditController {
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
 				}
 			}
-		} catch (Exception e) {
-			Logger.error("发售债权异常:", e);
-		}
-		return "redirect:/credit/sellIndex";
+		    return "redirect:/credit/sellIndex";
 	}
 
 	/**

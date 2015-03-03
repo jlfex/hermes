@@ -198,6 +198,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			virtualProcut.setManageFee(BigDecimal.ZERO);
 			virtualProcut.setManageFeeType("");
 			virtualProcut.setStatus(Product.Status.VIRTUAL_CREDIT_PROCD);
+			virtualProcut.setStartingAmt(new BigDecimal("0"));
 			virtualProcut.setDescription("债权标虚拟产品配置初始化");
 			Product savedProduct=  productService.save(virtualProcut);
 			if(savedProduct !=null){

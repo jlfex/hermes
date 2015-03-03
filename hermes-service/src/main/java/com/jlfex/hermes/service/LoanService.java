@@ -156,7 +156,7 @@ public interface LoanService {
 	 * @param loan
 	 * @return
 	 */
-	public Loan save(Loan loan);
+	public Loan save(Loan loan) throws Exception;
 
 	/**
 	 * 通过用户查找借款
