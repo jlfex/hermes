@@ -242,14 +242,13 @@ $(function() {
 
 		//点击提交并继续发布按钮
 		$("#submitAgin").on("click", function() {
-			if (checkAll()) {
+			if (checkAll() &&　validSize()) {
 				$.link.html(null, {
 					url : '${app}/content/addPublishAgain',
 					data : $("#addForm").serialize(),
 					target : 'main'
 				});
-			}
-			;
+			};		   
 		});
 	
 
@@ -321,7 +320,7 @@ $(function() {
 
 		//点击提交按钮
 		$("#publishContent").on("click", function() {
-			if (checkAll()) {
+			if (checkAll() && validSize()) {
 				$.link.html(null, {
 					url : '${app}/content/addPublish',
 					data : $("#addForm").serialize(),
@@ -369,6 +368,19 @@ $(function() {
 					checkInput(this);
 				});
 		return $("span.alert-danger:visible").length == 0;
+	}
+	
+	function validSize() {
+	    var maxwidth = 750;
+		var isOk = true;
+		$("#editor img").each(function() {
+			if ($(this).width() > maxwidth) {
+				alert("内容里面图片宽度不能超过" + maxwidth+"像素！");
+				isOk = false;
+				return false;
+			}
+		});
+		return isOk;
 	}
 
 	function initToolbarBootstrapBindings() {

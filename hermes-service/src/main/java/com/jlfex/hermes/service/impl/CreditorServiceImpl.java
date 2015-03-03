@@ -135,6 +135,7 @@ public class CreditorServiceImpl implements CreditorService {
 		userAccountRepository.save(accountList);
 		Logger.info("债权人:" + user.getId() + " 现金账户、冻结账户 创建成功");
 		return user;
+
 	}
 
 	/**
