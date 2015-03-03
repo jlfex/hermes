@@ -120,7 +120,9 @@ public class ArticleServiceImpl implements ArticleService {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				// TODO Auto-generated method stub
-				return cb.equal(root.get("category").get("id"), categoryId);
+				query.where(cb.equal(root.get("category").get("id"), categoryId));
+				query.orderBy(cb.desc(root.get("order")));
+				return query.getRestriction();
 			}
 		}, page);
 	}
