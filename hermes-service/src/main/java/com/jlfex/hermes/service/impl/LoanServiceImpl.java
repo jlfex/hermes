@@ -600,7 +600,7 @@ public class LoanServiceImpl implements LoanService {
 	 * 前台借款生成
 	 */
 	@Override
-	public Loan save(Loan loan) {
+	public Loan save(Loan loan) throws Exception {
 		Date now = new Date();
 		// 借款编号生成策略
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {

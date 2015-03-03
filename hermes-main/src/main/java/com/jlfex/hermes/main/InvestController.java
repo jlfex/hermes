@@ -398,8 +398,6 @@ public class InvestController {
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
 		model.addAttribute("remaintime", calculateMap.get("remaintime"));
-		model.addAttribute("creditDeadTime", calculateMap.get("creditDeadTime"));
-
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
@@ -432,7 +430,6 @@ public class InvestController {
 	public Map<String, Object> calculateRemainTime(Loan loan) {
 		String loanPurpose = "";
 		String remaintime = "0";
-		String creditDeadTime = "";
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			loanPurpose = loan.getPurpose();
@@ -446,7 +443,6 @@ public class InvestController {
 				Logger.info("根据loanid=" + loan.getId() + ",查询获取的债权招标截止时间为空!");
 			}
 			try {
-				creditDeadTime = Calendars.format("yyyy-MM-dd", crediteInfo.getBidEndTime()); // 获取债权表的招标截止时间
 				long endTime = crediteInfo.getBidEndTime().getTime();
 				long startTime = new Date().getTime();
 				if (endTime - startTime > 0) {
@@ -484,7 +480,6 @@ public class InvestController {
 		}
 		paramMap.put("loanPurpose", loanPurpose);
 		paramMap.put("remaintime", remaintime);
-		paramMap.put("creditDeadTime", creditDeadTime);
 		return paramMap;
 	}
 
