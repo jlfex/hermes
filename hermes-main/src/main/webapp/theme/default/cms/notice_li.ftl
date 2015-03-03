@@ -16,7 +16,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 
-.content_template{width: 980px; margin-left:265px;
+.content_template{width: 980px; margin-left:460px;position:relative;
 border: 2px solid #e2e2e2;
 height: auto;
 background: #FFF;
@@ -33,7 +33,7 @@ border-radius: 5px;}
 box-sizing: content-box;
 }
   .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-.notice_title{ margin-left:265px;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;}
+.notice_title{ margin-left:460px;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
 
 </style>
