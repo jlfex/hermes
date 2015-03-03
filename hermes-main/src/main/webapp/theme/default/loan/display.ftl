@@ -44,10 +44,32 @@ jQuery(function($) {
     var size =  $('#productSize').val();
 	for (var i = 1; i <= size; i++) 
 	{
-	    $('input:radio[name=purpose_'+i+']:first').attr('checked', 'true');
 	    $('input:radio[name=repay_'+i+']:first').attr('checked', 'true');
 	}
-		
+	 //设置第一产品 借款用途
+    var purposeId = $("#myTab").find("li").first().find("div").html();
+    if(purposeId!=''){
+       $('#'+purposeId).attr('checked', 'checked');
+    }else{
+           for (var i = 1; i <= size; i++) 
+			{
+			   $('input:radio[name=purpose_'+i+']:first').attr('checked', 'true');
+			}
+    }
+    //设置借款用途
+	$("#myTab").find("li").click(function (){ 
+	    var purposeId = $(this).find("div").html(); 
+	    if(purposeId != ''){
+	       var obj = $(".m_jk_c.m_tab_c div:visible").find("tr").eq(3) ;
+	       var $element = $('input:radio[value='+purposeId+']');
+	       obj.find($element).attr('checked', 'true');
+	    }else{
+	        for (var i = 1; i <= size; i++) 
+			{
+			   $('input:radio[name=purpose_'+i+']:first').attr('checked', 'true');
+			}
+	    }
+	});
 	$('.btn_list').click(function(){
 		var productName = $('li.active>h3').text();
 		var KeyValue=$('li.active>h3').siblings("span").text();
@@ -119,6 +141,7 @@ jQuery(function($) {
 				 	<h3>${p.name}</h3>
 					<p><#if (p.description)??>${p.description}</#if></p>
 				 	<span style=" visibility:hidden;">${p.id}$${name}</span>
+				 	<div style="display:none;" >${p.purpose}</div>
 				</li>
 			</#list>
 		</ul>
@@ -205,9 +228,9 @@ jQuery(function($) {
 						<#list p.loanUse as lu>  
 								 <#if purpose % 2  = 0>
 								 	 <td class="wd2">
-									 <input type="radio" name="purpose_${detail}" value=${lu.id} /><span> ${lu.name}</span><br />
+									 <input type="radio" id="${lu.id}"  name="purpose_${detail}" value=${lu.id} /><span> ${lu.name}</span><br />
 								 <#else> 
-								 	<input type="radio" name="purpose_${detail}" value=${lu.id} /><span> ${lu.name}</span>
+								 	<input type="radio" id="${lu.id}"  name="purpose_${detail}" value=${lu.id} /><span> ${lu.name}</span>
 									</td>
 								 </#if>
 								 <#assign purpose = purpose + 1 /> 
@@ -217,9 +240,7 @@ jQuery(function($) {
 					<tr class="mv_checked">
 						<td class="wd1"><span class="m_ico2_5"></span></td>
 						<td class="td1"><@messages key="model.repay.name"  /></td>
-					
-						
-						 <#assign repaymethod = 0 />
+						<#assign repaymethod = 0 />
 						<#list p.repayMethod as rm>  
 								 <#if repaymethod % 2  = 0 >
 								 	<td class="wd2">

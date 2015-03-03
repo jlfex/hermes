@@ -48,8 +48,8 @@ public class ProductInfo implements Serializable{
 	
 	private List<Dictionary> loanUse;
 	
-	/** 描述 */
-	@Column(name = "description")
+	private String purpose;
+	
 	private String description;
 
 	public String getId() {
@@ -162,6 +162,14 @@ public class ProductInfo implements Serializable{
 
 	public void setRate(String rate) {
 		this.rate = rate;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
 	}
 	
 	
