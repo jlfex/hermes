@@ -16,7 +16,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 
-.content_template{width: 980px; margin-left:460px;position:relative;
+.content_template{width: 980px; margin:0 auto;position:relative;
 border: 2px solid #e2e2e2;
 height: auto;
 background: #FFF;
@@ -33,8 +33,9 @@ border-radius: 5px;}
 box-sizing: content-box;
 }
   .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-.notice_title{ margin-left:460px;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
+.notice_title{ margin:0 auto;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
+
 </style>
 </head>
 
@@ -43,18 +44,15 @@ box-sizing: content-box;
 <#include "/header.ftl" />
 
 <div class="sub_main" style="margin-top:133px;">
-		<div class="account_content_right">
-		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
-			<div class="content_template">
-				<h2 class="title">${(ae.articleTitle)!}</h2>	
-				<div class="content_index">
-					<div class="clearfix"><p class="fl_right ">【发布时间：${(ae.updateTime)!}】</p>	</div>
-					<p>${(ae.content)!}</p>
-				</div>
+	<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
+		<div class="content_template">
+			<h2 class="title">${(ae.articleTitle)!}</h2>	
+			<div class="content_index">
+				<div class="clearfix"><p class="fl_right ">【发布时间：${(ae.updateTime)!}】</p>	</div>
+				<p>${(ae.content)!}</p>
 			</div>
 		</div>
-		<div class="clearfix"></div>
-	</div>
+</div>
 
 <#include "/footer.ftl" />
 
