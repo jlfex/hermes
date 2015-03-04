@@ -41,7 +41,7 @@ public interface ContentService {
 
 	Page<Article> find(String levelOne, String levelTwo, String levelThree, String inputName, int page, int size);
 
-	public Article addPublish(PublishContentVo pcVo);
+	public Article addPublish(PublishContentVo pcVo, int maxWidth) throws Exception;
 
 	public Page<FriendLink> findAll(int page, int size);
 
