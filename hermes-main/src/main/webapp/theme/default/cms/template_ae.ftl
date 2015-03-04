@@ -32,8 +32,8 @@ border-radius: 5px;}
 -moz-box-sizing: content-box;
 box-sizing: content-box;
 }
-  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-
+.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+._autoScroll{ word-wrap:break-word;}
 </style>
 </head>
 
@@ -66,7 +66,7 @@ box-sizing: content-box;
 				<h2 class="title">${(ae.articleTitle)!}</h2>	
 				<div class="content_index">
 					<div class="clearfix"><p class="fl_right ">【发布时间：${(ae.updateTime)!}】</p>	</div>
-					<p>${(ae.content)!}</p>
+					<p class="_autoScroll">${(ae.content)!}</p>
 				</div>
 			</div>
 		</div>
