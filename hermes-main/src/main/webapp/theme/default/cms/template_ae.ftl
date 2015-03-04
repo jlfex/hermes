@@ -46,7 +46,7 @@ box-sizing: content-box;
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
 			<div class="left_nav">
-				<#list nav.children as l>
+				<#list second as l>
 				<!--信息管理-->
 				<div class="information">
 					<h2>${l.name}</h2>
