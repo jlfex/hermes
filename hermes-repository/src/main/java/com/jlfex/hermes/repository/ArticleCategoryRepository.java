@@ -3,6 +3,7 @@ package com.jlfex.hermes.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,7 @@ public interface ArticleCategoryRepository extends PagingAndSortingRepository<Ar
 
 	ArticleCategory findOneByName(String name);
 
+	@Query("SELECT a FROM ArticleCategory a WHERE a.level = ?1 order by a.createTime asc")
 	List<ArticleCategory> findByLevel(String level);
 
 	List<ArticleCategory> findByParent(ArticleCategory parent);
