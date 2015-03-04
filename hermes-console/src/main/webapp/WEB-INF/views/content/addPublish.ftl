@@ -242,7 +242,7 @@ $(function() {
 
 		//点击提交并继续发布按钮
 		$("#submitAgin").on("click", function() {
-			if (checkAll() &&　validSize()) {
+			if (checkAll()) {
 				$.link.html(null, {
 					url : '${app}/content/addPublishAgain',
 					data : $("#addForm").serialize(),
@@ -320,7 +320,7 @@ $(function() {
 
 		//点击提交按钮
 		$("#publishContent").on("click", function() {
-			if (checkAll() && validSize()) {
+			if (checkAll()) {
 				$.link.html(null, {
 					url : '${app}/content/addPublish',
 					data : $("#addForm").serialize(),
@@ -370,19 +370,6 @@ $(function() {
 		return $("span.alert-danger:visible").length == 0;
 	}
 	
-	function validSize() {
-	    var maxwidth = 750;
-		var isOk = true;
-		$("#editor img").each(function() {
-			if ($(this).width() > maxwidth) {
-				alert("内容里面图片宽度不能超过" + maxwidth+"像素！");
-				isOk = false;
-				return false;
-			}
-		});
-		return isOk;
-	}
-
 	function initToolbarBootstrapBindings() {
 		var fonts = [ '宋体', '黑体', '隶书', '楷体_GB2312', '微软雅黑', 'Arial',
 				'Times New Roman' ], fontTarget = $('[title=字体]').siblings(
