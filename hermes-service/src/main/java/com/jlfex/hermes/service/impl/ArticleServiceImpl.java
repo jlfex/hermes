@@ -119,9 +119,7 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleRepository.findAll(new Specification<Article>() {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				query.where(cb.equal(root.get("category").get("id"), categoryId));
-				query.orderBy(cb.desc(root.get("order")));
-				return query.getRestriction();
+				return cb.equal(root.get("category").get("id"), categoryId);
 			}
 		}, page);
 	}
