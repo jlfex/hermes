@@ -42,6 +42,8 @@ import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 @Controller
 @RequestMapping("/content")
 public class ContentController {
+	//设置前台图文消息 图片 最大宽度
+	private static final int   DEFAULT_MAX_IMG_WIDTH = 700;
 	@Autowired
 	private ContentService contentService;
 
@@ -228,7 +230,7 @@ public class ContentController {
 	@RequestMapping("/addPublish")
 	public String addPublish(PublishContentVo pcVo, RedirectAttributes attr, Model model) {
 		try {
-			contentService.addPublish(pcVo);
+			contentService.addPublish(pcVo,DEFAULT_MAX_IMG_WIDTH);
 			attr.addFlashAttribute("msg", "发布内容成功");
 			return "redirect:/content/contentIndex";
 		} catch (Exception e) {
@@ -246,7 +248,7 @@ public class ContentController {
 	@RequestMapping("/addPublishAgain")
 	public String addPublishAgain(PublishContentVo pcVo, RedirectAttributes attr, Model model) {
 		try {
-			contentService.addPublish(pcVo);
+			contentService.addPublish(pcVo,DEFAULT_MAX_IMG_WIDTH);
 			attr.addFlashAttribute("msg", "发布内容成功");
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "发布内容失败");

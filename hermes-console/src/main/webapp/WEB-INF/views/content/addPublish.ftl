@@ -154,7 +154,7 @@
 							class="icon-underline"></i></a>
 					</div>
 
-					<div class="btn-group">
+					<div class="btn-group"> 
 						<a class="btn" data-edit="insertunorderedlist" title="项目符号"><i
 							class="icon-list-ul"></i></a> <a class="btn"
 							data-edit="insertorderedlist" title="编号"><i
@@ -199,7 +199,7 @@
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>内容编辑</label>
                 <div class="col-sm-8">
-                  <div id="editor"></div>
+                  <div id="editor" style="width:900px;"></div>
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，限定字符1万个（汉字为5000个）</span>
