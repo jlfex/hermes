@@ -118,7 +118,11 @@ public class ProductServiceImpl implements ProductService {
 			productInfo = new ProductInfo();
 			productInfo.setId(product.getId());
 			productInfo.setName(product.getName());
-
+			String purpose = "";
+			if(product.getPurpose()!=null){
+				purpose = product.getPurpose().getId();
+			}
+			productInfo.setPurpose(purpose);
 			String minAmount = product.getAmount().substring(0, product.getAmount().indexOf(","));
 			String maxAmount = product.getAmount().substring(product.getAmount().indexOf(",") + 1);
 			productInfo.setMinAmount(minAmount);
