@@ -134,10 +134,6 @@
 							<name>spring.profiles.active</name>
 							<value>development</value>
 						</systemProperty>
-						<systemProperty>
-							<name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
-							<value>-1</value>
-						</systemProperty>
 					</systemProperties>
 					<useTestClasspath>true</useTestClasspath>
 
