@@ -51,7 +51,7 @@ public interface ContentService {
 
 	public FriendLink findOneBy(String id);
 
-	Article updateContent(PublishContentVo pcVo);
+	Article updateContent(PublishContentVo pcVo, int maxWidth) throws Exception;
 
 	void deleteContent(String id);
 

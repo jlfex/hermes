@@ -3,13 +3,16 @@ package com.jlfex.hermes.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Article;
@@ -45,9 +50,9 @@ import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
 @Service
 public class ContentServiceImpl implements ContentService {
-	private static final  String IMG_FLAG = "<img";
-	private static final  String SRC_FLAG = "src";
-	private static final  String RIGHT_BRACE = ">";
+	private static final String IMG_FLAG = "<img";
+	private static final String SRC_FLAG = "src";
+	private static final String RIGHT_BRACE = ">";
 	@Autowired
 	private ArticleCategoryRepository articleCategoryRepository;
 	@Autowired
@@ -218,7 +223,7 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public Page<Article> find(final String levelOne, final String levelTwo, final String levelThree, final String inputName, int page, int size) {
 		// 初始化
-		Pageable pageable = Pageables.pageable(page, size, new Sort(Direction.DESC,  "createTime"));
+		Pageable pageable = Pageables.pageable(page, size, new Sort(Direction.DESC, "createTime"));
 		Page<Article> articleList = articleRepository.findAll(new Specification<Article>() {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -246,7 +251,7 @@ public class ContentServiceImpl implements ContentService {
 	 * 新增发布内容
 	 * 
 	 * @author lishunfeng
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	public Article addPublish(PublishContentVo pcVo, int maxWidth) throws Exception {
@@ -256,32 +261,32 @@ public class ContentServiceImpl implements ContentService {
 		String newContent = new String(pcVo.getContent(), "UTF-8");
 		StringBuffer contentBuffer = new StringBuffer(newContent);
 		String contentStr = new String(pcVo.getContent(), "UTF-8");
-		//判断图文内容中是否含有图片
-		if(contentStr.contains(IMG_FLAG)){
-			 String[] strGaps = contentStr.split(IMG_FLAG);
-			 for(int i=0; i<strGaps.length; i++){
-				 try{
-					 String element = strGaps[i];
-					 if(element.contains(SRC_FLAG)){
-						 int beginIndex = element.indexOf(SRC_FLAG);
-						 int endIndex = element.indexOf(RIGHT_BRACE);
-						 String base64Source = element.substring(beginIndex, endIndex) ;
-						 base64Source = base64Source.substring(base64Source.indexOf(",")+1,base64Source.lastIndexOf("\""));
-						 String resizeBase64Code =  compressImgToBase64(base64Source, maxWidth);
-						 if(resizeBase64Code != null) {
-							//替换压缩后的编码
+		// 判断图文内容中是否含有图片
+		if (contentStr.contains(IMG_FLAG)) {
+			String[] strGaps = contentStr.split(IMG_FLAG);
+			for (int i = 0; i < strGaps.length; i++) {
+				try {
+					String element = strGaps[i];
+					if (element.contains(SRC_FLAG)) {
+						int beginIndex = element.indexOf(SRC_FLAG);
+						int endIndex = element.indexOf(RIGHT_BRACE);
+						String base64Source = element.substring(beginIndex, endIndex);
+						base64Source = base64Source.substring(base64Source.indexOf(",") + 1, base64Source.lastIndexOf("\""));
+						String resizeBase64Code = compressImgToBase64(base64Source, maxWidth);
+						if (resizeBase64Code != null) {
+							// 替换压缩后的编码
 							int begin = contentBuffer.indexOf(base64Source);
 							int end = begin + base64Source.length();
 							contentBuffer.replace(begin, end, resizeBase64Code);
-						 }
-					 }
-				 }catch(Exception e){
-					 Logger.error("发布内容--图文信息中图片压缩异常，跳过压缩操作：", e);
-					 continue;
-				 }
-			 }
+						}
+					}
+				} catch (Exception e) {
+					Logger.error("发布内容--图文信息中图片压缩异常，跳过压缩操作：", e);
+					continue;
+				}
+			}
 			article.setContent(contentBuffer.toString().getBytes("UTF-8"));
-		}else{
+		} else {
 			article.setContent(pcVo.getContent());
 		}
 		article.setKeywords(pcVo.getKeywords());
@@ -303,19 +308,49 @@ public class ContentServiceImpl implements ContentService {
 		articleRepository.save(article);
 		return article;
 	}
-	
 
 	/**
 	 * 编辑发布内容
 	 * 
 	 * @author lishunfeng
+	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	public Article updateContent(PublishContentVo pcVo) {
+	public Article updateContent(PublishContentVo pcVo, int maxWidth) throws Exception {
 		Article article = articleRepository.findOne(pcVo.getId());
 		article.setArticleTitle(pcVo.getArticleTitle());
 		article.setAuthor("admin");
-		article.setContent(pcVo.getContent());
+		String newContent = new String(pcVo.getContent(), "UTF-8");
+		StringBuffer contentBuffer = new StringBuffer(newContent);
+		String contentStr = new String(pcVo.getContent(), "UTF-8");
+		// 判断图文内容中是否含有图片
+		if (contentStr.contains(IMG_FLAG)) {
+			String[] strGaps = contentStr.split(IMG_FLAG);
+			for (int i = 0; i < strGaps.length; i++) {
+				try {
+					String element = strGaps[i];
+					if (element.contains(SRC_FLAG)) {
+						int beginIndex = element.indexOf(SRC_FLAG);
+						int endIndex = element.indexOf(RIGHT_BRACE);
+						String base64Source = element.substring(beginIndex, endIndex);
+						base64Source = base64Source.substring(base64Source.indexOf(",") + 1, base64Source.lastIndexOf("\""));
+						String resizeBase64Code = compressImgToBase64(base64Source, maxWidth);
+						if (resizeBase64Code != null) {
+							// 替换压缩后的编码
+							int begin = contentBuffer.indexOf(base64Source);
+							int end = begin + base64Source.length();
+							contentBuffer.replace(begin, end, resizeBase64Code);
+						}
+					}
+				} catch (Exception e) {
+					Logger.error("发布内容--图文信息中图片压缩异常，跳过压缩操作：", e);
+					continue;
+				}
+			}
+			article.setContent(contentBuffer.toString().getBytes("UTF-8"));
+		} else {
+			article.setContent(pcVo.getContent());
+		}
 		article.setKeywords(pcVo.getKeywords());
 		article.setDescription(pcVo.getDescription());
 		ArticleCategory articleCategory = null;
@@ -571,40 +606,40 @@ public class ContentServiceImpl implements ContentService {
 	public List<Article> findArticleByCode(String code) {
 		return articleRepository.findByCode(code);
 	}
+
 	/**
 	 * 图文信息中超过 预设宽度的图片 压缩
+	 * 
 	 * @param originBase64
 	 * @param maxWidth
 	 * @return
 	 * @throws Exception
 	 */
-	public String  compressImgToBase64(String originBase64, int maxWidth) throws Exception{
-		if(Strings.empty(originBase64)){
+	public String compressImgToBase64(String originBase64, int maxWidth) throws Exception {
+		if (Strings.empty(originBase64)) {
 			return null;
 		}
 		BASE64Decoder decoder = new BASE64Decoder();
-        BASE64Encoder encoder = new BASE64Encoder();
-        //Base64解码
-        byte[] originBinary = decoder.decodeBuffer(originBase64);
-        for(int i=0;i<originBinary.length;++i)
-        {
-            if(originBinary[i]<0)
-            {//调整异常数据
-            	originBinary[i]+=256;
-            }
-        }
-        BufferedImage source =  ImageIO.read(new ByteArrayInputStream(originBinary));
-        int ogriWidth = source.getWidth();
-        if(ogriWidth > maxWidth){
-        	source = Scalr.resize(source, maxWidth); // 只设置宽度
-        }else{
-        	return null; 
-        }
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+		BASE64Encoder encoder = new BASE64Encoder();
+		// Base64解码
+		byte[] originBinary = decoder.decodeBuffer(originBase64);
+		for (int i = 0; i < originBinary.length; ++i) {
+			if (originBinary[i] < 0) {// 调整异常数据
+				originBinary[i] += 256;
+			}
+		}
+		BufferedImage source = ImageIO.read(new ByteArrayInputStream(originBinary));
+		int ogriWidth = source.getWidth();
+		if (ogriWidth > maxWidth) {
+			source = Scalr.resize(source, maxWidth); // 只设置宽度
+		} else {
+			return null;
+		}
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		ImageIO.write(source, "jpeg", os);
 		os.flush();
 		byte[] newBytes = os.toByteArray();
 		os.close();
-        return encoder.encode(newBytes);
+		return encoder.encode(newBytes);
 	}
 }
