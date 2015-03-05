@@ -1,9 +1,5 @@
 package com.jlfex.hermes.console;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.poi.ss.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
-import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Images;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
@@ -27,8 +21,7 @@ import com.jlfex.hermes.service.TextService;
 /**
  * 系统控制器
  * 
- * @author ultrafrog
- * @version 1.0, 2013-11-29
+ * @author administrator
  * @since 1.0
  */
 @Controller
@@ -103,7 +96,7 @@ public class SystemController {
 			result.addMessage(e.getMessage());
 		}
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-		result.addMessage(App.message("app.config.save.ok"));
+		result.addMessage("修改成功,请重启网站前台以使配置生效(备注:logo图标立即生效)");
 		return result;
 	}
 

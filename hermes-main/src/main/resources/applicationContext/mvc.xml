@@ -48,6 +48,7 @@
 				<entry key="messages"><bean class="com.jlfex.hermes.common.support.freemarker.MessagesDirective" /></entry>
 				<entry key="config"><bean class="com.jlfex.hermes.common.support.freemarker.ConfigDirective" /></entry>
 				<entry key="percent"><bean class="com.jlfex.hermes.common.support.freemarker.PercentDirective" /></entry>
+				<entry key="logo"><bean class="com.jlfex.hermes.main.freemark.LogoDirective" /></entry>
 			</map>
 		</property>
 	</bean>

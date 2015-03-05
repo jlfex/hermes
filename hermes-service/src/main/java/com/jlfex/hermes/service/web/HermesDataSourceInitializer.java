@@ -28,18 +28,18 @@ public class HermesDataSourceInitializer {
 
 	@PostConstruct
 	public void initData() throws SQLException {
-		Logger.info("start check for update");
+		Logger.info("检查是否需要初始化脚本");
 		Query query = new Query("from User");
 		Long userCount = commonRepository.count(query.getCount(), new HashMap<String, Object>());
 		if (userCount == 0) {
-			Logger.info("first launch.need init db");
+			Logger.info("开始进行初始化脚本");
 			ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 			populator.setSqlScriptEncoding("utf-8");
 			populator.addScript(dataScript);
 			populator.populate(dataSource.getConnection());
-			Logger.info("init db done.");
+			Logger.info("初始化脚本已完成");
 			return;
 		}
-		Logger.info("no need for update");
+		Logger.info("不需要初始化脚本");
 	}
 }
