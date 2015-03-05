@@ -66,7 +66,7 @@
 					        </select>
                         </div>
 	                 <div class="col-xs-2" style="margin-left:25px;">
-						<span class="alert-danger" style="display:none;background:none" style="margin-left:25px;">您还有分类未选择</span>
+						<span class="alert-danger" style="display:none;background:none" style="margin-left:25px;">三级分类必须同时选择</span>
 					 </div>                                        
                     </div>                                  
                 </div>
@@ -341,7 +341,7 @@ $(function() {
 				|| (e.id == 'order' && !/^[0-9]+$/.test(val))
 				|| (e.id == 'levelOne' && $this.val() == '')
 				|| (e.id == 'levelTwo' && $this.val() == '')
-				|| (e.id == 'levelThree' && $this.val() == '')
+				|| (e.id == 'levelThree' && ($this.val() == '' || $this.val() == null))
 				|| (e.id == 'keywords' && !/.{0,30}/.test(val)) //非必填
 		|| (e.id == 'description' && !/.{0,400}/.test(val)) //非必填
 		)) {
