@@ -20,14 +20,14 @@ public interface AuthService {
 	 * @return
 	 */
 	public UserProperties findByUserId(String userId);
-	
+
 	/**
 	 * 发送手机验证码
 	 * 
 	 * @param phone
 	 */
 	public Result sendAuthCodeByPhone(String userId, String phone);
-	
+
 	/**
 	 * 手机认证
 	 * 
@@ -53,4 +53,25 @@ public interface AuthService {
 	 * @return
 	 */
 	public boolean isAuth(String code);
+
+	/**
+	 * 绑定银行卡
+	 * 
+	 * @param bankId
+	 * @param cityId
+	 * @param deposit
+	 * @param account
+	 */
+	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault);
+
+	/**
+	 * 更换银行卡
+	 * 
+	 * @param bankId
+	 * @param cityId
+	 * @param deposit
+	 * @param account
+	 */
+	public Result editBankCard(String id, String bankId, String cityId, String deposit, String account, String isdefault);
+
 }

@@ -39,6 +39,9 @@
 						<ul>
 							<li><a href="#" class="icon user" data-url="${app}/account/getUserInfo" data-target="main"><@messages key="account.info.user" /></a></li>
 							<li><a href="#" class="icon auth" data-url="${app}/account/approve" data-target="main"><@messages key="account.info.auth" /></a></li>
+						    <li><img src="${app.theme}/public/images/account_small_020_new.png" />
+						        <a href="#" class="auth1" data-url="${app}/account/bankCardManage" data-target="main">银行卡管理</a>
+						    </li>							
 						</ul>
 					</div>
 					<div class="item">
@@ -58,6 +61,10 @@
 						</ul>
 					</div>
 					<a href="#" class="icon password sr-only" data-url="${app}/account/showModify" data-target="main"></a>
+					<a href="#" class="icon addBankCard sr-only" data-url="${app}/account/addBankCard" data-target="main"></a>
+					<#list bankAccounts as b>
+					<a href="#" class="icon editBankCard sr-only" data-url="${app}/account/editBankCard/${b.id}" data-target="main"></a>
+					</#list> 					
 				</div>
 			</div>
 			<!-- /account menu -->
