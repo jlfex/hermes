@@ -8,7 +8,7 @@
 		<div class="check pull-right"><i class="fa fa-check"></i></div>
 	</div>
 </div>
-<!--
+
 <#if phoneSwitch>
 <div class="block block-auth authphone" data-auth="${userProp.authCellphone}">
 	<div class="body clearfix">
@@ -30,7 +30,7 @@
 	</div>
 </div>
 </#if>
--->
+
 <#if idSwitch>
 <div class="block block-auth identity" data-auth="${userProp.authName}">
 	<div class="body clearfix">

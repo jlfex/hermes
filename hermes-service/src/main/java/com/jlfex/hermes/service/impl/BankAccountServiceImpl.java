@@ -43,39 +43,43 @@ import com.jlfex.hermes.service.withdraw.WithdrawFee;
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService {
 
-	private static final String PROP_WITHDRAW_FEE_NAME 		= "fee.withdraw.name";
-	private static final String PROP_WITHDRAW_FEE_CONFIG	= "fee.withdraw.config";
-	
+	private static final String PROP_WITHDRAW_FEE_NAME = "fee.withdraw.name";
+	private static final String PROP_WITHDRAW_FEE_CONFIG = "fee.withdraw.config";
+
 	/** 银行账户仓库 */
 	@Autowired
 	private BankAccountRepository bankAccountRepository;
-	
+
 	/** 银行信息仓库 */
 	@Autowired
 	private BankRepository bankRepository;
-	
+
 	/** 地区信息仓库 */
 	@Autowired
 	private AreaRepository areaRepository;
-	
+
 	/** 用户信息仓库 */
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	/** 用户属性仓库 */
 	@Autowired
 	private UserPropertiesRepository userPropertiesRepository;
-	
+
 	/** 提现信息仓库 */
 	@Autowired
 	private WithdrawRepository withdrawRepository;
-	
+
 	/** 交易业务接口 */
 	@Autowired
 	private TransactionService transactionService;
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#findByUserIdAndStatus(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.BankAccountService#findByUserIdAndStatus(java
+	 * .lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(readOnly = true)
@@ -84,8 +88,19 @@ public class BankAccountServiceImpl implements BankAccountService {
 		Assert.notEmpty(status, "status is empty.");
 		return bankAccountRepository.findByUserIdAndStatus(userId, status);
 	}
-	
-	/* (non-Javadoc)
+
+	@Override
+	public List<BankAccount> findByUserId(String userId) {
+		List<BankAccount> l = bankAccountRepository.findByUserId(userId);
+		for (BankAccount a : l) {
+			a.getCity().setParent(areaRepository.findOne(a.getCity().getParentId()));
+		}
+		return l;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.BankAccountService#findEnbaled()
 	 */
 	@Override
@@ -93,17 +108,24 @@ public class BankAccountServiceImpl implements BankAccountService {
 	public List<BankAccount> findEnbaled() {
 		return findByUserIdAndStatus(App.user().getId(), BankAccount.Status.ENABLED);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#save(com.jlfex.hermes.model.BankAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.BankAccountService#save(com.jlfex.hermes.model
+	 * .BankAccount)
 	 */
 	@Override
 	public BankAccount save(BankAccount bankAccount) {
 		return bankAccountRepository.save(bankAccount);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#save(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.jlfex.hermes.service.BankAccountService#save(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public BankAccount save(String bankId, String cityId, String deposit, String account) {
@@ -112,7 +134,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		Bank bank = bankRepository.findOne(bankId);
 		Area city = areaRepository.findOne(cityId);
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
-		
+
 		// 设置对象并保存
 		BankAccount bankAccount = new BankAccount();
 		bankAccount.setUser(user);
@@ -122,12 +144,14 @@ public class BankAccountServiceImpl implements BankAccountService {
 		bankAccount.setName(userProperties.getRealName());
 		bankAccount.setAccount(account);
 		bankAccount.setStatus(BankAccount.Status.ENABLED);
-		
+
 		// 返回数据
 		return save(bankAccount);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.jlfex.hermes.service.BankAccountService#findEnabledBank()
 	 */
 	@Override
@@ -135,18 +159,26 @@ public class BankAccountServiceImpl implements BankAccountService {
 	public List<Bank> findEnabledBank() {
 		return bankRepository.findByStatus(Bank.Status.ENBALED);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#loadBankById(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.BankAccountService#loadBankById(java.lang.String
+	 * )
 	 */
 	@Override
 	@Transactional(readOnly = true)
 	public Bank loadBankById(String id) {
 		return bankRepository.findOne(id);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#calcWithdrawFee(java.lang.Double)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.BankAccountService#calcWithdrawFee(java.lang
+	 * .Double)
 	 */
 	@Override
 	public Result<String> calcWithdrawFee(Double amount) {
@@ -154,13 +186,13 @@ public class BankAccountServiceImpl implements BankAccountService {
 		// 加载实现类
 		Result<String> result = new Result<String>();
 		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
-		
+
 		// 计算费用
 		try {
 			BigDecimal amt = Numbers.currency(amount);
 			BigDecimal fee = withdrawFee.calcFee(amt, App.config(PROP_WITHDRAW_FEE_CONFIG));
 			BigDecimal sum = amt.add(fee);
-			
+
 			result.setType(Result.Type.SUCCESS);
 			result.addMessage(Numbers.toCurrency(fee));
 			result.addMessage(Numbers.toCurrency(sum));
@@ -174,26 +206,30 @@ public class BankAccountServiceImpl implements BankAccountService {
 			result.addMessage(App.message(se.getKey()));
 			Logger.error(se.getMessage(), se);
 		}
-		
+
 		// 返回结果
 		return result;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.BankAccountService#addWithdraw(java.lang.String, java.lang.Double)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.jlfex.hermes.service.BankAccountService#addWithdraw(java.lang.String,
+	 * java.lang.Double)
 	 */
 	@Override
 	public Withdraw addWithdraw(String bankAccountId, Double amount) {
 		// 验证数据
 		Assert.notEmpty(bankAccountId, "bank account id is empty.", "account.fund.withdraw.failure.bankaccount");
 		Assert.notNull(amount, "amount is null.", "account.fund.withdraw.failure.amount");
-		
+
 		// 初始化并加载数据项
 		Withdraw withdraw = new Withdraw();
 		BankAccount bankAccount = bankAccountRepository.findOne(bankAccountId);
 		User user = userRepository.findOne(App.user().getId());
 		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
-		
+
 		// 设置数据并保存数据
 		withdraw.setUser(user);
 		withdraw.setBankAccount(bankAccount);
@@ -202,11 +238,19 @@ public class BankAccountServiceImpl implements BankAccountService {
 		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(PROP_WITHDRAW_FEE_CONFIG)));
 		withdraw.setStatus(Withdraw.Status.WAIT);
 		withdrawRepository.save(withdraw);
-		
+
 		// 冻结金额
 		transactionService.freeze(Transaction.Type.FREEZE, user, withdraw.getAmount().add(withdraw.getFee()), withdraw.getId(), App.message("transaction.withdraw.freeze"));
-		
+
 		// 返回结果
 		return withdraw;
 	}
+
+	@Override
+	public BankAccount loadBankAccountById(String id) {
+		BankAccount bankAccount = bankAccountRepository.findOne(id);
+		bankAccount.getCity().setParent(areaRepository.findOne(bankAccount.getCity().getParentId()));
+		return bankAccount;
+	}
+
 }

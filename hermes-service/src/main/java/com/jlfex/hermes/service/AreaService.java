@@ -12,7 +12,7 @@ import com.jlfex.hermes.model.Area;
  * @since 1.0
  */
 public interface AreaService {
-	
+
 	/**
 	 * 通过编号加载地区
 	 * 
@@ -28,7 +28,7 @@ public interface AreaService {
 	 * @return
 	 */
 	public List<Area> loadByParentId(String parentId);
-	
+
 	/**
 	 * 通过编号读取地区<br>
 	 * 加载缓存数据
@@ -37,7 +37,7 @@ public interface AreaService {
 	 * @return
 	 */
 	public Area getById(String id);
-	
+
 	/**
 	 * 读取所有下级地区<br>
 	 * 优先从缓存中加载
@@ -46,7 +46,7 @@ public interface AreaService {
 	 * @return
 	 */
 	public List<Area> getAllChildren(Area area);
-	
+
 	/**
 	 * 读取地址
 	 * 
@@ -55,4 +55,12 @@ public interface AreaService {
 	 * @return
 	 */
 	public String getAddress(String address, String... areas);
+
+	/**
+	 * 查询parent为空的地区
+	 * 
+	 * @return
+	 */
+	public List<Area> findByParentIsNull();
+
 }

@@ -196,7 +196,9 @@ jQuery(function($) {
 			success: function(data, textStatus, xhr) {
 				if (data.typeName === 'success') {
 					window.location.href = '${app}';
-				} else if (data.typeName === 'warning') {
+				} else if(data.typeName == 'notcertified'){
+				    window.location.href = '${app}/userIndex/authCellPhone?email=' + $('#email').val();
+				}else if (data.typeName === 'warning') {
 					window.location.href = '${app}/userIndex/resendMail?email=' + $('#email').val();
 				} else if (data.typeName === 'failure') {
 					$('#signPassword').val('').attr('placeholder', data.firstMessage).parent().addClass('has-error');

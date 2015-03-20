@@ -266,6 +266,8 @@ public class UserController {
 		Result result = userService.activeMail(userId, validateCode);
 		if (result.getType().equals(Type.SUCCESS)) {
 			model.addAttribute("message", result.getFirstMessage());
+			model.addAttribute("userId", userId);
+			model.addAttribute("cellphone", userService.loadById(userId).getCellphone());
 			return "user/emailActive";
 		} else if (result.getType().equals(Type.WARNING)) {
 			model.addAttribute("message", App.message("message.sign.email.expire", null));
@@ -276,6 +278,21 @@ public class UserController {
 			return "user/emailActive";
 		}
 
+	}
+
+	/**
+	 * 手机认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authCellPhone")
+	public String authCellPhone(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);
+		Result result = userService.signIn(user);
+		model.addAttribute("message", result.getFirstMessage());
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
+		return "user/authCellPhone";
 	}
 
 	/**

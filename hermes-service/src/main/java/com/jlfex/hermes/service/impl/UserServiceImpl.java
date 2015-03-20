@@ -318,7 +318,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 				} else if (Status.DISABLED.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("账号已被注销"));
-				} else {
+				} else if (Status.CERTIFIED.equals(user.getStatus())) {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
 					appUser.setAccount(user.getEmail());
@@ -332,6 +332,20 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					// 用户日志记录
 					saveUserLog(user, LogType.LOGIN);
+				} else {
+					AppUser appUser = new AppUser();
+					appUser.setId(user.getId());
+					appUser.setAccount(user.getEmail());
+					UserProperties userPro = userPropertiesRepository.findByUser(user);
+					if (userPro != null) {
+						appUser.setName(user.getAccount());
+					} else {
+						appUser.setName(App.message("anonymous"));
+					}
+					App.current().setUser(appUser);
+					if (!userPro.getAuthCellphone().equals(Auth.PASS)) {
+						result.setType(com.jlfex.hermes.common.Result.Type.NOTCERTIFIED);
+					}
 				}
 			} else {
 				// 账户和密码不匹配
