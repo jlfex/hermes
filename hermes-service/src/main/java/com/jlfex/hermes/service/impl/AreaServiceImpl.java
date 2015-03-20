@@ -103,4 +103,10 @@ public class AreaServiceImpl implements AreaService {
 		// 返回结果
 		return sb.append(address).toString();
 	}
+
+	@Override
+	public List<Area> findByParentIsNull() {
+		// TODO Auto-generated method stub
+		return areaRepository.findRoots();
+	}
 }
