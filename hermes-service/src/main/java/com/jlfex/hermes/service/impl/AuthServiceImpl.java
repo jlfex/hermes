@@ -124,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
 				userAuthRepository.save(userAuth);
 
 				// send verification code of sms
-				sendSms(phone, validateCode);
+				//sendSms(phone, validateCode);
 				result.addMessage(App.message("result.success.phone", null));
 				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 				return result;
