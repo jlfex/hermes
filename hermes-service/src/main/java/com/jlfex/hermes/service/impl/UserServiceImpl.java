@@ -267,6 +267,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 					// 验证码是否过期
 					if (currentDate.before(expire)) {
 						user.setStatus(Status.ENABLED);
+						user.setIsAuthentic(false);
 						userRepository.save(user);
 						UserProperties userPro = userPropertiesRepository.findByUser(user);
 						userPro.setAuthEmail(Auth.PASS);
@@ -318,7 +319,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 				} else if (Status.DISABLED.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("账号已被注销"));
-				} else if (Status.CERTIFIED.equals(user.getStatus())) {
+				} else if (Status.ENABLED.equals(user.getStatus()) && user.getIsAuthentic()) {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
 					appUser.setAccount(user.getEmail());

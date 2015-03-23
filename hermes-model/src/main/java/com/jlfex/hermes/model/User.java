@@ -48,8 +48,12 @@ public class User extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
+	/** 认证状态 */
+	@Column(name = "is_authentic")
+	private Boolean isAuthentic;
 
 	/** 类型 */
+	
 	@Column(name = "type")
 	private String type;
 
@@ -240,7 +244,7 @@ public class User extends Model {
 	 */
 	public static final class Status {
 
-		@Element("未认证")
+		@Element("正常")
 		public static final String ENABLED = "00";
 
 		@Element("未激活")
@@ -252,8 +256,6 @@ public class User extends Model {
 		@Element("注销")
 		public static final String DISABLED = "99";
 
-		@Element("已认证")
-		public static final String CERTIFIED = "02";
 
 	}
 
@@ -293,6 +295,13 @@ public class User extends Model {
 
 	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+	public Boolean getIsAuthentic() {
+		return isAuthentic;
+	}
+
+	public void setIsAuthentic(Boolean isAuthentic) {
+		this.isAuthentic = isAuthentic;
 	}
 
 	/**

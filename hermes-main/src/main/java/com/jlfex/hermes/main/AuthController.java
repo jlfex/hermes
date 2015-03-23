@@ -95,6 +95,7 @@ public class AuthController {
 		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
 		model.addAttribute("idTypeMap", idTypeMap);
 		model.addAttribute("userId", userId);
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(userId));
 		return "user/realNameApprove";
 	}
 
@@ -164,6 +165,7 @@ public class AuthController {
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
 		model.addAttribute("realName", userService.loadPropertiesByUserId(userId).getRealName());// 获取持卡人的真实姓名
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(userId));// 获取持卡人的真实姓名
 		return "user/bindBank";
 	}
 
@@ -190,7 +192,8 @@ public class AuthController {
 		String deposit = request.getParameter("deposit");
 		String account = request.getParameter("account");
 		String isdefault = request.getParameter("isdefault");
+		String realName = request.getParameter("realName");
 		// AppUser curUser = App.current().getUser();
-		return authService.bindBank(userId, bankId, cityId, deposit, account, isdefault);
+		return authService.bindBank(userId, bankId, cityId, deposit, account, isdefault,realName);
 	}
 }

@@ -42,7 +42,11 @@
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
+			<#if userProperties.authCellphone =='10'>
 			手机认证成功!为确保您的资金安全，请进行实名认证
+			<#else>
+			手机尚未认证!为确保您的资金安全，请进行实名认证
+			</#if>
 		</div>
 	</div>
 	<div class="m_fp_box jy_nobg_notb">

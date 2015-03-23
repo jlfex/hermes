@@ -42,7 +42,11 @@
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
+			<#if userProperties.authName =='10'>
 			实名认证成功！投资前，您需要绑定银行卡以便充值和取现。
+			<#else>
+			尚未实名认证！投资前，您需要绑定银行卡以便充值和取现。
+			</#if>
 		</div>
 	</div>
 	<div class="m_fp_box jy_nobg_notb">
@@ -54,7 +58,13 @@
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">持卡人</span>
+			<#if userProperties.realName??>
 			<span class="jy_ml">${realName}</span>
+			<#else>
+			<input type="text" class="form-control" id="realName" name="realName" onblur="verification()">
+			<label for="deposit" generated="true" class="error valid"></label>
+			<span class="mv_msg col-xs-6" id="mv_realName" style="color:red;width:200px"></span>						
+			</#if>
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">银行卡名称</span>
@@ -69,7 +79,6 @@
 			<span class="jy_alignr">开户所在地</span>
 			<select id="cityId2" name="cityId2"></select>
 			<select id="cityId" name="cityId" ></select>																				
-			<span class="mv_msg col-xs-3" id="mv_cityId" style="color:red;width:150px"></span>																		
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">开户行</span>
@@ -97,28 +106,34 @@
 	jQuery(function($) {
 		$('#cancelAuthIdentityBtn').on('click', function() {
 		     window.location.href="${app}/invest/index?type=auth1";	   						
-		});
-	
-    $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
+		});	
+        $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
 	});	
 	function mysubmit(){
 		if(verificationInf()){
 			bindBank();
 		 }
 	}
-
+    function verification(){
+        var vrealName = /^[\u4e00-\u9fa5]{2,20}$/;
+        var realName=$("#realName").val();
+        if(realName==""){
+			$("#mv_realName").html("持卡人不能为空");
+			return false;
+		}else if(!vrealName.test(realName)){
+			$("#mv_realName").html("持卡人只能为汉字");
+			return false;
+		}else{
+			$("#mv_realName").html("");
+		}
+    
+    }
 	function verificationInf(){
-		var vdeposit = /^[\u4e00-\u9fa5]{2,20}$/;
+		var vdeposit = /^[\u4e00-\u9fa5]{2,20}$/;		
 		var vaccount=/^[0-9]{12,20}$/;
         var deposit=$("#deposit").val();
         var account=$("#account").val();
-        var cityId=$("#cityId").val();
-	
 
-        if(cityId==""){
-			$("#mv_cityId").html("请选择开户行所在地");
-			return false;
-		}
 			
 		if(deposit==""){
 			$("#mv_deposit").html("开户行不能为空");
