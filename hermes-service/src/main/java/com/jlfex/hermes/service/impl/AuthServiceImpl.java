@@ -162,14 +162,12 @@ public class AuthServiceImpl implements AuthService {
 					userPropertiesRepository.save(userPro);
 					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.VERIFY);
-					user.setIsAuthentic(true);
 				} else {
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.OVERDUE);
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("result.failure.phone.overdue", null));
 				}
 				userAuthRepository.save(userAuth);
-				userRepository.save(user);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 				result.addMessage(App.message("result.failure.phone.error", null));
@@ -254,6 +252,8 @@ public class AuthServiceImpl implements AuthService {
 				bankAccount.setIsDefault(false);
 			}
 		}
+		userProperties.setAuthBankcard(Auth.PASS);
+		userPropertiesRepository.save(userProperties);
 		bankAccountRepository.save(bankAccount);
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;

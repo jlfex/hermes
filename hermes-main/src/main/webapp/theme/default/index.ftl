@@ -196,8 +196,14 @@ jQuery(function($) {
 			success: function(data, textStatus, xhr) {
 				if (data.typeName === 'success') {
 					window.location.href = '${app}';
-				} else if(data.typeName == 'notcertified'){
+				}else if(data.typeName == 'cellphone_notauth'){   //手机未认证
 				    window.location.href = '${app}/userIndex/authCellPhone?email=' + $('#email').val();
+				}else if(data.typeName == 'name_notauth'){   //实名未认证											
+					window.location.href = '${app}/userIndex/authName?email=' + $('#email').val();								
+				}else if(data.typeName == 'bankcard_notauth'){   //银行卡未认证
+					window.location.href = '${app}/userIndex/authBankCard?email=' + $('#email').val();			
+				}else if(data.typeName == 'notauth'){
+					window.location.href = '${app}/userIndex/authCellPhone?email=' + $('#email').val();				
 				}else if (data.typeName === 'warning') {
 					window.location.href = '${app}/userIndex/resendMail?email=' + $('#email').val();
 				} else if (data.typeName === 'failure') {

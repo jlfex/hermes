@@ -43,7 +43,7 @@
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
 			<#if userProperties.authName =='10'>
-			实名认证成功！投资前，您需要绑定银行卡以便充值和取现。
+			实名认证已成功！投资前，您需要绑定银行卡以便充值和取现。
 			<#else>
 			尚未实名认证！投资前，您需要绑定银行卡以便充值和取现。
 			</#if>
@@ -59,7 +59,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">持卡人</span>
 			<#if userProperties.realName??>
-			<span class="jy_ml">${realName}</span>
+			<span class="jy_ml">${realName!}</span>
 			<#else>
 			<input type="text" class="form-control" id="realName" name="realName" onblur="verification()">
 			<label for="deposit" generated="true" class="error valid"></label>
