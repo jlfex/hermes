@@ -48,9 +48,6 @@ public class User extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	/** 认证状态 */
-	@Column(name = "is_authentic")
-	private Boolean isAuthentic;
 
 	/** 类型 */
 	
@@ -295,13 +292,6 @@ public class User extends Model {
 
 	public void setRealName(String realName) {
 		this.realName = realName;
-	}
-	public Boolean getIsAuthentic() {
-		return isAuthentic;
-	}
-
-	public void setIsAuthentic(Boolean isAuthentic) {
-		this.isAuthentic = isAuthentic;
 	}
 
 	/**
