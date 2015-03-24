@@ -1,6 +1,7 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -14,17 +15,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.model.UserProperties.IdType;
+import com.jlfex.hermes.service.AreaService;
+import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.UserService;
 
@@ -39,6 +47,10 @@ public class UserController {
 	private EmailService emailService;
 	@Autowired
 	private ContentService contentService;
+	@Autowired
+	private BankService bankService;
+	@Autowired
+	private AreaService areaService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
@@ -288,11 +300,64 @@ public class UserController {
 	@RequestMapping("/authCellPhone")
 	public String authCellPhone(@RequestParam("email") String email, Model model) {
 		User user = userService.loadByEmail(email);
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
 		Result result = userService.signIn(user);
 		model.addAttribute("message", result.getFirstMessage());
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
-		return "user/authCellPhone";
+		model.addAttribute("email", email);
+		if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+		    return "user/authCellPhone";
+		}else if(!userPro.getAuthName().equals(Auth.PASS)){
+			return "redirect:/userIndex/authName";
+		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "redirect:/userIndex/authBankCard";
+		}else{
+			return "redirect:/invest/index";
+		}
+	}
+	/**
+	 * 实名认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authName")
+	public String authName(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);		
+		// 证件类型
+		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		model.addAttribute("idTypeMap", idTypeMap);
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("email", email);
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));
+		if(!userPro.getAuthName().equals(Auth.PASS)){
+			return "user/realNameApprove";
+		}else{
+			return "redirect:/userIndex/authBankCard";
+		}
+
+	}
+	/**
+	 * 银行卡认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authBankCard")
+	public String authBankcard(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);		
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
+		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
+		model.addAttribute("realName", userService.loadPropertiesByUserId(user.getId()).getRealName());// 获取持卡人的真实姓名
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));// 获取持卡人的真实姓名
+		if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "user/bindBank";
+		}else{
+			return "forward:/invest/index";
+		}
+
 	}
 
 	/**

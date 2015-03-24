@@ -42,12 +42,17 @@
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
-			手机认证成功!为确保您的资金安全，请进行实名认证
+			<#if userProperties.authCellphone =='10'>
+			手机认证已成功!为确保您的资金安全，请进行实名认证
+			<#else>
+			手机尚未认证!为确保您的资金安全，请进行实名认证
+			</#if>
 		</div>
 	</div>
 	<div class="m_fp_box jy_nobg_notb">
 	<form class="form-horizontal" role="form" id="authIdentityForm">
 	<input type="hidden" value="${userId}" id="userId" name="userId"  >
+	<input id="email" name="email" type="hidden" value="${email}">	
 		<div class="jy_info">
 			<span class="jy_titlt">实名认证</span>
 			<div class="jy_tip">请填写您本人真实有效的身份信息，一旦认证成功，信息将不可更改。</div>
@@ -87,7 +92,7 @@
 <script type="text/javascript" charset="utf-8">
 	jQuery(function($) {
 		$('#cancelAuthIdentityBtn').on('click', function() {
-               window.location.href="${app}/auth/bindBank/${userId}";		
+               window.location.href="${app}/userIndex/authBankCard?email=" + $('#email').val();		
         });
 	});
 	function verificationInf(){
@@ -158,7 +163,7 @@
 		        timeout: 10000,
 		        success: function(data) {
 		      	   if(data.type=="SUCCESS"){
-                       window.location.href="${app}/auth/bindBank/${userId}";
+                       window.location.href="${app}/userIndex/authBankCard?email=" + $('#email').val();
 					}
 		        }
 		    });

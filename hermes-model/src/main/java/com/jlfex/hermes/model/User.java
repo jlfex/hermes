@@ -50,6 +50,7 @@ public class User extends Model {
 	private String status;
 
 	/** 类型 */
+	
 	@Column(name = "type")
 	private String type;
 
@@ -240,7 +241,7 @@ public class User extends Model {
 	 */
 	public static final class Status {
 
-		@Element("未认证")
+		@Element("正常")
 		public static final String ENABLED = "00";
 
 		@Element("未激活")
@@ -252,8 +253,6 @@ public class User extends Model {
 		@Element("注销")
 		public static final String DISABLED = "99";
 
-		@Element("已认证")
-		public static final String CERTIFIED = "02";
 
 	}
 

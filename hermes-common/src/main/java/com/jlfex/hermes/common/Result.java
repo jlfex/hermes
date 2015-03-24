@@ -179,7 +179,13 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @since 1.0
 	 */
 	public static enum Type {
-		SUCCESS("success"), WARNING("warning"), FAILURE("failure"), NOTCERTIFIED("notcertified");
+		SUCCESS("success"), 
+		WARNING("warning"), 
+		FAILURE("failure"), 
+		NOTAUTH("notauth"),
+		CELLPHNOE_NOTAUTH("cellphone_notauth"),
+		NAME_NOTAUTH("name_notauth"),
+		BANKCARD_NOTAUTH("bankcard_notauth");
 
 		/** 名称 */
 		private String name;

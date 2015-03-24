@@ -20,6 +20,7 @@ import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.UserProperties.IdType;
 import com.jlfex.hermes.service.AreaService;
 import com.jlfex.hermes.service.AuthService;
@@ -90,12 +91,18 @@ public class AuthController {
 	 * @return
 	 */
 	@RequestMapping("realNameApprove/{userId}")
-	public String realNameApprove(@PathVariable("userId") String userId, Model model) {
+	public String realNameApprove(@PathVariable("userId") String userId,@RequestParam("email") String email, Model model) {
 		// 证件类型
 		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
+		UserProperties userPro=userService.loadPropertiesByUserId(userId);
 		model.addAttribute("idTypeMap", idTypeMap);
 		model.addAttribute("userId", userId);
-		return "user/realNameApprove";
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(userId));
+		if(!userPro.getAuthName().equals(Auth.PASS)){
+			return "user/realNameApprove";
+		}else{
+			return "redirect:/auth/bindBank/"+userId;
+		}
 	}
 
 	/**
@@ -160,11 +167,17 @@ public class AuthController {
 	 */
 	@RequestMapping("bindBank/{userId}")
 	public String bindBank(@PathVariable("userId") String userId, Model model) {
+		UserProperties userPro=userService.loadPropertiesByUserId(userId);
 		model.addAttribute("userId", userId);
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
 		model.addAttribute("realName", userService.loadPropertiesByUserId(userId).getRealName());// 获取持卡人的真实姓名
-		return "user/bindBank";
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(userId));// 获取持卡人的真实姓名
+		if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "user/bindBank";
+		}else{
+			return "redirect:/invest/index";
+		}
 	}
 
 	/**
@@ -190,7 +203,8 @@ public class AuthController {
 		String deposit = request.getParameter("deposit");
 		String account = request.getParameter("account");
 		String isdefault = request.getParameter("isdefault");
+		String realName = request.getParameter("realName");
 		// AppUser curUser = App.current().getUser();
-		return authService.bindBank(userId, bankId, cityId, deposit, account, isdefault);
+		return authService.bindBank(userId, bankId, cityId, deposit, account, isdefault,realName);
 	}
 }

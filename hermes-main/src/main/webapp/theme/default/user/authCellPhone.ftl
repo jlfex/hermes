@@ -47,7 +47,8 @@
 	</div>
 	<div class="m_fp_box jy_nobg_notb">
 	<form class="form-horizontal" role="form" id="authPhoneFrm" name="authPhoneFrm">
-	    <input type="hidden" value="${userId}" id="userId" name="userId">	
+	    <input type="hidden" value="${userId}" id="userId" name="userId">
+	    <input id="email" name="email" type="hidden" value="${email}">	
 		<div class="jy_info">
 			<span class="jy_titlt">手机认证</span>
 			<div class="jy_tip">为确保您的手机可用，请填写您收到的手机动态码。</div>
@@ -85,7 +86,7 @@
 	var seconds;
 	jQuery(function($) {
 		$('#skipAuthPhoneBtn').on('click', function() {
-		     window.location.href="${app}/auth/realNameApprove/${userId}";	   						
+		     window.location.href="${app}/userIndex/authName?email=" + $('#email').val();	   						
 		});
 		$("#getValidateCodeBtn").on("click",function(){
 		    $("#changeCellphnoe").html($("#cellphone").val());
@@ -135,7 +136,7 @@
 					 	//$("#authPhoneResult").removeClass("alert-info").addClass("alert-warning");
 					 	$("#authPhoneResult").html(data.firstMessage);
 					 }else if(data.type=="SUCCESS"){	
-		               window.location.href="${app}/auth/realNameApprove/${userId}";	   						
+		               window.location.href="${app}/userIndex/authName?email=" + $('#email').val();;	   						
 					 }
 				}
 		});

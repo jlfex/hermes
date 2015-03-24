@@ -318,7 +318,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 				} else if (Status.DISABLED.equals(user.getStatus())) {
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("账号已被注销"));
-				} else if (Status.CERTIFIED.equals(user.getStatus())) {
+				} else if (Status.ENABLED.equals(user.getStatus())) {
 					AppUser appUser = new AppUser();
 					appUser.setId(user.getId());
 					appUser.setAccount(user.getEmail());
@@ -329,23 +329,19 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 						appUser.setName(App.message("anonymous"));
 					}
 					App.current().setUser(appUser);
-					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+					if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+						result.setType(com.jlfex.hermes.common.Result.Type.CELLPHNOE_NOTAUTH);//判断手机是否认证
+					}else if(!userPro.getAuthName().equals(Auth.PASS)){
+						result.setType(com.jlfex.hermes.common.Result.Type.NAME_NOTAUTH);//判断实名是否认证
+					}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){						
+						result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);//判断银行卡是否认证
+					}else if(!userPro.getAuthCellphone().equals(Auth.PASS) && !userPro.getAuthName().equals(Auth.PASS) && !userPro.getAuthBankcard().equals(Auth.PASS)){
+						result.setType(com.jlfex.hermes.common.Result.Type.NOTAUTH);//判断手机，实名，银行卡是否都认证
+					}else{
+					    result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+					}
 					// 用户日志记录
 					saveUserLog(user, LogType.LOGIN);
-				} else {
-					AppUser appUser = new AppUser();
-					appUser.setId(user.getId());
-					appUser.setAccount(user.getEmail());
-					UserProperties userPro = userPropertiesRepository.findByUser(user);
-					if (userPro != null) {
-						appUser.setName(user.getAccount());
-					} else {
-						appUser.setName(App.message("anonymous"));
-					}
-					App.current().setUser(appUser);
-					if (!userPro.getAuthCellphone().equals(Auth.PASS)) {
-						result.setType(com.jlfex.hermes.common.Result.Type.NOTCERTIFIED);
-					}
 				}
 			} else {
 				// 账户和密码不匹配
@@ -443,6 +439,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		userProperties.setAuthCellphone(Auth.WAIT);
 		userProperties.setAuthEmail(Auth.WAIT);
 		userProperties.setAuthName(Auth.WAIT);
+		userProperties.setAuthBankcard(Auth.WAIT);
 		userProperties.setIsMortgagor(Mortgagor.ALL);
 		userPropertiesRepository.save(userProperties);
 

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,14 +162,12 @@ public class AuthServiceImpl implements AuthService {
 					userPropertiesRepository.save(userPro);
 					result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.VERIFY);
-					user.setStatus(com.jlfex.hermes.model.User.Status.CERTIFIED);
 				} else {
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.OVERDUE);
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 					result.addMessage(App.message("result.failure.phone.overdue", null));
 				}
 				userAuthRepository.save(userAuth);
-				userRepository.save(user);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 				result.addMessage(App.message("result.failure.phone.error", null));
@@ -221,7 +220,7 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * 绑定银行卡
 	 */
-	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault) {
+	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault,String realName) {
 		Result result = new Result();
 		User user = userRepository.findOne(userId);
 		Area city = areaRepository.findOne(cityId);
@@ -233,7 +232,11 @@ public class AuthServiceImpl implements AuthService {
 		bankAccount.setCity(city);// 开户所在地
 		bankAccount.setDeposit(deposit);// 开户行
 		bankAccount.setAccount(account);// 银行账号
-		bankAccount.setName(userProperties.getRealName());
+		if(StringUtils.isNotEmpty(realName)){
+			bankAccount.setName(realName);
+		}else{
+		    bankAccount.setName(userProperties.getRealName());
+		}
 		List<BankAccount> bankAccounts = bankAccountRepository.findByUserId(userId);
 
 		if (bankAccounts.size() == 0) {
@@ -249,6 +252,8 @@ public class AuthServiceImpl implements AuthService {
 				bankAccount.setIsDefault(false);
 			}
 		}
+		userProperties.setAuthBankcard(Auth.PASS);
+		userPropertiesRepository.save(userProperties);
 		bankAccountRepository.save(bankAccount);
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;

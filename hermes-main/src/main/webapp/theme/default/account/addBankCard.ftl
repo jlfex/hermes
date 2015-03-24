@@ -91,7 +91,7 @@ jQuery(function($) {
         $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
 });
 	function mysubmit(){
-		if(verificationInf()){
+		if(verification()){
 			bindBank();
 		 }
 	}
