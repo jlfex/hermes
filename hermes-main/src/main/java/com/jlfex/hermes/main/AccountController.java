@@ -130,8 +130,10 @@ public class AccountController {
 	public String bankCardManage(Model model) {
 		// 查询用户数据
 		App.checkUser();
+		BankAccount bankAccount = bankAccountService.findByIsDefault(true);
 		// 设置属性并渲染视图
-		model.addAttribute("bankAccounts", bankAccountService.findByUserId(App.user().getId()));
+		model.addAttribute("bankAccount", bankAccount);
+		model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
 		return "account/bankCardManage";
 	}
 
@@ -147,6 +149,7 @@ public class AccountController {
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
 		model.addAttribute("realName", userService.loadPropertiesByUserId(App.user().getId()).getRealName());// 获取持卡人的真实姓名
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(App.user().getId()));
 		return "account/addBankCard";
 	}
 

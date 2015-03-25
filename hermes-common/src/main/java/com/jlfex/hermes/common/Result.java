@@ -182,7 +182,6 @@ public class Result<T extends Serializable> implements Serializable {
 		SUCCESS("success"), 
 		WARNING("warning"), 
 		FAILURE("failure"), 
-		NOTAUTH("notauth"),
 		CELLPHNOE_NOTAUTH("cellphone_notauth"),
 		NAME_NOTAUTH("name_notauth"),
 		BANKCARD_NOTAUTH("bankcard_notauth");

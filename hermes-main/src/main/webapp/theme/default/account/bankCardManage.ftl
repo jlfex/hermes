@@ -14,19 +14,17 @@
                     <th style="border:none;">状态</th>
                     <th style="border:none;">操作</th>
                 </tr>
-                <#list bankAccounts as b> 
                 <tr>
-                    <td style="border:none;">${b.bank.name}</td>
-                    <td style="border:none;">${'${b.account}'?substring(0,4)}******${'${b.account}'?substring('${b.account}'?length-4)}</td>
-                    <td style="border:none;">${b.deposit}</td>
-                    <td style="border:none;">${b.city.parent.name}</td>
-                    <td style="border:none;">${b.city.name}</td>
-                    <td style="border:none;">${(b.status)!}</td>
+                    <td style="border:none;">${bankAccount.bank.name}</td>
+                    <td style="border:none;">${'${bankAccount.account}'?substring(0,4)}******${'${bankAccount.account}'?substring('${bankAccount.account}'?length-4)}</td>
+                    <td style="border:none;">${bankAccount.deposit}</td>
+                    <td style="border:none;">${area.name}</td>
+                    <td style="border:none;">${bankAccount.city.name}</td>
+                    <td style="border:none;">${(bankAccount.status)!}</td>
                     <td style="border:none;">
                     	<button type="button" class="btn btn-link editBtn" id="editBtn">更换</button>
                     </td>
                 </tr>
-                </#list> 
                 <tr>
                     <td colspan="6" style="border:none;"></td>
                     <td style="border:none;">

@@ -62,12 +62,12 @@
 			<span class="jy_alignr">手机动态码</span>
 			<input type="text" id="validateCode" name="validateCode"/>
 			<a href="#" id="getValidateCodeBtn" class="m_btn3 m_bg1">获取验证码</a>
+			<div id="authPhoneMessage" class="hidden">
+			    <div id="authPhoneResult" style="width:150px;margin-left:100px;color:red"></div>
+		    </div>						
 			<label for="validateCode" generated="true" class="error valid"></label>
-			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请于30分钟内输入</div>
+			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请查收</div>
 		</div>
-		<div id="authPhoneMessage" class="hidden">
-			<div id="authPhoneResult" style="width:150px;"></div>
-		</div>			
 		<div class="jy_btnlist">
 			<button id="confirmAuthPhoneBtn" type="submit" class="m_btn3 m_bg1">确认</button>
 			<button id="skipAuthPhoneBtn" type="button" class="m_btn3 m_bg2">跳过</button>
@@ -133,7 +133,7 @@
 				success: function(data, textStatus, xhr) {
 					//$("#authPhoneMessage").removeClass("hidden");
 					 if(data.type=="FAILURE"){
-					 	//$("#authPhoneResult").removeClass("alert-info").addClass("alert-warning");
+					 	$(".jy_tip2").remove();
 					 	$("#authPhoneResult").html(data.firstMessage);
 					 }else if(data.type=="SUCCESS"){	
 		               window.location.href="${app}/userIndex/authName?email=" + $('#email').val();;	   						
@@ -143,7 +143,7 @@
 	}
 	
 	function changeStyle(){
-		$("#cellphone").prop('style','');
+		$("#cellphone").prop('style','border:2px solid red;');
 		document.getElementById("cellphone").readOnly=false;
 		
 	}

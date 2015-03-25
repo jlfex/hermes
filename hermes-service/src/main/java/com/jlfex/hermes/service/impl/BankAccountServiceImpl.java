@@ -253,4 +253,10 @@ public class BankAccountServiceImpl implements BankAccountService {
 		return bankAccount;
 	}
 
+	@Override
+	public BankAccount findByIsDefault(Boolean isDefault) {
+		// TODO Auto-generated method stub
+		return bankAccountRepository.findByIsDefault(isDefault);
+	}
+
 }
