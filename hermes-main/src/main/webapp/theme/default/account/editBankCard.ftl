@@ -1,5 +1,7 @@
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/jquery-1.10.2.min.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
 
 <div class="account_content_right">
 	<div class="withdraw_amend zero_border">
@@ -33,7 +35,7 @@
 					    <option value="${a.id}">${a.name}</option>
 				        </#list>				    
 					</select>
-					<select id="cityId" name="cityId">
+					<select id="cityId" name="cityId" onchange="reloadBank();">
 					    <option value="">请选择</option>
 						<#list areaChildrens as a>
 					    <option value="${a.id}">${a.name}</option>
@@ -117,6 +119,43 @@ jQuery(function($) {
 		    });
 	 });
 });
+       //ajax获取后台数据
+        function reloadBank(){
+	 	    $.ajax({
+		        data: $("#authIdentityForm").serialize(),
+		        contentType: "application/json",
+		        url: "${app}/userIndex/findBranchBankByBankAndCity",
+		        dataType: "json",
+		        success: function (msg) {
+		            if (msg != null) {
+		                $("#deposit").autocomplete(msg, {
+		                    minChars: 1,                    //最少输入字条
+		                    max: 30,
+		                    autoFill: false,                //是否选多个,用","分开
+		                    mustMatch: false,               //是否全匹配, 如数据中没有此数据,将无法输入
+		                    matchContains: true,            //是否全文搜索,否则只是前面作为标准
+		                    scrollHeight: 220,
+		                    width: 190,
+		                    multiple: false,
+		                    formatItem: function (row, i, max) {                    //显示格式
+		                    	return "<span>" + row.branchBankName + "</span>";
+		                    },
+		                    formatMatch: function (row, i, max) {               //以什么数据作为搜索关键词,可包括中文,
+		                        return row.branchBankName;
+		                    },
+		                    formatResult: function (row) {                      //返回结果
+		                        return row.branchBankName;
+		                    }
+		                }).result(function (event, data, formatted) {
+		                    alert(data.id);
+		                    //根据最终返回的数据做处理
+		                    
+		                });
+		            }		            
+		         }
+		    });        
+        }
+
 	function mysubmit(){
 		if(verificationInf()){
 			bindBank();

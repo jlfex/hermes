@@ -1,6 +1,7 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -8,6 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +28,14 @@ import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
+import com.jlfex.hermes.model.Area;
+import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.UserProperties.IdType;
+import com.jlfex.hermes.model.hermes.BranchBank;
 import com.jlfex.hermes.service.AreaService;
 import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.ContentService;
@@ -352,12 +357,32 @@ public class UserController {
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
 		model.addAttribute("realName", userService.loadPropertiesByUserId(user.getId()).getRealName());// 获取持卡人的真实姓名
 		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));// 获取持卡人的真实姓名
-		if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+		if(StringUtils.isNotEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "user/bindBank";
+		}else if(StringUtils.isEmpty(userPro.getAuthBankcard())){
 			return "user/bindBank";
 		}else{
 			return "forward:/invest/index";
 		}
 
+	}
+	/**
+	 * 查询支行数据
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/findBranchBankByBankAndCity")
+	@ResponseBody
+	public List<BranchBank> findBranchBankByBankAndCity(@RequestParam("bankId") String bankId,@RequestParam("cityId") String cityId) {
+		List<BranchBank> list = null;
+		Bank bank = bankService.findOne(bankId);
+		Area area = areaService.loadById(cityId);
+		try {
+			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName());			
+		} catch (Exception e) {
+			Logger.error("获取支行信息失败!", e);
+		}
+		return list;
 	}
 
 	/**

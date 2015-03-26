@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.persistence.PostPersist;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -333,10 +334,10 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 						result.setType(com.jlfex.hermes.common.Result.Type.CELLPHNOE_NOTAUTH);//判断手机是否认证
 					}else if(!userPro.getAuthName().equals(Auth.PASS)){
 						result.setType(com.jlfex.hermes.common.Result.Type.NAME_NOTAUTH);//判断实名是否认证
-					}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){						
+					}else if(StringUtils.isEmpty(userPro.getAuthBankcard())){
+						result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);
+					}else if(StringUtils.isEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)){						
 						result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);//判断银行卡是否认证
-					}else if(!userPro.getAuthCellphone().equals(Auth.PASS) && !userPro.getAuthName().equals(Auth.PASS) && !userPro.getAuthBankcard().equals(Auth.PASS)){
-						result.setType(com.jlfex.hermes.common.Result.Type.NOTAUTH);//判断手机，实名，银行卡是否都认证
 					}else{
 					    result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 					}

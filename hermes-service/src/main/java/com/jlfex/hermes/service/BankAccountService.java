@@ -98,4 +98,6 @@ public interface BankAccountService {
 	 * @return
 	 */
 	public Withdraw addWithdraw(String bankAccountId, Double amount);
+	
+	public BankAccount findByIsDefault(Boolean isDefault);
 }

@@ -1,6 +1,9 @@
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/jquery-1.10.2.min.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
+
 
 <div class="account_content_right">
 	<div class="withdraw_amend zero_border">
@@ -14,7 +17,12 @@
        		<input type="hidden" value="${userId}" id="userId" name="userId">
             	<div class="m_block clearfix">
                 	<label>持卡人</label>
-                    <input type="text" id="realName" name="realName" value="${realName}" readonly="readonly" style="border:0px;">
+                	<#if userProperties.realName??>
+                        <input type="text" id="realName" name="realName" value="${realName}" readonly="readonly" style="border:0px;">
+					<#else>
+					    <input type="text" id="realName" name="realName" onblur="checkData()">
+					    <span id="mv_realName" style="color:red;width:200px"></span>												
+					</#if>                	
                 </div>
                 
                 <div class="m_block clearfix">
@@ -29,7 +37,7 @@
                 <div class="m_block clearfix">
                 	<label>开户所在地</label>					
 				   <select id="cityId2" name="cityId2"></select>
-				   <select id="cityId" name="cityId" ></select>																				
+				   <select id="cityId" name="cityId" onchange="reloadBank();"></select>																				
 																								
                 </div>
                 
@@ -89,12 +97,66 @@ jQuery(function($) {
 		     window.location.href="${app}/account/index?type=auth1";	   						
 		});
         $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
+        
+
+
 });
+       //ajax获取后台数据
+        function reloadBank(){
+	 	    $.ajax({
+		        data: $("#authIdentityForm").serialize(),
+		        contentType: "application/json",
+		        url: "${app}/userIndex/findBranchBankByBankAndCity",
+		        dataType: "json",
+		        success: function (msg) {
+		            if (msg != null) {
+		                $("#deposit").autocomplete(msg, {
+		                    minChars: 1,                    //最少输入字条
+		                    max: 30,
+		                    autoFill: false,                //是否选多个,用","分开
+		                    mustMatch: false,               //是否全匹配, 如数据中没有此数据,将无法输入
+		                    matchContains: true,            //是否全文搜索,否则只是前面作为标准
+		                    scrollHeight: 220,
+		                    width: 190,
+		                    multiple: false,
+		                    formatItem: function (row, i, max) {                    //显示格式
+		                    	return "<span>" + row.branchBankName + "</span>";
+		                    },
+		                    formatMatch: function (row, i, max) {               //以什么数据作为搜索关键词,可包括中文,
+		                        return row.branchBankName;
+		                    },
+		                    formatResult: function (row) {                      //返回结果
+		                        return row.branchBankName;
+		                    }
+		                }).result(function (event, data, formatted) {
+		                    //alert(data.id);
+		                    //根据最终返回的数据做处理
+		                    
+		                });
+		            }		            
+		         }
+		    });        
+        }
+
 	function mysubmit(){
-		if(verification()){
+		if(verification() && checkData()){
 			bindBank();
 		 }
 	}
+    function checkData(){
+        var vrealName = /^[\u4e00-\u9fa5]{2,20}$/;
+        var realName=$("#realName").val();
+        if(realName==""){
+			$("#mv_realName").html("持卡人不能为空");
+			return false;
+		}else if(!vrealName.test(realName)){
+			$("#mv_realName").html("持卡人只能为汉字");
+			return false;
+		}else{
+			$("#mv_realName").html("");
+		}
+    	return true;
+    }
 
   function verification(){
    		var deposit=$("#deposit").val();
@@ -120,8 +182,7 @@ jQuery(function($) {
    		 	return false;
    		}else{
    			$("#mv_account").html("");
-   		}
-   		
+   		}   		
    		return true;		  
    }
    

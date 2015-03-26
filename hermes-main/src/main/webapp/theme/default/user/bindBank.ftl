@@ -13,6 +13,9 @@
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/mValidate.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
+
 <style type="text/css">
 .jy_ml{margin-left: 18px;}
 .jy_bg1{background:#b9baba;}
@@ -78,7 +81,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">开户所在地</span>
 			<select id="cityId2" name="cityId2"></select>
-			<select id="cityId" name="cityId" ></select>																				
+			<select id="cityId" name="cityId" onchange="reloadBank();"></select>																				
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">开户行</span>
@@ -109,8 +112,45 @@
 		});	
         $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
 	});	
+	    //ajax获取后台数据
+        function reloadBank(){
+	 	    $.ajax({
+		        data: $("#authIdentityForm").serialize(),
+		        contentType: "application/json",
+		        url: "${app}/userIndex/findBranchBankByBankAndCity",
+		        dataType: "json",
+		        success: function (msg) {
+		            if (msg != null) {
+		                $("#deposit").autocomplete(msg, {
+		                    minChars: 1,                    //最少输入字条
+		                    max: 30,
+		                    autoFill: false,                //是否选多个,用","分开
+		                    mustMatch: false,               //是否全匹配, 如数据中没有此数据,将无法输入
+		                    matchContains: true,            //是否全文搜索,否则只是前面作为标准
+		                    scrollHeight: 220,
+		                    width: 240,
+		                    multiple: false,
+		                    formatItem: function (row, i, max) {                    //显示格式
+		                    	return "<span>" + row.branchBankName + "</span>";
+		                    },
+		                    formatMatch: function (row, i, max) {               //以什么数据作为搜索关键词,可包括中文,
+		                        return row.branchBankName;
+		                    },
+		                    formatResult: function (row) {                      //返回结果
+		                        return row.branchBankName;
+		                    }
+		                }).result(function (event, data, formatted) {
+		                    //alert(data.id);
+		                    //根据最终返回的数据做处理
+		                    
+		                });
+		            }		            
+		         }
+		    });        
+        }
+	
 	function mysubmit(){
-		if(verificationInf()){
+		if(verificationInf() && verification()){
 			bindBank();
 		 }
 	}
@@ -126,7 +166,7 @@
 		}else{
 			$("#mv_realName").html("");
 		}
-    
+         return true;
     }
 	function verificationInf(){
 		var vdeposit = /^[\u4e00-\u9fa5]{2,20}$/;		
