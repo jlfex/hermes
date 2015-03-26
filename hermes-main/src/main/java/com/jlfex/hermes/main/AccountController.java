@@ -28,6 +28,7 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.RequestParam;
 import com.jlfex.hermes.main.IndexController.HomeNav;
 import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.BankAccount.Status;
 import com.jlfex.hermes.model.Payment;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
@@ -95,7 +96,7 @@ public class AccountController {
 		App.checkUser();
 		model.addAttribute("nav", HomeNav.ACCOUNT);
 		model.addAttribute("type", Strings.empty(type, null));
-		model.addAttribute("bankAccounts", bankAccountService.findByUserId(App.user().getId()));
+		model.addAttribute("bankAccounts", bankAccountService.findByUserIdAndStatus(App.user().getId(), Status.ENABLED));
 		return "account/index";
 	}
 
@@ -130,10 +131,12 @@ public class AccountController {
 	public String bankCardManage(Model model) {
 		// 查询用户数据
 		App.checkUser();
-		BankAccount bankAccount = bankAccountService.findByIsDefault(true);
+		BankAccount bankAccount = bankAccountService.findByStatus(Status.ENABLED);
 		// 设置属性并渲染视图
+		if(bankAccount !=null){
+		   model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
+		}
 		model.addAttribute("bankAccount", bankAccount);
-		model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
 		return "account/bankCardManage";
 	}
 

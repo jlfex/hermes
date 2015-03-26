@@ -15,7 +15,7 @@
        		<input type="hidden" value="${bankAccount.id}" id="id" name="id">
             	<div class="m_block clearfix">
                 	<label>持卡人</label>
-                    <input type="text" id="realName" name="realName" value="${bankAccount.name}" readonly="readonly">
+                    <input type="text" id="realName" name="realName" value="${bankAccount.name}" readonly="readonly" style="border:0px;">
                 </div>
                 
                 <div class="m_block clearfix">

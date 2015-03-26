@@ -189,7 +189,7 @@ jQuery(function($) {
 	function bindBank(){
 		$.ajax({
 				data: $("#authIdentityForm").serialize(),
-		        url: "${app}/auth/handerBindBank/${userId}",
+		        url: "${app}/auth/handerAddBank/${userId}",
 		        type: "POST",
 		        dataType: 'json',
 		        timeout: 10000,

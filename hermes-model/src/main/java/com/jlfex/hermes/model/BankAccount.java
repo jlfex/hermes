@@ -42,9 +42,6 @@ public class BankAccount extends Model {
 	@Column(name = "deposit")
 	private String deposit;
 
-	/** 是否设置为默认银行卡 */
-	@Column(name = "isDefault")
-	private Boolean isDefault;
 	/** 开户人 */
 	@Column(name = "name")
 	private String name;
@@ -155,14 +152,6 @@ public class BankAccount extends Model {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Boolean getIsDefault() {
-		return isDefault;
-	}
-
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
 	}
 
 	/**

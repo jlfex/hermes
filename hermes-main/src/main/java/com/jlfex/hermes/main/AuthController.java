@@ -146,6 +146,35 @@ public class AuthController {
 	}
 
 	/**
+	 * 认证手机号(账户中心-认证管理入口)
+	 * 
+	 * @param cellphone
+	 * @param validateCode
+	 * @return
+	 */
+	@RequestMapping("authCellphone")
+	@ResponseBody
+	public Result authCellphone(String cellphone, String validateCode) {
+		AppUser curUser = App.current().getUser();
+		return authService.authPhone(curUser.getId(), cellphone, validateCode);
+	}
+
+	/**
+	 * 实名认证(账户中心-认证管理入口)
+	 * 
+	 * @param realName
+	 * @param idType
+	 * @param idNumber
+	 * @return
+	 */
+	@RequestMapping("authId")
+	@ResponseBody
+	public Result authId(String realName, String idType, String idNumber) {
+		AppUser curUser = App.current().getUser();
+		return authService.authIdentify(curUser.getId(), realName, idType, idNumber);
+	}
+
+	/**
 	 * 实名认证
 	 * 
 	 * @param realName
@@ -202,9 +231,25 @@ public class AuthController {
 		String cityId = request.getParameter("cityId");
 		String deposit = request.getParameter("deposit");
 		String account = request.getParameter("account");
+		String realName = request.getParameter("realName");
+		return authService.bindBank(userId, bankId, cityId, deposit, account,realName);
+	}
+	
+	/**
+	 * 处理新增银行卡业务
+	 * 
+	 * @return
+	 */
+	@RequestMapping("handerAddBank/{userId}")
+	@ResponseBody
+	public Result handerAddBank(@PathVariable("userId") String userId, HttpServletRequest request) {
+		String bankId = request.getParameter("bankId");
+		String cityId = request.getParameter("cityId");
+		String deposit = request.getParameter("deposit");
+		String account = request.getParameter("account");
 		String isdefault = request.getParameter("isdefault");
 		String realName = request.getParameter("realName");
-		// AppUser curUser = App.current().getUser();
 		return authService.bindBank(userId, bankId, cityId, deposit, account, isdefault,realName);
 	}
+
 }

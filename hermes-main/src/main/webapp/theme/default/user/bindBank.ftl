@@ -62,7 +62,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">持卡人</span>
 			<#if userProperties.realName??>
-			<span class="jy_ml">${realName!}</span>
+			<input type="text" class="jy_ml" id="realName" value="${realName}" name="realName" style="border:0px;">			
 			<#else>
 			<input type="text" class="form-control" id="realName" name="realName" onblur="verification()">
 			<label for="deposit" generated="true" class="error valid"></label>
@@ -156,8 +156,10 @@
 	}
     function verification(){
         var vrealName = /^[\u4e00-\u9fa5]{2,20}$/;
-        var realName=$("#realName").val();
-        if(realName==""){
+        var realName=$("#realName").val();      
+        if(realName !=""){
+            return true;
+        }else if(realName==""){
 			$("#mv_realName").html("持卡人不能为空");
 			return false;
 		}else if(!vrealName.test(realName)){
