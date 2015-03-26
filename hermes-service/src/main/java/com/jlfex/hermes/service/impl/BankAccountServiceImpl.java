@@ -254,9 +254,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 	}
 
 	@Override
-	public BankAccount findByIsDefault(Boolean isDefault) {
+	public BankAccount findByStatus(String status) {
 		// TODO Auto-generated method stub
-		return bankAccountRepository.findByIsDefault(isDefault);
+		return bankAccountRepository.findByStatus(status);
 	}
 
 }

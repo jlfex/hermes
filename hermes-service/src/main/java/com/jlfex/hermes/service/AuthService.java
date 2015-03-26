@@ -63,6 +63,11 @@ public interface AuthService {
 	 * @param account
 	 */
 	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault,String realName);
+	/**
+	 * 新增银行卡
+	 * 
+	 */
+	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account,String realName);
 
 	/**
 	 * 更换银行卡

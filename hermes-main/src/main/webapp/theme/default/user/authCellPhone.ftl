@@ -12,7 +12,6 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/mValidate.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
 .jy_ml{margin-left: 18px;}
 .jy_bg1{background:#b9baba;}
@@ -65,7 +64,7 @@
 			<div id="authPhoneMessage" class="hidden">
 			    <div id="authPhoneResult" style="width:150px;margin-left:100px;color:red"></div>
 		    </div>						
-			<label for="validateCode" generated="true" class="error valid"></label>
+			<label for="validateCode" generated="true" class="error valid" style="margin-left:100px;"></label>
 			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请查收</div>
 		</div>
 		<div class="jy_btnlist">
@@ -101,6 +100,7 @@
 				success: function(data, textStatus, xhr) {
 					countDown(seconds);
 					 if(data.type=="FAILURE"){
+					    $('.jy_tip2').remove();
 					 	$("#result").removeClass("alert-info").addClass("alert-warning");
 					 }else{
 					   $("#result").removeClass("alert-warning").addClass("alert-info");
@@ -143,9 +143,8 @@
 	}
 	
 	function changeStyle(){
-		$("#cellphone").prop('style','border:2px solid red;');
-		document.getElementById("cellphone").readOnly=false;
-		
+		$("#cellphone").attr('style','border:2px solid red;');
+		document.getElementById("cellphone").readOnly=false;		
 	}
 </script>
 </body>

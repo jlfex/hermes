@@ -14,23 +14,32 @@
                     <th style="border:none;">状态</th>
                     <th style="border:none;">操作</th>
                 </tr>
-                <tr>
+                <#if bankAccount??>              
+                <tr>                
                     <td style="border:none;">${bankAccount.bank.name}</td>
                     <td style="border:none;">${'${bankAccount.account}'?substring(0,4)}******${'${bankAccount.account}'?substring('${bankAccount.account}'?length-4)}</td>
                     <td style="border:none;">${bankAccount.deposit}</td>
                     <td style="border:none;">${area.name}</td>
                     <td style="border:none;">${bankAccount.city.name}</td>
-                    <td style="border:none;">${(bankAccount.status)!}</td>
+                    <td style="border:none;">${bankAccount.statusName}</td>
                     <td style="border:none;">
                     	<button type="button" class="btn btn-link editBtn" id="editBtn">更换</button>
                     </td>
                 </tr>
+                <tr>                
+                    <td colspan="6" style="border:none;"></td>
+                    <td style="border:none;">
+                    	<button type="button" class="btn btn-link addBtn" id="addBtn">新增</button>
+                    </td> 
+                </tr>                               
+                <#else>
                 <tr>
                     <td colspan="6" style="border:none;"></td>
                     <td style="border:none;">
                     	<button type="button" class="btn btn-link addBtn" id="addBtn">新增</button>
                     </td>
-                </tr>                                                    
+                </tr> 
+                </#if>                                                   
             </table>
         </div>
     </div>       
