@@ -1,4 +1,3 @@
-<script type="text/javascript" src="${app.theme}/public/other/javascripts/jquery-1.10.2.min.js" charset="utf-8"></script>
 
 <div class="account_content_right">
     <div class="f_money">
