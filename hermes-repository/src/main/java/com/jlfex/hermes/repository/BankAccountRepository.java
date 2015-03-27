@@ -33,6 +33,6 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, String
 	 * @return
 	 */
 	public List<BankAccount> findByUserId(String userId);
-	public BankAccount findByStatus(String status);
+	public BankAccount findOneByUserIdAndStatus(String userId,String status);
 
 }

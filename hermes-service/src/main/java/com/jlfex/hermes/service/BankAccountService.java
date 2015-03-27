@@ -99,5 +99,5 @@ public interface BankAccountService {
 	 */
 	public Withdraw addWithdraw(String bankAccountId, Double amount);
 	
-	public BankAccount findByStatus(String status);
+	public BankAccount findOneByUserIdAndStatus(String userId,String status);
 }

@@ -254,9 +254,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 	}
 
 	@Override
-	public BankAccount findByStatus(String status) {
+	public BankAccount findOneByUserIdAndStatus(String userId,String status) {
 		// TODO Auto-generated method stub
-		return bankAccountRepository.findByStatus(status);
+		return bankAccountRepository.findOneByUserIdAndStatus(userId,status);
 	}
 
 }

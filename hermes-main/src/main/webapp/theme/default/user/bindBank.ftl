@@ -72,7 +72,6 @@
 		<div class="jy_info">
 			<span class="jy_alignr">银行卡名称</span>
 		    <select id="bankId" name="bankId" class="form-control">
-		        <option value="">请选择</option>
 		        <#list banks as b>
 			    <option value="${b.id}" selected = "selected">${b.name}</option>
 		        </#list>				    

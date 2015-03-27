@@ -131,7 +131,7 @@ public class AccountController {
 	public String bankCardManage(Model model) {
 		// 查询用户数据
 		App.checkUser();
-		BankAccount bankAccount = bankAccountService.findByStatus(Status.ENABLED);
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(App.user().getId(),Status.ENABLED);
 		// 设置属性并渲染视图
 		if(bankAccount !=null){
 		   model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
