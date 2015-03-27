@@ -385,6 +385,34 @@ public class UserController {
 		return list;
 	}
 
+	
+	/**
+	 * 检测手机号是否已被绑定
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping("checkPhone")
+	@ResponseBody
+	public Result checkPhone(@RequestParam("phone") String phone,Model model) {	
+		Result result = new Result();
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+		try {
+			boolean flagPhone = userService.checkPhone(phone);
+			if (!flagPhone) {
+				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+				result.addMessage(App.message("当前手机号已被绑定"));
+			}
+		} catch (Exception e) {
+			Logger.info(e.getMessage());
+			model.addAttribute("errMsg", e.getMessage());
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			result.addMessage(App.message("校验失败"));
+		}
+		return  result;
+	}
+
+	
 	/**
 	 * 找回密码
 	 * 

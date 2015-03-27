@@ -11,7 +11,6 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
-<script type="text/javascript" src="${app.theme}/public/javascripts/mValidate.js"></script>
 <style type="text/css">
 .jy_ml{margin-left: 18px;}
 .jy_bg1{background:#b9baba;}
@@ -54,21 +53,21 @@
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">手机号码</span>			
-			<input type="text" id="cellphone" name="cellphone" value="${cellphone}" class="jy_tel" readonly="readonly" style="border:0px;"/>
+			<input type="text" id="cellphone" name="cellphone" value="${cellphone}" class="jy_tel" readonly="readonly" style="border:0px;"  onblur="checkPhone()"/>
 			<a href="#" style="margin-left:40px;" onclick='changeStyle()'>更换号码</a>
+			<label for="cellphone" generated="true" class="error valid" id="label"></label>
+			<span class="mv_msg col-xs-4" id="mv_cellphone" style="color:red;width:200px;font-weight:bold;"></span>			
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">手机动态码</span>
-			<input type="text" id="validateCode" name="validateCode"/>
+			<input type="text" id="validateCode" name="validateCode" onblur="checkCode()"/>
 			<a href="#" id="getValidateCodeBtn" class="m_btn3 m_bg1">获取验证码</a>
-			<div id="authPhoneMessage" class="hidden">
-			    <div id="authPhoneResult" style="width:150px;margin-left:100px;color:red"></div>
-		    </div>						
+			<span class="mv_msg col-xs-4" id="mv_validateCode" style="color:red;width:200px;font-weight:bold;"></span>			
 			<label for="validateCode" generated="true" class="error valid" style="margin-left:100px;"></label>
 			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请查收</div>
 		</div>
 		<div class="jy_btnlist">
-			<button id="confirmAuthPhoneBtn" type="submit" class="m_btn3 m_bg1">确认</button>
+			<button id="confirmAuthPhoneBtn" type="button" onClick="mysubmit()" class="m_btn3 m_bg1">确认</button>
 			<button id="skipAuthPhoneBtn" type="button" class="m_btn3 m_bg2">跳过</button>
 		</div>
 		</form>
@@ -131,21 +130,73 @@
 				dataType: 'json',
 				timeout: 10000,
 				success: function(data, textStatus, xhr) {
-					//$("#authPhoneMessage").removeClass("hidden");
 					 if(data.type=="FAILURE"){
 					 	$(".jy_tip2").remove();
-					 	$("#authPhoneResult").html(data.firstMessage);
+					 	$("#mv_validateCode").html(data.firstMessage);
 					 }else if(data.type=="SUCCESS"){	
-		               window.location.href="${app}/userIndex/authName?email=" + $('#email').val();;	   						
+		               window.location.href="${app}/userIndex/authName?email=" + $('#email').val();
 					 }
 				}
 		});
 	}
 	
 	function changeStyle(){
-		$("#cellphone").attr('style','border:2px solid red;');
+		$("#cellphone").attr('style','border:2px solid #F1F1F1;background-color:#FFF7B2;');
 		document.getElementById("cellphone").readOnly=false;		
 	}
+	
+	function mysubmit(){
+		if(checkPhone() && checkCode()){
+			subAuthPhone();
+		 }
+	}
+	
+	function checkPhone(){	
+        var vcellphone = /^((1)+\d{10})$/;
+        var cellphone=$("#cellphone").val();
+        if(cellphone==""){
+			$("#mv_cellphone").html("不能为空");
+			return false;
+		}else if(!vcellphone.test(cellphone)){
+			$("#mv_cellphone").html("手机号码格式错误");
+			return false;
+		}else{
+			$("#mv_cellphone").html("");
+		}
+     	var _result = false;
+		 $.ajax({
+	        url: "${app}/userIndex/checkPhone?phone="+cellphone,
+	        type: "POST",
+	        dataType: 'json',
+	        timeout: 10000,
+	        async:false,    
+			success: function(data, textStatus, xhr) {
+				 if(data.type=="FAILURE"){
+	               $("#mv_cellphone").html(data.firstMessage);
+				 }else if(data.type=="SUCCESS"){
+				 	_result = true;
+				 }
+			}
+	    });
+    	return _result;
+	}
+	function checkCode(){
+	    var vvalidateCode = /[^\d]/g;
+        var validateCode=$("#validateCode").val();
+        if(validateCode=="" || validateCode==null){
+			$("#mv_validateCode").html("不能为空");
+			return false;
+		}else if(vvalidateCode.test(validateCode)){
+			$("#mv_validateCode").html("只能输入数字");
+			return false;
+		}else if(validateCode.length != '6'){
+			$("#mv_validateCode").html("请输入一个长度为6位数字");
+			return false;				
+		}else{
+			$("#mv_validateCode").html("");
+		}
+		return true;   	    
+	 }
 </script>
 </body>
 </html>
