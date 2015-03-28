@@ -51,7 +51,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">手机号码</span>			
 			<input type="text" id="cellphone" name="cellphone" value="${cellphone}" class="jy_tel" readonly="readonly" style="border:0px;"  onblur="checkPhone()"/>
-			<a href="#" style="margin-left:40px;" onclick='changeStyle()'>更换号码</a>
+			<a href="#" id="changePhoneNumber" style="margin-left:40px;" onclick='changeStyle()'>更换号码</a>
 			<label for="cellphone" generated="true" class="error valid" id="label"></label>
 			<span class="mv_msg col-xs-4" id="mv_cellphone" style="color:red;width:200px;font-weight:bold;"></span>			
 		</div>
@@ -88,6 +88,8 @@
 		       	document.getElementById("#getValidateCodeBtn").disabled=true;		       
 		    }
 		    $("#changeCellphnoe").html($("#cellphone").val());
+		    $("#changePhoneNumber").removeAttr("href").css("color","#CECED1");
+		    document.getElementById("cellphone").disabled = true;
 			$('.jy_tip2').show();
 			seconds = 60;
 			var cellphone = $("#cellphone").val();
@@ -117,7 +119,8 @@
 		}else{
 			$("#getValidateCodeBtn").removeClass("disabled");
 			$('#getValidateCodeBtn').text('获取验证码');
-			$("#result").removeClass("alert-info").removeClass("alert-warning");
+		    $("#changePhoneNumber").attr("href","#").css("color","#878DCB");
+		    document.getElementById("cellphone").disabled = false;		    
 		}
 	}
 	
