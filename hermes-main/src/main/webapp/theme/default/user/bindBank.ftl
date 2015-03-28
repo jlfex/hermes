@@ -58,7 +58,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">持卡人</span>
 			<#if userProperties.realName??>
-			<input type="text" class="jy_ml" id="realName" value="${realName}" name="realName" style="border:0px;">			
+			<input type="text" class="jy_ml" id="realName" value="${realName}" name="realName" style="border:0px;" disabled="disabled"/>			
 			<#else>
 			<input type="text" class="form-control" id="realName" name="realName" onblur="verification()">
 			<label for="deposit" generated="true" class="error valid"></label>
