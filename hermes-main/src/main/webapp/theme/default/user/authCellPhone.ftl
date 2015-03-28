@@ -28,10 +28,7 @@
 .jy_nobg_notb .jy_btnlist{margin-left:83px;}
 .jy_nobg_notb .jy_btnlist .m_btn3{margin: 14px 20px;height:30px;width:90px;}
 </style>
-
-
 </head>
-
 <body>
 <#include "/header.ftl" />
 

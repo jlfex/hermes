@@ -137,14 +137,7 @@ jQuery(function($) {
 		var vdeposit = /^[\u4e00-\u9fa5]{2,20}$/;
 		var vaccount=/^[0-9]{12,20}$/;
         var deposit=$("#deposit").val();
-        var account=$("#account").val();
-        var cityId=$("#cityId").val();
-	
-
-        if(cityId==""){
-			$("#mv_cityId").html("请选择开户行所在地");
-			return false;
-		}
+        var account=$("#account").val();	
 			
 		if(deposit==""){
 			$("#mv_deposit").html("开户行不能为空");

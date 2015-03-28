@@ -158,8 +158,7 @@ jQuery(function($) {
    		var deposit=$("#deposit").val();
    		var account=$("#account").val();
    		var vsubbranch=/^(?!\d{1,30}$)(?![a-zA-Z]{1,30}$)[\da-zA-Z\u4e00-\u9fa5]{1,30}$/;
-   		var vbankAccount=/^[0-9]{12,20}$/; 
-   		
+   		var vbankAccount=/^[0-9]{12,20}$/;    		
    		if(deposit==""){
    		 	$("#mv_deposit").html("不能为空");
    		 	return false

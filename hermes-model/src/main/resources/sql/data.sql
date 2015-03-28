@@ -370,6 +370,7 @@ insert into `hm_area` (`id`, `create_time`, `creator`, `update_time`, `updater`,
 insert into `hm_area` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `parent`) values('98','2015-01-01 15:42:39',NULL,'2015-01-02 15:42:39',NULL,NULL,'163000','大庆市','8');
 insert into `hm_area` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `parent`) values('99','2015-01-01 15:42:39',NULL,'2015-01-02 15:42:39',NULL,NULL,'153000','伊春市','8');
 
+
 insert into `hm_bank` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `logo`, `name`, `status`) values('067ca118-74bf-11e3-ae10-6cae8b21aeaa','2014-01-03 16:35:54',NULL,'2014-01-03 16:35:54',NULL,NULL,'CCB',NULL,'中国建设银行','00');
 insert into `hm_bank` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `logo`, `name`, `status`) values('1d9ebe3a-74bf-11e3-ae10-6cae8b21aeaa','2014-01-03 16:36:33',NULL,'2014-01-03 16:36:33',NULL,NULL,'ABCHINA',NULL,'中国农业银行','00');
 insert into `hm_bank` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `logo`, `name`, `status`) values('a8587ebe-73f0-11e3-ae10-6cae8b21aeaa','2014-01-02 15:58:40',NULL,'2014-01-02 15:58:40',NULL,NULL,'ICBC',NULL,'中国工商银行','00');
