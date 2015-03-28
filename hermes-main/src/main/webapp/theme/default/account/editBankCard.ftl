@@ -1,5 +1,4 @@
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
-<script type="text/javascript" src="${app.theme}/public/other/javascripts/jquery-1.10.2.min.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
 
@@ -27,20 +26,10 @@
 					</select>
                 </div>
                 
-                <div class="m_block clearfix">
-                	<label>开户所在地</label>											
-					<select id="cityId2" name="cityId2">
-				        <option value="">请选择</option>
-				        <#list areaRoots as a>
-					    <option value="${a.id}">${a.name}</option>
-				        </#list>				    
-					</select>
-					<select id="cityId" name="cityId" onchange="reloadBank();">
-					    <option value="">请选择</option>
-						<#list areaChildrens as a>
-					    <option value="${a.id}">${a.name}</option>
-				        </#list>
-					</select>
+               <div class="m_block clearfix">
+                   <label>开户所在地</label>					
+				   <select id="cityId2" name="cityId2"></select>
+				   <select id="cityId" name="cityId" onchange="reloadBank();"></select>																																												
                 </div>
                 
                 <div class="m_block clearfix">
@@ -99,25 +88,7 @@ jQuery(function($) {
 	$('#cancelAuthIdentityBtn').on('click', function() {
 		     window.location.href="${app}/account/index?type=auth1";	   						
 	});
-
-	$("#cityId2").bind("change",function() {
-		var parentId = $("#cityId2").val();				
-			$.ajax({
-			     type : 'POST',
-			      url : '${app}/auth/findAreaByParentId',
-			     data : 'parentId='+parentId,
-			  success : function(msg){
-						//清空表格
-						$("#cityId").empty();
-						var option = "<option value=\"\">请选择</option>";		
-						$.each(msg, function(k, v)
-						{
-							option += "<option value=\"" + v['id'] + "\">" + v['name'] + "</option>";
-						});
-						$("#cityId").append(option);
-			   }
-		    });
-	 });
+    $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });        
 });
        //ajax获取后台数据
         function reloadBank(){

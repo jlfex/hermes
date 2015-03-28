@@ -35,10 +35,9 @@
                 </div>
                 
                 <div class="m_block clearfix">
-                	<label>开户所在地</label>					
+                   <label>开户所在地</label>					
 				   <select id="cityId2" name="cityId2"></select>
-				   <select id="cityId" name="cityId" onchange="reloadBank();"></select>																				
-																								
+				   <select id="cityId" name="cityId" onchange="reloadBank();"></select>																																												
                 </div>
                 
                 <div class="m_block clearfix">
@@ -96,10 +95,7 @@ jQuery(function($) {
 		$('#cancelAuthIdentityBtn').on('click', function() {
 		     window.location.href="${app}/account/index?type=auth1";	   						
 		});
-        $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });
-        
-
-
+        $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });        
 });
        //ajax获取后台数据
         function reloadBank(){
@@ -147,10 +143,10 @@ jQuery(function($) {
         var vrealName = /^[\u4e00-\u9fa5]{2,20}$/;
         var realName=$("#realName").val();
         if(realName==""){
-			$("#mv_realName").html("持卡人不能为空");
+			$("#mv_realName").html("不能为空");
 			return false;
 		}else if(!vrealName.test(realName)){
-			$("#mv_realName").html("持卡人只能为汉字");
+			$("#mv_realName").html("只能输入中文");
 			return false;
 		}else{
 			$("#mv_realName").html("");

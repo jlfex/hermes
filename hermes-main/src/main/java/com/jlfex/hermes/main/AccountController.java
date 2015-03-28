@@ -165,8 +165,9 @@ public class AccountController {
 	public String editBankCard(@PathVariable("id") String id, Model model) {
 		model.addAttribute("bankAccount", bankAccountService.loadBankAccountById(id));
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
-		model.addAttribute("areaRoots", areaService.findByParentIsNull());// 查询area根级数据
-		model.addAttribute("areaChildrens", areaService.loadByParentId(bankAccountService.loadBankAccountById(id).getCity().getParent().getId()));// 查询area子数据
+		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
+	  //model.addAttribute("areaRoots", areaService.findByParentIsNull());// 查询area根级数据
+	  //model.addAttribute("areaChildrens", areaService.loadByParentId(bankAccountService.loadBankAccountById(id).getCity().getParent().getId()));// 查询area子数据
 		return "account/editBankCard";
 	}
 

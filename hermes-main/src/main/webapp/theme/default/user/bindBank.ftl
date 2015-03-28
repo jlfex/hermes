@@ -11,7 +11,6 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
-<script type="text/javascript" src="${app.theme}/public/javascripts/mValidate.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
@@ -155,14 +154,12 @@
 	}
     function verification(){
         var vrealName = /^[\u4e00-\u9fa5]{2,20}$/;
-        var realName=$("#realName").val();      
-        if(realName !=""){
-            return true;
-        }else if(realName==""){
-			$("#mv_realName").html("持卡人不能为空");
+        var realName=$("#realName").val(); 
+        if(realName==""){
+			$("#mv_realName").html("不能为空");
 			return false;
 		}else if(!vrealName.test(realName)){
-			$("#mv_realName").html("持卡人只能为汉字");
+			$("#mv_realName").html("只能输入中文");
 			return false;
 		}else{
 			$("#mv_realName").html("");
@@ -173,9 +170,7 @@
 		var vdeposit = /^[\u4e00-\u9fa5]{2,20}$/;		
 		var vaccount=/^[0-9]{12,20}$/;
         var deposit=$("#deposit").val();
-        var account=$("#account").val();
-
-			
+        var account=$("#account").val();			
 		if(deposit==""){
 			$("#mv_deposit").html("开户行不能为空");
 			return false;
