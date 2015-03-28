@@ -28,10 +28,7 @@
 .jy_nobg_notb .jy_btnlist{margin-left:83px;}
 .jy_nobg_notb .jy_btnlist .m_btn3{margin: 14px 20px;height:30px;width:90px;}
 </style>
-
-
 </head>
-
 <body>
 <#include "/header.ftl" />
 
@@ -61,7 +58,7 @@
 		<div class="jy_info">
 			<span class="jy_alignr">手机动态码</span>
 			<input type="text" id="validateCode" name="validateCode" onblur="checkCode()"/>
-			<a href="#" id="getValidateCodeBtn" class="m_btn3 m_bg1">获取验证码</a>
+			<button id="getValidateCodeBtn" class="m_btn3 m_bg1"  style="color:white">获取验证码</button>
 			<span class="mv_msg col-xs-4" id="mv_validateCode" style="color:red;width:200px;font-weight:bold;"></span>			
 			<label for="validateCode" generated="true" class="error valid" style="margin-left:100px;"></label>
 			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请查收</div>
@@ -87,12 +84,14 @@
 		     window.location.href="${app}/userIndex/authName?email=" + $('#email').val();	   						
 		});
 		$("#getValidateCodeBtn").on("click",function(){
+		    if(!checkPhone()){
+		       	document.getElementById("#getValidateCodeBtn").disabled=true;		       
+		    }
 		    $("#changeCellphnoe").html($("#cellphone").val());
-			$("#authPhoneMessage").addClass("hidden");
 			$('.jy_tip2').show();
 			seconds = 60;
 			var cellphone = $("#cellphone").val();
-			$("#getValidateCodeBtn").addClass("disabled");
+            $("#getValidateCodeBtn").attr('disabled',true);
 			$.ajax('${app}/auth/sendphoneCode/${userId}/?cellphone='+cellphone, {
 				type: 'post',
 				timeout: 10000,
