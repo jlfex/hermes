@@ -38,7 +38,7 @@ public class BankAccount extends Model {
 	@JoinColumn(name = "city")
 	private Area city;
 
-	/** 开户行 */
+	/** 开户支行 */
 	@Column(name = "deposit")
 	private String deposit;
 

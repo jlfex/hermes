@@ -378,4 +378,18 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
+	
+	@Override
+	public List<Transaction> cropAccountToJlfexPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
+		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		return transact(type, cropAccount, userAccount, amount, reference, remark);
+	}
+	
+	@Override
+	public List<Transaction> cropAccountToZJPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
+		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		return transact(type, cropAccount, userAccount, amount, reference, remark);
+	}
 }

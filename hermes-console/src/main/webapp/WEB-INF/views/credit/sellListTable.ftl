@@ -37,10 +37,14 @@
 		                        <td class="align-center">${(l.statusName)!''}</td> 
 								<td class="align-center">
 	                                 <a href="#"  data-url="${app}/credit/sellDetail/${l.id}" data-target="main" >查看</a> &nbsp;&nbsp;
-	                            <#if l.status == '00' &&  !l.outOfDate>
-	                                 <a href="#" data-url="${app}/credit/goSell/${l.id}"  data-target="main">发售</a>
+	                         	<#if l.creditKind?? && l.creditKind =='01'>
+	                                   <span style="color:#CDCDCD">发售</a>
 	                            <#else>
-	                                <span style="color:#CDCDCD">发售</a>
+	                                   <#if l.status == '00' &&  !l.outOfDate>
+	                                   <a href="#" data-url="${app}/credit/goSell/${l.id}"  data-target="main">发售</a>
+	                                   <#else>
+	                                   <span style="color:#CDCDCD">发售</a>
+	                                   </#if>
 	                            </#if>
 	                        </td>    
 							</tr>

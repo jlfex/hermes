@@ -7,7 +7,7 @@
                         <th class="align-center">借款人</th>
                         <th class="align-center">借款金额</th>
                         <th class="align-center">年利率</th>
-                        <th class="align-center">期限(月)</th>
+                        <th class="align-center">期限</th>
                         <th class="align-center">借款用途</th>
                         <th class="align-center">还款方式</th>
                         <th class="align-center">导入日期</th>
@@ -30,7 +30,13 @@
 		                        <td class="align-center">${(l.borrower)!''}</td> 
 		                        <td class="align-center">${(l.amount)!''}</td> 
 		                        <td class="align-center">${(l.rate!0)?string.percent}</td> 
-		                        <td class="align-center">${(l.period)!''}</td>
+		                        <td class="align-center">${(l.period)!''} 
+		                          <#if (l.creditKind)?? && l.creditKind == '01'  >
+								              天 
+								   <#else>
+								        <@messages key="common.unit.month" />
+								  </#if>
+		                        </td>
 		                        <td class="align-center">${(l.purpose)!''}</td>
 		                        <td class="align-center">${(l.payType)!''}</td> 
 		                        <td class="align-center">${(l.createTime)!''}</td> 

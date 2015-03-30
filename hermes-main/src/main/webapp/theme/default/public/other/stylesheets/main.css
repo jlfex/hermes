@@ -519,7 +519,7 @@ a.m_btn1:hover {color: #fff;}
 .m_bg_gry{ background:#babbbb; cursor:default;}
 .m_bg1 {background: #018dc8;cursor:pointer;}
 
-.m_fp_bid{height: 100px;line-height: 87px;text-align: center;}
+.m_fp_bid{height: 240px;line-height: 87px;text-align: center;}
 .m_fp_bid img {margin-right: 20px;vertical-align: middle;}
 
 p.m_im_txt {padding-top:20px;line-height: 45px;color: #444444;font-size: 16px;font-family: "微软雅黑", "Microsoft YaHei"; margin-left:120px;}

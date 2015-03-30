@@ -18,9 +18,15 @@ import com.jlfex.hermes.model.CrediteInfo;
  */
 public interface CreditRepayPlanService {
 
-    
 	/**
 	 * 保存
+	 * @param product
+	 * @return
+	 */
+	public CreditRepayPlan save(CreditRepayPlan plan) throws Exception ;
+    
+	/**
+	 * 批量保存
 	 * @param product
 	 * @return
 	 */

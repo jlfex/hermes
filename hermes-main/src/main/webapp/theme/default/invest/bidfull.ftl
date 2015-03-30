@@ -5,6 +5,7 @@
 <title><@config key="app.title" /></title>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
+<script type="text/javascript" src="${app.js}/jquery.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">

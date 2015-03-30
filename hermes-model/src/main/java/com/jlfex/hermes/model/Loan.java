@@ -580,6 +580,8 @@ public class Loan extends Model {
 		public static final String OUTSIDE_ASSIGN_LOAN 	= "01";
 		@Element("平台内债权标")
 		public static final String PLATFORM_ASSIGN_LOAN = "02";
+		@Element("易联债权标")
+		public static final String YLTX_ASSIGN_LOAN =     "03";
 
 	}
 }

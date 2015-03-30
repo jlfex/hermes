@@ -13,18 +13,20 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
-    var  validFlag = '${validFlag?c}';
-    if(validFlag == 'false'){
+    var  validFlag = '${validFlag!''}';
+    if(validFlag == '01'){
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html("提示：不能对自己发布的借款标进行投标");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+    }
+    if(validFlag == '02'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
     }
     $('#funanceProtocol').click(function(){
-			openwindow("${app}/loan/funanceProtocol","",1000,800);
-			
+		openwindow("${app}/loan/funanceProtocol","",1000,800);
 	});
 	$('.deal').click(function(){
-			openwindow("${app}/loan/deal/${loan.id}","",1000,800);
-			
+		openwindow("${app}/loan/deal/${loan.id}","",1000,800);
 	});
 
 	function openwindow(url,name,iWidth,iHeight)
@@ -37,11 +39,18 @@ jQuery(function($) {
 		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
 		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
-	$('.confirm').click(function(){
+	
+	 $('.confirm').click(function(){
+	    var loanKind = '${loanKind!''}' ;
 	    if(validFlag == 'false'){
 	       return ;
 	    }
-	 	$.ajax({
+	    if(loanKind == '03'){
+	       var investamount =$("#investamount").val();
+		   var loanid =$("#loanid").val();
+	       window.location.href="${app}/invest/goJlfexBid?investamount="+investamount+"&loanid="+loanid;
+	    }else{
+	      $.ajax({
 				data: $("#loanDetail").serialize(),
 			     url: "${app}/invest/bid",
 			    type: "POST",
@@ -59,8 +68,9 @@ jQuery(function($) {
 						window.location.href="${app}/invest/bidfull";
 					}
 				}
-			});
-	 });
+		  });
+	 	}
+	  });
 		var remaintime =$("#remaintime").val();
 		setTime();
 		function setTime() 
@@ -217,9 +227,11 @@ jQuery(function($) {
                             <td class="th_06"><@messages key="model.loan.rate" />：<span>${(loan.rate!0)?string.percent}</span></td>
                             <td class="th_06">
                              <#if loan.loanKind=='00'>
-                              <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
-                             <#else>
-                                                     剩余期限：<span>${loan.deadline!''}</span>天
+                               <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
+                             <#elseif loan.loanKind=='01'>
+                                                        剩余期限：<span>${loan.deadline!''}</span>天
+                             <#elseif loan.loanKind=='03'>    
+                                                        剩余期限：<span>${loan.period!''}</span>天               
                              </#if>
                              </td>
                         </tr>
@@ -253,6 +265,7 @@ jQuery(function($) {
                 		<input type="radio"name="otherrepay" value="00" /> 
                 		  <#if guaranteeType??>${guaranteeType!''} <#else>  <@messages key="invest.occurred.late.advance" /></#if>
                 		&nbsp;&nbsp;
+                		 
                 		<input type="radio" name="otherrepay"  value="01" checked="true"> <@messages key="invest.occurred.late.noadvance" />
                 		<span class="mv_msg" data-msg='请选择逾期垫付方式！'></span></td></tr>
                 		<tr><td colspan="3" class="td_deal">
@@ -328,7 +341,8 @@ jQuery(function($) {
 			                            <td class="tdalign"><@messages key="model.basic.gender" /></td>
 			                            <td class="th_00 th_06 black">${loanUserInfo.genderName!''}</td>
 			                            <td class="tdalign"><@messages key="model.basic.married" /></td>
-			                            <td class="th_00 black">${loanUserInfo.marriedName!''}</td>
+			                            <td class
+			                            ="th_00 black">${loanUserInfo.marriedName!''}</td>
 			                            <td class="tdalign"><@messages key="model.basic.age" /></td>
 			                            <td class="th_00 black">${loanUserInfo.age!''}</td>
 			                        </tr>
@@ -409,6 +423,16 @@ jQuery(function($) {
 											<td>${l.repayPrincipal?string('#,##0.00')}</td>
 											<td>${l.repayInterest}</td>
 											<td>${l.repayAllmount}</td>
+										</tr>
+										</#list>
+									</#if>
+									 <#if financePlanList??>
+				                        <#list financePlanList as l>  
+										<tr>
+											<td class="th_00">${(l.repaymentDate?string('yyyy-MM-dd'))!''}</td>
+											<td>${l.repaymentPrincipal?string('#,##0.00')}</td>
+											<td>${l.repaymentInterest?string('#,##0.00')}</td>
+											<td>${l.repaymentMoney?string('#,##0.00')}</td>
 										</tr>
 										</#list>
 									</#if>

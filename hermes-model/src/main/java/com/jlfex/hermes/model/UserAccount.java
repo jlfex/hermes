@@ -217,6 +217,12 @@ public class UserAccount extends Model {
 
 		@Element("逾期管理费账户")
 		public static final String OVERDUE_FEE = "17";
+		
+		@Element("Jlfex代扣账户")
+		public static final String JLFEX_FEE =  "18";
+		
+		@Element("中金代扣账户")
+		public static final String ZHONGJIN_FEE = "19";
 
 	}
 

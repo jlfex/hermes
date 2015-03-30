@@ -32,6 +32,9 @@ public interface CreditorRepository extends JpaRepository<Creditor, String>, Jpa
 	public Creditor findById(String id);
 
 	public List<Creditor> findByStatusIn(List<String> status);
+	
+	@Query("select t from Creditor t where t.originNo =?1")
+	public Creditor  findByOriginNo(String originNo);
 
 
 }

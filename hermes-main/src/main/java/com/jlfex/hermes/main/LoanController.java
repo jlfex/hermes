@@ -98,27 +98,6 @@ public class LoanController {
 		return "loan/test";
 	}
 
-	@RequestMapping("/testSubmit")
-	public String testSubmit() {
-		// Properties properties =new Properties();
-		// properties.setName("投标金额倍数");
-		// properties.setCode("invest.bid.multiple");
-		// properties.setValue("50");
-		// propertiesService.save(properties);
-		// Logger.info("loanid:" + loanid);
-		// loanService.loanOut(loanid, null, true);
-		// User user = userInfoService.findByUserId("crop");
-		// UserAccount userAccount=new UserAccount();
-		// userAccount.setUser(user);
-		// userAccount.setBalance(BigDecimal.ZERO);
-		// userAccount.setMinus("00");
-		// userAccount.setStatus("00");
-		// userAccount.setType("15");
-		// userAccount.setVersion(0L);
-		// userAccountRepository.save(userAccount);
-		return "0";
-	}
-
 	/**
 	 * 我的借款
 	 * 
@@ -176,27 +155,6 @@ public class LoanController {
 		return "loan/myloaninfo";
 	}
 
-	//
-	// /**
-	// * 还款
-	// *
-	// * @param request
-	// * @return
-	// */
-	// @RequestMapping("/repayment/{repay}")
-	// public String repayment(@PathVariable("repay") String repayid, Model
-	// model) {
-	// Result result = new Result();
-	//
-	// App.checkUser();
-	// boolean repaymentResult =repayService.repayment(repayid);
-	// if (repaymentResult) {
-	// result.setType(Type.SUCCESS);
-	// } else {
-	// result.setType(Type.FAILURE);
-	// }
-	// return result;
-	// }
 
 	/**
 	 * 还款操作

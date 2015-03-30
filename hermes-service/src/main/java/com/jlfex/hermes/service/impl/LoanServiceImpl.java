@@ -24,6 +24,7 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Bool;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -302,14 +303,14 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	public List<Loan> findByKindAndStatus(Integer limit, String loanKind, String... status) {
+	public List<Loan> findByKindAndStatus(Integer limit, List<String> loanKinds, String... status) {
 		// 验证数据有效性
 		if (status == null || status.length == 0) {
 			throw new ServiceException("状态为空");
 		}
 		// 分页查询数据
 		Pageable pageable = new PageRequest(0, limit, Direction.DESC, "datetime");
-		Page<Loan> page = loanRepository.findByloanKindAndStatusIn(loanKind, Arrays.asList(status), pageable);
+		Page<Loan> page = loanRepository.findByloanKindInAndStatusIn(loanKinds, Arrays.asList(status), pageable);
 
 		// 返回结果
 		return page.getContent();
@@ -321,19 +322,19 @@ public class LoanServiceImpl implements LoanService {
 	 * @see com.jlfex.hermes.service.LoanService#findForIndex()
 	 */
 	@Override
-	public List<LoanInfo> findForIndex(String loanKind) {
+	public List<LoanInfo> findForIndex(List<String> loanKinds) {
 		// 初始化
 		Integer size = Integer.valueOf(App.config("index.loan.size", "10"));
 		List<LoanInfo> loans = new ArrayList<LoanInfo>(size);
 
 		// 查询招标中记录
-		loans.addAll(toInfos(findByKindAndStatus(size, loanKind, Loan.Status.BID)));
+		loans.addAll(toInfos(findByKindAndStatus(size, loanKinds, Loan.Status.BID)));
 		Logger.debug("find %d loans by status bid.", loans.size());
 
 		// 判断是否已经满足记录条数
 		// 当不满足条数要求时查询以已完成记录补充
 		if (loans.size() < size) {
-			loans.addAll(toInfos(findByKindAndStatus(size - loans.size(), loanKind, Loan.Status.COMPLETED)));
+			loans.addAll(toInfos(findByKindAndStatus(size - loans.size(), loanKinds, Loan.Status.COMPLETED)));
 		}
 		// 返回结果
 		return loans;
@@ -603,12 +604,9 @@ public class LoanServiceImpl implements LoanService {
 	public Loan save(Loan loan) throws Exception {
 		Date now = new Date();
 		// 借款编号生成策略
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			// 债权标
-			loan.setLoanNo(generateLoanNo());
-		} else {
+		loan.setLoanNo(generateLoanNo());
+		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
 			// 普通标
-			loan.setLoanNo(generateLoanNo());
 			loan.setStatus(Loan.Status.AUDIT_FIRST);
 			loan.setProceeds(BigDecimal.ZERO);
 			loan.setDeadline(loan.getProduct().getDeadline());
@@ -637,19 +635,22 @@ public class LoanServiceImpl implements LoanService {
 		}
 		// 记录借款日志
 		LoanLog loanLog = new LoanLog();
-		loanLog.setUser(loan.getUser().getId());
+		if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			loanLog.setUser(HermesConstants.PLAT_MANAGER_ID);
+		}else{
+			loanLog.setUser(loan.getUser().getId());
+		}
 		loanLog.setLoan(reloan);
 		loanLog.setDatetime(now);
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			loanLog.setType(Type.START_INVEST);
-		} else {
+		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
 			loanLog.setType(Type.RELEASE);
+		}else {
+			loanLog.setType(Type.START_INVEST);
 		}
 		loanLog.setAmount(loan.getAmount());
-		// 由于已经生成借款，故将理财人变更为借款人
-		UserProperties up = userPropertiesRepository.findByUser(loan.getUser());
-		if (!Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			// 普通标更新 用户属性为 借款人
+		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+			// 由于已经生成借款，故将理财人变更为借款人 普通标更新 用户属性为 借款人
+			UserProperties up = userPropertiesRepository.findByUser(loan.getUser());
 			up.setIsMortgagor(Bool.TRUE);
 			userPropertiesRepository.save(up);
 		}
@@ -670,11 +671,12 @@ public class LoanServiceImpl implements LoanService {
 		info.setId(loan.getId());
 		info.setInvester(loan.getUser().getAccount());
 		info.setAvatar(userService.getAvatar(loan.getUser(), UserImage.Type.AVATAR));
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+		
+		if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+			info.setPurpose(getDictionaryName(loan.getPurpose()));
+		}else{
 			String purpose = loan.getPurpose();
 			info.setPurpose((purpose != null && purpose.length() > 4) ? (purpose.substring(0, 4) + "...") : purpose);
-		} else {
-			info.setPurpose(getDictionaryName(loan.getPurpose()));
 		}
 		info.setRate(Numbers.toPercent(loan.getRate().doubleValue()));
 		info.setAmount(Numbers.toCurrency(loan.getAmount().doubleValue()));
@@ -769,7 +771,6 @@ public class LoanServiceImpl implements LoanService {
 
 	/**
 	 * 生成借款编号
-	 * 
 	 * @return
 	 */
 	public synchronized String generateLoanNo() {
