@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.dict.Element;
-import com.jlfex.hermes.main.cfca.payment.TestTx1631;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.Loan;
