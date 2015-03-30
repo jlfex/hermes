@@ -247,7 +247,9 @@ jQuery(function($) {
 							<#else> 
 								0
 							</#if>
-							<@messages key="common.unit.cny" /></span><a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a></td>
+							<@messages key="common.unit.cny" /></span>
+							<!--<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a>-->
+						</td>
                 		</tr>
                 		<tr class="mv_checked"><td colspan="3" class="td_height">担保方式：
                 		<input type="radio"name="otherrepay" value="00" /> 
@@ -287,7 +289,9 @@ jQuery(function($) {
 							<#else> 
 								0
 							</#if>
-							<@messages key="common.unit.cny" /></span><a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a></td>
+							<@messages key="common.unit.cny" /></span>
+							<!--<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a>-->
+						</td>
                 		</tr>
                 	</table>
                 	<div class="tw_condition"><img src="${app.theme}/public/other/images/icon1/bid_postmarkbg.png"/></div>
@@ -305,7 +309,9 @@ jQuery(function($) {
 							<#else> 
 								0
 							</#if>
-							<@messages key="common.unit.cny" /></span><a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a></td>
+							<@messages key="common.unit.cny" /></span>
+							<!--<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a>-->
+						</td>
                 		</tr>
                 	</table>
                 	<div class="tw_condition"><img src="${app.theme}/public/other/images/icon1/bid_postmarkbg01.png"/></div>

@@ -26,7 +26,7 @@
 						<@messages key="account.info.user.frozen" />&nbsp;<span class="currency">${frozen.balance?string('#,##0.00')}</span>&nbsp;<@messages key="common.unit.cny" /><#t>
 					</p>
 					<p>
-						<button type="button" class="btn btn-primary" data-menu="charge"><@messages key="common.op.charge" /></button>
+						<!--<button type="button" class="btn btn-primary" data-menu="charge"><@messages key="common.op.charge" /></button>-->
 						<button type="button" class="btn btn-danger" data-menu="withdraw"><@messages key="common.op.withdraw" /></button>
 					</p>
 				</div>
