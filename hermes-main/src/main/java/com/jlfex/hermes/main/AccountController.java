@@ -28,6 +28,7 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.RequestParam;
 import com.jlfex.hermes.main.IndexController.HomeNav;
 import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.BankAccount.Status;
 import com.jlfex.hermes.model.Payment;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
@@ -35,7 +36,9 @@ import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.service.AreaService;
+import com.jlfex.hermes.service.AuthService;
 import com.jlfex.hermes.service.BankAccountService;
+import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.PaymentService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
@@ -78,6 +81,10 @@ public class AccountController {
 	/** 地区业务接口 */
 	@Autowired
 	private AreaService areaService;
+	@Autowired
+	private BankService bankService;
+	@Autowired
+	private AuthService authService;
 
 	/**
 	 * 索引
@@ -89,6 +96,7 @@ public class AccountController {
 		App.checkUser();
 		model.addAttribute("nav", HomeNav.ACCOUNT);
 		model.addAttribute("type", Strings.empty(type, null));
+		model.addAttribute("bankAccounts", bankAccountService.findByUserIdAndStatus(App.user().getId(), Status.ENABLED));
 		return "account/index";
 	}
 
@@ -111,6 +119,73 @@ public class AccountController {
 		model.addAttribute("phoneSwitch", Strings.equals(AUTH_TRUE, App.config("auth.cellphone.switch")));
 		model.addAttribute("idSwitch", Strings.equals(AUTH_TRUE, App.config("auth.realname.switch")));
 		return "account/approve-new";
+	}
+
+	/**
+	 * 银行卡管理
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/bankCardManage")
+	public String bankCardManage(Model model) {
+		// 查询用户数据
+		App.checkUser();
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(App.user().getId(),Status.ENABLED);
+		// 设置属性并渲染视图
+		if(bankAccount !=null){
+		   model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
+		}
+		model.addAttribute("bankAccount", bankAccount);
+		return "account/bankCardManage";
+	}
+
+	/**
+	 * 新增银行卡页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/addBankCard")
+	public String addBankCard(Model model) {
+		App.checkUser();
+		model.addAttribute("userId", App.user().getId());
+		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
+		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
+		model.addAttribute("realName", userService.loadPropertiesByUserId(App.user().getId()).getRealName());// 获取持卡人的真实姓名
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(App.user().getId()));
+		return "account/addBankCard";
+	}
+
+	/**
+	 * 编辑银行卡页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/editBankCard/{id}")
+	public String editBankCard(@PathVariable("id") String id, Model model) {
+		model.addAttribute("bankAccount", bankAccountService.loadBankAccountById(id));
+		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
+		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
+	  //model.addAttribute("areaRoots", areaService.findByParentIsNull());// 查询area根级数据
+	  //model.addAttribute("areaChildrens", areaService.loadByParentId(bankAccountService.loadBankAccountById(id).getCity().getParent().getId()));// 查询area子数据
+		return "account/editBankCard";
+	}
+
+	/**
+	 * 处理更换银行卡业务
+	 * 
+	 * @return
+	 */
+	@RequestMapping("handerEditBankCard/{id}")
+	@ResponseBody
+	public Result handerEditBankCard(@PathVariable("id") String id, HttpServletRequest request) {
+		String bankId = request.getParameter("bankId");
+		String cityId = request.getParameter("cityId");
+		String deposit = request.getParameter("deposit");
+		String account = request.getParameter("account");
+		String isdefault = request.getParameter("isdefault");
+	 // AppUser curUser = App.current().getUser();
+		return authService.editBankCard(id, bankId, cityId, deposit, account, isdefault);
 	}
 
 	/**
@@ -206,11 +281,11 @@ public class AccountController {
 	public String addCharge(String channel, Double amount, Model model) {
 		App.checkUser();
 		Payment payment = paymentService.save(channel, amount);
-		//模拟充值
+		// 模拟充值
 		transactionService.fromCropAccount(Transaction.Type.CHARGE, payment.getUser(), UserAccount.Type.PAYMENT, payment.getAmount(), payment.getId(), App.message("transaction.charge"));
-		//扣除充值手续
+		// 扣除充值手续
 		transactionService.betweenCropAccount(Transaction.Type.OUT, UserAccount.Type.PAYMENT, UserAccount.Type.PAYMENT_FEE, payment.getFee(), payment.getId(), App.message("transaction.charge.fee"));
-		model.addAttribute("payment",payment);
+		model.addAttribute("payment", payment);
 		return "account/charge-success";
 	}
 

@@ -12,7 +12,7 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 银行帐号信息模型
- *
+ * 
  * @author ultrafrog
  * @version 1.0, 2013-11-12
  * @since 1.0
@@ -20,40 +20,40 @@ import com.jlfex.hermes.common.utils.Strings;
 @Entity
 @Table(name = "hm_bank_account")
 public class BankAccount extends Model {
-	
+
 	private static final long serialVersionUID = -8229728021471501358L;
 
 	/** 用户 */
 	@ManyToOne
 	@JoinColumn(name = "user")
 	private User user;
-	
+
 	/** 银行 */
 	@ManyToOne
 	@JoinColumn(name = "bank")
 	private Bank bank;
-	
+
 	/** 城市 */
 	@ManyToOne
 	@JoinColumn(name = "city")
 	private Area city;
-	
+
 	/** 开户支行 */
 	@Column(name = "deposit")
 	private String deposit;
-	
+
 	/** 开户人 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 帐号 */
 	@Column(name = "account")
 	private String account;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/**
 	 * 读取用户
 	 * 
@@ -63,7 +63,7 @@ public class BankAccount extends Model {
 	public User getUser() {
 		return user;
 	}
-	
+
 	/**
 	 * 设置用户
 	 * 
@@ -73,7 +73,7 @@ public class BankAccount extends Model {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	/**
 	 * 读取银行
 	 * 
@@ -83,7 +83,7 @@ public class BankAccount extends Model {
 	public Bank getBank() {
 		return bank;
 	}
-	
+
 	/**
 	 * 设置银行
 	 * 
@@ -93,7 +93,7 @@ public class BankAccount extends Model {
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
-	
+
 	/**
 	 * 读取城市
 	 * 
@@ -113,7 +113,7 @@ public class BankAccount extends Model {
 	public void setCity(Area city) {
 		this.city = city;
 	}
-	
+
 	/**
 	 * 读取开户行
 	 * 
@@ -123,7 +123,7 @@ public class BankAccount extends Model {
 	public String getDeposit() {
 		return deposit;
 	}
-	
+
 	/**
 	 * 设置开户行
 	 * 
@@ -133,7 +133,7 @@ public class BankAccount extends Model {
 	public void setDeposit(String deposit) {
 		this.deposit = deposit;
 	}
-	
+
 	/**
 	 * 读取开户人
 	 * 
@@ -143,7 +143,7 @@ public class BankAccount extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置开户人
 	 * 
@@ -153,7 +153,7 @@ public class BankAccount extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取帐号
 	 * 
@@ -163,7 +163,7 @@ public class BankAccount extends Model {
 	public String getAccount() {
 		return account;
 	}
-	
+
 	/**
 	 * 设置帐号
 	 * 
@@ -173,7 +173,7 @@ public class BankAccount extends Model {
 	public void setAccount(String account) {
 		this.account = account;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -183,7 +183,7 @@ public class BankAccount extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -193,7 +193,7 @@ public class BankAccount extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * 读取尾号
 	 * 
@@ -223,9 +223,9 @@ public class BankAccount extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
-		public static final String ENABLED	= "00";
+		public static final String ENABLED = "00";
 
 		@Element("无效")
 		public static final String DISABLED = "99";

@@ -65,6 +65,9 @@ public class UserProperties extends Model {
 	/** 邮件认证 */
 	@Column(name = "auth_email")
 	private String authEmail;
+	/** 银行卡认证 */
+	@Column(name = "auth_bankcard")
+	private String authBankcard;
 
 	/** 用户 */
 	@ManyToOne
@@ -356,6 +359,17 @@ public class UserProperties extends Model {
 		return Dicts.name(authCellphone, authCellphone, Auth.class);
 	}
 	
+	public String getAuthBankcard() {
+		return authBankcard;
+	}
+
+	public void setAuthBankcard(String authBankcard) {
+		this.authBankcard = authBankcard;
+	}
+	public String getAuthBankcardName() {
+		return Dicts.name(authBankcard, authBankcard, Auth.class);
+	}
+
 	/**
 	 * 读取邮件认证名称
 	 * 

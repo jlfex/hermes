@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,9 @@ import com.jlfex.hermes.common.support.freemarker.StringTemplateLoader;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.Strings.StringSet;
+import com.jlfex.hermes.model.Area;
+import com.jlfex.hermes.model.Bank;
+import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.model.User;
@@ -25,6 +29,9 @@ import com.jlfex.hermes.model.UserAuth.Status;
 import com.jlfex.hermes.model.UserAuth.Type;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.repository.AreaRepository;
+import com.jlfex.hermes.repository.BankAccountRepository;
+import com.jlfex.hermes.repository.BankRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.repository.TextRepository;
 import com.jlfex.hermes.repository.UserAuthRepository;
@@ -58,9 +65,14 @@ public class AuthServiceImpl implements AuthService {
 	/** 用户认证仓库 */
 	@Autowired
 	private UserAuthRepository userAuthRepository;
-
+	@Autowired
+	private AreaRepository areaRepository;
 	@Autowired
 	private TextRepository textRepository;
+	@Autowired
+	private BankRepository bankRepository;
+	@Autowired
+	private BankAccountRepository bankAccountRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -113,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
 				userAuthRepository.save(userAuth);
 
 				// send verification code of sms
-				sendSms(phone, validateCode);
+				//sendSms(phone, validateCode);
 				result.addMessage(App.message("result.success.phone", null));
 				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 				return result;
@@ -180,8 +192,8 @@ public class AuthServiceImpl implements AuthService {
 		Result result = new Result();
 		User user = userRepository.findOne(userId);
 		UserProperties userPro_c = userPropertiesRepository.findByIdNumberAndIdTypeAndAuthName(idNumber, idType, Auth.PASS);
-		if (userPro_c != null) { 
-			if (!userPro_c.getUser().getId().equals(userId)) { //证件被占用
+		if (userPro_c != null) {
+			if (!userPro_c.getUser().getId().equals(userId)) { // 证件被占用
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 				result.addMessage(App.message("result.failure.id.occupy", null));
 			}
@@ -202,6 +214,104 @@ public class AuthServiceImpl implements AuthService {
 			}
 			userPropertiesRepository.save(userPro_u);
 		}
+		return result;
+	}
+
+	/**
+	 * 绑定银行卡
+	 */
+	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String realName) {
+		Result result = new Result();
+		User user = userRepository.findOne(userId);
+		Area city = areaRepository.findOne(cityId);
+		Bank bank = bankRepository.findOne(bankId);
+		UserProperties userProperties = userPropertiesRepository.findByUserId(userId);
+		BankAccount bankAccount = new BankAccount();
+		bankAccount.setUser(user);// 持卡人信息
+		bankAccount.setBank(bank);// 银行名称
+		bankAccount.setCity(city);// 开户所在地
+		bankAccount.setDeposit(deposit);// 开户行
+		bankAccount.setAccount(account);// 银行账号
+		if(StringUtils.isEmpty(userProperties.getRealName())){
+			bankAccount.setName(realName);
+			userProperties.setRealName(realName);
+		}else{
+			bankAccount.setName(userProperties.getRealName());
+		}
+		bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.ENABLED);//绑定银行卡，状态置为有效
+		userProperties.setAuthBankcard(Auth.PASS);
+		userPropertiesRepository.save(userProperties);
+		bankAccountRepository.save(bankAccount);
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+		return result;
+	}
+
+	/**
+	 * 新增银行卡
+	 */
+	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault,String realName) {
+		Result result = new Result();
+		User user = userRepository.findOne(userId);
+		Area city = areaRepository.findOne(cityId);
+		Bank bank = bankRepository.findOne(bankId);
+		UserProperties userProperties = userPropertiesRepository.findByUserId(userId);
+		BankAccount bankAccount = new BankAccount();
+		bankAccount.setUser(user);// 持卡人信息
+		bankAccount.setBank(bank);// 银行名称
+		bankAccount.setCity(city);// 开户所在地
+		bankAccount.setDeposit(deposit);// 开户行
+		bankAccount.setAccount(account);// 银行账号
+		if(StringUtils.isEmpty(userProperties.getRealName())){
+			bankAccount.setName(realName);
+			userProperties.setRealName(realName);
+		}else{
+			bankAccount.setName(userProperties.getRealName());
+		}
+		List<BankAccount> bankAccounts = bankAccountRepository.findByUserId(userId);
+		if (bankAccounts.size() == 0) {
+			bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.ENABLED);// 用户第一次绑定银行卡的时候设为默认
+		} else {
+			if (isdefault != null) {
+				List<BankAccount> bankAccountList = bankAccountRepository.findByUserId(userId);
+				for (BankAccount bankinfo : bankAccountList) {
+					bankinfo.setStatus(com.jlfex.hermes.model.BankAccount.Status.DISABLED);
+				}
+				bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.ENABLED);
+			} else {
+				bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.DISABLED);
+			}
+		}
+		userProperties.setAuthBankcard(Auth.PASS);
+		userPropertiesRepository.save(userProperties);
+		bankAccountRepository.save(bankAccount);
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+		return result;
+	}
+
+	
+	/**
+	 * 更改银行卡
+	 */
+	public Result editBankCard(String id, String bankId, String cityId, String deposit, String account, String isdefault) {
+		Result result = new Result();
+		Area city = areaRepository.findOne(cityId);
+		Bank bank = bankRepository.findOne(bankId);
+		BankAccount bankAccount = bankAccountRepository.findOne(id);
+		bankAccount.setBank(bank);// 银行名称
+		bankAccount.setCity(city);// 开户所在地
+		bankAccount.setDeposit(deposit);// 开户行
+		bankAccount.setAccount(account);// 银行账号
+		if (isdefault != null) {
+			List<BankAccount> bankAccountList = bankAccountRepository.findByUserId(bankAccount.getUser().getId());
+			for (BankAccount bankinfo : bankAccountList) {
+				bankinfo.setStatus(com.jlfex.hermes.model.BankAccount.Status.DISABLED);
+			}
+			bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.ENABLED);
+		} else {
+			bankAccount.setStatus(com.jlfex.hermes.model.BankAccount.Status.DISABLED);
+		}
+		bankAccountRepository.save(bankAccount);
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		return result;
 	}
 
@@ -247,4 +357,5 @@ public class AuthServiceImpl implements AuthService {
 		// return Identity.verify(param);
 		return "3";
 	}
+
 }

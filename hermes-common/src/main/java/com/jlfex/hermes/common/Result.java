@@ -17,20 +17,20 @@ public class Result<T extends Serializable> implements Serializable {
 
 	/** 类型 */
 	private Type type;
-	
+
 	/** 消息列表 */
 	private List<String> messages;
-	
+
 	/** 数据 */
 	private T data;
-	
+
 	/**
 	 * 构造函数
 	 */
 	public Result() {
 		this.messages = new LinkedList<String>();
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -44,7 +44,7 @@ public class Result<T extends Serializable> implements Serializable {
 		this.messages.add(message);
 		this.data = data;
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -54,7 +54,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public Result(Type type, String message) {
 		this(type, message, null);
 	}
-	
+
 	/**
 	 * 构造函数
 	 * 
@@ -64,7 +64,7 @@ public class Result<T extends Serializable> implements Serializable {
 		this();
 		this.type = type;
 	}
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -74,7 +74,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public Type getType() {
 		return type;
 	}
-	
+
 	/**
 	 * 读取类型名称
 	 * 
@@ -83,7 +83,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public String getTypeName() {
 		return type.toString();
 	}
-	
+
 	/**
 	 * 设置类型
 	 * 
@@ -103,7 +103,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public List<String> getMessages() {
 		return messages;
 	}
-	
+
 	/**
 	 * 读取第一条消息
 	 * 
@@ -112,7 +112,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public String getFirstMessage() {
 		return (messages.size() >= 1) ? messages.get(0) : "";
 	}
-	
+
 	/**
 	 * 添加消息
 	 * 
@@ -121,7 +121,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public void addMessage(String message) {
 		messages.add(message);
 	}
-	
+
 	/**
 	 * 添加消息
 	 * 
@@ -151,7 +151,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public void setData(T data) {
 		this.data = data;
 	}
-	
+
 	/**
 	 * 是否成功
 	 * 
@@ -160,7 +160,7 @@ public class Result<T extends Serializable> implements Serializable {
 	public boolean success() {
 		return Type.SUCCESS.equals(type);
 	}
-	
+
 	/**
 	 * 结果标识<br>
 	 * 用于判断是否为结果
@@ -179,13 +179,16 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @since 1.0
 	 */
 	public static enum Type {
-		SUCCESS("success"),
-		WARNING("warning"),
-		FAILURE("failure");
-		
+		SUCCESS("success"), 
+		WARNING("warning"), 
+		FAILURE("failure"), 
+		CELLPHNOE_NOTAUTH("cellphone_notauth"),
+		NAME_NOTAUTH("name_notauth"),
+		BANKCARD_NOTAUTH("bankcard_notauth");
+
 		/** 名称 */
 		private String name;
-		
+
 		/**
 		 * 构造函数
 		 * 
@@ -194,8 +197,10 @@ public class Result<T extends Serializable> implements Serializable {
 		private Type(String name) {
 			this.name = name;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Enum#toString()
 		 */
 		@Override

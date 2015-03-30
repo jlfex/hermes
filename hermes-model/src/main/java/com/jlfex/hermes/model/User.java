@@ -28,38 +28,39 @@ public class User extends Model {
 	/** 帐号 */
 	@Column(name = "account")
 	private String account;
-	
+
 	/** 邮件 */
 	@Column(name = "email")
 	private String email;
-	
+
 	/** 手机 */
 	@Column(name = "cellphone")
 	private String cellphone;
-	
+
 	/** 登录密码 */
 	@Column(name = "sign_password")
 	private String signPassword;
-	
+
 	/** 支付密码 */
 	@Column(name = "pay_password")
 	private String payPassword;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/** 类型 */
+	
 	@Column(name = "type")
 	private String type;
-	
+
 	/** 角色列表 */
 	@Transient
 	private List<Role> roles = new LinkedList<Role>();
 	/** 验证码 */
 	@Transient
-    private String verificationCode ;
-	/**  真实姓名  **/
+	private String verificationCode;
+	/** 真实姓名 **/
 	@Transient
 	private String realName;
 
@@ -202,7 +203,7 @@ public class User extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * 读取角色列表
 	 * 
@@ -221,7 +222,7 @@ public class User extends Model {
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
 	}
-	
+
 	/**
 	 * 读取类型名称
 	 * 
@@ -230,7 +231,7 @@ public class User extends Model {
 	public String getTypeName() {
 		return Dicts.name(type, type, Type.class);
 	}
-	
+
 	/**
 	 * 状态
 	 * 
@@ -239,20 +240,22 @@ public class User extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("正常")
-		public static final String ENABLED		= "00";
-		
+		public static final String ENABLED = "00";
+
 		@Element("未激活")
-		public static final String INACTIVATE 	= "01";
-		
+		public static final String INACTIVATE = "01";
+
 		@Element("冻结")
-		public static final String FROZEN		= "88";
-		
+		public static final String FROZEN = "88";
+
 		@Element("注销")
-		public static final String DISABLED		= "99";
+		public static final String DISABLED = "99";
+
+
 	}
-	
+
 	/**
 	 * 类型
 	 * 
@@ -261,18 +264,18 @@ public class User extends Model {
 	 * @since 1.0
 	 */
 	public static final class Type {
-		
+
 		@Element("客户")
-		public static final String CLIENT	= "00";
-		
+		public static final String CLIENT = "00";
+
 		@Element("管理员")
-		public static final String ADMIN	= "10";
-		
+		public static final String ADMIN = "10";
+
 		@Element("根")
-		public static final String ROOT		= "99";
-		
+		public static final String ROOT = "99";
+
 		@Element("债权人")
-		public static final String CREDIT	= "20";
+		public static final String CREDIT = "20";
 	}
 
 	public String getVerificationCode() {
@@ -290,31 +293,31 @@ public class User extends Model {
 	public void setRealName(String realName) {
 		this.realName = realName;
 	}
-	
+
 	/**
 	 * 去除空格
 	 */
-    public void propertyTrim(){
-    	if(!Strings.empty(account)){
-    		account = account.trim();
-    	}
-    	if(!Strings.empty(email)){
-    		email = email.trim();
-    	}
-    	if(!Strings.empty(cellphone)){
-    		cellphone = cellphone.trim();
-    	}
-    	if(!Strings.empty(signPassword)){
-    		signPassword = signPassword.trim();
-    	}
-    	if(!Strings.empty(payPassword)){
-    		payPassword = payPassword.trim();
-    	}
-    	if(!Strings.empty(verificationCode)){
-    		verificationCode = verificationCode.trim();
-    	}
-    	if(!Strings.empty(realName)){
-    		realName = realName.trim();
-    	}
-    }
+	public void propertyTrim() {
+		if (!Strings.empty(account)) {
+			account = account.trim();
+		}
+		if (!Strings.empty(email)) {
+			email = email.trim();
+		}
+		if (!Strings.empty(cellphone)) {
+			cellphone = cellphone.trim();
+		}
+		if (!Strings.empty(signPassword)) {
+			signPassword = signPassword.trim();
+		}
+		if (!Strings.empty(payPassword)) {
+			payPassword = payPassword.trim();
+		}
+		if (!Strings.empty(verificationCode)) {
+			verificationCode = verificationCode.trim();
+		}
+		if (!Strings.empty(realName)) {
+			realName = realName.trim();
+		}
+	}
 }

@@ -1,12 +1,15 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,17 +17,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.main.freemark.ModelLoader;
+import com.jlfex.hermes.model.Area;
+import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.HermesConstants;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.model.UserProperties.IdType;
+import com.jlfex.hermes.model.hermes.BranchBank;
+import com.jlfex.hermes.service.AreaService;
+import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.UserService;
 
@@ -39,6 +52,10 @@ public class UserController {
 	private EmailService emailService;
 	@Autowired
 	private ContentService contentService;
+	@Autowired
+	private BankService bankService;
+	@Autowired
+	private AreaService areaService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
@@ -266,6 +283,8 @@ public class UserController {
 		Result result = userService.activeMail(userId, validateCode);
 		if (result.getType().equals(Type.SUCCESS)) {
 			model.addAttribute("message", result.getFirstMessage());
+			model.addAttribute("userId", userId);
+			model.addAttribute("cellphone", userService.loadById(userId).getCellphone());
 			return "user/emailActive";
 		} else if (result.getType().equals(Type.WARNING)) {
 			model.addAttribute("message", App.message("message.sign.email.expire", null));
@@ -278,6 +297,122 @@ public class UserController {
 
 	}
 
+	/**
+	 * 手机认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authCellPhone")
+	public String authCellPhone(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		Result result = userService.signIn(user);
+		model.addAttribute("message", result.getFirstMessage());
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
+		model.addAttribute("email", email);
+		if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+		    return "user/authCellPhone";
+		}else if(!userPro.getAuthName().equals(Auth.PASS)){
+			return "redirect:/userIndex/authName";
+		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "redirect:/userIndex/authBankCard";
+		}else{
+			return "redirect:/invest/index";
+		}
+	}
+	/**
+	 * 实名认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authName")
+	public String authName(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);		
+		// 证件类型
+		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		model.addAttribute("idTypeMap", idTypeMap);
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("email", email);
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));
+		if(!userPro.getAuthName().equals(Auth.PASS)){
+			return "user/realNameApprove";
+		}else{
+			return "redirect:/userIndex/authBankCard";
+		}
+
+	}
+	/**
+	 * 银行卡认证页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/authBankCard")
+	public String authBankcard(@RequestParam("email") String email, Model model) {
+		User user = userService.loadByEmail(email);		
+		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		model.addAttribute("userId", user.getId());
+		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
+		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
+		model.addAttribute("realName", userService.loadPropertiesByUserId(user.getId()).getRealName());// 获取持卡人的真实姓名
+		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));// 获取持卡人的真实姓名
+		if(StringUtils.isNotEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)){
+			return "user/bindBank";
+		}else if(StringUtils.isEmpty(userPro.getAuthBankcard())){
+			return "user/bindBank";
+		}else{
+			return "forward:/invest/index";
+		}
+
+	}
+	/**
+	 * 查询支行数据
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/findBranchBankByBankAndCity")
+	@ResponseBody
+	public List<BranchBank> findBranchBankByBankAndCity(@RequestParam("bankId") String bankId,@RequestParam("cityId") String cityId) {
+		List<BranchBank> list = null;
+		Bank bank = bankService.findOne(bankId);
+		Area area = areaService.loadById(cityId);
+		try {
+			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName());			
+		} catch (Exception e) {
+			Logger.error("获取支行信息失败!", e);
+		}
+		return list;
+	}
+
+	
+	/**
+	 * 检测手机号是否已被绑定
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping("checkPhone")
+	@ResponseBody
+	public Result checkPhone(@RequestParam("phone") String phone,Model model) {	
+		Result result = new Result();
+		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+		try {
+			boolean flagPhone = userService.checkPhone(phone);
+			if (!flagPhone) {
+				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+				result.addMessage(App.message("当前手机号已被绑定"));
+			}
+		} catch (Exception e) {
+			Logger.info(e.getMessage());
+			model.addAttribute("errMsg", e.getMessage());
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			result.addMessage(App.message("校验失败"));
+		}
+		return  result;
+	}
+
+	
 	/**
 	 * 找回密码
 	 * 
