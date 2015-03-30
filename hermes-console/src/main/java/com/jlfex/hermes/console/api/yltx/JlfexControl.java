@@ -1,19 +1,16 @@
 package com.jlfex.hermes.console.api.yltx;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
-import com.jlfex.hermes.model.ApiLog;
+import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
@@ -38,7 +35,7 @@ public class JlfexControl {
 		int dealSucSize = 0;       //处理成功数
 		int dealFailSize = 0;      //处理失败数
 		int undoSize= 0;           //重复订单，不需处理数
-		String createDate = ""; //createDate = Calendars.format(HermesConstants.FORMAT_19);
+		String createDate = Calendars.format(HermesConstants.FORMAT_19);
 		QueryFinanceOrderVo queryFunanceOrderVo = null;
 		try{
 			String jsonOrder = jlfexService.queryFinanceOrder(null, createDate, HermesConstants.JL_PAGE_SIZE, HermesConstants.JL_PAGE_NUM);

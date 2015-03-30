@@ -44,7 +44,7 @@ public class Invest extends Model {
 	private Date datetime;
 
 	/** 所占比例 */
-	@Column(name = "ratio")
+	@Column(name = "ratio", precision=16, scale=8,nullable=false)
 	private BigDecimal ratio;
 
 	/** 垫付 */

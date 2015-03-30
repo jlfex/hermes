@@ -30,6 +30,7 @@ import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -37,6 +38,7 @@ import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
+import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.AreaRepository;
 import com.jlfex.hermes.repository.CommonRepository;
@@ -46,6 +48,7 @@ import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
+import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserLogRepository;
@@ -54,10 +57,12 @@ import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.InvestService;
+import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
+import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
@@ -124,7 +129,10 @@ public class InvestServiceImpl implements InvestService {
 	private AreaRepository areaRepository;
 	@Autowired
 	private JlfexOrderService jlfexOrderService;
-	
+	@Autowired 
+	private  FinanceRepayPlanService financeRepayPlanService;
+	@Autowired 
+	private  RepayService repayService;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -390,6 +398,9 @@ public class InvestServiceImpl implements InvestService {
 		//保存理财信息
 		Invest invest = saveInvestRecord(investUser, investAmount, null, loan);
 		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		//保存理财收益信息
+		List<LoanRepay>  loanRepayList = repayService.findByLoanAndStatus(loan, LoanRepay.RepayStatus.WAIT);
+		saveInvestProfit(invest, loanRepayList);
 		//保存订单
 		JlfexOrder jlfexOrder = jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, invest));
 		if(HermesConstants.ORDER_PAYING.equals(jlfexOrder.getOrderStatus()) &&
@@ -413,7 +424,32 @@ public class InvestServiceImpl implements InvestService {
 		}
 		return true;
 	}
-	
+	/**
+	 * 保存投标理财收益
+	 * @param invest
+	 * @param loanRepayList
+	 * @throws Exception
+	 */
+	public void saveInvestProfit(Invest invest , List<LoanRepay> loanRepayList) throws Exception{
+		if(loanRepayList == null || loanRepayList.size() == 0){
+			throw new Exception("投标收益保存异常：还款计划明细为空");
+		}
+		List<InvestProfit>  investProfitList = new ArrayList<InvestProfit>();
+		for(LoanRepay loanRepay : loanRepayList){
+			InvestProfit  profit = new InvestProfit();
+			profit.setUser(invest.getUser());
+			profit.setInvest(invest);
+			profit.setLoanRepay(loanRepay);
+			profit.setDate(loanRepay.getPlanDatetime());
+			profit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+			profit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+			profit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+			profit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+			profit.setStatus(InvestProfit.Status.WAIT);
+			investProfitList.add(profit);
+		}
+		investProfitRepository.save(investProfitList);
+	}
 	/**
 	 * 易联标 规则： 理财产品募资开始时间之后，募资截止日期的中午12点之前发起
 	 * @param loan
@@ -459,7 +495,7 @@ public class InvestServiceImpl implements InvestService {
 		if(HermesConstants.CODE_99.equals(orderPayMap.get("code"))){
 			return null;
 		}
-		OrderPayResponseVo respVo = JSON.parseObject(orderPayMap.get("result"),OrderPayResponseVo.class);
+		OrderPayResponseVo respVo = JSON.parseObject(orderPayMap.get("msg"),OrderPayResponseVo.class);
 		return respVo;
 	}
 
@@ -605,19 +641,19 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	@Override
-	public List<InvestInfo> findByUser(User user, String loanKind) {
+	public List<InvestInfo> findByUser(User user, List<String> loanKindList) {
 		List<InvestInfo> investinfoList = new ArrayList<InvestInfo>();
-		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKind, user);
+		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKindList, user);
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
 			investInfo.setId(invest.getId());
 			String purpose = "";
 			String loanStatus = invest.getLoan().getLoanKind();
-			if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanStatus)){
-				purpose = invest.getLoan().getPurpose();
-			}else{
+			if(Loan.LoanKinds.NORML_LOAN.equals(loanStatus)){
 				purpose = getDictionaryName(invest.getLoan().getPurpose());
+			}else{
+				purpose = invest.getLoan().getPurpose();
 			}
 			investInfo.setPurpose(purpose);
 			investInfo.setRate(Numbers.toPercent(invest.getLoan().getRate().doubleValue()));

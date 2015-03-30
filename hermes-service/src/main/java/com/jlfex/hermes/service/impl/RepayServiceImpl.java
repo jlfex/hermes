@@ -5,24 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-//import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
-
-
-
-
-
-
-
-
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -56,10 +41,6 @@ import com.jlfex.hermes.service.repay.RepayMethod;
 /**
  * 
  * 还款方式业务实现
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 @Service
 @Transactional

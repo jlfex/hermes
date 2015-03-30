@@ -366,11 +366,12 @@ public class LoanServiceImpl implements LoanService {
 	public Loan loanOut(String id, String remark, boolean isPass) throws Exception {
 		Logger.info("满标处理开始：loan_id =" + id + ", 处理方式：isPass=" + isPass + ",remark=" + remark);
 		Loan loan = loanRepository.findOne(id);
+		if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			Logger.info("易联债权标：不需要进行人工满标业务处理");
+			return null;
+		}
 		if (isPass) {
-			int success = loanNativeRepository.updateStatus(id, Status.FULL, Status.REPAYING); // 借款状态更新:
-																								// 满标
-																								// to
-																								// 还款中
+			int success = loanNativeRepository.updateStatus(id, Status.FULL, Status.REPAYING); // 借款状态更新: 满标 to还款中
 			if (success > 0) {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("lendingDate", Calendars.format("yyyy-MM-dd", new Date()));

@@ -63,7 +63,7 @@ public interface InvestRepository extends JpaRepository<Invest, String> {
 	 * @param loanKind
 	 * @return
 	 */
-	@Query("SELECT  t  FROM Invest  t  where t.loan.loanKind =?1 and t.user=?2 order by t.status asc")
-	public List<Invest> findByUserAndLoanKind(String loanKind, User user);
+	@Query("SELECT  t  FROM Invest  t  where t.loan.loanKind in ?1 and t.user=?2 order by t.status asc")
+	public List<Invest> findByUserAndLoanKind(List<String> loanKindList, User user);
 
 }

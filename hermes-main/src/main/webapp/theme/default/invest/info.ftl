@@ -97,16 +97,13 @@ jQuery(function($) {
 			var investamount =$("#investamount").val();
 			var loanid =$("#loanid").val();
 			var msg =$('#investamount').siblings("span").text();
-		//	console.log(msg);
 			if(msg.length==1)
 			{
-				//console.log(investamount);
 			  	htmlobj=$.ajax({
 			  			url:'${app}/invest/calmaturegain',
 			  			data: {"investamount":investamount,"loanid":loanid},
 			  			dataType: "json",
 			  			async:false});
-				//console.log(htmlobj.responseText);
 				$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
 			}
 			else
