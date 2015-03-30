@@ -88,6 +88,8 @@ jQuery(function($) {
 	$('#cancelAuthIdentityBtn').on('click', function() {
 		     window.location.href="${app}/account/index?type=auth1";	   						
 	});
+	$('#cityId2').data().val = '${bankAccount.city.parent.id}';
+	$('#cityId').data().val = '${bankAccount.city.id}';
     $.area({ data: ${area}, bind: [$('#cityId2'), $('#cityId')] });        
 });
        //ajax获取后台数据
@@ -179,9 +181,11 @@ jQuery(function($) {
 		        }
 		    });
 	}
+	alert(${bankAccount.city.parent.id});
+	alert(${bankAccount.city.id});
 	$("#bankId").val("${bankAccount.bank.id}");
-	$("#cityId2").val("${bankAccount.city.parent.id}");
-	$("#cityId").val("${bankAccount.city.id}");
+	//$("#cityId2").val("${bankAccount.city.parent.id}");
+	//$("#cityId").val("${bankAccount.city.id}");
 </script>
 <style>
 .zero_border{ height:auto;-moz-border-top-left-radius: 4px; -webkit-border-top-left-radius: 4px;border-top-left-radius: 4px; 

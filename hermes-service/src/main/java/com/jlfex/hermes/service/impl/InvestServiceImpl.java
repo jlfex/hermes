@@ -816,6 +816,7 @@ public class InvestServiceImpl implements InvestService {
 				String purposeStr = String.valueOf(object[11]);
 				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
 			}
+			loanInfo.setApplicationNo(String.valueOf(object[12]));
 			loans.add(loanInfo);
 		}
 		// 返回结果
