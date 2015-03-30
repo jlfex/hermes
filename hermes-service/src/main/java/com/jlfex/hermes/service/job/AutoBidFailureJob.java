@@ -33,7 +33,6 @@ public class AutoBidFailureJob extends Job {
 
 	@Autowired
 	private LoanService loanService;
-
 	@Autowired
 	private InvestService investService;
 	@Autowired

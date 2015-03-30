@@ -29,7 +29,7 @@ public class AssetVo  implements Serializable {
 	private  String  memberId;					//客户编号
 	private  String  transferorName;			//出让人
 	private  String  transferorCertiType;		//出让人证件类型
-	private  String  transferorCertNum;			//出让人证件号码
+	private  String  transferorCertiNum;		//出让人证件号码
 	private  String  transferorBankCard;		//出让人银行名称
 	private  String  transferorBankProvince;	//银行所在省份
 	private  String  transferorBankCity;		//银行所在城市
@@ -121,11 +121,11 @@ public class AssetVo  implements Serializable {
 	public void setTransferorCertiType(String transferorCertiType) {
 		this.transferorCertiType = transferorCertiType;
 	}
-	public String getTransferorCertNum() {
-		return transferorCertNum;
+	public String getTransferorCertiNum() {
+		return transferorCertiNum;
 	}
-	public void setTransferorCertNum(String transferorCertNum) {
-		this.transferorCertNum = transferorCertNum;
+	public void setTransferorCertiNum(String transferorCertiNum) {
+		this.transferorCertiNum = transferorCertiNum;
 	}
 	public String getTransferorBankCard() {
 		return transferorBankCard;
@@ -333,8 +333,8 @@ public class AssetVo  implements Serializable {
 		if(Strings.notEmpty(transferorCertiType)){
 			this.transferorCertiType = transferorCertiType.trim();
 		}
-		if(Strings.notEmpty(transferorCertNum)){
-			this.transferorCertNum = transferorCertNum.trim();
+		if(Strings.notEmpty(transferorCertiNum)){
+			this.transferorCertiNum = transferorCertiNum.trim();
 		}
 		if(Strings.notEmpty(transferorBankCard)){
 			this.transferorBankCard = transferorBankCard.trim();

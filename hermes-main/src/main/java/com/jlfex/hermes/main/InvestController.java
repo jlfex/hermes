@@ -3,6 +3,7 @@ package com.jlfex.hermes.main;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -111,7 +112,6 @@ public class InvestController {
 	@RequestMapping("checkMoneyMore")
 	@ResponseBody
 	public JSONObject checkMoneyMore(BigDecimal investamount, String loanid) {
-
 		Logger.info("investamount:" + investamount + "loanid:" + loanid);
 		Loan loan = loanService.loadById(loanid);
 		BigDecimal remain = loan.getAmount().subtract(loan.getProceeds());
@@ -128,14 +128,18 @@ public class InvestController {
 
 	@RequestMapping("checkMoneyLess")
 	@ResponseBody
-	public JSONObject checkMoneyLess(BigDecimal investamount) {
-
-		Logger.info("investamount:" + investamount);
+	public JSONObject checkMoneyLess(BigDecimal investamount,String loanid) {
+		Logger.info("loanId = "+loanid+",投标金额:" + investamount);
 		AppUser curUser = App.current().getUser();
 		UserAccount userAccount = userInfoService.loadByUserIdAndType(curUser.getId(), UserAccount.Type.CASH);
+		Loan loan = loanService.loadById(loanid);
 		BigDecimal balance = userAccount.getBalance();
-		Logger.info("balance:" + balance);
+		Logger.info("用户账户余额:" + balance);
 		JSONObject jsonObj = new JSONObject();
+		if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+			jsonObj.put("investamount", true);
+			return jsonObj;
+		}
 		// 大于返回false提示不成功信息
 		if (investamount.compareTo(balance) == 1) {
 			jsonObj.put("investamount", false);
@@ -621,8 +625,9 @@ public class InvestController {
 		BigDecimal interestSum = investProfitService.loadInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		// 罚息
 		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
-
-		List<InvestInfo> investInfoList = investService.findByUser(user, Loan.LoanKinds.NORML_LOAN);
+		List<String> loanKindList = new ArrayList<String>();
+		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
+		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -691,7 +696,10 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		// 已获收益
-		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		List<String> loanKinds = new ArrayList<String>();
+		loanKinds.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		loanKinds.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, loanKinds, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		BigDecimal allProfitSum = BigDecimal.ZERO;// 总收益
 		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
 		BigDecimal overdueInterestSum = BigDecimal.ZERO; // 罚息收益总数
@@ -704,13 +712,15 @@ public class InvestController {
 			}
 			allProfitSum = allProfitSum.add(interestSum).add(overdueInterestSum);
 		}
-		List<InvestInfo> investInfoList = investService.findByUser(user, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		List<String> loanKindList = new ArrayList<String>();
+		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
 		int investSuccessCount = 0;
-		for (InvestInfo investInfo : investInfoList) {
+		for (InvestInfo investInfo : investInfoList){
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
 				investSuccessCount = investSuccessCount + 1;
 			}
-
 		}
 		if (allProfitSum == null)
 			allProfitSum = BigDecimal.ZERO;

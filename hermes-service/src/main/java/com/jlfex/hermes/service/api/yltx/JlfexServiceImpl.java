@@ -1,7 +1,6 @@
 package com.jlfex.hermes.service.api.yltx;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,9 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
@@ -29,6 +30,7 @@ import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
@@ -38,6 +40,7 @@ import com.jlfex.hermes.model.yltx.AssetRepayPlan;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.repository.DictionaryTypeRepository;
+import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.service.CreditInfoService;
@@ -108,6 +111,8 @@ public class JlfexServiceImpl implements JlfexService {
 	private  UserInfoService userInfoService;
 	@Autowired 
 	private  FinanceRepayPlanService financeRepayPlanService;
+	@Autowired
+	private  LoanRepayRepository loanRepayRepository;
 	//接口配置
 	public static ApiConfig  apiConfig = null;
 	
@@ -199,7 +204,7 @@ public class JlfexServiceImpl implements JlfexService {
 	  		apiLog.setException(e.getMessage());
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
-	  	if(result.contains("status") && result.contains("memo")){
+	  	if(result!=null && result.contains("status") && result.contains("memo")){
 			errMsg = result;
 		}
 	  	if(errMsg==null){
@@ -408,6 +413,7 @@ public class JlfexServiceImpl implements JlfexService {
 	 * 易联债权标处理
 	 * flag :  00 未处理  01 处理成功  02: 重复不处理
 	 */
+	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public String yltxCreditDeal(FinanceOrder obj) throws Exception {
 		String  flag = "00";
@@ -480,6 +486,13 @@ public class JlfexServiceImpl implements JlfexService {
 	public boolean autoBuildLoan(FinanceOrder financeOrder) throws Exception {
 		Loan loan = buildLoan(financeOrder, queryRepayObj());
 		Loan loanNew = loanService.save(loan);
+		//保存标 还款计划
+		List<FinanceRepayPlan> financeRepayPlanList = financeRepayPlanService.queryByFinanceOrder(financeOrder);
+		if(financeRepayPlanList==null || financeRepayPlanList.size()== 0){
+			throw new Exception("理财产品id="+financeOrder.getUniqId()+",对应的还款计划表为空!");
+		}
+		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
+		saveLoanRepay(loanNew, financeRepayPlanList, loanRepayList);
 		if(loanNew != null){
 			financeOrder.setDealStatus(FinanceOrder.DealStatus.DEAL_SUC);
 			financeOrderService.save(financeOrder);
@@ -487,6 +500,32 @@ public class JlfexServiceImpl implements JlfexService {
 		}else{
 			return false;
 		}
+	}
+
+	/**
+	 * 保存 标还款计划明细
+	 * @param loanNew
+	 * @param financeRepayPlanList
+	 * @param loanRepayList
+	 */
+	public void saveLoanRepay(Loan loanNew,List<FinanceRepayPlan> financeRepayPlanList,List<LoanRepay> loanRepayList)
+	throws Exception{
+		for(FinanceRepayPlan plan :financeRepayPlanList){
+			LoanRepay loanRepay = new LoanRepay();
+			loanRepay.setLoan(loanNew);
+			loanRepay.setSequence(plan.getPeriod());
+			loanRepay.setPlanDatetime(plan.getRepaymentDate());
+			loanRepay.setAmount(plan.getRepaymentMoney());
+			loanRepay.setPrincipal(plan.getRepaymentPrincipal());
+			loanRepay.setInterest(plan.getRepaymentInterest());
+			loanRepay.setOtherAmount(BigDecimal.ZERO); // 月缴管理费
+			loanRepay.setOverdueDays(0);
+			loanRepay.setOverdueInterest(BigDecimal.ZERO);
+			loanRepay.setOverduePenalty(BigDecimal.ZERO);
+			loanRepay.setStatus(LoanRepay.RepayStatus.WAIT);
+			loanRepayList.add(loanRepay);
+		}
+		loanRepayRepository.save(loanRepayList);
 	}
 	
 	/**
@@ -789,7 +828,7 @@ public class JlfexServiceImpl implements JlfexService {
 							asset.setMemberId(voo.getMemberId());
 							asset.setTransferorName(voo.getTransferorName());
 							asset.setTransferorCertiType(voo.getTransferorCertiType());
-							asset.setTransferorCertNum(voo.getTransferorCertNum());
+							asset.setTransferorCertNum(voo.getTransferorCertiNum());
 							asset.setTransferorBankCard(voo.getTransferorBankCard());
 							asset.setTransferorBankProvince(voo.getTransferorBankProvince());
 							asset.setTransferorBankCity(voo.getTransferorBankCity());

@@ -15,10 +15,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 借款还款信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_loan_repay")
@@ -374,8 +370,6 @@ public class LoanRepay extends Model {
 	/**
 	 * 还款状态
 	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午2:12:36 operation by: description:
 	 */
 	public static final class RepayStatus {
 		

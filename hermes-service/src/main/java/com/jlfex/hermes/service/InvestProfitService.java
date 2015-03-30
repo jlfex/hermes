@@ -78,7 +78,7 @@ public interface InvestProfitService {
 	 * @param profitState
 	 * @return
 	 */
-	public InvestProfit sumAllProfitByAssignLoan(User user, String loanKind ,String... profitState);
+	public InvestProfit sumAllProfitByAssignLoan(User user, List<String> loanKinds ,String... profitState);
 
 	
 

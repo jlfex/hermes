@@ -346,7 +346,7 @@
             key: 'investamount'
         },
 	    moneyLessAjax: {
-	        url: "checkMoneyLess",  
+	        url: "checkMoneyLess?loanid="+$("#loanid").val(),  
 	        dataType: 'json',
 	        key: 'investamount'
 	    }
