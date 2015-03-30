@@ -8,7 +8,7 @@
 					<input id="creditorName" name="creditorName" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">
-					<label for="account">手机号码</label>
+					<label for="account">联系方式</label>
 					<input id="cellphone" name="cellphone" type="text" class="form-control">
 				</div>
 				<div class="col-xs-1 hm-col form-group">

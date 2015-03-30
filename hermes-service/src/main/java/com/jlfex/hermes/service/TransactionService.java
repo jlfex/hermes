@@ -227,4 +227,28 @@ public interface TransactionService {
 	 */
 	List<Transaction> cropAccountToCreditorOutline(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark);
 
+	/**
+	 * JLfex代扣 充值
+	 * @param type
+	 * @param user
+	 * @param cropAccountType
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 * @return
+	 */
+	List<Transaction> cropAccountToJlfexPay(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
+
+	/**
+	 * 中金 代扣 充值
+	 * @param type
+	 * @param user
+	 * @param cropAccountType
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 * @return
+	 */
+	List<Transaction> cropAccountToZJPay(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
+
 }

@@ -35,7 +35,7 @@ public class AutoRepayJob extends Job {
 	 */
 	@Override
 	public Result run() {
-		String var = "自动还款JOB....";
+		String var = "自动还款JOB：";
 		try {
 			long beginTime = System.currentTimeMillis();
 			Logger.info(var+"开始....");
@@ -55,7 +55,8 @@ public class AutoRepayJob extends Job {
 				LoanRepay loanRepay = loanRepayList.get(i);
 				try {
 					Loan loan = loanRepay.getLoan();
-					if(loan!= null && Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+					if(!Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
+						Logger.info(var+"自动还款任务只处理普通标，当前标类型为：loanKind="+loan.getloanKindName()+", loanNo="+loan.getLoanNo());
 						continue; 
 					}
 					//自动还款 判断之前是否有逾期

@@ -37,6 +37,11 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	private CreditorRepayPlanRepository creditorRepayPlanRepository;
 
 	@Override
+	public CreditRepayPlan save(CreditRepayPlan plan) throws Exception {
+		return creditorRepayPlanRepository.saveAndFlush(plan);
+	}
+	
+	@Override
 	public List<CreditRepayPlan> saveBatch(List<CreditRepayPlan> list)throws Exception {
 		return creditorRepayPlanRepository.save(list);
 	}

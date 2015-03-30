@@ -80,7 +80,7 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 * @return
 	 */
 	
-	public Page<Loan> findByloanKindAndStatusIn(String loanKind, List<String> status, Pageable pageable);
+	public Page<Loan> findByloanKindInAndStatusIn(List<String> loanKinds, List<String> status, Pageable pageable);
 	/**
 	 * 根据标类型 +状态+ 债权信息 
 	 * @param creditInfoId

@@ -27,6 +27,9 @@ public class Creditor  extends Model {
 	//债权人名称
 	@Column(name = "creditor_name")
 	private String creditorName;
+	//外围系统编号
+	@Column(name = "origin_no")
+	private String originNo;
 	//债权人证件类型
 	@Column(name = "cert_type")
 	private String  certType;
@@ -78,6 +81,13 @@ public class Creditor  extends Model {
 	}
 	public void setCreditorNo(String creditorNo) {
 		this.creditorNo = creditorNo;
+	}
+	
+	public String getOriginNo() {
+		return originNo;
+	}
+	public void setOriginNo(String originNo) {
+		this.originNo = originNo;
 	}
 	public String getCreditorName() {
 		return creditorName;

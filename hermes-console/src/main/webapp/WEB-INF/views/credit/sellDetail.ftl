@@ -34,7 +34,9 @@
                         <div class="spanblock"><span class="wd_100">债权人编号：</span>${(creditInfo.creditor.creditorNo)!''}</div>
                         <div class="spanblock"><span class="wd_100">联系人：</span>${(creditInfo.creditor.contacter)!''}</div>
                         <div class="spanblock"><span class="wd_100">可用余额：</span>${reMainCash!'0'} 元 &nbsp;&nbsp;
+                         <#if creditInfo.creditKind == '00'>
                          <button type="button" id="creditorCharge"  class="btn btn-primary" data-id="${(creditInfo.creditor.id)!''}">充值</button>
+                         </#if>
                        </div>
                     </div>
                     <div class="col-xs-4">
@@ -75,7 +77,7 @@
                                 <th class="align-center">债权类型</th>
                                 <th class="align-center">项目本金/元</th>
                                 <th class="align-center">年利率</th>
-                                <th class="align-center">项目期限/月</th>
+                                <th class="align-center">项目期限</th>
                                 <th class="align-center">剩余本金/元</th>
                                 <th class="align-center">剩余期限/天</th>
                                 <th class="align-center">状态</th>
@@ -87,7 +89,13 @@
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
                                 <td class="align-center"><#if (creditInfo.rate)?? >${(creditInfo.rate)?string.percent}<#else>0%</#if></td> 
-                                <td class="align-center">${(creditInfo.period)!''}</td>
+                                <td class="align-center">${(creditInfo.period)!''}
+                                  <#if (creditInfo.creditKind)?? && creditInfo.creditKind == '01'  >
+								              天 
+								   <#else>
+								        <@messages key="common.unit.month" />
+								  </#if>
+                                </td>
                                 <td class="align-center">${remainAmount!''}</td>
                                 <td class="align-center">${remainDays!''}</td>
                                 <td class="align-center">${(creditInfo.statusName)!''}</td> 
@@ -162,11 +170,16 @@
                                 <td class="align-center">${l.remainPrincipal!''}</td>
                                 <td class="align-center">${l.statusName!''}</td> 
                                 <td class="align-center">
-                                <#if l.status?? && l.status == '00' >
-                                  <button type="button" class="btn btn-primary" data-id="${l.id}">还款</button>
-                                <#elseif l.status?? && l.status == '01'>
-                                  <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
-                                <#else></#if>
+                                 <#if (creditInfo.creditKind)?? && creditInfo.creditKind == '01'  >
+								         <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
+								   <#else>
+									    <#if l.status?? && l.status == '00' >
+		                                  <button type="button" class="btn btn-primary" data-id="${l.id}">还款</button>
+		                                <#elseif l.status?? && l.status == '01'>
+		                                  <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
+		                                <#else></#if>
+								  </#if>
+                               
                                 </td>  
                             </tr>
                            </#list>

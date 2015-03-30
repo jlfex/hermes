@@ -134,7 +134,7 @@ jQuery(function($) {
 		if($this.val()==''
 		   ||( e.id == 'creditorName' && (!/^[a-zA-Z0-9\u4e00-\u9fa5_-]+$/.test(val) || val.length < 2 || val.length > 10) )
 		   ||( e.id == 'bankAccount' && !/^\d{16,19}$/.test(val) )
-		   ||( e.id == 'cellphone' && !/^1[3458]\d{9}$/.test(val) )
+		   ||( e.id == 'cellphone' && !/\d{7,13}|-*$/.test(val) )
 		   ||( e.id == 'mail' && !/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(val) )
 		){
 			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);

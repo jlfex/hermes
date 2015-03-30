@@ -80,8 +80,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<BankAccount> findByUserIdAndStatus(String userId, String status) {
-		Assert.notEmpty(userId, "user id is empty.");
-		Assert.notEmpty(status, "status is empty.");
 		return bankAccountRepository.findByUserIdAndStatus(userId, status);
 	}
 	

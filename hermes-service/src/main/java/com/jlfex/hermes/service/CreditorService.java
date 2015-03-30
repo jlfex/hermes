@@ -39,7 +39,7 @@ public interface CreditorService {
 	 * @param product
 	 * @return
 	 */
-	public void save(Creditor creditor) throws Exception ;
+	public Creditor save(Creditor creditor) throws Exception ;
 	
 	/**
 	 * 获取 最大 债权人编号
@@ -55,5 +55,12 @@ public interface CreditorService {
 	 */
 	public Creditor findByCredtorNo(String creditorNo)   ;
 	
-	
+	public String generateCreditorNo() throws Exception ;
+
+	/**
+	 * 根据债权人原始编号 获取债权人信息
+	 * @param creditorNo
+	 * @return
+	 */
+	public Creditor findByOriginNo(String creditorNo);
 }

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.jlfex.hermes.common.Logger;
-import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.RequestUtils;
@@ -47,9 +46,6 @@ import com.jlfex.hermes.service.UserService;
 @Controller
 @RequestMapping("/credit")
 public class CreditController {
-
-	private static String today;
-	private final static String CACHE_CREDITOR_SEQUENCE = "com.jlfex.cache.creditorsequence";
 
 	@Autowired
 	private CreditorService creditorService;
@@ -89,7 +85,7 @@ public class CreditController {
 	public String addCredit(Model model) {
 		String uniqueueCode = "";
 		try {
-			uniqueueCode = generateLoanNo();
+			uniqueueCode = creditorService.generateCreditorNo();
 		} catch (Exception e) {
 			Logger.error("生成债权人唯一编号异常：", e);
 		}
@@ -125,6 +121,7 @@ public class CreditController {
 				if (Strings.empty(creditor.getCreditorNo())) {
 					return "credit/goAdd";
 				}
+				creditor.setOriginNo(creditor.getCreditorNo());
 				creditorService.save(creditor);
 			}
 		} catch (Exception e) {
@@ -152,47 +149,7 @@ public class CreditController {
 		return "credit/add";
 	}
 
-	/**
-	 * 生成债权人编号
-	 * 
-	 * @return
-	 */
-	public synchronized String generateLoanNo() throws Exception {
-		String date = Calendars.format("yyyyMMdd");
-		Creditor creditor = null;
-		List<Creditor> creditList = creditorService.findMaxCredtorNo();
-		if (creditList != null && creditList.size() > 0) {
-			creditor = creditList.get(0);
-			if (creditor != null && !Strings.empty(creditor.getCreditorNo())) {
-				String currMaxCreditNo = creditor.getCreditorNo();
-				if (!Strings.empty(currMaxCreditNo) && currMaxCreditNo.length() == 14) {
-					today = currMaxCreditNo.substring(2, 10);
-					currMaxCreditNo = currMaxCreditNo.substring(10);
-					Caches.set(CACHE_CREDITOR_SEQUENCE, Long.valueOf(currMaxCreditNo));
-					Logger.info("数据库总：最大的债权人编号是：" + currMaxCreditNo);
-				}
-			}
-		}
-		// 判断缓存序列是否存在 若不存在则初始化
-		if (Caches.get(CACHE_CREDITOR_SEQUENCE) == null) {
-			Caches.set(CACHE_CREDITOR_SEQUENCE, 0);
-		}
-		// 若未匹配则重置序列编号 判断日期是否与当前日期匹配
-		if (Strings.empty(today)) {
-			today = date;
-		} else {
-			int num_nowDate = Integer.parseInt(date);
-			int num_today = Integer.parseInt(Strings.empty(today, "0"));
-			if (!date.equals(today)) {
-				if (num_today < num_nowDate) {
-					today = date;
-					Caches.set(CACHE_CREDITOR_SEQUENCE, 0);
-				}
-			}
-		}
-		Long seq = Caches.incr(CACHE_CREDITOR_SEQUENCE, 1);// 递增缓存数据
-		return String.format("ZQ%s%04d", today, seq);
-	}
+
 
 	/**
 	 * 债权导入 列表
@@ -776,7 +733,7 @@ public class CreditController {
 			if (creditInfo == null || Strings.empty(creditInfo.getId())) {
 				model.addAttribute("creditInfo", creditInfo);
 				model.addAttribute("errMsg", "债权信息为空");
-			} else {
+			}else{
 				CrediteInfo entity = creditInfoService.findById(creditInfo.getId());
 				if (!Strings.empty(creditInfo.getPurpose())) {
 					entity.setPurpose(creditInfo.getPurpose());

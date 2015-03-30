@@ -3,9 +3,9 @@ package com.jlfex.hermes.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Area;
 
 /**
@@ -16,7 +16,7 @@ import com.jlfex.hermes.model.Area;
  * @since 1.0
  */
 @Repository
-public interface AreaRepository extends JpaRepository<Area, String> {
+public interface AreaRepository extends JpaRepository<Area, String>, JpaSpecificationExecutor<Area> {
 
 	/**
 	 * 通过父级查询数据

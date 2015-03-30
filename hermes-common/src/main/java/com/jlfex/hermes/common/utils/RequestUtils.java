@@ -25,7 +25,7 @@ import org.springframework.ui.Model;
 public class RequestUtils {
 
 	public static String encodeParameterStringWithPrefix(Map<String, Object> params, String prefix) {
-		if (Collections3.isEmpty(params)) {
+		if (CollectionUtil.isEmpty(params)) {
 			return "";
 		}
 
@@ -54,7 +54,7 @@ public class RequestUtils {
 	}
 
 	public static String encodeParameterHtmlWithPrefix(Map<String, Object> params, String prefix) {
-		if (Collections3.isEmpty(params)) {
+		if (CollectionUtil.isEmpty(params)) {
 			return "";
 		}
 

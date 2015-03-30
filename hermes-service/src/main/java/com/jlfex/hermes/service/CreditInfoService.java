@@ -33,7 +33,7 @@ public interface CreditInfoService {
 	 * @param product
 	 * @return
 	 */
-	public void save(CrediteInfo crediteInfo) throws Exception ;
+	public CrediteInfo save(CrediteInfo crediteInfo) throws Exception ;
 	
 	/**
 	 * 保存

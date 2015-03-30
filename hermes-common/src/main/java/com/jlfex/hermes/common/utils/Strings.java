@@ -26,6 +26,10 @@ public abstract class Strings {
 		return (str == null || str.length() == 0);
 	}
 	
+	public static boolean notEmpty(String str) {
+		return !(str == null || str.length() == 0);
+	}
+	
 	/**
 	 * 判断字符串是否为空<br>
 	 * 若字符串为空则返回默认字符串

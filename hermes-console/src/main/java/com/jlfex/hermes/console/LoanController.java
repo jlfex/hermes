@@ -245,10 +245,10 @@ public class LoanController {
 		Loan loan = loanService.loadById(id);
 		model.addAttribute("loan", loan);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
-		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			model.addAttribute("purpose", loan.getPurpose());
-		} else {
+		if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
 			model.addAttribute("purpose", dictionary.getName());
+		} else {
+			model.addAttribute("purpose", loan.getPurpose());
 		}
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
