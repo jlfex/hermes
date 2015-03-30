@@ -38,6 +38,4 @@ public interface CreditInfoRepository extends JpaRepository<CrediteInfo, String>
 	@Query("select t from CrediteInfo t where  t.creditor.creditorNo = ?1 and t.crediteCode = ?2")
 	public List<CrediteInfo>  findByCreditorNoAndCrediteCode(String creditorNo , String crediteCode);
 	
-
-
 }

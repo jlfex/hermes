@@ -54,8 +54,13 @@ public class IndexController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
-		model.addAttribute("loans", loanService.findForIndex(Loan.LoanKinds.NORML_LOAN));
-		model.addAttribute("assignLoans", loanService.findForIndex(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
+		List<String> normalKind = new ArrayList<String>();
+		normalKind.add(Loan.LoanKinds.NORML_LOAN);
+		model.addAttribute("loans", loanService.findForIndex(normalKind));
+		normalKind.clear();
+		normalKind.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		normalKind.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		model.addAttribute("assignLoans", loanService.findForIndex(normalKind));
 		model.addAttribute("bannerPicture", contentService.findOneByCode(HermesConstants.INDEX_BANNER));
 		model.addAttribute("investPicture", contentService.findOneByCode(HermesConstants.INDEX_INVEST));
 		model.addAttribute("loanPicture", contentService.findOneByCode(HermesConstants.INDEX_LOAN));

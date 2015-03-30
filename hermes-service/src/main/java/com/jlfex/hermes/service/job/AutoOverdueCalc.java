@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
+import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.service.RepayService;
@@ -33,6 +34,11 @@ public class AutoOverdueCalc extends Job {
 			StringBuilder remarks = new StringBuilder();
 			for (int i = 0; i < loanRepayList.size(); i++) {
 				LoanRepay loanRepay = loanRepayList.get(i);
+				String loanKind = loanRepay.getLoan().getLoanKind();
+				if(!(Loan.LoanKinds.NORML_LOAN.equals(loanKind) || Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind))){
+					Logger.info("自动逾期计算JOB：只处理普通标和外部导入债权标，当前loanKind="+loanKind);
+					continue;
+				}
 				try {
 					isUpdateData = true;
 					boolean success = repayService.overdueCalc(loanRepay);

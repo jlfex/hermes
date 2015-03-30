@@ -83,8 +83,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	}
 
 	@Override
-	public void save(CrediteInfo crediteInfo) throws Exception {
-		creditInfoRepository.save(crediteInfo);
+	public CrediteInfo save(CrediteInfo crediteInfo) throws Exception {
+		return creditInfoRepository.save(crediteInfo);
 	}
 
 
@@ -177,7 +177,6 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 */
 	@Override
 	public Product  generateVirtualProduct(Repay repay) throws Exception{
-		
 		Boolean existsFlag = false;
 		Product virtualProcut = new  Product();
 		try{

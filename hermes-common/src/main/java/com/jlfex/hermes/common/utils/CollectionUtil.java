@@ -9,9 +9,11 @@ package com.jlfex.hermes.common.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @author calvin
  */
-public class Collections3 {
+public class CollectionUtil {
 
 	/**
 	 * 提取集合中的对象的两个属性(通过Getter函数), 组合成Map.
@@ -189,5 +191,27 @@ public class Collections3 {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * Set集合 转 List集合
+	 * @param a
+	 * @return
+	 */
+	public static  <T> List<T>  switchSet2List(Set<T> a) {
+		List<T>  list = new  ArrayList<T>();
+		list.addAll(a);
+		return  list;
+	}
+	
+	/**
+	 * List集合 转 Set 集合
+	 * @param a
+	 * @return
+	 */
+	public static  <T> Set<T>  switchList2Set(List<T> a) {
+		Set<T>  sets = new  HashSet<T>();
+		sets.addAll(a);
+		return  sets;
 	}
 }

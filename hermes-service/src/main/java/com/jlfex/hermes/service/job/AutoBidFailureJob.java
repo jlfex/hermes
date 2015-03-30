@@ -70,7 +70,7 @@ public class AutoBidFailureJob extends Job {
 						}else{
 							Logger.info(JobDESC+",普通标id="+loan.getId()+",招标截止时间为空，跳过处理。");
 						}
-					}else{
+					}else if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
 						//普通标
 						LoanLog LoanLogStartInvest = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.START_INVEST);
 						if (LoanLogStartInvest != null) {
@@ -78,6 +78,10 @@ public class AutoBidFailureJob extends Job {
 							loan.setBusinessDate(Calendars.add(LoanLogStartInvest.getDatetime(), duration)); //设置投标的截至时间
 							loanStartInvest.add(loan);
 						}
+					}else if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+						Logger.info("易联债权标:不自动流标处理，loanNo="+loan.getLoanNo());
+					}else{
+						Logger.info("无效的标类型：loanNo="+loan.getLoanNo()+",loanKind="+loan.getLoanKind());
 					}
 				}
 				//由于每天有可能有新的终审通过，开始招标的借款，故设置有效期为1天 

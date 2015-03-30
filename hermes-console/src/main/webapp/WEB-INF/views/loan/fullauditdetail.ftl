@@ -34,8 +34,8 @@
 					<div class="form-group">
 						<label class="col-xs-2 control-label">&nbsp;</label>
 						<div class="col-xs-10">
-							<button type="button" data-status="00" class="btn btn-success">放款</button>
-							<button type="button" data-status="01" class="btn btn-danger">流标</button>
+							<button type="button" id="FundTransfer" data-status="00" class="btn btn-success">放款</button>
+							<button type="button" id="bidFail" data-status="01" class="btn btn-danger">流标</button>
 							<button type="button" class="btn btn-default"><@messages key="common.op.cancel" /></button>
 							<input id="detailStatus" name="status" type="hidden">
 						</div>
@@ -50,7 +50,11 @@
 <!--
 jQuery(function($) {
 
-	
+	var loanKind ='${loan.loanKind!''}';
+	if(loanKind == '03'){
+	    $("#FundTransfer").removeClass("btn-success").attr('disabled',true);
+	    $("#bidFail").removeClass("btn-danger").attr('disabled',true);
+	}
 		// 初始化
 	var _form_search = $('#searchForm'),
 		_form_data = $('#dataForm'),

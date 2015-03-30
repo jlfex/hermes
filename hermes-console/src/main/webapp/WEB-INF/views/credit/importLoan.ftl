@@ -39,12 +39,18 @@
                         <div class="col-xs-1 hm-col form-group">
                             <label>&nbsp;</label>
                             <input id="file" name="file" type="file" multiple="multiple" class="hidden" />
-                            <button id="uploadBtn" type="button" class="btn  btn-default btn-block">+ 导入新债权</button>&nbsp;
+                            <button id="uploadBtn" type="button" class="btn  btn-default btn-block">导入新债权</button>&nbsp;
+                        </div>
+                        <div class="col-xs-1 hm-col form-group">
+                            <label>&nbsp;</label>
+                            <button id="synchYLTXCredit" type="button" class="btn  btn-default btn-block">同步易联天下债权</button>&nbsp;
                         </div>
                 </div>
             </form>
         </div>
-<div id="importResult"></div>
+<div id="importResult">
+  ${synchResult!''}
+</div>
 <div id="data"></div>   
 <script type="text/javascript" charset="utf-8">
 <!--
@@ -82,7 +88,14 @@ jQuery(function($) {
 	});
 	
 	$.page.withdraw({
-	search: '${app}/credit/loandata'
+    	search: '${app}/credit/loandata'
+	});
+	
+	$("#synchYLTXCredit").click(function(){
+	  $.link.html(null, {
+			url: '${app}/jlfex/queryfinance',
+			target: 'main'
+		});
 	});
 	
 	

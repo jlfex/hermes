@@ -108,14 +108,9 @@ public class CrediteInfo extends Model {
 	// 债权 借款管理费
 	@Column(name = "manage_fee")
 	private BigDecimal manageFee;
-
-	public Integer getTermNum() {
-		return termNum;
-	}
-
-	public void setTermNum(Integer termNum) {
-		this.termNum = termNum;
-	}
+	//债权类型
+	@Column(name = "credit_kind")
+	private String  creditKind ; 
 
 	@Transient
 	private String bidEndTimeStr;
@@ -384,6 +379,21 @@ public class CrediteInfo extends Model {
 	public void setAssignTime(Date assignTime) {
 		this.assignTime = assignTime;
 	}
+	public Integer getTermNum() {
+		return termNum;
+	}
+
+	public void setTermNum(Integer termNum) {
+		this.termNum = termNum;
+	}
+	
+	public String getCreditKind() {
+		return creditKind;
+	}
+
+	public void setCreditKind(String creditKind) {
+		this.creditKind = creditKind;
+	}
 
 	/**
 	 * 读取当前用户名称
@@ -402,7 +412,6 @@ public class CrediteInfo extends Model {
 	}
 
 	public Boolean getOutOfDate() {
-
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(deadTime);
 		c1.set(Calendar.MINUTE, 0);
@@ -431,6 +440,14 @@ public class CrediteInfo extends Model {
 		public static final String IMP_FAIL = "04";
 		@Element("已过期")
 		public static final String FAIL_ASSIGNING = "05";
+	}
+	
+	public static final class CreditKind {
+		@Element("导入标")
+		public static final String EXECEL_IMP = "00";
+		@Element("易联标")
+		public static final String YLTX_API = "01";
+		
 	}
 
 }
