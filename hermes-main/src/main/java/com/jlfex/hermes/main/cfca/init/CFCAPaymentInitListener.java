@@ -3,7 +3,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import com.jlfex.hermes.common.Logger;
 
-import cfca.payment.api.system.PaymentEnvironment;
+//import cfca.payment.api.system.PaymentEnvironment;
 
 public class CFCAPaymentInitListener implements ServletContextListener {
 
@@ -14,7 +14,7 @@ public class CFCAPaymentInitListener implements ServletContextListener {
         try {
             // 初始化支付环境
         	String path = Class.class.getClass().getResource("/").getPath()+PAYMENT_CONFIG_PATH;
-            PaymentEnvironment.initialize(path);
+            //PaymentEnvironment.initialize(path);
         } catch (Exception e) {
             Logger.error("初始化中金支付环境异常:", e);
         }
