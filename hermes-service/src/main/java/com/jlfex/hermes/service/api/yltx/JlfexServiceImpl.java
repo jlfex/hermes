@@ -150,7 +150,7 @@ public class JlfexServiceImpl implements JlfexService {
 	  		apiLog.setException(e.getMessage());
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
-	  	if(result.contains("status") && result.contains("memo")){
+	  	if(result!=null && result.contains("status") && result.contains("memo")){
 			Logger.info(var+" 接口返回结果="+result);
 			result = null;
 		}
@@ -324,7 +324,8 @@ public class JlfexServiceImpl implements JlfexService {
 		ApiConfig  apiConfig = apiConfigRepository.findByPlatCodeAndStatus(HermesConstants.PLAT_JLFEX_CODE, HermesConstants.VALID);
 		if(apiConfig == null){
 			Map<String,String>  recodeMap = new HashMap<String,String>();
-		  	recodeMap.put("interfaceMethod",HermesConstants.JL_FINANCE_FRODUCT_GET);
+			recodeMap.put("interfaceMethod",HermesConstants.JL_FINANCE_FRODUCT_GET);
+			recodeMap.put("exception","平台接口配置没有初始化");
 		    recordApiLog(apiConfig, recodeMap);
 			throw new  Exception("平台接口配置没有初始化");
 		}
@@ -351,6 +352,9 @@ public class JlfexServiceImpl implements JlfexService {
 		}
 		if(!Strings.empty(map.get("serialNo"))){
 			apiLog.setSerialNo(map.get("serialNo"));
+		}
+		if(!Strings.empty(map.get("exception"))){
+			apiLog.setException(map.get("exception"));
 		}
 		try{
 		    return apiLogService.saveApiLog(apiLog);
