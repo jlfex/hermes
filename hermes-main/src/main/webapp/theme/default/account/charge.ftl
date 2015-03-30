@@ -36,7 +36,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-xs-2 col-xs-offset-2 u-col">
-					<!--<button id="addChargeBtn" type="button" disabled="disabled" class="btn btn-default btn-block"><@messages key="common.op.charge" /></button>-->
+					<button id="addChargeBtn" type="button" disabled="disabled" class="btn btn-default btn-block"><@messages key="common.op.charge" /></button>
 				</div>
 			</div>
 		</form>
