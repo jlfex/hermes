@@ -97,8 +97,8 @@ public interface InvestProfitRepository extends JpaRepository<InvestProfit, Stri
 	 * @param user
 	 * @return
 	 */
-	@Query("SELECT new InvestProfit(SUM(t.interest) , SUM(t.overdueInterest))  FROM InvestProfit t where  t.status in ?1  and  t.invest.loan.loanKind = ?2 and  t.user =?3  ")
-	public InvestProfit sumAllProfitByAssignLoan(List<String> profitStatusList, String loanKind, User user);
+	@Query("SELECT new InvestProfit(SUM(t.interest) , SUM(t.overdueInterest))  FROM InvestProfit t where  t.status in ?1  and  t.invest.loan.loanKind in ?2 and  t.user =?3  ")
+	public InvestProfit sumAllProfitByAssignLoan(List<String> profitStatusList, List<String> loanKinds, User user);
 	
 //	/**
 //	 * 债权表：获取收益

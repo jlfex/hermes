@@ -103,9 +103,7 @@ public final class HermesConstants {
 	 */
 	public  static final String PAY_SUC   		= "支付成功";
 	public  static final String PAY_FAIL 		= "支付失败";
-	public  static final String PAY_DOING	    = "代扣正在处理中";
-	public  static final String REFUND_DOING 	= "退款正在处理中";
-	public  static final String PAY_CANCEL 		= "代扣撤销";
+	public  static final String PAY_WAIT_CONFIRM= "支付确认中";
 	public  static final String CLEARING_SUC  	= "结算成功";
 	public  static final String CLEARING_FAIL 	= "结算失败";
 	public  static final String CLEARING_DOING	= "结算正在处理中";

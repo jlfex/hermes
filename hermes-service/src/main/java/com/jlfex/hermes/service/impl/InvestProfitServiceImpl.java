@@ -89,73 +89,7 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 		return investProfitRepository.loadOverdueInterestSumByUserAndInStatus(user, Arrays.asList(status));
 	}
 
-	// private String getCondition(String investid, Map<String, Object> params)
-	// {
-	// StringBuilder condition = new StringBuilder();
-	// condition.append(" where 1=1");
-	// if (!Strings.empty(investid)) {
-	// condition.append(" and hip.id = :id");
-	// params.put("id", investid);
-	// }
-	//
-	// return condition.toString();
-	// }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.InvestProfitService#findByJointSql(java.lang
-	 * .String, java.lang.String, java.lang.String)
-	 */
-	// @Override
-	// public Page<Map<String, Object>> findByJointSql(String investId, String
-	// page, String size) {
-	// Map<String, Object> params = new HashMap<String, Object>();
-	//
-	// String sqlSearchByInvestProfit =
-	// commonRepository.readScriptFile(Script.searchByInvestProfit);
-	// String sqlCountSearchByInvestProfit =
-	// commonRepository.readScriptFile(Script.countSearchByInvestProfit);
-	//
-	// String condition = getCondition(investId, params);
-	// sqlSearchByInvestProfit = String.format(sqlSearchByInvestProfit,
-	// condition);
-	// sqlCountSearchByInvestProfit =
-	// String.format(sqlCountSearchByInvestProfit, condition);
-	//
-	// // 初始化
-	// Pageable pageable =
-	// Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")),
-	// Integer.valueOf(Strings.empty(size, "100")));
-	// List<?> listCount =
-	// commonRepository.findByNativeSql(sqlCountSearchByInvestProfit, params);
-	// Long total = Long.parseLong(String.valueOf(listCount.get(0)));
-	// Logger.info("total:" + total);
-	// List<?> list = commonRepository.findByNativeSql(sqlSearchByInvestProfit,
-	// params, pageable.getOffset(), pageable.getPageSize());
-	// List<Map<String, Object>> investProfits = new ArrayList<Map<String,
-	// Object>>();
-	// for (int i = 0; i < list.size(); i++) {
-	// Map<String, Object> attributes = new HashMap<String, Object>();
-	// Object[] object = (Object[]) list.get(i);
-	// attributes.put("sequence", String.valueOf(object[0]));
-	// attributes.put("period", String.valueOf(object[1]));
-	// attributes.put("planDatetime", String.valueOf(object[2]));
-	// attributes.put("principal", String.valueOf(object[3]));
-	// attributes.put("interest", String.valueOf(object[4]));
-	// attributes.put("amount", String.valueOf(object[5]));
-	// attributes.put("overdueInterest", String.valueOf(object[6]));
-	// attributes.put("overdueDays", String.valueOf(object[7]));
-	// attributes.put("status", String.valueOf(object[8]));
-	// investProfits.add(attributes);
-	// }
-	// // 返回结果
-	// Page<Map<String, Object>> pageMap = new PageImpl<Map<String,
-	// Object>>(investProfits, pageable, total);
-	// return pageMap;
-	//
-	// }
 
 	/**
 	 * 此方法用于获取已收记录及最新一期待收
@@ -238,8 +172,8 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 	}
 	
 	@Override
-	public InvestProfit sumAllProfitByAssignLoan(User user, String loanKind ,String... profitState) {
-		return investProfitRepository.sumAllProfitByAssignLoan( Arrays.asList(profitState),loanKind, user);
+	public InvestProfit sumAllProfitByAssignLoan(User user, List<String> loanKinds ,String... profitState) {
+		return investProfitRepository.sumAllProfitByAssignLoan( Arrays.asList(profitState),  loanKinds, user);
 	}
 
 }

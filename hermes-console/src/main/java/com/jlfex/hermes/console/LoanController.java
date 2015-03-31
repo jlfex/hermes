@@ -635,7 +635,7 @@ public class LoanController {
 		try {
 			String loanRepayId = loanService.queryLoanRepayId(repayid);
 			boolean repaymentResult = repayService.repayment(loanRepayId);
-			if (repaymentResult) {
+			if (repaymentResult){
 				// 更新债权明细表中状态
 				loanService.updateCreditRepayPlanStatus(repayid, CreditRepayPlan.Status.ALREADY_PAY);
 				Logger.info("债权还款操作 成功：债权还款明细id=" + repayid);

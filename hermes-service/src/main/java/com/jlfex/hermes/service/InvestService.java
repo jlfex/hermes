@@ -15,10 +15,6 @@ import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
 
 /**
  * 理财业务接口
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 public interface InvestService {
 
@@ -86,7 +82,7 @@ public interface InvestService {
 	 * 
 	 * @return
 	 */
-	public List<InvestInfo> findByUser(User user,String loanKind);
+	public List<InvestInfo> findByUser(User user,List<String> loanKindList);
 
 	/**
 	 * 加载用户投标记录（分页）
