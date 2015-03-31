@@ -27,7 +27,8 @@
                 </div>               
             </form>
         </div>
-<div id="data"></div>   
+<div id="data">
+</div>   
 <script type="text/javascript" charset="utf-8">
 jQuery(function($) {
     $("#beginDate").datetimepicker({

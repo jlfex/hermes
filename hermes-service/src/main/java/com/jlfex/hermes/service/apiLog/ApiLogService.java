@@ -15,10 +15,6 @@ public interface ApiLogService {
 	public ApiLog  saveApiLog(ApiLog apiLog) throws Exception  ;
 	/**
 	 * 外围日志列表
-	 * @param page
-	 * @param size
-	 * @return
-	 * @throws Exception
 	 */
 	public Page<ApiLog>  queryByCondition(ApiLogVo apiLogVo,String page, String size) throws Exception ;
 

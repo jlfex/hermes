@@ -25,7 +25,6 @@ import com.jlfex.hermes.service.pojo.yltx.ApiLogVo;
  * 日志控制器
  * 
  * @author lishunfeng
- * @version 1.0, 2013-11-14
  * @since 1.0
  */
 @Controller

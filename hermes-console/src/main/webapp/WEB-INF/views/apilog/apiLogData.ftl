@@ -42,7 +42,7 @@
 <ul class="pagination" data-number="${apiLogList.number!''}" data-total-pages="${apiLogList.totalPages!''}"></ul>
  </#if>
 <script type="text/javascript">
-<!--
+
 jQuery(function($) {
 	$('#table a').link();
 	$('.pagination').pagination({
@@ -52,7 +52,4 @@ jQuery(function($) {
 		}
 	});
 });
-
-
-//-->
 </script>

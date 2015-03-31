@@ -51,8 +51,6 @@ public class ApiLogServiceImpl implements  ApiLogService {
 	 * 外围日志列表
 	 * @param page
 	 * @param size
-	 * @return
-	 * @throws Exception
 	 */
 	@Override
 	public Page<ApiLog> queryByCondition(final ApiLogVo apiLogVo, String page, String size) throws Exception {

@@ -9,8 +9,8 @@ public class ApiLogVo implements Serializable{
 	private String id;
 	private String serialNo;              //请求流水号	
 	private String interfaceName;         //接口名称
-	private String beginDate; // 开始时间 用于检索请求时间段
-	private String endDate; // 开始时间 用于检索请求时间段
+	private String beginDate; // 开始时间 
+	private String endDate; // 结束时间
 	public String getId() {
 		return id;
 	}

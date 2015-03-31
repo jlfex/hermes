@@ -97,7 +97,6 @@ public class ApiLog   extends Model{
 	/**
 	 * 读取状态名称
 	 * 
-	 * @return
 	 */
 	public String getDealResultName() {
 		return Dicts.name(dealFlag, dealFlag, DealResult.class);
