@@ -6,6 +6,7 @@
 <link rel="shortcut icon" type="image/png" href="${app.img}/favicon.png">
 <link rel="stylesheet" href="${app.css}/style.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui.css">
+<link rel="stylesheet" href="${app.css}/jquery-ui-timepicker-addon.css">
 <script type="text/javascript" charset="utf-8">
 	window.ctxforcontent = '${app.js}';
 </script>
@@ -43,6 +44,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/hermes-page.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.modal.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.confirm.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
