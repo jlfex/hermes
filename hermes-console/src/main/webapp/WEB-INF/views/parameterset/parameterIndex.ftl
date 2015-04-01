@@ -10,7 +10,7 @@
 		<form id="searchForm" method="post" action="#">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterType">参数类</label>
+					<label for="parameterType">参数类型</label>
 					<input id="parameterType" name="parameterType" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">
@@ -23,9 +23,13 @@
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
-					<button id="addBtn" type="button" class="btn btn-primary btn-block">新增</button>
+					<button id="addTypeBtn" type="button" class="btn btn-primary btn-block">添加参数类型</button>
+				</div>	
+			   	<div class="col-xs-1 hm-col form-group">
+					<label>&nbsp;</label>
+					<button id="addBtn" type="button" class="btn btn-primary btn-block">添加参数值</button>
 					<input id="page" name="page" type="hidden" value="0">
-				</div>				
+				</div>				   										
 			</div>
 		</form>
 	</div>
@@ -38,8 +42,16 @@ jQuery(function($) {
 	$.page.withdraw({
 		search: '${app}/parameter/parameterdata'
 	});	
+
+    //点击添加参数类按钮
+	$("#addTypeBtn").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/parameter/addParameterType',
+			target: 'main'
+		});
+	});
 	
-    //点击新增按钮
+    //点击添加参数值按钮
 	$("#addBtn").on("click",function(){
 		$.link.html(null, {
 			url: '${app}/parameter/addParameter',

@@ -68,8 +68,10 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 			Object[] object = (Object[]) list.get(i);
 			parameterSetInfo.setId(String.valueOf(object[0]));
 			parameterSetInfo.setParameterType(String.valueOf(object[1]));
-			parameterSetInfo.setParameterValue(String.valueOf(object[2]));
+			parameterSetInfo.setParameterValue(object[2]==null?null:String.valueOf(object[2]));
 			parameterSetInfo.setStatus(String.valueOf(object[3]));
+			parameterSetInfo.setDicId(String.valueOf(object[4]));
+			parameterSetInfo.setTypeStatus(String.valueOf(object[5]));
 			parameterSetInfos.add(parameterSetInfo);
 		}
 		// 返回结果
@@ -104,6 +106,17 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		dictionary.setOrder(nextOrder(dictionaryType.getId()));
 		dictionaryRepository.save(dictionary);
 		return dictionary;
+	}
+
+	/**
+	 * 添加参数类型
+	 */
+	public DictionaryType addDictionaryType(String name,String status) {
+		DictionaryType dicType = new DictionaryType();
+		dicType.setName(name);
+		dicType.setStatus(status);
+		dictionaryTypeRepository.save(dicType);
+		return dicType;
 	}
 
 	/**
@@ -166,6 +179,16 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		dictionaryRepository.save(dictionary);
 		return dictionary;
 	}
+	/**
+	 * 修改参数类型
+	 * 
+	 */
+	public DictionaryType updateDicType(String parameterType,String id) {
+		DictionaryType dicType = dictionaryTypeRepository.findOne(id);
+		dicType.setName(parameterType);
+		dictionaryTypeRepository.save(dicType);
+		return dicType;
+	}
 
 	/**
 	 * 根据id找到某条记录
@@ -199,6 +222,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	@Override
 	public List<Dictionary> findByNameAndType(String name, String typeId) {
 		return dictionaryRepository.findByNameAndType(name, typeId);
+	}
+
+	@Override
+	public List<DictionaryType> findByName(String name) {
+		return dictionaryTypeRepository.findByName(name);
 	}
 
 }

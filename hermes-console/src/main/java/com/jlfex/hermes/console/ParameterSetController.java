@@ -2,6 +2,7 @@ package com.jlfex.hermes.console;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +58,15 @@ public class ParameterSetController {
 	public String addDictionary(Model model) {
 		return "/parameterset/addParameter";
 	}
+	/**
+	 * 新增参数类型页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/addParameterType")
+	public String addParameterType(Model model) {
+		return "/parameterset/addParameterType";
+	}
 
 	/**
 	 * 处理新增参数配置逻辑
@@ -85,6 +95,32 @@ public class ParameterSetController {
 			return "redirect:/parameter/addParameter";
 		}
 	}
+	/**
+	 * 处理添加参数类业务
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerAddParameterType")
+	public String handerAddParameterType(String parameterType,String status, RedirectAttributes attr, Model model) {
+		try {
+			List<DictionaryType> dicList = parameterSetService.findByName(parameterType);
+			if (dicList.size() > 0) {
+				attr.addFlashAttribute("msg", "参数类型已经存在");
+				return "redirect:/parameter/addParameterType";
+			} else if (StringUtils.isEmpty(parameterType)) {
+				attr.addFlashAttribute("msg", "参数类型不能为空");
+				return "redirect:/parameter/addParameterType";
+			} else {
+				parameterSetService.addDictionaryType(parameterType, status);
+				attr.addFlashAttribute("msg", "添加参数类型成功");
+				return "redirect:/parameter/index";
+			}
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "添加参数类型失败");
+			Logger.error("添加参数类型失败：", e);
+			return "redirect:/parameter/addParameterType";
+		}
+	}
 
 	/**
 	 * 编辑参数配置页面
@@ -95,6 +131,17 @@ public class ParameterSetController {
 	public String editParameter(@RequestParam(value = "id", required = true) String id, Model model) {
 		model.addAttribute("parameter", parameterSetService.findOne(id));
 		return "/parameterset/editParameter";
+	}
+
+	/**
+	 * 编辑参数类型页面
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/editParameterType")
+	public String editParameterType(@RequestParam(value = "id", required = true) String id, Model model) {
+		model.addAttribute("parameter", parameterSetService.findOneById(id));
+		return "/parameterset/editParameterType";
 	}
 
 	/**
@@ -121,6 +168,32 @@ public class ParameterSetController {
 			attr.addFlashAttribute("msg", "参数配置修改失败");
 			Logger.error("参数配置修改失败：", e);
 			return "redirect:/parameter/editParameter";
+		}
+	}
+
+	/**
+	 * 修改参数类型
+	 * 
+	 * @author lishunfeng
+	 */
+	@RequestMapping("/handerEditParameterType")
+	public String handerEditParameterType(String parameterType,String id, RedirectAttributes attr, Model model) {
+		try {
+			List<DictionaryType> dicList = parameterSetService.findByName(parameterType);
+			if (dicList.size() > 0) {
+				attr.addFlashAttribute("msg", "参数类型已经存在");
+				return "redirect:/parameter/editParameterType";
+			} else if (StringUtils.isEmpty(parameterType)) {
+				attr.addFlashAttribute("msg", "参数类型不能为空");
+				return "redirect:/parameter/editParameterType";
+			}
+			parameterSetService.updateDicType(parameterType, id);
+			attr.addFlashAttribute("msg", "参数配置修改成功");
+			return "redirect:/parameter/index";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "参数配置修改失败");
+			Logger.error("参数配置修改失败：", e);
+			return "redirect:/parameter/editParameterType";
 		}
 	}
 

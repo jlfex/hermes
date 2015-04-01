@@ -34,8 +34,12 @@ public class UserDetailsService implements org.springframework.security.core.use
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 查询并判断用户是否有效
 		User user = userService.loadByEmail(username);
-		if (user == null) user = userService.loadByAccount(username);
-		if (user == null) throw new UsernameNotFoundException("cannot find user " + username + ".");
+		if (user == null){
+			user = userService.loadByAccount(username);
+		}
+		if (user != null && !"admin".equals(username)) {
+			throw new UsernameNotFoundException("cannot find user " + username + ".");
+		}
 		
 		// 设置当前用户
 		user.getRoles().addAll(roleService.findByUserId(user.getId()));

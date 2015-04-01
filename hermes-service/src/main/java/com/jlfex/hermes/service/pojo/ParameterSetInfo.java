@@ -6,12 +6,17 @@ public class ParameterSetInfo implements Serializable {
 	private static final long serialVersionUID = 2738596796196493682L;
 	/** 编号 */
 	private String id;
+	/** 字典编号*/
+	private String dicId;
 	/** 参数类 */
 	private String parameterType;
 	/** 参数值 */
 	private String parameterValue;
 	/** 参数状态 */
 	private String status;
+	/** 参数类型状态 */
+	private String typeStatus;
+
 
 	public String getId() {
 		return id;
@@ -19,6 +24,14 @@ public class ParameterSetInfo implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getDicId() {
+		return dicId;
+	}
+
+	public void setDicId(String dicId) {
+		this.dicId = dicId;
 	}
 
 	public String getParameterType() {
@@ -43,6 +56,14 @@ public class ParameterSetInfo implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getTypeStatus() {
+		return typeStatus;
+	}
+
+	public void setTypeStatus(String typeStatus) {
+		this.typeStatus = typeStatus;
 	}
 
 }
