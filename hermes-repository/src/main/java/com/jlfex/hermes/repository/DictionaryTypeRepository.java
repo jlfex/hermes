@@ -1,8 +1,12 @@
 package com.jlfex.hermes.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.DictionaryType;
 
 /**
@@ -24,5 +28,9 @@ public interface DictionaryTypeRepository extends JpaRepository<DictionaryType, 
 	public DictionaryType findByCode(String code);
 
 	public DictionaryType findOneByName(String name);
+	
+	@Query("from DictionaryType d where d.name = ?1")
+	public List<DictionaryType> findByName(String name);
+
 
 }

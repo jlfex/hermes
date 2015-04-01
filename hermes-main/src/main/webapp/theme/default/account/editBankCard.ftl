@@ -181,11 +181,7 @@ jQuery(function($) {
 		        }
 		    });
 	}
-	alert(${bankAccount.city.parent.id});
-	alert(${bankAccount.city.id});
 	$("#bankId").val("${bankAccount.bank.id}");
-	//$("#cityId2").val("${bankAccount.city.parent.id}");
-	//$("#cityId").val("${bankAccount.city.id}");
 </script>
 <style>
 .zero_border{ height:auto;-moz-border-top-left-radius: 4px; -webkit-border-top-left-radius: 4px;border-top-left-radius: 4px; 

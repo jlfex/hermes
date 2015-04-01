@@ -10,7 +10,7 @@
             <div id="data" style="display:block">
           <form class="form-horizontal" role="form" id="addForm" method="post">
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>参数类</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>参数类型</label>
                 <div class="col-sm-5">
                       <select class="form-control selector" name="parameterType" id="parameterType1">
                         <option value="176c9150-7103-11e3-ae10-6cae8b21aead" selected="selected">产品招标期限</option>
@@ -21,7 +21,7 @@
                 </div>
                </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>参数值</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>参数值</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" name="parameterValue" id ="parameterValue1" placeholder="参数值"/>
                 </div>
@@ -73,9 +73,11 @@ jQuery(function($) {
 	   var parameterType  = $("#parameterType1").val();
 	   var parameterValue = $("#parameterValue1").val(); 
 	   if(parameterType == '176c9150-7103-11e3-ae10-6cae8b21aead' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
-		   $(this).parent().parent().find(".alert-danger:eq(0)").show();    
+		   $(this).parent().parent().find(".alert-danger:eq(0)").show();  
+		    document.getElementById("addParameter").disabled = true;		     
 	   }else{
-	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();
+	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
+	       document.getElementById("addParameter").disabled = false;		     	              
 	   }
 	});
 

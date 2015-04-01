@@ -35,5 +35,12 @@ public interface ParameterSetService {
 	public void switchDictionary(String id);
 
 	public List<Dictionary> findByNameAndType(String name, String typeId);
+	
+	public List<DictionaryType> findByName(String name);
+	
+	public DictionaryType addDictionaryType(String name,String status);
+	
+	public DictionaryType updateDicType(String parameterType,String id);
+
 
 }
