@@ -4,21 +4,18 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 
 /**
  * 还款计划仓库
  * 
- * @author Ray
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Repository
-public interface LoanRepayRepository extends JpaRepository<LoanRepay, String> {
+public interface LoanRepayRepository extends JpaRepository<LoanRepay, String>, JpaSpecificationExecutor<LoanRepay> { 
 
 	/**
 	 * 通过借款和期数加载还款计划

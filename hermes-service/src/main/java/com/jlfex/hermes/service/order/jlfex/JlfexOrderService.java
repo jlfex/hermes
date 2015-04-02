@@ -1,5 +1,7 @@
 package com.jlfex.hermes.service.order.jlfex;
 
+import java.util.List;
+
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 
 /**
@@ -10,5 +12,7 @@ import com.jlfex.hermes.model.yltx.JlfexOrder;
 public interface JlfexOrderService {
 	
 	public JlfexOrder  saveOrder(JlfexOrder jlfexOrder) throws Exception  ;
+	
+	public List<JlfexOrder>  queryOrderByPayStatus(List<String> satatusList) throws Exception  ;
 
 }

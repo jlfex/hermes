@@ -357,4 +357,12 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	public CrediteInfo findByLoanInfo(Loan loan) throws Exception {
 		return creditInfoRepository.findOne(loan.getCreditInfoId());
 	}
+
+	/**
+	 *  根据债权编号  获取 债权信息
+	 */
+	@Override
+	public CrediteInfo findByCrediteCode(String crediteCode) throws Exception {
+		return creditInfoRepository.findByCrediteCode(crediteCode);
+	}
 }
