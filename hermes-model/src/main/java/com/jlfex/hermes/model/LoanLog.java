@@ -15,9 +15,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 借款日志模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-12
  * @since 1.0
  */
 @Entity

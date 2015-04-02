@@ -14,10 +14,6 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 用户模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user")

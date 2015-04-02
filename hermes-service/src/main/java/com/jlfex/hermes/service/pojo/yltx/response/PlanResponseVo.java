@@ -8,18 +8,18 @@ import java.util.List;
  * @author Administrator
  *
  */
-public class RepayPlan implements Serializable {
+public class PlanResponseVo implements Serializable {
 
 	private static final long serialVersionUID = 98294601687213662L;
 	
 	
-	private List<AssetRepayPlanVo> content;  //返回内容 
+	private List<RepayPlanVo> content;  //返回内容 
 
-	public List<AssetRepayPlanVo> getContent() {
+	public List<RepayPlanVo> getContent() {
 		return content;
 	}
 
-	public void setContent(List<AssetRepayPlanVo> content) {
+	public void setContent(List<RepayPlanVo> content) {
 		this.content = content;
 	}
 

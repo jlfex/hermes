@@ -40,6 +40,12 @@ public class AssetRepayPlan extends Model{
 	@Column(name =   "residue_principal")
 	private  BigDecimal  residuePrincipal;			//剩余本金
 	
+	@Column(name =   "old_principal")
+	private  BigDecimal  oldPrincipal;				//原始应还本金
+	@Column(name =   "old_interest")
+	private  BigDecimal  oldInterest;				//原始应还利息
+	@Column(name =   "old_money")
+	private  BigDecimal  oldMoney;					//原始应还金额
 	
 	
 	public Asset getAsset() {
@@ -60,7 +66,6 @@ public class AssetRepayPlan extends Model{
 	public void setPeriod(int period) {
 		this.period = period;
 	}
-	
 	public Date getRepaymentDate() {
 		return repaymentDate;
 	}
@@ -90,6 +95,24 @@ public class AssetRepayPlan extends Model{
 	}
 	public void setResiduePrincipal(BigDecimal residuePrincipal) {
 		this.residuePrincipal = residuePrincipal;
+	}
+	public BigDecimal getOldPrincipal() {
+		return oldPrincipal;
+	}
+	public void setOldPrincipal(BigDecimal oldPrincipal) {
+		this.oldPrincipal = oldPrincipal;
+	}
+	public BigDecimal getOldInterest() {
+		return oldInterest;
+	}
+	public void setOldInterest(BigDecimal oldInterest) {
+		this.oldInterest = oldInterest;
+	}
+	public BigDecimal getOldMoney() {
+		return oldMoney;
+	}
+	public void setOldMoney(BigDecimal oldMoney) {
+		this.oldMoney = oldMoney;
 	}
 	
 	

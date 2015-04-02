@@ -14,7 +14,9 @@ import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
-import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceOrderVo;
+import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
+import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
+import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
  * 易联天下对接
@@ -36,11 +38,11 @@ public class JlfexControl {
 		int dealFailSize = 0;      //处理失败数
 		int undoSize= 0;           //重复订单，不需处理数
 		String createDate = Calendars.format(HermesConstants.FORMAT_19);
-		QueryFinanceOrderVo queryFunanceOrderVo = null;
+		QueryFinanceRspVo queryFinanceRspVo = null;
 		try{
 			String jsonOrder = jlfexService.queryFinanceOrder(null, createDate, HermesConstants.JL_PAGE_SIZE, HermesConstants.JL_PAGE_NUM);
-			queryFunanceOrderVo = JSON.parseObject(jsonOrder,QueryFinanceOrderVo.class);
-			if(queryFunanceOrderVo == null){
+			queryFinanceRspVo = JSON.parseObject(jsonOrder,QueryFinanceRspVo.class);
+			if(queryFinanceRspVo == null){
 				model.addAttribute("synchResult", "易联接口异常，请查看接口日志");
 				return "credit/importLoan";
 			}
@@ -51,12 +53,17 @@ public class JlfexControl {
 		}
 		//数据处理
 		List<FinanceOrder> financeOrderList = new  ArrayList<FinanceOrder>();
-		jlfexService.buildFinanceOrder(financeOrderList, queryFunanceOrderVo);
+		jlfexService.buildFinanceOrder(financeOrderList, queryFinanceRspVo);
 		financeOrderSize = financeOrderList.size();
 		for(FinanceOrder obj: financeOrderList){
 			try{
 				String  resultVal = null;
-				String  resultCode = jlfexService.yltxCreditDeal(obj);
+				if(!(HermesConstants.FINANCE_FUNDRAISING.equals(obj.getStatus().trim()) ||
+				     HermesConstants.FINANCE_WAIT_PAY.equals(obj.getStatus().trim()))	){
+					 Logger.info("理财产品id="+obj.getUniqId()+", 状态为="+obj.getStatus()+",不进行处理");
+					continue ;
+				}
+				String  resultCode = jlfexService.sellCreditDeal(obj);
 				if("00".equals(resultCode)){
 					resultVal = "发售失败";
 					dealFailSize ++ ;
@@ -83,8 +90,8 @@ public class JlfexControl {
 	
 	@RequestMapping("/queryRepayPlan")
 	public String queryRepayPlan(Model model) throws Exception {
-		String id = "1503180002-0002";
-		String type = "2";
+		String id = "17113";
+		String type = "1";
 		String jsonOrder = jlfexService.queryRepayPlan(id,type);
 		System.out.println(jsonOrder);
 		return "credit/index";
@@ -95,6 +102,16 @@ public class JlfexControl {
 		
 		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
 		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
+		return "credit/index";
+	}
+	
+	@RequestMapping("/queryOrder")
+	public String queryOrder(Model model) throws Exception {
+		String orderCode = "2015030102332";
+		String result  = jlfexService.queryOrderStatus(orderCode);
+		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
+		List<OrderVo>  lists = responVo.getContent();
+		
 		return "credit/index";
 	}
 	

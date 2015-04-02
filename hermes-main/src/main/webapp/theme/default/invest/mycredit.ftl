@@ -40,7 +40,7 @@ jQuery(function($) {
 					<th>期限(天)</th>
 					<th>应收本息(<@messages key="common.unit.cny" />)</th>
 					<th>已收本息(<@messages key="common.unit.cny" />)</th>
-					<th>代收本息(<@messages key="common.unit.cny" />)</th>
+					<th>待收本息(<@messages key="common.unit.cny" />)</th>
 					<th>状态</th>
 				</tr>
 			</thead>

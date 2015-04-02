@@ -300,9 +300,16 @@ public class InvestController {
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount );
 		OrderPayResponseVo responseVo =  investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
-		boolean bidResult = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
-		if(bidResult){
+		String flag = null;
+		try{
+			flag = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
+		}catch(Exception e){
+			Logger.error(e.getMessage());
+		}
+		if("00".equals(flag)){
 			resultView = "invest/bidAndPaySuc";
+		}else if("01".equals(flag)){
+			resultView = "invest/bidAndPayWait";
 		}else{
 			resultView = "invest/bidAndPayFail";
 		}

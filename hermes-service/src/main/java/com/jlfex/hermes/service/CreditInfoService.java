@@ -137,4 +137,11 @@ public interface CreditInfoService {
      * @throws Exception
      */
 	public CrediteInfo findByLoanInfo(Loan loan) throws Exception;
+	/**
+	 * 根据债权编号  获取  债权信息
+	 * @param crediteCode
+	 * @return
+	 * @throws Exception
+	 */
+	public CrediteInfo findByCrediteCode(String crediteCode) throws Exception;
 }

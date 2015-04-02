@@ -245,6 +245,10 @@ public class Invest extends Model {
 
 		@Element("借款流标")
 		public static final String FAILURE = "20";
+		@Element("处理中")
+		public static final String WAIT = "98";
+		@Element("投标失败")
+		public static final String FAIL = "99";
 	}
 
 }

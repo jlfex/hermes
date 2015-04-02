@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.yltx.Asset;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
@@ -139,7 +140,30 @@ public interface InvestService {
      * @return
      * @throws Exception
      */
-	public boolean jlfexBid(String loanId, User investUser,BigDecimal investAmount,OrderPayResponseVo responseVo) throws Exception;
+	public String jlfexBid(String loanId, User investUser,BigDecimal investAmount,OrderPayResponseVo responseVo) throws Exception;
+
+	/**
+	 * 保存投标日志
+	 * @param investUser
+	 * @param investAmount
+	 * @param loan
+	 * @param type
+	 * @param remark
+	 */
+	public void saveLoanLog(User investUser, BigDecimal investAmount, Loan loan,String type, String remark) throws Exception;
+
+	/**
+	 * 保存 操作日志
+	 * @param investUser
+	 */
+	public void saveUserLog(User investUser) throws Exception;
+    /**
+     * 获取订单 对应的 资产编号
+     * @param orderCode
+     * @return
+     * @throws Exception
+     */
+	public String getAssetCodeOfOrder(String orderCode) throws Exception;
 
 
 }

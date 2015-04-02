@@ -4,7 +4,7 @@ package com.jlfex.hermes.service.pojo.yltx.response;
 import java.io.Serializable;
 import java.util.List;
 
-public class QueryFinanceOrderVo implements  Serializable{
+public class QueryFinanceRspVo implements  Serializable{
 
 	/**
 	 * 查询理财产品订单接口  响应实体
