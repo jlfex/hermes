@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Transaction;
@@ -19,6 +20,7 @@ import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
+import com.jlfex.hermes.service.job.Job.Result;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
@@ -49,7 +51,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 			for(JlfexOrder order : orderList){
 				try{
 					String result =  jlfexService.queryOrderStatus(order.getOrderCode());
-					if(result!=null){
+					if(Strings.notEmpty(result)){
 						OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
 						List<OrderVo>   orderVoList = responVo.getContent();
 						if(orderVoList==null || orderVoList.size() != 1){
@@ -94,11 +96,10 @@ public class ScanJlfexWaitOrderJob extends Job {
 					continue;
 				}
 			}
-			return  null;
 		} catch (Exception e) {
 			throw  new ServiceException(e.getMessage(), e);
 		}
-
+		return new Result(true, false, "");
 	}
 
 }

@@ -17,7 +17,7 @@ import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
- * 自动同步 理财产品查询接口
+ * 自动同步 理财产品JOB
  */
 @Component("autoSynchFinanceJob")
 public class AutoSynchFinanceJob extends Job {
@@ -93,7 +93,7 @@ public class AutoSynchFinanceJob extends Job {
 				Logger.error("自动同步理财产品JOB 异常：", e);
 				return  new Result(true, false, "自动同步理财产品JOB 异常"+e.getMessage());
 			}
-			return new Result(true, false, "");
+			return new Result(true, false, "自动同步 理财产品JOB处理结束");
 		} catch (Exception e) {
 			throw  new ServiceException(e.getMessage(), e);
 		}

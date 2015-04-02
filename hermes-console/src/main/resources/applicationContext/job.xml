@@ -13,6 +13,9 @@
 			    <ref bean="autoRepayJobTrigger" />
 				<ref bean="autoBidFailureJobTrigger" />  
 				<ref bean="autoOverdueCalcJobTrigger" />   
+				<ref bean="scanJlfexWaitOrderJobTrigger" />
+				<ref bean="scanJlfexRepayOrderJobTrigger" />  
+				<ref bean="autoSynchFinanceJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -66,5 +69,34 @@
 		</property>
 		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
-	
+	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个一分钟运行一次  -->
+	<bean id="scanJlfexWaitOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="scanJlfexWaitOrderJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 */2 * * * ?" />
+	</bean>
+	<!-- 描述：JLFEX回购订单信息同步  执行时间: 每个一小时运行一次  -->
+	<bean id="scanJlfexRepayOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="scanJlfexRepayOrderJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 0 */1 * * ?" />
+	</bean>
+	<!-- 描述：JLFEX理财产品同步   执行时间: 每天凌晨03:00  -->
+	<bean id="autoSynchFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoSynchFinanceJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 0 3 * * ?" />
+	</bean>
 </beans>

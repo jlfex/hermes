@@ -3,14 +3,13 @@ package com.jlfex.hermes.service.job;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.InvestProfit;
@@ -67,7 +66,7 @@ public class ScanJlfexRepayOrderJob extends Job {
 			for(JlfexOrder order : orderList){
 				try{
 					String result =  jlfexService.queryOrderStatus(order.getOrderCode());
-					if(result!=null){
+					if(Strings.notEmpty(result)){
 						OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
 						List<OrderVo>   orderVoList = responVo.getContent();
 						if(orderVoList==null || orderVoList.size() != 1){
@@ -108,11 +107,10 @@ public class ScanJlfexRepayOrderJob extends Job {
 					continue;
 				}
 			}
-			return  null;
 		} catch (Exception e) {
 			throw  new ServiceException(e.getMessage(), e);
 		}
-
+		return new Result(true, false, "");
 	}
 
 }
