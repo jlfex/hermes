@@ -11,13 +11,13 @@
           <form class="form-horizontal" role="form" id="editForm" method="post">
           <input type="hidden" value="${(parameter.id)!}" name="id" />
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span class="color_red">* </span>参数类</label>
+                <label for="" class="col-sm-2 control-label">参数类型</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="parameterType1"  name="parameterType" placeholder="参数类"  disabled="disabled" value="${parameter.type.name!}">
+                  <input type="text" class="form-control" id="parameterType1"  name="parameterType" placeholder="参数类型" readonly="readonly" value="${parameter.type.name!}">
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label">参数值</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">*</span>参数值</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="parameterValue1" name="parameterValue" placeholder="参数值" value="${parameter.name}">
                 </div>

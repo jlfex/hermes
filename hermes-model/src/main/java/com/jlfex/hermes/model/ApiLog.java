@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 @Entity
@@ -39,7 +39,7 @@ public class ApiLog   extends Model{
 	@Column(name = "deal_flag")
 	private String dealFlag;              //处理标识
 	private String exception;             //异常信息
-	
+
 	public ApiConfig getApiConfig() {
 		return apiConfig;
 	}
@@ -94,6 +94,14 @@ public class ApiLog   extends Model{
 	public void setException(String exception) {
 		this.exception = exception;
 	}
+	/**
+	 * 读取状态名称
+	 * 
+	 */
+	public String getDealResultName() {
+		return Dicts.name(dealFlag, dealFlag, DealResult.class);
+	}
+
 	/**
 	 * 处理状态
 	 * @author Administrator

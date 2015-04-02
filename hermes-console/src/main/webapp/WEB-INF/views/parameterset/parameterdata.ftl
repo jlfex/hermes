@@ -1,7 +1,7 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-				<th width="10%" class="align-center">参数类</th>
+				<th width="10%" class="align-center">参数类型</th>
 				<th width="10%" class="align-center">参数值</th>
 				<th width="10%" class="align-center">参数状态</th>
 				<th width="10%" class="align-center">操作</th>
@@ -14,20 +14,29 @@
 		<#else>
 		<#list parameterSet.content as p>
 		<tr>
-			<td class="align-center">${p.parameterType}</td>
-			<td class="align-center">${p.parameterValue}</td>
-			<#if p.status == "00" >
+			<td class="align-center">${(p.parameterType)!''}</td>
+			<td class="align-center">${(p.parameterValue)!''}</td>
+			<#if p.status == "00">
+			  <td class="align-center">启用</td>			  
+			<#elseif p.status == "09">
+			  <td class="align-center">禁用</td>
+			<#elseif p.typeStatus == "00">
 			  <td class="align-center">启用</td>
-			  
+			<#elseif p.typeStatus == "09">
+			  <td class="align-center">禁用</td>
 			<#else>
 			  <td class="align-center">禁用</td>
 			</#if>
-			<td class="align-center">
-                <button type="button" class="btn btn-link hm-col editBtn"  pid="${p.id}">编辑</button>
-                <#if p.status == "00">
-                  <button type="button" class="btn btn-link forbiddenBtn"  fid="${p.id}">禁用</button>
+			<td class="align-center">	
+			    <#if p.parameterValue??>		  
+                   <button type="button" class="btn btn-link hm-col editBtn"  pid="${(p.dicId)!''}">编辑</button>
                 <#else>
-                  <button type="button" class="btn btn-link enabledBtn"  eid="${p.id}">启用</button>
+                   <button type="button" class="btn btn-link hm-col editTypeBtn"  oid="${(p.id)!''}">编辑</button>
+                </#if>
+                <#if p.status == "00" && p.parameterValue?exists>
+                  <button type="button" class="btn btn-link forbiddenBtn"  fid="${(p.dicId)!''}">禁用</button>
+                <#elseif p.status == "09" && p.parameterValue?exists>
+                  <button type="button" class="btn btn-link enabledBtn"  eid="${(p.dicId)!''}">启用</button>
                 </#if>				  
 			</td>			
 		</tr>
@@ -52,6 +61,14 @@ $(".editBtn").on("click",function(){
 		target: 'main'
 	});
 });	
+$(".editTypeBtn").on("click",function(){
+	var oid = $(this).attr("oid");
+	$.link.html(null, {
+		url: '${app}/parameter/editParameterType?id='+oid,
+		target: 'main'
+	});
+});	
+
 //点击禁用按钮
 $(".forbiddenBtn").on("click",function(){
 	var fid = $(this).attr("fid");
