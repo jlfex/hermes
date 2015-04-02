@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.jlfex.hermes.common.dict.Dicts;
+import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.model.ApiLog.DealResult;
+
 
 @Entity
 @Table(name = "hm_api_config", uniqueConstraints={@UniqueConstraint(columnNames = {"plat_code" })} )
@@ -35,7 +39,7 @@ public class ApiConfig  extends Model{
 	private  String  apiUrl;
 	
 	//扩展字段
-	@Column(name = "ext",nullable=false, length = 60)
+	@Column(name = "ext",length = 60)
 	private  String  ext;
 	//接口状态
 	@Column(name = "status",nullable=false, length = 2)
@@ -100,9 +104,24 @@ public class ApiConfig  extends Model{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	/**
+	 * 读取状态名称
+	 * 
+	 */
+	public String getStatusName() {
+		return Dicts.name(status, status, Status.class);
+	}
 	
-	
-	
-	
+	/**
+	 * 接口状态
+	 *
+	 */
+	public static final class Status {
+		@Element("有效")
+		public static final String INVALID = "0";
+		@Element("无效")
+		public static final String EFFECTIVE = "1";
 
+	}
+	
 }
