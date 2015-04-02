@@ -47,6 +47,9 @@ public class JlfexOrder extends Model{
 	@Column(name =   "pay_status")
 	private  String   payStatus;					//支付状态
 	private  String   status;					    //处理状态
+	@Column(name =   "asset_code")
+	private  String   assetCode;				    //资产编号
+	
 	
 	
 	
@@ -110,18 +113,27 @@ public class JlfexOrder extends Model{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+	public String getAssetCode() {
+		return assetCode;
+	}
+	public void setAssetCode(String assetCode) {
+		this.assetCode = assetCode;
+	}
+
 	/**
 	 * 处理状态
 	 * @author Administrator
 	 *
 	 */
 	public static final class Status {
-		@Element("待处理")
+		@Element("待同步")
 		public static final String WAIT_DEAL   = "00";
-		@Element("已处理")
+		@Element("已同步")
 		public static final String FIN_DEAL    = "01";
+		@Element("已撤单")
+		public static final String CANCEL      = "02";
 	}
+	
 	
 	
 	

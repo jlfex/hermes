@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import com.jlfex.hermes.common.Logger;
@@ -35,16 +36,17 @@ import com.jlfex.hermes.common.utils.Strings;
 public class HttpClientUtil {
 
 	private static  HttpClient httpClient;
-	private static  String key_store_client_path = "/certificate/";
+	private static  String key_store_client_path ;
 	private static  String key_store_password ;
-	private static  String key_store_trust_path = "/certificate/";
+	private static  String key_store_trust_path ;
 	private static  String key_store_trust_password;
 	private static  boolean key_init_flag = false;
 	private static  final  int  CONNECTION_TIMEOUT = 10000; 
 	private static  final  int  SO_TIMEOUT = 20000;
+	private static  final  String DIRECTORY = "/certificate/";
 	
 	static {
-		httpClient = new DefaultHttpClient();
+		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
 		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_TIMEOUT); //设置连接超时
 		httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,SO_TIMEOUT);//设置读取超时
 	}
@@ -58,9 +60,9 @@ public class HttpClientUtil {
 	 */
 	public static void initHttps(String keyStoreName,String keyStorePwd,String trustStoreName,String trustStorePwd){
 		if(!key_init_flag){
-			key_store_client_path = key_store_client_path+keyStoreName;
+			key_store_client_path = DIRECTORY+keyStoreName;
 			key_store_password = keyStorePwd;
-			key_store_trust_path = key_store_trust_path + trustStoreName;
+			key_store_trust_path = DIRECTORY + trustStoreName;
 			key_store_trust_password = trustStorePwd;
 			key_init_flag = true;
 		}

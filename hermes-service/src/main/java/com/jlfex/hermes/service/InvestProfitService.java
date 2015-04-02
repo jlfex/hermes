@@ -80,6 +80,14 @@ public interface InvestProfitService {
 	 */
 	public InvestProfit sumAllProfitByAssignLoan(User user, List<String> loanKinds ,String... profitState);
 
+	/**
+	 * 根据理财  获取理财收益信息
+	 * @param invest
+	 * @return
+	 * @throws Exception
+	 */
+	public List<InvestProfit> queryByInvest(Invest invest) throws Exception;
+
 	
 
 }

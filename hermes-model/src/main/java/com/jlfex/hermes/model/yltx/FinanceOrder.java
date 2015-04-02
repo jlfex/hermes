@@ -45,7 +45,7 @@ public class FinanceOrder extends Model{
 	private String assetGuarantee;				 //资产保证方式
 	@Column(name = "management_rate")
 	private String managementRate;				 //投资管理费率
-	@Column(name = "dateof_value")
+	@Column(name = "dateof_value",nullable=false)
 	private Date   dateOfValue;					 //起息日期
 	@Column(name = "fund_purpose")
 	private String fundPurpose;					 //资金用途

@@ -194,14 +194,20 @@ public class RepayServiceImpl implements RepayService {
 	public boolean repayment(String id) {
 		LoanRepay loanRepay = loanRepayRepository.findOne(id);
 		// 判断假如借款还款状态为正常还款或者逾期还款，说明已经还过了，无须再还
-		if (Strings.equals(loanRepay.getStatus(), RepayStatus.NORMAL) || Strings.equals(loanRepay.getStatus(), RepayStatus.OVERDUE_REPAY)) {
+		if (Strings.equals(loanRepay.getStatus(), RepayStatus.NORMAL) || 
+			Strings.equals(loanRepay.getStatus(), RepayStatus.OVERDUE_REPAY)) {
 			return false;
 		}
-		// 取得借款还款的最大期数
-		Integer loanMaxSequence = loanRepayRepository.findMaxSequenceByloan(loanRepay.getLoan());
 		int success;
 		Date now = new Date();
 		Loan loan = loanRepay.getLoan();
+		if(!(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind()) ||
+		   Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind()))){
+			Logger.info("标编号="+loan.getLoanNo()+",类型：loanKind="+loan.getLoanKind()+",不走公共还款业务处理");
+			return false;
+		}
+		// 取得借款还款的最大期数
+		Integer loanMaxSequence = loanRepayRepository.findMaxSequenceByloan(loan);
 		BigDecimal amount = BigDecimal.ZERO; // 总还款=总本金+总利息+管理费+逾期违约金+逾期罚息
 		BigDecimal principal = BigDecimal.ZERO; // 总本金
 		BigDecimal interest = BigDecimal.ZERO; // 总利息
@@ -222,12 +228,9 @@ public class RepayServiceImpl implements RepayService {
 				investProfitRepository.save(investProfit);
 			}
 			// 总还款=总本金+总利息+管理费
-			// amount =
-			// amount.add(principal).add(interest).add(loanRepay.getOtherAmount());
-
+			// amount =amount.add(principal).add(interest).add(loanRepay.getOtherAmount());
 			// 总还款=总本金+总利息
 			amount = amount.add(principal).add(interest);
-
 			loanRepay.setRepayDatetime(now);
 			loanRepay.setAmount(amount);
 			loanRepay.setPrincipal(principal);

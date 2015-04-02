@@ -14,9 +14,6 @@ import com.jlfex.hermes.common.dict.Element;
 /**
  * 用户账户信息模型
  *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_account")

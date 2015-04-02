@@ -6,7 +6,7 @@ import java.util.Map;
 import com.jlfex.hermes.model.yltx.Asset;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
-import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceOrderVo;
+import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
  * 易联天下 对接接口
@@ -78,7 +78,7 @@ public interface JlfexService {
 	 * @param queryFunanceOrderVo
 	 * @throws Exception
 	 */
-	public void buildFinanceOrder(List<FinanceOrder> financeOrderList, QueryFinanceOrderVo queryFunanceOrderVo) throws Exception;
+	public void buildFinanceOrder(List<FinanceOrder> financeOrderList, QueryFinanceRspVo queryFunanceOrderVo) throws Exception;
 	
 
 	/**
@@ -90,12 +90,19 @@ public interface JlfexService {
 	public void transCreditInfo(List<Asset> savedAssetLists, FinanceOrder financeOrder) throws Exception;
 
 	/**
-	 * 易联债权处理
+	 * 理财产品发售
 	 * @param financeOrderList
 	 * @return
 	 * @throws Exception
 	 */
-	public String yltxCreditDeal( FinanceOrder financeOrder) throws Exception;
+	public String sellCreditDeal( FinanceOrder financeOrder) throws Exception;
+	/**
+	 * 募资完成 更新理财产品
+	 * @param financeOrderList
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean updateFinishedFinance(FinanceOrder obj) throws Exception;
 	
 
 }

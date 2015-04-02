@@ -52,7 +52,7 @@ public class AssetVo  implements Serializable {
 	private  String  assetDtlType;				//原始债权类型
 	private  Date  assetDtlCreditEndDate;		//原始债权到期日
 	private  Date  assetDtlLendingDay;		    //原始债权放款日
-	private  List<AssetRepayPlanVo> creditorsRepaymentList; //原始债权还款计划表
+	private  List<RepayPlanVo> creditorsRepaymentList; //原始债权还款计划表
 	private  String  assetAttachmentIds;		//资产附件编号
 	
 	
@@ -243,11 +243,11 @@ public class AssetVo  implements Serializable {
 		this.assetDtlType = assetDtlType;
 	}
 	
-	public List<AssetRepayPlanVo> getCreditorsRepaymentList() {
+	public List<RepayPlanVo> getCreditorsRepaymentList() {
 		return creditorsRepaymentList;
 	}
 	public void setCreditorsRepaymentList(
-			List<AssetRepayPlanVo> creditorsRepaymentList) {
+			List<RepayPlanVo> creditorsRepaymentList) {
 		this.creditorsRepaymentList = creditorsRepaymentList;
 	}
 	public String getAssetAttachmentIds() {

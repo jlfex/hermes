@@ -175,5 +175,11 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 	public InvestProfit sumAllProfitByAssignLoan(User user, List<String> loanKinds ,String... profitState) {
 		return investProfitRepository.sumAllProfitByAssignLoan( Arrays.asList(profitState),  loanKinds, user);
 	}
+	
+	@Override
+	public List<InvestProfit> queryByInvest(Invest invest) throws Exception{
+		return  investProfitRepository.findByInvest(invest);
+	}
+	
 
 }

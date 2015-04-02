@@ -390,11 +390,13 @@ jQuery(function($) {
 			                        <tr>
 			                        <th class="th_00"><@messages key="invest.user" /></th>
 			                        <th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
+			                        <th>投标状态</th>
 			                        <th>投标时间</th></tr>
 			                        <#list invests as i>  
 									<tr>
 										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
 										<td>${i.amount?string('#,##0.00')}</td>
+										<td>${i.statusName}</td>
 										<td>${i.datetime?string('yyyy-MM-dd HH:mm:ss')}</td>
 									</tr>
 									</#list>

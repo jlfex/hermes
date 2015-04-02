@@ -103,7 +103,7 @@ public class CreditorServiceImpl implements CreditorService {
 	 */
 	public User buildAccount(Creditor creditor) throws Exception {
 		User obj = new User();
-		obj.setAccount(creditor.getCreditorName());
+		obj.setAccount(creditor.getCreditorNo());
 		obj.setType(Type.CREDIT);
 		obj.setStatus(Status.ENABLED);
 		obj.setSignPassword("");

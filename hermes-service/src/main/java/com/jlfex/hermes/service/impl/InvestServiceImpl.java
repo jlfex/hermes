@@ -38,7 +38,6 @@ import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
-import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.AreaRepository;
 import com.jlfex.hermes.repository.CommonRepository;
@@ -48,7 +47,6 @@ import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
-import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserLogRepository;
@@ -67,8 +65,9 @@ import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
-import com.jlfex.hermes.service.pojo.yltx.response.ErrorResponse;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
+import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
+import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
 
 /**
  * 
@@ -340,7 +339,7 @@ public class InvestServiceImpl implements InvestService {
 				return backMap;
 			}
 			//保存理财信息
-			saveInvestRecord(investUser, investAmount, otherRepay, loan);
+			saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
 			saveUserLog(investUser);
 		} else {
@@ -357,20 +356,14 @@ public class InvestServiceImpl implements InvestService {
 	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
-		int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
-		if(updateRecord == 1){
-			Loan loan = loanRepository.findOne(loanId);
-			// 判断假如借款金额与已筹金额相等，更新状态为满标
-			if(loan.getAmount().compareTo(loan.getProceeds()) == 0){
-				loan.setStatus(Loan.Status.FULL);
-				loanRepository.save(loan);
-				saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL,"投标成功");
-			}
-            return orderAndPayRequest(loan, investUser,investAmount);
-		} else {
-			Logger.info("投标操作：剩余金额不足。loanId="+loanId+",投标金额="+investAmount.toString());
-			return null;
+		Loan loan = loanRepository.findOne(loanId);
+		// 判断假如借款金额与已筹金额相等，更新状态为满标
+		if(loan.getAmount().compareTo(loan.getProceeds()) == 0){
+			loan.setStatus(Loan.Status.FULL);
+			loanRepository.save(loan);
+			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL,"投标成功");
 		}
+        return orderAndPayRequest(loan, investUser,investAmount);
 	}
 	
 	/**
@@ -378,51 +371,85 @@ public class InvestServiceImpl implements InvestService {
 	 */
 	@Transactional(rollbackFor=Exception.class)
 	@Override
-	public boolean jlfexBid(String loanId, User investUser, BigDecimal investAmount, OrderPayResponseVo responseVo) throws Exception {
+	public String jlfexBid(String loanId, User investUser, BigDecimal investAmount, OrderPayResponseVo responseVo) throws Exception {
+		String resultFlag = "99";
 		Loan loan = loanRepository.findOne(loanId);
 		if(responseVo == null){
+			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL );
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
-			return false;
+			return resultFlag;
 		}
-		Logger.info("易联债权标：loanNo="+loan.getLoanNo()+", 下单并支付：订单状态="+responseVo.getOrderStatus()+",支付状态="+responseVo.getPayStatus());
-		//撤单 
+		int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
+		if(updateRecord != 1){
+			throw new Exception("投标失败,当前标 可投金额不足,投标金额: "+investAmount+" > 可投金额："+ loan.getAmount().subtract(loan.getProceeds()));
+		} 
+		Logger.info("易联债权标投标:开始 ：loanNo="+loan.getLoanNo()+", 下单并支付接口返回:订单状态="+responseVo.getOrderStatus()+",支付状态="+responseVo.getPayStatus());
+		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		//1:撤单 
+		String assetCode = getAssetCodeOfOrder(responseVo.getOrderCode().trim()) ;
 		if(HermesConstants.ORDER_WAIT_PAY.equals(responseVo.getOrderStatus()) &&
 				 HermesConstants.PAY_FAIL.equals(responseVo.getPayStatus())){
 			jlfexService.revokeOrder(responseVo.getOrderCode());
-			Logger.info("撤单成功!");
+			//保存理财信息
+			Invest badInvest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL );
+			jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, badInvest, assetCode,JlfexOrder.Status.CANCEL));
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
-			return false;
+			Logger.info("撤单成功!");
+			return resultFlag;
 		}
-		//保存理财信息
-		Invest invest = saveInvestRecord(investUser, investAmount, null, loan);
-		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
-		//保存理财收益信息
-		List<LoanRepay>  loanRepayList = repayService.findByLoanAndStatus(loan, LoanRepay.RepayStatus.WAIT);
-		saveInvestProfit(invest, loanRepayList);
-		//保存订单
-		JlfexOrder jlfexOrder = jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, invest));
-		if(HermesConstants.ORDER_PAYING.equals(jlfexOrder.getOrderStatus()) &&
-		   HermesConstants.PAY_SUC.equals(jlfexOrder.getPayStatus())){
+		//2:成功
+		Invest invest = null;
+		if(HermesConstants.ORDER_PAYING.equals(responseVo.getOrderStatus().trim()) &&
+		   HermesConstants.PAY_SUC.equals(responseVo.getPayStatus().trim())){
+		   //保存理财信息
+		   invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FREEZE );
 		   transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, "JLfex代扣充值", "JLfex代扣充值");
 		   transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
-		   Logger.info("资金流水记录成功  理财ID investId="+invest.getId());
 		   //保存操作日志
 		   saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
 		   saveUserLog(investUser);
+		   resultFlag = "00";
+		   Logger.info("资金流水记录成功  理财ID investId="+invest.getId());
 		}else{
-		   Logger.info("支付状态 待确认中   理财ID investId="+invest.getId());
+		//3:处理中
+		   //保存理财信息
+		   resultFlag = "01";
+		   invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.WAIT );
 		   saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标支付结果待确认中");
 		   saveUserLog(investUser);
+		   Logger.info("支付状态 待确认中   理财ID investId="+invest.getId());
 		}
+		//保存理财收益信息
+	    saveInvestProfit(invest, repayService.findByLoanAndStatus(loan, LoanRepay.RepayStatus.WAIT));
+		//保存订单
+		jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, invest,assetCode,JlfexOrder.Status.WAIT_DEAL));
 		// 判断假如借款金额与已筹金额相等，更新状态为满标
 		if(loan.getAmount().compareTo(loan.getProceeds()) == 0){
 			loan.setStatus(Loan.Status.FULL);
 			loanRepository.save(loan);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL,"投标成功");
 		}
-		return true;
+		return resultFlag;
+	}
+	/**
+	 * 获取 订单 对应的  资产Id
+	 * @param orderCode
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String  getAssetCodeOfOrder(String orderCode) throws Exception {
+		String result = jlfexService.queryOrderStatus(orderCode);
+		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
+		List<OrderVo>   orderVoList = responVo.getContent();
+		if(orderVoList==null || orderVoList.size() != 1){
+			throw new Exception("根据orderCode="+orderCode+" jlfex接口返回订单条数不唯一");
+		}
+		OrderVo  vo = orderVoList.get(0);
+		Logger.info("订单编号："+orderCode+",对应的资产编号为："+vo.getChildAssetId().trim());
+		return vo.getChildAssetId().trim() ;
 	}
 	/**
 	 * 保存投标理财收益
@@ -495,7 +522,7 @@ public class InvestServiceImpl implements InvestService {
 		if(HermesConstants.CODE_99.equals(orderPayMap.get("code"))){
 			return null;
 		}
-		OrderPayResponseVo respVo = JSON.parseObject(orderPayMap.get("msg"),OrderPayResponseVo.class);
+		OrderPayResponseVo respVo = JSON.parseObject(orderPayMap.get("result"),OrderPayResponseVo.class);
 		return respVo;
 	}
 
@@ -533,7 +560,7 @@ public class InvestServiceImpl implements InvestService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JlfexOrder transOrderVo2Entity(OrderPayResponseVo vo, FinanceOrder financeOrder,Invest invest) 
+	public JlfexOrder transOrderVo2Entity(OrderPayResponseVo vo, FinanceOrder financeOrder,Invest invest,String assetCode,String status) 
 		throws Exception{
 		JlfexOrder entity = new JlfexOrder();
 		entity.setFinanceOrder(financeOrder);
@@ -544,8 +571,9 @@ public class InvestServiceImpl implements InvestService {
 		entity.setPaymentPdfId(vo.getPaymentPdfId());
 		entity.setOrderStatus(vo.getOrderStatus());
 		entity.setPayStatus(vo.getPayStatus());
-		entity.setStatus(JlfexOrder.Status.WAIT_DEAL);
+		entity.setStatus(status);
 		entity.setOrderAmount(invest.getAmount());
+		entity.setAssetCode(assetCode);
 		return  entity;
 	}
 	
@@ -556,7 +584,7 @@ public class InvestServiceImpl implements InvestService {
      * @param otherRepay
      * @param loan
      */
-	public Invest saveInvestRecord(User investUser, BigDecimal investAmount,String otherRepay, Loan loan) {
+	public Invest saveInvestRecord(User investUser, BigDecimal investAmount,String otherRepay, Loan loan, String status) {
 		Invest invest = new Invest();
 		invest.setAmount(investAmount);
 		invest.setOtherRepay(otherRepay==null?"":otherRepay);
@@ -565,7 +593,7 @@ public class InvestServiceImpl implements InvestService {
 		invest.setUser(investUser);
 		invest.setLoan(loan);
 		invest.setDatetime(new Date());
-		invest.setStatus(Invest.Status.FREEZE);
+		invest.setStatus(status);
 		return save(invest);
 	}
     /**
@@ -575,7 +603,8 @@ public class InvestServiceImpl implements InvestService {
      * @param loan
      * @param type
      */
-	public void saveLoanLog(User investUser, BigDecimal investAmount,Loan loan,String type,String remark) {
+	@Override
+	public void saveLoanLog(User investUser, BigDecimal investAmount,Loan loan,String type,String remark) throws Exception{
 		LoanLog loanLog = new LoanLog();
 		loanLog.setLoan(loan);
 		loanLog.setUser(investUser.getId());
@@ -589,7 +618,8 @@ public class InvestServiceImpl implements InvestService {
      * 插入用户日志表
      * @param investUser
      */
-	public void saveUserLog(User investUser) {
+	@Override
+	public void saveUserLog(User investUser) throws Exception {
 		UserLog userLog = new UserLog();
 		userLog.setUser(investUser);
 		userLog.setDatetime(new Date());
