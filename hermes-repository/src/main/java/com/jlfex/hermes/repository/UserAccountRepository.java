@@ -3,6 +3,7 @@ package com.jlfex.hermes.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.jlfex.hermes.model.User;
@@ -11,12 +12,9 @@ import com.jlfex.hermes.model.UserAccount;
 /**
  * 用户账户信息仓库
  * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Repository
-public interface UserAccountRepository extends JpaRepository<UserAccount, String> {
+public interface UserAccountRepository extends JpaRepository<UserAccount, String>, JpaSpecificationExecutor<UserAccount> {
 	
 	/**
 	 * 根据用户查找账户

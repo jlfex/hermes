@@ -12,8 +12,8 @@ public final class HermesConstants {
 	 * 平台管理
 	 */
 	public static final String 	 PLAT_MANAGER = "admin";
-	public static final String   PLAT_MANAGER_ID = "e74428d8-7fb4-11e3-ae10-6cae8b21aeaa";
 	public static final String   PRE_HERMES = "HERMES"; // 下单并支付接口 订单流水号前缀
+	public static final String   CROP_USER_ID = "crop";
     /**
      * HTTPS 连接常量
      */

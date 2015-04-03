@@ -44,6 +44,8 @@ public class HttpClientUtil {
 	private static  final  int  CONNECTION_TIMEOUT = 10000; 
 	private static  final  int  SO_TIMEOUT = 20000;
 	private static  final  String DIRECTORY = "/certificate/";
+	private static  final  int  RSP_200 = 200;
+	private static  final  int  RSP_400 = 400;
 	
 	static {
 		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
@@ -88,11 +90,15 @@ public class HttpClientUtil {
 		HttpResponse  response = httpClient.execute(post);
 		HttpEntity respEntity = response.getEntity();
 		int  responseCode = response.getStatusLine().getStatusCode();
-		Logger.info("httpClient post请求 URL="+url+", 响应状态responseCode="+responseCode);
+		Logger.info("httpClient post 响应状态responseCode="+responseCode+", 请求 URL="+url);
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(respEntity.getContent(), "UTF-8"));
 		String text = null;
-		while ((text = bufferedReader.readLine()) != null) {
-			stringBuilder.append(text);
+		if(responseCode == RSP_200 || responseCode == RSP_400){
+			while ((text = bufferedReader.readLine()) != null) {
+				stringBuilder.append(text);
+			}
+		}else{
+		    throw new Exception("接口请求异常：接口响应状态="+responseCode);
 		}
 		bufferedReader.close();
 		post.releaseConnection();
@@ -109,11 +115,17 @@ public class HttpClientUtil {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpGet httpGet = new HttpGet(url);
 		HttpResponse response = httpClient.execute(httpGet);
+		int responseCode = response.getStatusLine().getStatusCode();
+		Logger.info("httpClient get 响应状态responseCode="+responseCode+", 请求 URL="+url);
 		HttpEntity respEntity = response.getEntity();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(respEntity.getContent(), "UTF-8"));
 		String text;
-		while ((text = bufferedReader.readLine()) != null) {
-			stringBuilder.append(text);
+		if(responseCode == RSP_200 || responseCode == RSP_400){
+			while ((text = bufferedReader.readLine()) != null) {
+				stringBuilder.append(text);
+			}
+		}else{
+			throw new Exception("接口请求异常：接口响应状态="+responseCode);
 		}
 		bufferedReader.close();
 		httpGet.releaseConnection();

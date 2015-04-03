@@ -212,7 +212,7 @@ public interface TransactionService {
 	 * @param reference
 	 * @param remark
 	 */
-	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount,UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
 
 	/**
 	 * 债权人 账户线下充值

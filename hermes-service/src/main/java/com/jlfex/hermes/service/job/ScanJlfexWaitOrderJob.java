@@ -24,6 +24,7 @@ import com.jlfex.hermes.service.job.Job.Result;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
+import com.jlfex.hermes.service.userAccount.UserAccountService;
 
 /**
  * 处理 支付状态=支付确认中 的订单
@@ -40,6 +41,8 @@ public class ScanJlfexWaitOrderJob extends Job {
     private TransactionService transactionService;
     @Autowired
     private InvestService investService;
+    @Autowired
+    private UserAccountService userAccountService;
 	
 	@Override
 	public Result run() {
@@ -65,7 +68,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 						String orderDealStatus = null;
 						if(HermesConstants.PAY_SUC.equals(vo.getPayStatus().trim())){
 							//支付成功
-							transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE,investUser , UserAccount.Type.JLFEX_FEE, order.getOrderAmount(), "JLfex代扣充值", "JLfex代扣充值");
+							transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE,investUser , UserAccount.Type.JLFEX_FEE, order.getOrderAmount(),investUser.getId() , "JLfex代扣充值成功");
 							transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), order.getOrderAmount(), order.getInvest().getLoan().getId(), "投标冻结");
 							Logger.info("资金流水记录成功  理财ID investId="+order.getInvest().getId());
 							//保存操作日志
@@ -76,6 +79,9 @@ public class ScanJlfexWaitOrderJob extends Job {
 							orderDealStatus = JlfexOrder.Status.FIN_DEAL;
 						}else if(HermesConstants.PAY_FAIL.equals(vo.getPayStatus().trim())){
 							//支付失败 撤单
+							UserAccount cropAccount = userAccountService.findByUserIdAndType(HermesConstants.CROP_USER_ID, UserAccount.Type.ZHONGJIN_FEE);
+							UserAccount investAccount = userAccountService.findByUserAndType(investUser, UserAccount.Type.CASH);
+							transactionService.addCashAccountRecord(Transaction.Type.CHARGE, cropAccount,investAccount, order.getOrderAmount(), investUser.getId(), "JLfex代扣充值失败");
 							investStatus = Invest.Status.FAIL;
 							payStatus = HermesConstants.PAY_FAIL;
 							orderDealStatus = JlfexOrder.Status.CANCEL;

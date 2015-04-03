@@ -68,6 +68,7 @@ import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
+import com.jlfex.hermes.service.userAccount.UserAccountService;
 
 /**
  * 
@@ -132,6 +133,8 @@ public class InvestServiceImpl implements InvestService {
 	private  FinanceRepayPlanService financeRepayPlanService;
 	@Autowired 
 	private  RepayService repayService;
+	@Autowired
+	private  UserAccountService userAccountService;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -394,6 +397,10 @@ public class InvestServiceImpl implements InvestService {
 			//保存理财信息
 			Invest badInvest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL );
 			jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, badInvest, assetCode,JlfexOrder.Status.CANCEL));
+			//保存充值失败记录
+			UserAccount cropAccount = userAccountService.findByUserIdAndType(HermesConstants.CROP_USER_ID, UserAccount.Type.ZHONGJIN_FEE);
+			UserAccount investAccount = userAccountService.findByUserAndType(investUser, UserAccount.Type.CASH);
+			transactionService.addCashAccountRecord(Transaction.Type.CHARGE, cropAccount,investAccount, investAmount, investUser.getId(), "JLfex代扣充值失败");
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
 			Logger.info("撤单成功!");
@@ -405,7 +412,7 @@ public class InvestServiceImpl implements InvestService {
 		   HermesConstants.PAY_SUC.equals(responseVo.getPayStatus().trim())){
 		   //保存理财信息
 		   invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FREEZE );
-		   transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, "JLfex代扣充值", "JLfex代扣充值");
+		   transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, investUser.getId(), "JLfex代扣充值成功");
 		   transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
 		   //保存操作日志
 		   saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");

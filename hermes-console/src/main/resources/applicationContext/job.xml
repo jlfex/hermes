@@ -69,7 +69,7 @@
 		</property>
 		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个一分钟运行一次  -->
+	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个2分钟运行一次  -->
 	<bean id="scanJlfexWaitOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
