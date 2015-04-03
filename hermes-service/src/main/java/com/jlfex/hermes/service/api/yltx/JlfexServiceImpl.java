@@ -51,6 +51,7 @@ import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
 import com.jlfex.hermes.service.asset.AssetService;
 import com.jlfex.hermes.service.assetRepay.AssetRepayPlanService;
@@ -113,6 +114,8 @@ public class JlfexServiceImpl implements JlfexService {
 	private  FinanceRepayPlanService financeRepayPlanService;
 	@Autowired
 	private  LoanRepayRepository loanRepayRepository;
+	@Autowired
+	private  UserService userService;
 	//接口配置
 	public static ApiConfig  apiConfig = null;
 	
@@ -584,7 +587,7 @@ public class JlfexServiceImpl implements JlfexService {
 	public Loan buildLoan(FinanceOrder order, Repay repay) throws Exception{
 		Loan loan = new Loan();
 		loan.setProduct(generateVirtualProduct(repay));
-		loan.setUser(userInfoService.findByUserId(HermesConstants.PLAT_MANAGER_ID));
+		loan.setUser(userService.getUserByAccount(HermesConstants.PLAT_MANAGER));
 		loan.setRepay(repay);
 		loan.setAmount(order.getLimit());
 		loan.setPeriod(Integer.parseInt(order.getTimeLimit().replace("D", "").trim()));

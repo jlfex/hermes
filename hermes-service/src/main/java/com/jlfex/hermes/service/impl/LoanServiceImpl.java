@@ -637,7 +637,7 @@ public class LoanServiceImpl implements LoanService {
 		// 记录借款日志
 		LoanLog loanLog = new LoanLog();
 		if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
-			loanLog.setUser(HermesConstants.PLAT_MANAGER_ID);
+			loanLog.setUser(userService.getUserByAccount(HermesConstants.PLAT_MANAGER).getId());
 		}else{
 			loanLog.setUser(loan.getUser().getId());
 		}

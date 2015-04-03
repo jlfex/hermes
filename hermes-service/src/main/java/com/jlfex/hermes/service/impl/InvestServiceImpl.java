@@ -72,6 +72,7 @@ import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
+import com.jlfex.hermes.service.userAccount.UserAccountService;
 
 /**
  * 
@@ -132,14 +133,13 @@ public class InvestServiceImpl implements InvestService {
 	private AreaRepository areaRepository;
 	@Autowired
 	private JlfexOrderService jlfexOrderService;
+	@Autowired 
+	private  FinanceRepayPlanService financeRepayPlanService;
+	@Autowired 
+	private  RepayService repayService;
 	@Autowired
-	private FinanceRepayPlanService financeRepayPlanService;
-	@Autowired
-	private RepayService repayService;
-	@Autowired
-	private UserAccountRepository userAccountRepository;
-	@Autowired
-	private UserInfoService userInfoService;
+	private  UserAccountService userAccountService;
+
 
 	@Override
 	public Invest save(Invest invest) {
@@ -397,9 +397,13 @@ public class InvestServiceImpl implements InvestService {
 		String assetCode = getAssetCodeOfOrder(responseVo.getOrderCode().trim());
 		if (HermesConstants.ORDER_WAIT_PAY.equals(responseVo.getOrderStatus()) && HermesConstants.PAY_FAIL.equals(responseVo.getPayStatus())) {
 			jlfexService.revokeOrder(responseVo.getOrderCode());
-			// 保存理财信息
-			Invest badInvest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
-			jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, badInvest, assetCode, JlfexOrder.Status.CANCEL));
+			//保存理财信息
+			Invest badInvest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL );
+			jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, badInvest, assetCode,JlfexOrder.Status.CANCEL));
+			//保存充值失败记录
+			UserAccount cropAccount = userAccountService.findByUserIdAndType(HermesConstants.CROP_USER_ID, UserAccount.Type.ZHONGJIN_FEE);
+			UserAccount investAccount = userAccountService.findByUserAndType(investUser, UserAccount.Type.CASH);
+			transactionService.addCashAccountRecord(Transaction.Type.CHARGE, cropAccount,investAccount, investAmount, investUser.getId(), "JLfex代扣充值失败");
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
 			Logger.info("撤单成功!");
@@ -407,29 +411,30 @@ public class InvestServiceImpl implements InvestService {
 		}
 		// 2:成功
 		Invest invest = null;
-		if (HermesConstants.ORDER_PAYING.equals(responseVo.getOrderStatus().trim()) && HermesConstants.PAY_SUC.equals(responseVo.getPayStatus().trim())) {
-			// 保存理财信息
-			invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FREEZE);
-			transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, "JLfex代扣充值", "JLfex代扣充值");
-			transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
-			// 保存操作日志
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
-			saveUserLog(investUser);
-			resultFlag = "00";
-			Logger.info("资金流水记录成功  理财ID investId=" + invest.getId());
-		} else {
-			// 3:处理中
-			// 保存理财信息
-			resultFlag = "01";
-			invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.WAIT);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标支付结果待确认中");
-			saveUserLog(investUser);
-			Logger.info("支付状态 待确认中   理财ID investId=" + invest.getId());
+		if(HermesConstants.ORDER_PAYING.equals(responseVo.getOrderStatus().trim()) &&
+		   HermesConstants.PAY_SUC.equals(responseVo.getPayStatus().trim())){
+		   //保存理财信息
+		   invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FREEZE );
+		   transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, investUser.getId(), "JLfex代扣充值成功");
+		   transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
+		   //保存操作日志
+		   saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
+		   saveUserLog(investUser);
+		   resultFlag = "00";
+		   Logger.info("资金流水记录成功  理财ID investId="+invest.getId());
+		}else{
+		//3:处理中
+		   //保存理财信息
+		   resultFlag = "01";
+		   invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.WAIT );
+		   saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标支付结果待确认中");
+		   saveUserLog(investUser);
+		   Logger.info("支付状态 待确认中   理财ID investId="+invest.getId());
 		}
-		// 保存理财收益信息
-		saveInvestProfit(invest, repayService.findByLoanAndStatus(loan, LoanRepay.RepayStatus.WAIT));
-		// 保存订单
-		jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, invest, assetCode, JlfexOrder.Status.WAIT_DEAL));
+		//保存理财收益信息
+	    saveInvestProfit(invest, repayService.findByLoanAndStatus(loan, LoanRepay.RepayStatus.WAIT));
+		//保存订单
+		jlfexOrderService.saveOrder(transOrderVo2Entity(responseVo, finaceOrder, invest,assetCode,JlfexOrder.Status.WAIT_DEAL));
 		// 判断假如借款金额与已筹金额相等，更新状态为满标
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 			loan.setStatus(Loan.Status.FULL);
@@ -882,13 +887,10 @@ public class InvestServiceImpl implements InvestService {
 	 * @return
 	 */
 	public boolean isBalanceEnough(BigDecimal investAmount) {
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
-		UserAccount cashAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
+		UserAccount cashAccount = userAccountService.findByUserIdAndType( App.current().getUser().getId(), UserAccount.Type.CASH);
 		if (investAmount.compareTo(cashAccount.getBalance()) > 0 && UserAccount.Minus.INMINUS.equals(cashAccount.getMinus())) {
 			return false;
 		}
-
 		return true;
 	}
 }

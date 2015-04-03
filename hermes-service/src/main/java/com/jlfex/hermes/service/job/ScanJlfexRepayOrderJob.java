@@ -3,15 +3,19 @@ package com.jlfex.hermes.service.job;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
+import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
@@ -20,6 +24,7 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.service.CreditInfoService;
+import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
@@ -55,6 +60,8 @@ public class ScanJlfexRepayOrderJob extends Job {
     private CreditInfoService creditInfoService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CreditRepayPlanService creditRepayPlanService;
 	
 	@Override
 	public Result run() {
@@ -75,32 +82,42 @@ public class ScanJlfexRepayOrderJob extends Job {
 						OrderVo vo = orderVoList.get(0);
 						CrediteInfo crediteInfo = creditInfoService.findByCrediteCode(order.getAssetCode());
 						Creditor creditor = crediteInfo.getCreditor();
+						Invest invest = order.getInvest();
 						User  creditUser = userService.loadByAccount(creditor.getCreditorNo());
 						//若订单状态为“已回款”+支付状态为“结算成功” 则进行还款业务操作
 						if(HermesConstants.CLEARING_SUC.equals(vo.getPayStatus().trim()) && 
 						   HermesConstants.ORDER_FINISH_REPAY.equals(vo.getOrderStatus().trim())){
 							 //更新理财人收益信息
-							List<LoanRepay>  loanRepayList =  loanRepayService.findByLoanAndStatus(order.getInvest().getLoan(), LoanRepay.RepayStatus.WAIT);
-							for(LoanRepay loanRepay : loanRepayList){
-								BigDecimal amount = BigDecimal.ZERO;		 // 总还款=总本金+总利息
-								BigDecimal principal = BigDecimal.ZERO;		 // 总本金
-								BigDecimal interest = BigDecimal.ZERO;		 // 总利息
-								Loan loan = loanRepay.getLoan();
-								List<InvestProfit> investProfitList = investProfitRepository.findByLoanRepay(loanRepay);
-								for (InvestProfit investProfit : investProfitList){
-									// 还本金
-									transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "jlfex正常还本金");
-									principal = principal.add(investProfit.getPrincipal());
-									// 还利息
-									transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "jlfex正常还利息");
-									interest = interest.add(investProfit.getInterest());
-									//更新理财收益表
-									investProfit.setStatus(InvestProfit.Status.ALREADY);
-									investProfitRepository.save(investProfit);
+							List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
+							for (InvestProfit investProfit : investProfitList){
+								if(!investProfit.getStatus().equals(InvestProfit.Status.WAIT)){
+									Logger.info("跳过还款处理：状态不对, 当前理财收益investProfitId="+investProfit.getId()+" 状态为="+investProfit.getStatus());
+									continue ;
 								}
+								// 还本金
+								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "jlfex正常还本金");
+								// 还利息
+								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "jlfex正常还利息");
+								//更新理财收益表
+								investProfit.setStatus(InvestProfit.Status.ALREADY);
+								investProfitRepository.save(investProfit);
 							}
 							//更新订单信息
+							order.setStatus(JlfexOrder.Status.FIN_DEAL);
+							jlfexOrderService.saveOrder(order);
+							//更新理财记录
+							invest.setStatus(Invest.Status.COMPLETE);
+							investService.save(invest);
 						}
+						//更新债权信息
+						crediteInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
+						creditInfoService.save(crediteInfo);
+						//更新债权还款计划
+						List<CreditRepayPlan> creditPlanList = creditRepayPlanService.queryByCreditInfo(crediteInfo);
+						for(CreditRepayPlan creditPlan: creditPlanList){
+							creditPlan.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
+						}
+						creditRepayPlanService.saveBatch(creditPlanList);
 					}
 				}catch(Exception e){
 					Logger.error(var+",异常", e);

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -37,7 +38,6 @@ import com.jlfex.hermes.service.common.Pageables;
 public class TransactionServiceImpl implements TransactionService {
 
 	private static final Integer TYPE_SPAN = 50;
-	private static final String CROP_USER_ID = "crop";
 
 	/** 用户信息仓库 */
 	@Autowired
@@ -158,7 +158,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> toCropAccount(String type, String userId, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, userAccount, cropAccount, amount, reference, remark);
 	}
 
@@ -173,7 +173,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> toCropAccount(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, userAccount, cropAccount, amount, reference, remark);
 	}
 
@@ -188,7 +188,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> fromCropAccount(String type, String userId, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 
@@ -203,7 +203,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> fromCropAccount(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 
@@ -217,8 +217,8 @@ public class TransactionServiceImpl implements TransactionService {
 	 */
 	@Override
 	public List<Transaction> betweenCropAccount(String type, String sourceType, String targetType, BigDecimal amount, String reference, String remark) {
-		UserAccount sourceUserAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, sourceType);
-		UserAccount targetUserAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, targetType);
+		UserAccount sourceUserAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, sourceType);
+		UserAccount targetUserAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, targetType);
 		return transact(type, sourceUserAccount, targetUserAccount, amount, reference, remark);
 	}
 
@@ -361,35 +361,38 @@ public class TransactionServiceImpl implements TransactionService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void AddCashAccount(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark) {
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount,UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
 		Transaction transaction = new Transaction();
-		transaction.setType(type);
 		transaction.setSourceUserAccount(sourceUserAccount);
-		transaction.setAmount(amount);
+		transaction.setTargetUserAccount(targetUserAccount);
 		transaction.setReference(reference);
-		transaction.setRemark(remark);
+		transaction.setType(type);
 		transaction.setDatetime(new Date());
+		transaction.setAmount(amount.negate());
+		transaction.setSourceBeforeBalance(sourceUserAccount.getBalance());
+		transaction.setTargetBeforeBalance(targetUserAccount.getBalance());
+		transaction.setRemark(remark);
 		transactionRepository.save(transaction);
 	}
 
 	@Override
 	public List<Transaction> cropAccountToCreditorOutline(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 	
 	@Override
 	public List<Transaction> cropAccountToJlfexPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 	
 	@Override
 	public List<Transaction> cropAccountToZJPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
-		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(CROP_USER_ID, cropAccountType);
+		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
 }

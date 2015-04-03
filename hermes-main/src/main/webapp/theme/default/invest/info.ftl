@@ -418,7 +418,7 @@ jQuery(function($) {
 									<tr>
 										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
 										<td>${i.amount?string('#,##0.00')}</td>
-										<td>${i.statusName}</td>
+										<td>${i.statusName!''}</td>
 										<td>${i.datetime?string('yyyy-MM-dd HH:mm:ss')}</td>
 									</tr>
 									</#list>
