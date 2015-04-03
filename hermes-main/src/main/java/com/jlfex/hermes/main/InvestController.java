@@ -43,6 +43,7 @@ import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.repository.UserAccountRepository;
@@ -515,6 +516,11 @@ public class InvestController {
 		if (!bidAuthentication) {
 			validFlag = "02";
 			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
+		}
+		UserProperties userPro = userPropertiesService.queryByUser(curUser.getId());
+		if (!userPro.getAuthName().equals(Auth.PASS)) {
+			validFlag = "03";
+			model.addAttribute("tipMsg", "提示：您尚且还未进行实名认证");
 		}
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
