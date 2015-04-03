@@ -45,6 +45,7 @@ import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
+import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
@@ -93,17 +94,19 @@ public class InvestController {
 	private CreditInfoService creditInfoService;
 	@Autowired
 	private CreditRepayPlanService creditRepayPlanService;
-    @Autowired
-    private FinanceOrderService  financeOrderService ;
-    @Autowired
-    private FinanceRepayPlanService  financeRepayPlanService ;
-    @Autowired
-    private BankAccountService bankAccountService;
-    @Autowired
-    private UserPropertiesService userPropertiesService;
-    @Autowired
-    private UserService userService;
-	
+	@Autowired
+	private FinanceOrderService financeOrderService;
+	@Autowired
+	private FinanceRepayPlanService financeRepayPlanService;
+	@Autowired
+	private BankAccountService bankAccountService;
+	@Autowired
+	private UserPropertiesService userPropertiesService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private UserAccountRepository userAccountRepository;
+
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
 
@@ -128,15 +131,15 @@ public class InvestController {
 
 	@RequestMapping("checkMoneyLess")
 	@ResponseBody
-	public JSONObject checkMoneyLess(BigDecimal investamount,String loanid) {
-		Logger.info("loanId = "+loanid+",投标金额:" + investamount);
+	public JSONObject checkMoneyLess(BigDecimal investamount, String loanid) {
+		Logger.info("loanId = " + loanid + ",投标金额:" + investamount);
 		AppUser curUser = App.current().getUser();
 		UserAccount userAccount = userInfoService.loadByUserIdAndType(curUser.getId(), UserAccount.Type.CASH);
 		Loan loan = loanService.loadById(loanid);
 		BigDecimal balance = userAccount.getBalance();
 		Logger.info("用户账户余额:" + balance);
 		JSONObject jsonObj = new JSONObject();
-		if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			jsonObj.put("investamount", true);
 			return jsonObj;
 		}
@@ -194,10 +197,11 @@ public class InvestController {
 
 	/**
 	 * 投标操作
+	 * 
 	 * @param request
 	 * @param model
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("/bid")
 	@ResponseBody
@@ -223,57 +227,54 @@ public class InvestController {
 		try {
 			bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
 		} catch (Exception e) {
-			Logger.error("投标异常：",e);
+			Logger.error("投标异常：", e);
 			result.setType(Type.FAILURE);
 			result.addMessage(0, e.getMessage());
 			return result;
 		}
 		if (HermesConstants.CODE_00.equals(bidResult.get("code"))) {
 			result.setType(Type.SUCCESS);
-			if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))){
+			if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))) {
 				result.addMessage(0, bidResult.get("orderStatus"));
 				result.addMessage(1, bidResult.get("payStatus"));
 			}
 		} else {
 			result.setType(Type.FAILURE);
-			if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))){
+			if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))) {
 				result.addMessage(0, bidResult.get("msg"));
 			}
 		}
 		return result;
 	}
+
 	/**
 	 * 易联标 投标支付页面
+	 * 
 	 * @param loanid
 	 * @param investamount
 	 * @param model
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("/goJlfexBid")
 	public String goJlfexBid(String loanid, String investamount, Model model) throws Exception {
 		App.checkUser();
 		BankAccount bankAccount = null;
 		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(App.current().getUser().getId(), BankAccount.Status.ENABLED);
-		//校验 银行卡绑定认证
-		if(bankAccountList == null || bankAccountList.size() != 1){
-			 Logger.info("投标异常：没有找到理财人有效的银行卡信息");
-		}else{
-			 bankAccount = bankAccountList.get(0);
-			 if(Strings.empty(bankAccount.getName()) ||
-				Strings.empty(bankAccount.getBank().getName()) ||
-				Strings.empty(bankAccount.getDeposit()) ||
-				Strings.empty(bankAccount.getAccount()) ){
-				 Logger.info("银行卡绑定认证：信息不完整 或没有通过绑卡认证。");
-				 bankAccount = null;
-			 }
+		// 校验 银行卡绑定认证
+		if (bankAccountList == null || bankAccountList.size() != 1) {
+			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
+		} else {
+			bankAccount = bankAccountList.get(0);
+			if (Strings.empty(bankAccount.getName()) || Strings.empty(bankAccount.getBank().getName()) || Strings.empty(bankAccount.getDeposit()) || Strings.empty(bankAccount.getAccount())) {
+				Logger.info("银行卡绑定认证：信息不完整 或没有通过绑卡认证。");
+				bankAccount = null;
+			}
 		}
-		//校验 实名制认证 
-		UserProperties  userProperties = userPropertiesService.queryByUser(App.current().getUser().getId());
-		if(userProperties == null ||
-		   Strings.empty(userProperties.getId()) ||
-		   Strings.empty(userProperties.getIdType()) ){
-			 Logger.info("实名制认证：信息不完整 或没有通过实名制认证。");
+		// 校验 实名制认证
+		UserProperties userProperties = userPropertiesService.queryByUser(App.current().getUser().getId());
+		if (userProperties == null || Strings.empty(userProperties.getId()) || Strings.empty(userProperties.getIdType())) {
+			Logger.info("实名制认证：信息不完整 或没有通过实名制认证。");
 			userProperties = null;
 		}
 		model.addAttribute("nav", "invest");
@@ -284,8 +285,10 @@ public class InvestController {
 		model.addAttribute("loanId", loanid);
 		return "invest/bidAndPay";
 	}
+
 	/**
 	 * 易联标：投标操作
+	 * 
 	 * @param loanId
 	 * @param investAmount
 	 * @param model
@@ -298,31 +301,31 @@ public class InvestController {
 		String resultView = "";
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount );
-		OrderPayResponseVo responseVo =  investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
+		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount);
+		OrderPayResponseVo responseVo = investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
 		String flag = null;
-		try{
+		try {
 			flag = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
-		}catch(Exception e){
+		} catch (Exception e) {
 			Logger.error(e.getMessage());
 		}
-		if("00".equals(flag)){
+		if ("00".equals(flag)) {
 			resultView = "invest/bidAndPaySuc";
-		}else if("01".equals(flag)){
+		} else if ("01".equals(flag)) {
 			resultView = "invest/bidAndPayWait";
-		}else{
+		} else {
 			resultView = "invest/bidAndPayFail";
 		}
 		return resultView;
 	}
-	
-    /**
-     * 
-     * @param investamount
-     * @param loanid
-     * @param model
-     * @return
-     */
+
+	/**
+	 * 
+	 * @param investamount
+	 * @param loanid
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/bidsuccess")
 	public String bidsuccess(String investamount, String loanid, Model model) {
 		App.checkUser();
@@ -331,8 +334,6 @@ public class InvestController {
 		model.addAttribute("loanid", loanid);
 		return "invest/bidsuccess";
 	}
-	
-	
 
 	@RequestMapping("/bidfull")
 	public String bidfull(Model model) {
@@ -362,68 +363,73 @@ public class InvestController {
 	 */
 	@RequestMapping("/calmaturegain")
 	@ResponseBody
-	public BigDecimal calmaturegain(HttpServletRequest request)  throws Exception{
-		BigDecimal maturegain =  BigDecimal.ZERO;
+	public BigDecimal calmaturegain(HttpServletRequest request) throws Exception {
+		BigDecimal maturegain = BigDecimal.ZERO;
 		String loanid = request.getParameter("loanid");
 		String investamount = request.getParameter("investamount");
 		Logger.info("计算预期收益:loanid=" + loanid + ", investamount=" + investamount);
 		Loan loan = loanService.loadById(loanid);
-		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
-			 maturegain = repayService.getRepayMethod(loan.getRepay().getId()).getProceeds(loan, null, new BigDecimal(investamount));
-		}else if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
-			 maturegain = calcuOutCreditProfit(new BigDecimal(investamount), loan);
-		}else if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+			maturegain = repayService.getRepayMethod(loan.getRepay().getId()).getProceeds(loan, null, new BigDecimal(investamount));
+		} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			maturegain = calcuOutCreditProfit(new BigDecimal(investamount), loan);
+		} else if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			maturegain = calcuYltxCreditProfit(new BigDecimal(investamount), loan);
-		}else{
-			throw new  Exception("无效的标类型loanKind="+loan.getLoanKind());
+		} else {
+			throw new Exception("无效的标类型loanKind=" + loan.getLoanKind());
 		}
 		return maturegain;
 	}
+
 	/**
 	 * 债权标： 到期收益
+	 * 
 	 * @param investAmount
 	 * @param loan
 	 * @return
 	 * @throws Exception
 	 */
 	public BigDecimal calcuOutCreditProfit(BigDecimal investAmount, Loan loan) throws Exception {
-		BigDecimal profitAmount =  BigDecimal.ZERO;
+		BigDecimal profitAmount = BigDecimal.ZERO;
 		CrediteInfo creditInfo = creditInfoService.findByLoanInfo(loan);
-		List<CreditRepayPlan>  creditRepayPlanList = creditRepayPlanService.findByCreditInfoAscPeriod(creditInfo);
-		for(CreditRepayPlan plan : creditRepayPlanList) {
-			if(CreditRepayPlan.Status.ALREADY_PAY.equals(plan.getStatus())){
+		List<CreditRepayPlan> creditRepayPlanList = creditRepayPlanService.findByCreditInfoAscPeriod(creditInfo);
+		for (CreditRepayPlan plan : creditRepayPlanList) {
+			if (CreditRepayPlan.Status.ALREADY_PAY.equals(plan.getStatus())) {
 				continue;
 			}
 			profitAmount = plan.getRepayAllmount().add(profitAmount);
 		}
 		BigDecimal scale = investAmount.divide(loan.getAmount(), 8, RoundingMode.HALF_DOWN);
-		return  profitAmount.multiply(scale).setScale(2, RoundingMode.HALF_UP);
+		return profitAmount.multiply(scale).setScale(2, RoundingMode.HALF_UP);
 	}
+
 	/**
 	 * 易联债权标: 到期收益计算
+	 * 
 	 * @param investAmount
 	 * @param loan
 	 * @return
 	 * @throws Exception
 	 */
 	public BigDecimal calcuYltxCreditProfit(BigDecimal investAmount, Loan loan) throws Exception {
-		BigDecimal profitAmount =  BigDecimal.ZERO;
+		BigDecimal profitAmount = BigDecimal.ZERO;
 		FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
-		List<FinanceRepayPlan>  creditRepayPlanList = financeRepayPlanService.queryByFinanceOrder(financeOrder);
-		if(creditRepayPlanList == null || creditRepayPlanList.size() == 0){
-			throw new Exception("理财产品id="+financeOrder.getUniqId()+", 对应的理财产品还款计划为空!");
+		List<FinanceRepayPlan> creditRepayPlanList = financeRepayPlanService.queryByFinanceOrder(financeOrder);
+		if (creditRepayPlanList == null || creditRepayPlanList.size() == 0) {
+			throw new Exception("理财产品id=" + financeOrder.getUniqId() + ", 对应的理财产品还款计划为空!");
 		}
-		for(FinanceRepayPlan plan: creditRepayPlanList){
-			if(plan!=null){
+		for (FinanceRepayPlan plan : creditRepayPlanList) {
+			if (plan != null) {
 				profitAmount = plan.getRepaymentMoney().add(profitAmount);
 			}
 		}
 		BigDecimal scale = investAmount.divide(loan.getAmount(), 8, RoundingMode.HALF_DOWN);
-		return  profitAmount.multiply(scale).setScale(2, RoundingMode.HALF_UP);
+		return profitAmount.multiply(scale).setScale(2, RoundingMode.HALF_UP);
 	}
 
 	/**
 	 * 借款列表查询
+	 * 
 	 * @param purpose
 	 * @param raterange
 	 * @param periodrange
@@ -472,7 +478,7 @@ public class InvestController {
 	 * @param model
 	 * @param loanid
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("/info")
 	public String info(Model model, String loanid) throws Exception {
@@ -484,31 +490,31 @@ public class InvestController {
 		String guaranteeType = null;
 		String validFlag = "00";
 		Loan loan = loanService.loadById(loanid);
-		if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
 			List<CreditRepayPlan> creditRepayList = creditRepayPlanService.queryByCreditInfo(creditInfo); // 获取回款记录
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("creditRepayList", creditRepayList);
-		}else if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())){
+		} else if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
 			// 普通标 担保方式
 			Dictionary guaranteeDic = loan.getProduct().getGuarantee();
 			if (guaranteeDic != null) {
 				guaranteeType = guaranteeDic.getName();
 			}
-		}else if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+		} else if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
 			model.addAttribute("financeOrder", financeOrder);
 			model.addAttribute("financePlanList", financeRepayPlanService.queryByFinanceOrder(financeOrder));
-			if(!investService.checkValid(loan)){
-				validFlag = "01"; 
-				model.addAttribute("tipMsg", "提示：债权标有效投标时间为["+Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseStartTime())+"—"+Calendars.format(HermesConstants.FORMAT_10,financeOrder.getRaiseEndTime())+"]"); 
+			if (!investService.checkValid(loan)) {
+				validFlag = "01";
+				model.addAttribute("tipMsg", "提示：债权标有效投标时间为[" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseStartTime()) + "—" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseEndTime()) + "]");
 			}
 		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication = investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
-		if(!bidAuthentication){
+		if (!bidAuthentication) {
 			validFlag = "02";
-			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标"); 
+			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
 		}
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
@@ -543,14 +549,14 @@ public class InvestController {
 	 * 
 	 * @param loan
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public Map<String, Object> calculateRemainTime(Loan loan) throws Exception {
 		String loanPurpose = "";
 		String remaintime = "0";
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
-			//普通标
+		if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
+			// 普通标
 			loanPurpose = dictionaryService.loadById(loan.getPurpose()).getName();
 			// 从借款日志表里取开始投标的起始时间
 			if (Caches.get(CACHE_LOAN_DEADLINE_PREFIX + loan.getId()) == null) {
@@ -575,8 +581,8 @@ public class InvestController {
 			} else {
 				remaintime = "0";
 			}
-		}else if(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())){
-			//导入标
+		} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			// 导入标
 			loanPurpose = loan.getPurpose();
 			CrediteInfo crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
 			try {
@@ -589,8 +595,8 @@ public class InvestController {
 				Logger.error("导入债权计算剩余时间异常", e);
 				remaintime = "0";
 			}
-		}else if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
-			//易联标
+		} else if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
+			// 易联标
 			loanPurpose = loan.getPurpose();
 			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
 			try {
@@ -598,15 +604,15 @@ public class InvestController {
 				long startTime = new Date().getTime();
 				if (endTime - startTime > 0) {
 					remaintime = String.valueOf(endTime - startTime);
-				}else{
-					Logger.info("募资截止日期："+financeOrder.getRaiseEndTime()+",小于当前时间:"+Calendars.format(HermesConstants.FORMAT_19));
+				} else {
+					Logger.info("募资截止日期：" + financeOrder.getRaiseEndTime() + ",小于当前时间:" + Calendars.format(HermesConstants.FORMAT_19));
 				}
 			} catch (Exception e) {
 				Logger.error("易联债权计算剩余时间异常", e);
 				remaintime = "0";
 			}
-		}else{
-			Logger.error("无效的标类型：loanKind="+loan.getLoanKind());
+		} else {
+			Logger.error("无效的标类型：loanKind=" + loan.getLoanKind());
 		}
 		paramMap.put("loanPurpose", loanPurpose);
 		paramMap.put("remaintime", remaintime);
@@ -724,7 +730,7 @@ public class InvestController {
 		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
 		int investSuccessCount = 0;
-		for (InvestInfo investInfo : investInfoList){
+		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
 				investSuccessCount = investSuccessCount + 1;
 			}
@@ -759,5 +765,55 @@ public class InvestController {
 	@RequestMapping("/assdebtagree")
 	public String assdebtAgree() {
 		return "agree/assdebt";
+	}
+
+	/**
+	 * 客户投资普通标或债券标时现金账户余额是否充足
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/isBalanceEnough")
+	@ResponseBody
+	public Result isBalanceEnough(BigDecimal investAmount) {
+		Result result = new Result();
+		boolean isEnough = investService.isBalanceEnough(investAmount);
+
+		if (isEnough) {
+			result.setType(Type.SUCCESS);
+		} else {
+			result.setType(Type.FAILURE);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 账户余额不足界面
+	 * 
+	 * @param investAmount
+	 * @param balance
+	 * @param needAmount
+	 * @param loanId
+	 * @param otherRepay
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/balInsuff")
+	public String balInsuff(BigDecimal investAmount, String loanId, String otherRepay, Model model) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+
+		// 现金账户
+		UserAccount cashAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
+
+		model.addAttribute("investAmount", investAmount);
+		model.addAttribute("balance", cashAccount.getBalance());
+		model.addAttribute("needAmount", investAmount.subtract(cashAccount.getBalance()));
+		model.addAttribute("loanId", loanId);
+		model.addAttribute("otherRepay", otherRepay);
+
+		return "invest/balInsuff";
 	}
 }
