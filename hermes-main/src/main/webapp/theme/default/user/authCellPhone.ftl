@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<div class="m_fp_box jy_nobg_notb">
-	<form class="form-horizontal" role="form" id="authPhoneFrm" name="authPhoneFrm">
+	<form class="form-horizontal" role="form" id="authPhoneFrm" name="authPhoneFrm" onsubmit="return false">
 	    <input type="hidden" value="${userId}" id="userId" name="userId">
 	    <input id="email" name="email" type="hidden" value="${email}">	
 		<div class="jy_info">
@@ -61,7 +61,7 @@
 			<button id="getValidateCodeBtn" class="m_btn3 m_bg1"  style="color:white">获取验证码</button>
 			<span class="mv_msg col-xs-4" id="mv_validateCode" style="color:red;width:200px;font-weight:bold;"></span>			
 			<label for="validateCode" generated="true" class="error valid" style="margin-left:100px;"></label>
-			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe">${cellphone}</span>，请查收</div>
+			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe" style="color:blue;">${cellphone}</span>，请查收</div>
 		</div>
 		<div class="jy_btnlist">
 			<button id="confirmAuthPhoneBtn" type="button" onClick="mysubmit()" class="m_btn3 m_bg1">确认</button>
@@ -119,8 +119,9 @@
 		}else{
 			$("#getValidateCodeBtn").removeClass("disabled");
 			$('#getValidateCodeBtn').text('获取验证码');
-		    $("#changePhoneNumber").attr("href","#").css("color","#878DCB");
-		    document.getElementById("cellphone").disabled = false;		    
+		    $("#changePhoneNumber").css("color","#878DCB");
+		    document.getElementById("cellphone").disabled = false;
+		    $("#getValidateCodeBtn").removeAttr('disabled');
 		}
 	}
 	

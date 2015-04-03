@@ -22,6 +22,12 @@ jQuery(function($) {
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
        $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
     }
+    if(validFlag == '03'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+       $("#auth_msg").show();
+    }
+    
     $('#funanceProtocol').click(function(){
 		openwindow("${app}/loan/funanceProtocol","",1000,800);
 	});
@@ -300,7 +306,7 @@ jQuery(function($) {
 	                		<span class="confirm">
 								<a href="#"  class="m_btn1 bt_red a_middle mv_submit"><@messages key="invest.loan.bid" /></a>
 							</span>
-							&nbsp;&nbsp;<span id="err_msg" ></span>
+							&nbsp;&nbsp;<span id="err_msg" ></span><span id="auth_msg" style="color:#F00;display:none;">&nbsp;!&nbsp;&nbsp;&nbsp;点击<a href="${app}/account/index?type=auth" style="text-decoration:underline;">认证中心</a>进行认证</span>
 							</td>
 						</tr>
                 	</table>
