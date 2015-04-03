@@ -50,27 +50,49 @@ jQuery(function($) {
 		   var loanid =$("#loanid").val();
 	       window.location.href="${app}/invest/goJlfexBid?investamount="+investamount+"&loanid="+loanid;
 	    }else{
-	      $.ajax({
-				data: $("#loanDetail").serialize(),
-			     url: "${app}/invest/bid",
-			    type: "POST",
-			    dataType: 'json',
-				success: function(data){
-					if(data.type=="SUCCESS"){
-						var investamount =$("#investamount").val();
-						var loanid =$("#loanid").val();
-						window.location.href="${app}/invest/bidsuccess?investamount="+investamount+"&loanid="+loanid;
-					}else if(data.type=="WARNING"){
-						window.location.href="${app}/userIndex/skipSignIn";
-					}else if(data.type=="FAILURE"){
-					    window.location.href="${app}/invest/bidInvalid";
-					}else{
-						window.location.href="${app}/invest/bidfull";
-					}
-				}
-		  });
+	    	<!-- 判断余额是否充足-->
+	    	$.ajax({
+	    		data:$("#loanDetail").serialize(),
+	    		url:"${app}/invest/isBalanceEnough",
+	    		type:"POST",
+	    		dataType:'json',
+	    		success:function(data) {
+	    			if(data.type=="SUCCESS") {
+	    				bid();
+	    			} else {
+	    			    var investAmount = $("#investamount").val();
+	    			    var loanId = $("#loanid").val();
+	    			    var otherRepay = $("#otherrepayselect").val();
+	    		
+	    				window.location.href="${app}/invest/goJlfexBid?investAmount="+investAmount+"&loanId="+loanid+"&otherRepay="+otherRepay;
+	    			}
+	    		}
+	    	});
 	 	}
 	  });
+	  
+	  function bid() {
+     		 $.ajax({
+	          data: $("#loanDetail").serialize(),
+	          url: "${app}/invest/bid",
+	          type: "POST",
+	          dataType: 'json',
+	          success: function(data) {
+	              if (data.type == "SUCCESS") {
+	                  var investamount = $("#investamount").val();
+	                  var loanid = $("#loanid").val();
+	                  window.location.href = "${app}/invest/bidsuccess?investamount=" + investamount + "&loanid=" + loanid;
+	              } else if (data.type == "WARNING") {
+	                  window.location.href = "${app}/userIndex/skipSignIn";
+	              } else if (data.type == "FAILURE") {
+	                  window.location.href = "${app}/invest/bidInvalid";
+	              } else {
+	                  window.location.href = "${app}/invest/bidfull";
+	              }
+	          }
+      		});
+ 		 }
+ 		 
 		var remaintime =$("#remaintime").val();
 		setTime();
 		function setTime() 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd 
 		http://www.springframework.org/schema/context 
@@ -10,93 +9,122 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-			    <ref bean="autoRepayJobTrigger" />
-				<ref bean="autoBidFailureJobTrigger" />  
-				<ref bean="autoOverdueCalcJobTrigger" />   
+				<ref bean="autoRepayJobTrigger" />
+				<ref bean="autoBidFailureJobTrigger" />
+				<ref bean="autoOverdueCalcJobTrigger" />
 				<ref bean="scanJlfexWaitOrderJobTrigger" />
-				<ref bean="scanJlfexRepayOrderJobTrigger" />  
+				<ref bean="scanJlfexRepayOrderJobTrigger" />
 				<ref bean="autoSynchFinanceJobTrigger" />
+				<ref bean="autoCollectionQueryJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
-			<bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+			<bean
+				class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 				<property name="corePoolSize" value="10" />
 				<property name="maxPoolSize" value="100" />
 				<property name="queueCapacity" value="500" />
 			</bean>
 		</property>
 	</bean>
-	
-	<!-- sample job  -->
-	<bean id="sampleJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+
+	<!-- sample job -->
+	<bean id="sampleJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="sampleJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0/15 * * * * ?" />
 	</bean>
-	
-	<!-- autoRepay job  -->
-	<bean id="autoRepayJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+
+	<!-- autoRepay job -->
+	<bean id="autoRepayJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoRepayJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0 2 * * ?" />
 	</bean>
-	
-	<!-- autoBidFailureJob job  -->
-	<bean id="autoBidFailureJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+
+	<!-- autoBidFailureJob job -->
+	<bean id="autoBidFailureJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoBidFailureJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
-	<!-- autoOverdueCalcJob job  -->
-	<bean id="autoOverdueCalcJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<!-- autoOverdueCalcJob job -->
+	<bean id="autoOverdueCalcJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoOverdueCalcJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个一分钟运行一次  -->
-	<bean id="scanJlfexWaitOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<!-- 描述：JLFEX 支付确认中订单 扫描 执行时间:job 每个一分钟运行一次 -->
+	<bean id="scanJlfexWaitOrderJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanJlfexWaitOrderJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 */2 * * * ?" />
 	</bean>
-	<!-- 描述：JLFEX回购订单信息同步  执行时间: 每个一小时运行一次  -->
-	<bean id="scanJlfexRepayOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<!-- 描述：JLFEX回购订单信息同步 执行时间: 每个一小时运行一次 -->
+	<bean id="scanJlfexRepayOrderJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanJlfexRepayOrderJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX理财产品同步   执行时间: 每天凌晨03:00  -->
-	<bean id="autoSynchFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<!-- 描述：JLFEX理财产品同步 执行时间: 每天凌晨03:00 -->
+	<bean id="autoSynchFinanceJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoSynchFinanceJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0 3 * * ?" />
+	</bean>
+
+	<!-- 中金支付查询接口 执行时间：每隔一分钟执行一次 -->
+	<bean id="autoCollectionQueryJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean
+				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoCollectionQueryJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 </beans>
