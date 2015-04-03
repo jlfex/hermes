@@ -13,6 +13,7 @@
 			    <ref bean="autoRepayJobTrigger" />
 				<ref bean="autoBidFailureJobTrigger" />  
 				<ref bean="autoOverdueCalcJobTrigger" />   
+				<ref bean="autoCollectionQueryJobTrigger" />   
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -67,4 +68,13 @@
 		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
 	
+	<bean id="autoCollectionQueryJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoCollectionQueryJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 */50 * * * ?" />
+	</bean>
 </beans>

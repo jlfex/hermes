@@ -76,14 +76,24 @@
 			<version>1.4.7</version>
 			<optional>true</optional>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2</artifactId> <version>1.6.2</version> </dependency> 
-			<dependency> <groupId>org.apache.ws.commons.axiom</groupId> <artifactId>axiom-api</artifactId> <version>1.2.14</version> 
-			</dependency> -->
+		<!-- <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2</artifactId> 
+			<version>1.6.2</version> </dependency> <dependency> <groupId>org.apache.ws.commons.axiom</groupId> 
+			<artifactId>axiom-api</artifactId> <version>1.2.14</version> </dependency> -->
 		<!-- 短信接口第三方包 -->
 		<dependency>
 			<groupId>wzsoft.sms.client</groupId>
 			<artifactId>wzsoft-sms-client</artifactId>
 			<version>0.9.12.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>cfca.payment.api</groupId>
+			<artifactId>payment</artifactId>
+			<version>1.5-jdk5</version>
+		</dependency>
+		<dependency>
+			<groupId>cfca</groupId>
+			<artifactId>tools</artifactId>
+			<version>1.3.8</version>
 		</dependency>
 		<!-- axis for webservice -->
 		<dependency>
@@ -91,13 +101,15 @@
 			<artifactId>axis</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<!-- <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> <version>1.6.3</version> </dependency> <dependency> 
-			<groupId>org.apache.ws.commons.schema</groupId> <artifactId>XmlSchema</artifactId> <version>1.4.7</version> </dependency> 
-			<dependency> <artifactId>axiom-impl</artifactId> <groupId>org.apache.ws.commons.axiom</groupId> <version>1.2.14</version> 
-			</dependency> <dependency> <groupId>org.apache.neethi</groupId> <artifactId>neethi</artifactId> <version>3.0.3</version> 
-			</dependency> <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2-transport-local</artifactId> <version>1.6.2</version> 
-			</dependency> <dependency> <groupId>org.apache.axis2</groupId> <artifactId>axis2-transport-http</artifactId> <version>1.6.2</version> 
-			</dependency> -->
+		<!-- <dependency> <groupId>wsdl4j</groupId> <artifactId>wsdl4j</artifactId> 
+			<version>1.6.3</version> </dependency> <dependency> <groupId>org.apache.ws.commons.schema</groupId> 
+			<artifactId>XmlSchema</artifactId> <version>1.4.7</version> </dependency> 
+			<dependency> <artifactId>axiom-impl</artifactId> <groupId>org.apache.ws.commons.axiom</groupId> 
+			<version>1.2.14</version> </dependency> <dependency> <groupId>org.apache.neethi</groupId> 
+			<artifactId>neethi</artifactId> <version>3.0.3</version> </dependency> <dependency> 
+			<groupId>org.apache.axis2</groupId> <artifactId>axis2-transport-local</artifactId> 
+			<version>1.6.2</version> </dependency> <dependency> <groupId>org.apache.axis2</groupId> 
+			<artifactId>axis2-transport-http</artifactId> <version>1.6.2</version> </dependency> -->
 		<dependency>
 			<groupId>com.icegreen</groupId>
 			<artifactId>greenmail</artifactId>

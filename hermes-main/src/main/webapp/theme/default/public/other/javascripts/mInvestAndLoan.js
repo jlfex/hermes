@@ -338,7 +338,7 @@
 	    
 	
     // 投标金额验证
-    $('#invest').mValidator({
+/*    $('#invest').mValidator({
         isInitMsg: true,
         moneyMoreAjax: {
             url: "checkMoneyMore?loanid="+$("#loanid").val(), 
@@ -350,7 +350,7 @@
 	        dataType: 'json',
 	        key: 'investamount'
 	    }
-    });
+    });*/
     function loadData(){
     	 $('#loanData').fadeOut('fast').load('search', $('#investForm').serialize(), function(html) {
 			 	$(this).fadeIn('fast');

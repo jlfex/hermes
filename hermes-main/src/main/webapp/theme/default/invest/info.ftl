@@ -64,6 +64,8 @@ jQuery(function($) {
 						window.location.href="${app}/userIndex/skipSignIn";
 					}else if(data.type=="FAILURE"){
 					    window.location.href="${app}/invest/bidInvalid";
+					}else if(data.type=="BALANCE_INSUFFICIENT") {
+						window.location.href="${app}/invest/balInsuff?investAmount="+data.messages[0]+"&balance="+data.messages[1]+"&needAmount="+data.messages[2]+"&loanId="+data.messages[3]+"&otherRepay="+data.messages[4];
 					}else{
 						window.location.href="${app}/invest/bidfull";
 					}
