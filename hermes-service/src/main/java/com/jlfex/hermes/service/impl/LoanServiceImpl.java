@@ -685,7 +685,7 @@ public class LoanServiceImpl implements LoanService {
 		info.setRemain(loan.getRemain());
 		info.setProgress(String.valueOf(loan.getProgress()));
 		info.setStatus(Strings.equals(Loan.Status.BID, loan.getStatus()) ? LoanInfo.Status.BID : LoanInfo.Status.COMPLETED);
-
+        info.setApplicationNo(loan.getLoanNo());
 		return info;
 	}
 

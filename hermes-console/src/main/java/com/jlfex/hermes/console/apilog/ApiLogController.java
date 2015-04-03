@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
@@ -40,6 +41,7 @@ public class ApiLogController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
+		model.addAttribute("status", Dicts.elements(ApiLog.DealResult.class).entrySet());
 		return "apilog/apiLogIndex";
 	}
 	/**

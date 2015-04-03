@@ -91,29 +91,31 @@ $(function(){
                 <table cellpadding="0" cellspacing="0" border="0">
 					<thead>
 						<tr style="background:#e5f9ff;">
-							<th class="th_01">借款用途</th>
-							<th class="th_02">金额（元）</th>
-							<th class="th_03">年利率</th>
+						    <th class="th_04">出借编号</th>
+							<th class="th_04">借款用途</th>
+							<th class="th_04">金额（元）</th>
+							<th class="th_04">年利率</th>
 							<th class="th_04">期限</th>
-							<th class="th_05">进度</th>
-							<th class="th_06">剩余金额（元）</th>
-							<th class="th_07">操作</th>
+							<th class="th_04">进度</th>
+							<th class="th_04">剩余金额（元）</th>
+							<th class="th_04">操作</th>
 						</tr>
 					</thead>
 					<#list loans as l>
 					<tr data-progress="${l.progress}">
-						<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-                        <td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
-                        <td class="td_03">${l.rate}</td>
+						<td class="td_04">${l.applicationNo!'-'}</td>					
+						<td class="td_04"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+                        <td class="td_04">${l.amount} <@messages key="common.unit.cny" /></td>
+                        <td class="td_04">${l.rate}</td>
                         <td class="td_04">${l.period} <@messages key="common.unit.month" /></td>
-                        <td class="td_05">
+                        <td class="td_04">
                             <div class="layer_box"> 
                                 <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
                                 <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
                             </div>
                         </td>
-                        <td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
-                        <td class="td_07"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                        <td class="td_04">${l.remain} <@messages key="common.unit.cny" /></td>
+                        <td class="td_04"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
 					</tr>
 					</#list>
                 </table>
@@ -130,30 +132,30 @@ $(function(){
                 <table cellpadding="0" cellspacing="0" border="0">
 					<thead>
 						<tr style="background:#fff9f9;">
-							<th class="th_01">债权名称</th>
-							<th class="th_02">剩余本金（元）</th>
-							<th class="th_03">年利率</th>
+						    <th class="th_04">出借编号</th>
+							<th class="th_04">债权名称</th>
+							<th class="th_04">年利率</th>
 							<th class="th_04">期限</th>
-							<th class="th_05">进度</th>
-							<th class="th_06">转让价格（元）</th>
-							<th class="th_07">操作</th>
+							<th class="th_04">进度</th>
+							<th class="th_04">剩余金额（元）</th>
+							<th class="th_04">操作</th>
 						</tr>
 					</thead>
                     <#list assignLoans as l>
 					<tr data-progress="${l.progress}">
-						<td class="td_01"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-                        <td class="td_02">${l.amount} <@messages key="common.unit.cny" /></td>
-                       <td class="td_03">${l.rate}</td>
+					    <td class="td_04">${l.applicationNo!'-'}</td>
+						<td class="td_04"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
+                        <td class="td_04">${l.rate}</td>
                         <td class="td_04">${l.period}天</td>
                         
-                        <td class="td_05">
+                        <td class="td_04">
                             <div class="layer_box">
                                 <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
                                 <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
                             </div>
                         </td>
-                       <td class="td_06">${l.remain} <@messages key="common.unit.cny" /></td>
-                      <td class="td_07"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                       <td class="td_04">${l.remain} <@messages key="common.unit.cny" /></td>
+                      <td class="td_04"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
 					</tr>
 					</#list>
                 </table>
