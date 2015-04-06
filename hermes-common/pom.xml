@@ -88,13 +88,13 @@
 		<!-- cfca start -->
 		<dependency>
 			<groupId>cfca</groupId>
-			<artifactId>tools</artifactId>
-			<version>1.3.8</version>
+			<artifactId>payment</artifactId>
+			<version>0.1.5</version>
 		</dependency>
 		<dependency>
-			<groupId>cfca.payment.api</groupId>
-			<artifactId>payment</artifactId>
-			<version>1.5-jdk5</version>
+			<groupId>cfca</groupId>
+			<artifactId>tool</artifactId>
+			<version>1.3.8</version>
 		</dependency>
 		<!-- cfca end -->
 		<!-- axis for webservice -->

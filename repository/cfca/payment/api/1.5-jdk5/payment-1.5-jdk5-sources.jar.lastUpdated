@@ -1,8 +1,0 @@
-#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
-#Tue Mar 31 17:21:22 CST 2015
-file\://repository/.error=
-@default-http\://maven.oschina.net/content/groups/public/.lastUpdated=1427793682210
-@default-https\://repo1.maven.org/maven2/.lastUpdated=1427793682179
-https\://repo1.maven.org/maven2/.error=Could not transfer artifact cfca.payment.api\:payment\:jar\:sources\:1.5-jdk5 from/to central (https\://repo1.maven.org/maven2)\: repo1.maven.org
-file\://repository/.lastUpdated=1427793682210
-http\://maven.oschina.net/content/groups/public/.error=Could not transfer artifact cfca.payment.api\:payment\:jar\:sources\:1.5-jdk5 from/to oschina (http\://maven.oschina.net/content/groups/public)\: maven.oschina.net
