@@ -2,10 +2,9 @@ package com.jlfex.hermes.console.cfca.init;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import com.jlfex.hermes.common.Logger;
 
 import cfca.payment.api.system.PaymentEnvironment;
-
-import com.jlfex.hermes.common.Logger;
 
 public class CFCAPaymentInitListener implements ServletContextListener {
 
@@ -24,5 +23,7 @@ public class CFCAPaymentInitListener implements ServletContextListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
 	}
+
 }
