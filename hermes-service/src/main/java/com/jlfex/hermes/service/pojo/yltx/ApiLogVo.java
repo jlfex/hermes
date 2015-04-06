@@ -11,6 +11,7 @@ public class ApiLogVo implements Serializable{
 	private String interfaceName;         //接口名称
 	private String beginDate; // 开始时间 
 	private String endDate; // 结束时间
+	private String status;
 	public String getId() {
 		return id;
 	}
@@ -40,6 +41,12 @@ public class ApiLogVo implements Serializable{
 	}
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

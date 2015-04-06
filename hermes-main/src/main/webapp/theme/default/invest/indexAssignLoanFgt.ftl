@@ -3,7 +3,6 @@
 		<tr style="background:#fff9f9;">
 			<th class="th_04">出借编号</th>		
 			<th class="th_04">债权名称</th>
-			<th class="th_04">剩余本金（元）</th>
 			<th class="th_04">年利率</th>
 			<th class="th_04">期限</th>
 			<th class="th_04">进度</th>
@@ -15,7 +14,6 @@
 	<tr>
 	    <td class="td_04">${l.applicationNo!'-'}</td>
 		<td class="th_04"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
-		<td class="th_04">${l.amount} <@messages key="common.unit.cny" /></td>
 		<td class="th_04">${l.rate}</td>
 		<td class="th_04">${l.period}天</td>
 		<td class="th_04">

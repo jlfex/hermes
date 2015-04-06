@@ -65,6 +65,9 @@ public class ApiLogServiceImpl implements  ApiLogService {
 				if (StringUtils.isNotEmpty(apiLogVo.getInterfaceName())) {
 					list.add(cb.like(root.<String>get("interfaceName"), "%"+apiLogVo.getInterfaceName().trim()+"%"));
 				}
+				if (StringUtils.isNotEmpty(apiLogVo.getStatus())) {
+					list.add(cb.equal(root.<String>get("dealFlag"), apiLogVo.getStatus().trim()));
+				}
 				if(StringUtils.isNotEmpty(apiLogVo.getBeginDate()) && StringUtils.isNotEmpty(apiLogVo.getEndDate())){
 					Date beginDate = null, endDate = null;
 					try{
