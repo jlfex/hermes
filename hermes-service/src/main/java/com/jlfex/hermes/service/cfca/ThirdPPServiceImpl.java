@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cfca.payment.api.system.TxMessenger;
+import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
 import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
@@ -19,7 +20,7 @@ import cfca.payment.api.tx.Tx1362Response;
 public class ThirdPPServiceImpl implements ThirdPPService {
 
 	@Override
-	public Tx1361Response invokeTx1361(Tx1362Request request) {
+	public Tx1361Response invokeTx1361(Tx1361Request request) {
 		try {
 			request.process();
 

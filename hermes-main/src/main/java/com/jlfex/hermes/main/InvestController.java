@@ -27,6 +27,7 @@ import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.MoneyUtil;
 import com.jlfex.hermes.common.utils.Strings;
@@ -47,6 +48,7 @@ import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.repository.UserAccountRepository;
+import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
@@ -107,6 +109,8 @@ public class InvestController {
 	private UserService userService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
+	@Autowired
+	private UserPropertiesRepository userPropertiesRepository;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -208,22 +212,11 @@ public class InvestController {
 	@ResponseBody
 	public Result bid(String loanid, String investamount, String otherrepayselect) throws Exception {
 		Result result = new Result();
-		try {
-			App.checkUser();
-		} catch (Exception ex) {
-			result.setType(Type.WARNING);
+		User user = this.checkBidAuthority(loanid, investamount, otherrepayselect, result);
+		if (!result.getType().equals(Type.SUCCESS)) {
 			return result;
 		}
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
-		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
-		// 自己发布的借款 不能自己投标
-		boolean bidAuthentication = investService.bidAuthentication(loanid, user);
-		if (!bidAuthentication) {
-			result.setType(Type.FAILURE);
-			result.setData("自己发布的借款 不能自己投标");
-			return result;
-		}
+
 		Map<String, String> bidResult = null;
 		try {
 			bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
@@ -246,6 +239,37 @@ public class InvestController {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 检查投标权限
+	 * 
+	 * @param loanid
+	 * @param investamount
+	 * @param otherrepayselect
+	 * @param result
+	 */
+	private User checkBidAuthority(String loanid, String investamount, String otherrepayselect, Result result) {
+		try {
+			App.checkUser();
+		} catch (Exception ex) {
+			result.setType(Type.WARNING);
+
+			return null;
+		}
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
+		// 自己发布的借款 不能自己投标
+		boolean bidAuthentication = investService.bidAuthentication(loanid, user);
+		if (!bidAuthentication) {
+			result.setType(Type.FAILURE);
+			result.setData("自己发布的借款 不能自己投标");
+
+			return user;
+		}
+		result.setType(Type.SUCCESS);
+		return user;
 	}
 
 	/**
@@ -781,9 +805,9 @@ public class InvestController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/isBalanceEnough")
 	@ResponseBody
-	public Result isBalanceEnough(BigDecimal investAmount) {
+	public Result isBalanceEnough(BigDecimal investamount) {
 		Result result = new Result();
-		boolean isEnough = investService.isBalanceEnough(investAmount);
+		boolean isEnough = investService.isBalanceEnough(investamount);
 
 		if (isEnough) {
 			result.setType(Type.SUCCESS);
@@ -821,5 +845,102 @@ public class InvestController {
 		model.addAttribute("otherRepay", otherRepay);
 
 		return "invest/balInsuff";
+	}
+
+	/**
+	 * 前往投标并支付页面
+	 * 
+	 * @param investAmount
+	 * @param needAmount
+	 * @param loanId
+	 * @param otherRepay
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/goBid2Pay")
+	public String goBid2Pay(String investAmount, String needAmount, String loanId, String otherRepay, Model model) {
+		App.checkUser();
+		model.addAttribute("investAmount", investAmount);
+		model.addAttribute("needAmount", needAmount);
+		model.addAttribute("loanId", loanId);
+		model.addAttribute("otherRepay", otherRepay);
+		model.addAttribute("investAmountChinese", MoneyUtil.amountToChinese(Double.parseDouble(needAmount.replace(",", ""))));
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		UserProperties userProperties = userPropertiesRepository.findByUser(user);
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		model.addAttribute("bankAccount", bankAccount);
+		model.addAttribute("userProperties", userProperties);
+
+		return "invest/bid2Pay";
+	}
+
+	/**
+	 * 投标并支付
+	 * 
+	 * @param investAmount
+	 * @param loanId
+	 * @param otherRepay
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/bid2Pay")
+	@ResponseBody
+	public Result<String> bid2Pay(String investAmount, String loanId, String otherRepay, Model model) {
+		Result<String> result = new Result<>();
+
+		User user = this.checkBidAuthority(loanId, investAmount, otherRepay, result);
+		if (!result.getType().equals(Type.SUCCESS)) {
+			return result;
+		}
+		try {
+			Map<String, String> bidResult = investService.bid2Pay(loanId, user, new BigDecimal(investAmount.replace(",", "")), otherRepay);
+
+			if (Tx1361Status.WITHHOLDING_SUCC.getStatus().toString().equals(bidResult.get("code"))) {
+				result.setType(Type.SUCCESS);
+				result.addMessage(0, bidResult.get("msg"));
+
+			} else if (Tx1361Status.WITHHOLDING_FAIL.getStatus().toString().equals(bidResult.get("code"))) {
+				result.setType(Type.FAILURE);
+				result.addMessage(0, bidResult.get("msg"));
+			} else {
+				result.setType(Type.WITHHOLDING_PROCESSING);
+				result.addMessage(0, bidResult.get("msg"));
+			}
+		} catch (Exception e) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "投标并支付失败！");
+		}
+
+		return result;
+	}
+
+	/**
+	 * 返回结果页面
+	 * 
+	 * @param message
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/bid2PayResult")
+	public String bid2PayResult(String message, Model model) {
+		App.checkUser();
+		model.addAttribute("message", message);
+
+		return "invest/bid2PayResult";
+	}
+
+	/**
+	 * 限额是否合法
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/isLimitValid")
+	@ResponseBody
+	public Result isLimitValid(BigDecimal investAmount) {
+		App.checkUser();
+
+		return investService.isLimitValid(investAmount);
 	}
 }
