@@ -56,4 +56,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
 	@Query("from Transaction tx where tx.sourceUserAccount = ?1 and type in (?2) ")
 	public List<Transaction> findBySourceUserAccountAndTypeIn(UserAccount sourceuserAccount, List<String> types);
+	
+	public Transaction findOneByReferenceAndType(String reference,String type);
 }

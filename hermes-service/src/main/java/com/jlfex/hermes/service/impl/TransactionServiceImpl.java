@@ -18,6 +18,7 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -388,11 +389,70 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
-	
+
 	@Override
-	public List<Transaction> cropAccountToZJPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
+	public List<Transaction> cropAccountToZJPay(String type, User user,
+			String cropAccountType, BigDecimal amount, String reference,
+			String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
-		return transact(type, cropAccount, userAccount, amount, reference, remark);
+		return transactToZJPay(type, cropAccount, userAccount, amount, reference, remark);
+	}
+
+	@Override
+	public List<Transaction> transactToZJPay(String type,
+			UserAccount sourceUserAccount, UserAccount targetUserAccount,
+			BigDecimal amount, String reference, String remark) {
+		// 验证参数
+		Assert.notEmpty(type, "type is empty.", "exception.transaction.type.empty");
+		Assert.notNull(sourceUserAccount, "source user account is null", "exception.transaction.user.account.null");
+		Assert.equals(User.Status.ENABLED, sourceUserAccount.getUser().getStatus(), "source user is not enabled.", "exception.transaction.user.status");
+		Assert.equals(UserAccount.Status.VALID, sourceUserAccount.getStatus(), "source user account is not enabled.", "exception.transaction.user.account.status");
+		Assert.notNull(targetUserAccount, "target user account is null", "exception.transaction.user.account.null");
+		Assert.equals(User.Status.ENABLED, targetUserAccount.getUser().getStatus(), "target user is not enabled.", "exception.transaction.user.status");
+		Assert.equals(UserAccount.Status.VALID, targetUserAccount.getStatus(), "target user account is not enabled.", "exception.transaction.user.account.status");
+		Assert.notNull(amount, "amount is null", "exception.transaction.amount.null");
+
+
+		// 交易流水
+		Transaction source = new Transaction();
+		source.setSourceUserAccount(sourceUserAccount);
+		source.setTargetUserAccount(targetUserAccount);
+		source.setReference(reference);
+		source.setType(type);
+		source.setDatetime(new Date());
+		source.setAmount(amount.negate());
+		source.setSourceBeforeBalance(sourceUserAccount.getBalance());
+		source.setTargetBeforeBalance(targetUserAccount.getBalance());
+		source.setRemark(remark);
+
+		Transaction target = new Transaction();
+		target.setSourceUserAccount(targetUserAccount);
+		target.setTargetUserAccount(sourceUserAccount);
+		target.setReference(reference);
+		target.setType(String.valueOf(Integer.valueOf(type) + TYPE_SPAN));
+		target.setDatetime(source.getDatetime());	
+		target.setAmount(amount);
+		target.setSourceBeforeBalance(targetUserAccount.getBalance());
+		target.setTargetBeforeBalance(sourceUserAccount.getBalance());
+		target.setRemark(remark);
+		if(remark.equals(Transaction.Status.RECHARGE_SUCC)) {
+			sourceUserAccount.setBalance(sourceUserAccount.getBalance().subtract(amount));
+			targetUserAccount.setBalance(targetUserAccount.getBalance().add(amount));
+		}
+		// 计算金额
+		source.setSourceAfterBalance(sourceUserAccount.getBalance());
+		source.setTargetAfterBalance(targetUserAccount.getBalance());
+		target.setSourceAfterBalance(targetUserAccount.getBalance());
+		target.setTargetAfterBalance(sourceUserAccount.getBalance());
+
+		// 保存数据
+		userAccountRepository.save(sourceUserAccount);
+		userAccountRepository.save(targetUserAccount);
+		transactionRepository.save(source);
+		transactionRepository.save(target);
+
+		// 返回结果
+		return Arrays.asList(source, target);		
 	}
 }

@@ -11,7 +11,18 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".confirm").click(function() {
+			var investAmount  = $("#investAmount").val();
+			var needAmount = $("#needAmount").val();
+			var loanId = $("#loanId").val();
+			var otherRepay = $("#otherRepay").val();
+			
+			window.location.href="${app}/invest/goBid2Pay?investAmount="+investAmount+"&needAmount="+needAmount+"&loanId="+loanId+"&otherRepay="+otherRepay;
+		});
+	});
+</script>
 <body>
 
 <#include "/header.ftl" />
@@ -34,9 +45,14 @@
 			还需支付金额：<span class="lightyellow">${needAmount}</span>
 		</div>
 	</div>
-	<p class="a_pa_lt"><a href="${app}/invest/index" class="q_btn1 q_bg1">确认</a></p>
+	<p class="a_pa_lt"><span class="confirm"><a href="#" class="q_btn1 q_bg1">确认</a></span></p>
 </div>
-
+<form id="loanDetail" name="loanDetail">
+<input id="investAmount" name="investAmount" type="hidden" value="${investAmount}" ></input>	
+<input id="needAmount" name="needAmount" type="hidden" value="${needAmount}" ></input>
+<input id="loanId" name="loanId" type="hidden" value="${loanId}" ></input>
+<input id="otherRepay" name="otherRepay" type="hidden" value="${otherRepay}" ></input>
+</form> 
 
 <#include "/footer.ftl" />
 </body>

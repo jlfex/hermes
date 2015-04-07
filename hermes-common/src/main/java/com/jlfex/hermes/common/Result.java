@@ -184,7 +184,11 @@ public class Result<T extends Serializable> implements Serializable {
 		FAILURE("failure"), 
 		CELLPHNOE_NOTAUTH("cellphone_notauth"),
 		NAME_NOTAUTH("name_notauth"),
-		BANKCARD_NOTAUTH("bankcard_notauth");
+		BANKCARD_NOTAUTH("bankcard_notauth"),
+		/**
+		 * 代扣处理中
+		 */
+		WITHHOLDING_PROCESSING("withholding_processing");
 
 		/** 名称 */
 		private String name;
