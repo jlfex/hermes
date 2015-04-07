@@ -1,5 +1,9 @@
 package com.jlfex.hermes.service.api.yltx;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -58,11 +62,11 @@ import com.jlfex.hermes.service.assetRepay.AssetRepayPlanService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
-import com.jlfex.hermes.service.pojo.yltx.response.RepayPlanVo;
 import com.jlfex.hermes.service.pojo.yltx.response.AssetVo;
 import com.jlfex.hermes.service.pojo.yltx.response.FinanceOrderVo;
-import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 import com.jlfex.hermes.service.pojo.yltx.response.PlanResponseVo;
+import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
+import com.jlfex.hermes.service.pojo.yltx.response.RepayPlanVo;
 import com.jlfex.hermes.service.sequence.SequenceService;
 
 
@@ -132,7 +136,7 @@ public class JlfexServiceImpl implements JlfexService {
 	    reqUrlBuffer.append(apiConfig.getApiUrl().trim());
 	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_FINANCE_FRODUCT_GET, serialNo));
 	    if(Strings.notEmpty(createDate)){
-	    	 reqUrlBuffer.append("createDate=").append("").append("&");
+	    	 reqUrlBuffer.append("createDate=").append(createDate).append("&");
 	    }
 	    if(Strings.notEmpty(financeProductStatus)){
 	    	 reqUrlBuffer.append("financeProductStatus=").append(financeProductStatus).append("&");
@@ -221,6 +225,9 @@ public class JlfexServiceImpl implements JlfexService {
 		return resultMap;
 	}
 
+	/**
+	 * 撤销订单接口
+	 */
 	@Override
 	public String revokeOrder(String orderCode) throws Exception {
 		String var = "撤销订单接口:";
@@ -259,7 +266,9 @@ public class JlfexServiceImpl implements JlfexService {
 		}
 		return result;
 	}
-
+   /**
+    * 查询订单接口
+    */
 	@Override
 	public String queryOrderStatus(String orderCodes) throws Exception {
 		String var = "查询订单接口:";
@@ -279,7 +288,7 @@ public class JlfexServiceImpl implements JlfexService {
 	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
 	    //保存请求日志
 	  	Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_FINANCE_FRODUCT_GET);
+	  	recodeMap.put("interfaceMethod",HermesConstants.JL_ORDER_GET);
 	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
 	  	recodeMap.put("serialNo", serialNo);
 	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
@@ -303,9 +312,53 @@ public class JlfexServiceImpl implements JlfexService {
 		return result;
 	}
 
+	/**
+	 * 查询文件协议
+	 */
 	@Override
-	public void queryProtocolFile(String fileId) throws Exception {
-		
+	public InputStream queryProtocolFile(String fileId) throws Exception {
+		String var = "查询文件协议接口:";
+		if(apiConfig==null){
+			apiConfig = getApiConfig();
+		}
+		String serialNo = generateSerialNo(HermesConstants.CODE_FILE_GET);
+		StringBuffer reqUrlBuffer = new StringBuffer();
+		reqUrlBuffer.append(apiConfig.getApiUrl().trim());
+	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_FILE_GET, serialNo));
+	    if(Strings.notEmpty(fileId)){
+	    	 reqUrlBuffer.append("fileId=").append(fileId);
+	    }
+	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
+	    //保存请求日志
+	  	Map<String,String>  recodeMap = new HashMap<String,String>();
+	  	recodeMap.put("interfaceMethod",HermesConstants.JL_FILE_GET);
+	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
+	  	recodeMap.put("serialNo", serialNo);
+	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+	  	InputStream inputSM = null;
+	  	try{
+		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
+		    inputSM = HttpClientUtil.doFileGetHttps(reqUrlBuffer.toString().trim());
+		    
+		    File  file = new File("D:/testFile.pdf");
+		    OutputStream  outputSM = new FileOutputStream(file);
+		    byte[] buffer = new byte[2048];
+		    int count = 0;
+		    while((count=inputSM.read(buffer)) != -1 ){
+		    	outputSM.write(buffer, 0, count);
+		    }
+		    outputSM.flush();
+		    outputSM.close();
+		    
+		    apiLog.setResponseMessage("");
+		    apiLog.setResponseTime(new Date());
+		    apiLog.setDealFlag(ApiLog.DealResult.SUC);
+	  	}catch(Exception e){
+	  		Logger.error(var+"请求异常：", e);
+	  		apiLog.setException(e.getMessage());
+	  	}
+	  	apiLogService.saveApiLog(apiLog);
+	  	 return inputSM;
 	}
 	
 	/**

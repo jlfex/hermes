@@ -18,6 +18,7 @@ import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.cfca.ThirdPPService;
+import com.jlfex.hermes.service.job.Job.Result;
 
 /**
  * 自动代收查询
@@ -45,6 +46,6 @@ public class AutoCollectionQueryJob extends Job {
 			}
 		}
 		
-		return null;
+		return  new Result(true, false, "");
 	}
 }

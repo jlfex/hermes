@@ -242,22 +242,28 @@ public class HttpClientUtil {
 		}
 		return flag;
 	}
-	
-	
-	
-	public static void main(String[] args) throws Exception {
-		
-		//测试get
-		String getUrl = "https://open.jlfex.com/rest" ;
-			// "?method=jl.financefroduct.get&timestamp=" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),"UTF-8") + "&format=json&v=1.0&serial_no=9900001000000000203&pageSize=10&pageNum=1";
-		String methodName = "jl.financefroduct.get";
-		String serialNo = "9900001000000000204";
-		StringBuffer commParam = buildGetCommonParam(methodName, serialNo);
-		commParam.append("pageSize=").append("10").append("&");
-		commParam.append("pageNum=").append("1");
-		String  result = doGetHttps(getUrl+commParam.toString());
-		System.out.println("======"+result);
-
+	/**
+	 * 获取二进制文件流
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	public static InputStream doFileGetHttps(String url) throws  Exception {
+		initSSLContext();
+		HttpGet httpGet = new HttpGet(url);
+		HttpResponse response = httpClient.execute(httpGet);
+		int responseCode = response.getStatusLine().getStatusCode();
+		Logger.info("httpClient get 响应状态responseCode="+responseCode+", 请求 URL="+url);
+		HttpEntity respEntity = response.getEntity();
+		if(responseCode == RSP_200 || responseCode == RSP_400){
+			InputStream ins = respEntity.getContent();
+			httpGet.releaseConnection();
+			return ins;
+		}else{
+			httpGet.releaseConnection();
+			throw new Exception("接口请求异常：接口响应状态="+responseCode);
+		}
 	}
-
+	
+	
 }
