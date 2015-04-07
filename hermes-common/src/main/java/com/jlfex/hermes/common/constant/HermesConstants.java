@@ -137,5 +137,13 @@ public final class HermesConstants {
 	public static final String  YLTX_CREDIT = "外部债权标";
 	public static final String  PROVINCE_SUFFIX = "市";
 	
+	/**
+	 * 中金支付代表成功返回的代码
+	 */
+	public static final String  CFCA_SUCCESS_CODE = "2000";
 	
+	/**
+	 * 中金市场订单号
+	 */
+	public static final String CFCA_MARKET_ORDER_NO = "H-100000-000001";
 }

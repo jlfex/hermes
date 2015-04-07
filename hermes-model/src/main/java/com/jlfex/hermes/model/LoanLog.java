@@ -244,4 +244,13 @@ public class LoanLog extends Model {
 		@Element("债权发售")
 		public static final String  SELL_CREDIT= "30";
 	}
+	
+	public static final class Status {
+		@Element("冻结中")
+		public static final String FREEZE = "冻结中";
+		@Element("投标确认中")
+		public static final String WAIT = "投标确认中";
+		@Element("投标失败")
+		public static final String FAIL = "投标失败";
+	}
 }
