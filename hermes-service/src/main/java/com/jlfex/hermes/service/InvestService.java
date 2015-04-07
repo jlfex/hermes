@@ -46,9 +46,7 @@ public interface InvestService {
 	 * @param size
 	 * @return
 	 */
-	public Page<LoanInfo> findByJointSql(String purpose, String raterange,
-			String periodrange, String repayname, String page, String size,
-			String orderByField, String orderByDirection, String loanKind);
+	public Page<LoanInfo> findByJointSql(String purpose, String raterange, String periodrange, String repayname, String page, String size, String orderByField, String orderByDirection, String loanKind);
 
 	/**
 	 * 通过借款编号查询理财
@@ -67,8 +65,7 @@ public interface InvestService {
 	 * @param otherRepay
 	 * @return
 	 */
-	public Map<String, String> bid(String loanId, User investUser,
-			BigDecimal investAmount, String otherRepay) throws Exception;
+	public Map<String, String> bid(String loanId, User investUser, BigDecimal investAmount, String otherRepay) throws Exception;
 
 	/**
 	 * 根据用户和状态取记录数
@@ -92,8 +89,7 @@ public interface InvestService {
 	 * @param userId
 	 * @return
 	 */
-	public Page<InvestInfo> loadInvestRecordByUser(String userId, Integer page,
-			Integer size);
+	public Page<InvestInfo> loadInvestRecordByUser(String userId, Integer page, Integer size);
 
 	/**
 	 * 自动任务，处理自动流标失败的接口
@@ -111,8 +107,7 @@ public interface InvestService {
 	 * @param loanKind
 	 * @return
 	 */
-	public Page<LoanInfo> investIndexLoanList(String page, String size,
-			String loanKind);
+	public Page<LoanInfo> investIndexLoanList(String page, String size, String loanKind);
 
 	/**
 	 * 自己的借款标自己不能投资
@@ -140,8 +135,7 @@ public interface InvestService {
 	 * @return
 	 * @throws Exception
 	 */
-	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser,
-			BigDecimal investAmount) throws Exception;
+	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception;
 
 	/**
 	 * 易联标：投标
@@ -153,9 +147,7 @@ public interface InvestService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String jlfexBid(String loanId, User investUser,
-			BigDecimal investAmount, OrderPayResponseVo responseVo)
-			throws Exception;
+	public String jlfexBid(String loanId, User investUser, BigDecimal investAmount, OrderPayResponseVo responseVo) throws Exception;
 
 	/**
 	 * 保存投标日志
@@ -166,8 +158,7 @@ public interface InvestService {
 	 * @param type
 	 * @param remark
 	 */
-	public void saveLoanLog(User investUser, BigDecimal investAmount,
-			Loan loan, String type, String remark) throws Exception;
+	public void saveLoanLog(User investUser, BigDecimal investAmount, Loan loan, String type, String remark) throws Exception;
 
 	/**
 	 * 保存 操作日志
@@ -207,8 +198,7 @@ public interface InvestService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> bid2Pay(String loanId, User investUser,
-			BigDecimal investAmount, String otherRepay) throws Exception;
+	public Map<String, String> bid2Pay(String loanId, User investUser, BigDecimal investAmount, String otherRepay) throws Exception;
 
 	/**
 	 * 是否超过银行金额限制
