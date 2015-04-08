@@ -2,10 +2,8 @@ package com.jlfex.hermes.service.job;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -20,7 +18,6 @@ import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
-import com.jlfex.hermes.service.job.Job.Result;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
@@ -50,6 +47,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 		try {
 			List<String> payStatusList = new ArrayList<String>();
 			payStatusList.add(HermesConstants.PAY_WAIT_CONFIRM);
+			payStatusList.add(HermesConstants.NOTHING);
 			List<JlfexOrder> orderList = jlfexOrderService.queryOrderByPayStatus(payStatusList);
 			for(JlfexOrder order : orderList){
 				try{

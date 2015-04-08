@@ -303,19 +303,22 @@ public class InvestController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount);
-		OrderPayResponseVo responseVo = investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
 		String flag = null;
+		String error_Msg = null;
 		try {
+			OrderPayResponseVo responseVo = investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
 			flag = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
 		} catch (Exception e) {
 			Logger.error(e.getMessage());
+			error_Msg = e.getMessage();
 		}
-		if ("00".equals(flag)) {
+		if ("00".equals(flag)){
 			resultView = "invest/bidAndPaySuc";
 		} else if ("01".equals(flag)) {
 			resultView = "invest/bidAndPayWait";
 		} else {
 			resultView = "invest/bidAndPayFail";
+			model.addAttribute("err_msg", "错误提示:"+error_Msg);
 		}
 		return resultView;
 	}

@@ -360,7 +360,6 @@ public class InvestServiceImpl implements InvestService {
 	/**
 	 * 易联标：下单支付
 	 */
-	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
@@ -370,7 +369,21 @@ public class InvestServiceImpl implements InvestService {
 			loanRepository.save(loan);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 		}
-		return orderAndPayRequest(loan, investUser, investAmount);
+		BankAccount bankAccount = null;
+		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
+		if (bankAccountList == null || bankAccountList.size() != 1) {
+			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
+		} else {
+			bankAccount = bankAccountList.get(0);
+		}
+		OrderPayRequestVo reqVo = buildOrderPayReqVo(investAmount, investUser, bankAccount, finaceOrder);
+		// 调用下单并支付接口
+		Map<String, String> orderPayMap = jlfexService.createOrderAndPay(reqVo);
+		if (!HermesConstants.CODE_00.equals(orderPayMap.get("code"))) {
+			 throw new Exception(orderPayMap.get("msg"));
+		}
+		return  JSON.parseObject(orderPayMap.get("msg"), OrderPayResponseVo.class);
 	}
 
 	/**
@@ -513,35 +526,6 @@ public class InvestServiceImpl implements InvestService {
 			Logger.error("易联标投标规则判断异常:", e);
 		}
 		return normal;
-	}
-
-	/**
-	 * 获取下单结果
-	 * 
-	 * @param loan
-	 * @param investUser
-	 * @param investAmount
-	 * @return
-	 * @throws Exception
-	 */
-
-	public OrderPayResponseVo orderAndPayRequest(Loan loan, User investUser, BigDecimal bidAmount) throws Exception {
-		BankAccount bankAccount = null;
-		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
-		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
-		if (bankAccountList == null || bankAccountList.size() != 1) {
-			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
-		} else {
-			bankAccount = bankAccountList.get(0);
-		}
-		OrderPayRequestVo reqVo = buildOrderPayReqVo(bidAmount, investUser, bankAccount, finaceOrder);
-		// 调用下单并支付接口
-		Map<String, String> orderPayMap = jlfexService.createOrderAndPay(reqVo);
-		if (HermesConstants.CODE_99.equals(orderPayMap.get("code"))) {
-			return null;
-		}
-		OrderPayResponseVo respVo = JSON.parseObject(orderPayMap.get("result"), OrderPayResponseVo.class);
-		return respVo;
 	}
 
 	/**
