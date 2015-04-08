@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
+import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
@@ -182,4 +183,29 @@ public interface InvestService {
 	 * @return
 	 */
 	public boolean isBalanceEnough(BigDecimal investAmount);
+
+	/**
+	 * 投标并支付
+	 * 
+	 * @param loanId
+	 *            标id
+	 * @param investUser
+	 *            投资人
+	 * @param investAmount
+	 *            投资金额
+	 * @param otherRepay
+	 *            支付方式
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> bid2Pay(String loanId, User investUser, BigDecimal investAmount, String otherRepay) throws Exception;
+
+	/**
+	 * 是否超过银行金额限制
+	 * 
+	 * @param investAmount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result isLimitValid(BigDecimal investAmount);
 }

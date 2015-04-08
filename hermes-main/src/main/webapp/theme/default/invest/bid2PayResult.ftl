@@ -26,50 +26,27 @@
 	.sweet-tip p{ line-height:25px;color:#727272;}
 </style>
 <style>
- 
    .content{ margin:0 20px;}
    .content p{ line-height:40px; text-align:center;}
    .mtb_30px{ margin:30px 0;}
   .content p img{ display:inline-block; vertical-align:middle;}
 </style>
 </head>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#confirm").click(function() {
-			var investAmount  = $("#investAmount").val();
-			var needAmount = $("#needAmount").val();
-			var loanId = $("#loanId").val();
-			var otherRepay = $("#otherRepay").val();
-			
-			window.location.href="${app}/invest/goBid2Pay?investAmount="+investAmount+"&needAmount="+needAmount+"&loanId="+loanId+"&otherRepay="+otherRepay;
-		});
-	});
-</script>
 <body>
-
 <#include "/header.ftl" />
-
 
 <!-- middle start-->
 <div class="m_con m_fp">
 	<div class="content">
-    	<p><img src="${app.theme}/public/other/images/icon2/1.png" width="24" height="24" alt="" /> 您的账户余额不足<p>
-     	<p>计划投标金额：<span class="blue fs_18">${investAmount}</span> 元</p>
-        <p>账户可用余额：<span class="blue fs_18">${balance}</span> 元</p>
-        <p>还需支付金额：<span class="colorred fs_18">${needAmount}</span> 元</p>
-        <p class="mtb_30px">
-        	<a href="#" class="m_btn3 m_bg1" id="confirm">确认</a>
-            <a href="#" class="m_btn3 m_bg2 ml_20px" id="Button2">取消</a>
+    	<p><img src="${app.theme}/public/other/images/icon2/${type}" width="24" height="24" alt="" /> ${message}<p>
+     	<p>您可通过 资金明细 查询充值结果</p>
+        <p>通过 我的债权 查询交易结果</p>
+        <p>
+        	<a href="#" class="a_dec">资金明细</a>
+            <a href="#" class="a_dec ml_20px">我的债权</a>
         </p>   
 	</div>
 </div>
-<form id="loanDetail" name="loanDetail">
-<input id="investAmount" name="investAmount" type="hidden" value="${investAmount}" ></input>	
-<input id="needAmount" name="needAmount" type="hidden" value="${needAmount}" ></input>
-<input id="loanId" name="loanId" type="hidden" value="${loanId}" ></input>
-<input id="otherRepay" name="otherRepay" type="hidden" value="${otherRepay}" ></input>
-</form> 
-
 <#include "/footer.ftl" />
 </body>
 </html>

@@ -31,4 +31,16 @@ public class HermesEnum {
 			return status;
 		}
 	}
+	
+	/**
+	 * 第三方支付机构
+	 * @author jswu
+	 *
+	 */
+	public enum PPOrg {
+		/**
+		 * 中金
+		 */
+		ZJ
+	}
 }

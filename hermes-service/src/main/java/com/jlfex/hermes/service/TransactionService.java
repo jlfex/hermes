@@ -212,7 +212,7 @@ public interface TransactionService {
 	 * @param reference
 	 * @param remark
 	 */
-	public void addCashAccountRecord(String type, UserAccount sourceUserAccount,UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
 
 	/**
 	 * 债权人 账户线下充值
@@ -229,6 +229,7 @@ public interface TransactionService {
 
 	/**
 	 * JLfex代扣 充值
+	 * 
 	 * @param type
 	 * @param user
 	 * @param cropAccountType
@@ -237,18 +238,33 @@ public interface TransactionService {
 	 * @param remark
 	 * @return
 	 */
-	List<Transaction> cropAccountToJlfexPay(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
+	List<Transaction> cropAccountToJlfexPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark);
 
 	/**
 	 * 中金 代扣 充值
+	 * 
 	 * @param type
 	 * @param user
 	 * @param cropAccountType
 	 * @param amount
 	 * @param reference
 	 * @param remark
+	 *            充值结果
 	 * @return
 	 */
-	List<Transaction> cropAccountToZJPay(String type, User user,String cropAccountType, BigDecimal amount, String reference,String remark);
+	List<Transaction> cropAccountToZJPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark);
 
+	/**
+	 * 根据中金返回结果记账
+	 * 
+	 * @param type
+	 * @param sourceUserAccount
+	 * @param targetUserAccount
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 *            充值结果
+	 * @return
+	 */
+	public List<Transaction> transactToZJPay(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
 }

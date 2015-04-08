@@ -17,21 +17,21 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_bank")
 public class Bank extends Model {
-	
+
 	private static final long serialVersionUID = 5689593171313318346L;
 
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 图片 */
 	@Column(name = "logo")
 	private String logo;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
@@ -45,7 +45,7 @@ public class Bank extends Model {
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * 设置名称
 	 * 
@@ -55,7 +55,7 @@ public class Bank extends Model {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * 读取代码
 	 * 
@@ -65,7 +65,7 @@ public class Bank extends Model {
 	public String getCode() {
 		return code;
 	}
-	
+
 	/**
 	 * 设置代码
 	 * 
@@ -75,7 +75,7 @@ public class Bank extends Model {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	/**
 	 * 读取图片
 	 * 
@@ -85,7 +85,7 @@ public class Bank extends Model {
 	public String getLogo() {
 		return logo;
 	}
-	
+
 	/**
 	 * 设置图片
 	 * 
@@ -95,7 +95,7 @@ public class Bank extends Model {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -105,7 +105,7 @@ public class Bank extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -133,9 +133,9 @@ public class Bank extends Model {
 	 * @since 1.0
 	 */
 	public static final class Status {
-		
+
 		@Element("有效")
-		public static final String ENBALED 	= "00";
+		public static final String ENBALED = "00";
 
 		@Element("无效")
 		public static final String DISABLED = "99";
