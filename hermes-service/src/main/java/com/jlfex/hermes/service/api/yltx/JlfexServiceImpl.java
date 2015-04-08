@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -80,7 +82,8 @@ import com.jlfex.hermes.service.sequence.SequenceService;
 public class JlfexServiceImpl implements JlfexService {
 
 	//开放平台流水号缓存标识
-	private final static String CACHE_YLTX_SERIAL_SEQUENCE = "com.jlfex.cache.request.serial";
+	private  static final String CACHE_YLTX_SERIAL_SEQUENCE = "com.jlfex.cache.request.serial";
+	private  static final String CACHE_YLTX_ORDERSN_SEQUENCE = "com.jlfex.cache.request.orderSn";
 		
 	@Autowired
 	private  SequenceService  sequenceService;
@@ -174,21 +177,22 @@ public class JlfexServiceImpl implements JlfexService {
 	 */
 	@Override
 	public Map<String,String> createOrderAndPay(OrderPayRequestVo vo) throws Exception {
-		Map<String,String> resultMap = new  HashMap<String,String>();
 		String var = "下单并支付接口:";
-		String errMsg = null;
+	  	String code  	 = null;
+	  	String msg   	 = null;
+	  	String result    = null;
+	  	String exception = null;
+	  	Map<String,String> resultMap = new  HashMap<String,String>();
 		if(vo == null){
-			errMsg = "下单并支付接口： 无效的请求报文实体";
-			Logger.info(errMsg);
 			resultMap.put("code", "99");
-			resultMap.put("msg", errMsg);
+			resultMap.put("err_msg",   "下单并支付接口 请求报文实体为空");
 			return resultMap;
 		}
-		vo.setOrderSn(generateOrderSn());
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
 		}
-		String serialNo = generateSerialNo(HermesConstants.CODE_ORDER_DO2PAY) ;
+		vo.setOrderSn(generateOrderSn());
+		String serialNo = generateSerialNo(HermesConstants.CODE_ORDER_DO2PAY);
 		Map<String,String>  commonMap = HttpClientUtil.buildPostCommonParam(HermesConstants.JL_ORDER_DO2PAY, serialNo);
 		commonMap.putAll(Bean2Map.getValueMap(vo));
 		//请求日志
@@ -196,8 +200,8 @@ public class JlfexServiceImpl implements JlfexService {
 	  	recodeMap.put("interfaceMethod",HermesConstants.JL_ORDER_DO2PAY);
 	  	recodeMap.put("requestMsg",commonMap.toString());
 	  	recodeMap.put("serialNo", serialNo);
+	  	recodeMap.put("orderSn",serialNo );
 	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
-	  	String result = null;
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    result = HttpClientUtil.doPostHttps(apiConfig.getApiUrl().trim(), commonMap);
@@ -205,23 +209,30 @@ public class JlfexServiceImpl implements JlfexService {
 		    apiLog.setResponseMessage(result);
 		    apiLog.setResponseTime(new Date());
 		    apiLog.setDealFlag(ApiLog.DealResult.SUC);
+	  	}catch(SocketTimeoutException se){
+	  		Logger.error(var+"请求异常：", se);
+	  		apiLog.setException(se.getMessage());
+	  		exception ="接口数据读取超时";
 	  	}catch(Exception e){
-	  		errMsg = e.getMessage();
 	  		Logger.error(var+"请求异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		exception = e.getMessage();
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
-	  	if(result!=null && result.contains("status") && result.contains("memo")){
-			errMsg = result;
-		}
-	  	if(errMsg==null){
-	  		resultMap.put("code", "00");
-	  		resultMap.put("msg", "成功");
-	  		resultMap.put("result", result);
+	  	if(exception == null){
+	  		//接口404
+	  		code = "00";
+	  		msg =  result;
+	  		if(result.contains("status") && result.contains("memo")){
+	  			code = "98";
+		  		msg =  JSON.parseObject(result).getString("memo");
+			}
 	  	}else{
-	  		resultMap.put("code", "99");
-	  		resultMap.put("msg", errMsg);
+	  		code = "99";
+	  		msg =  exception;
 	  	}
+	  	resultMap.put("code", code);
+  		resultMap.put("msg",  msg);
 		return resultMap;
 	}
 
@@ -368,23 +379,16 @@ public class JlfexServiceImpl implements JlfexService {
 	 * @throws Exception
 	 */
 	public synchronized String generateSerialNo(String interfaceCode) throws Exception {
-		int increamentVal = 1;
 		Sequence sequence = sequenceService.findBySeqNameAndStatus(HermesConstants.SEQ_YLTX_REQUEST_SERIAL_NO, HermesConstants.VALID);
 		if (sequence != null) {
-			increamentVal = sequence.getIncrementVal();
-			String currentVal = sequence.getCurrentVal();
-			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, Long.valueOf(currentVal));
-			Logger.info("当前系统请求流水号CACHE_YLTX_SERIAL_SEQUENCE=" + currentVal);	
+			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, Long.valueOf(sequence.getCurrentVal().trim()));
 		}else{
-			Logger.error("序列serialNo没有初始化");
+			throw new Exception("序列serialNo没有初始化");
 		}
-		// 判断缓存序列是否存在 若不存在则初始化
-		if (Caches.get(CACHE_YLTX_SERIAL_SEQUENCE) == null) {
-			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, 0);
-		}
-		Long seq = Caches.incr(CACHE_YLTX_SERIAL_SEQUENCE, increamentVal);// 递增缓存数据
+		Long seq = Caches.incr(CACHE_YLTX_SERIAL_SEQUENCE, sequence.getIncrementVal());// 递增缓存数据
 		sequence.setCurrentVal(seq.toString());
 		sequenceService.saveSequnce(sequence);
+		Logger.info("创建的serialNo="+String.format(interfaceCode+"%012d", seq));
 		return String.format(interfaceCode+"%012d", seq);
 	}
 	
@@ -394,23 +398,16 @@ public class JlfexServiceImpl implements JlfexService {
      * @throws Exception
      */
 	public synchronized String generateOrderSn() throws Exception {
-		int increamentVal = 1;
 		Sequence sequence = sequenceService.findBySeqNameAndStatus(HermesConstants.SEQ_YLTX_REQUEST_ORDER_SN, HermesConstants.VALID);
 		if (sequence != null) {
-			increamentVal = sequence.getIncrementVal();
-			String currentVal = sequence.getCurrentVal();
-			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, Long.valueOf(currentVal));
-			Logger.info("当前系统请求流水号CACHE_YLTX_SERIAL_SEQUENCE=" + currentVal);	
+			Caches.set(CACHE_YLTX_ORDERSN_SEQUENCE, Long.valueOf(sequence.getCurrentVal()));
 		}else{
-			Logger.error("序列serialNo没有初始化");
+			throw new Exception("订单流水号序列orderSn没有配置");
 		}
-		// 判断缓存序列是否存在 若不存在则初始化
-		if (Caches.get(CACHE_YLTX_SERIAL_SEQUENCE) == null) {
-			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, 0);
-		}
-		Long seq = Caches.incr(CACHE_YLTX_SERIAL_SEQUENCE, increamentVal);// 递增缓存数据
+		Long seq = Caches.incr(CACHE_YLTX_ORDERSN_SEQUENCE, sequence.getIncrementVal());// 递增缓存数据
 		sequence.setCurrentVal(seq.toString());
 		sequenceService.saveSequnce(sequence);
+		Logger.info("创建的orderSn="+String.format(HermesConstants.PRE_HERMES+"%012d", seq));
 		return String.format(HermesConstants.PRE_HERMES+"%012d", seq);
 	}
 	
@@ -442,7 +439,7 @@ public class JlfexServiceImpl implements JlfexService {
 		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
 		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
 		apiLog.setRequestTime(new Date());
-		apiLog.setDealFlag(ApiLog.DealResult.FAIL);
+		apiLog.setDealFlag(ApiLog.DealResult.FAIL);//默认
 		if(!Strings.empty(map.get("interfaceMethod"))){
 			apiLog.setInterfaceName(map.get("interfaceMethod"));
 		}

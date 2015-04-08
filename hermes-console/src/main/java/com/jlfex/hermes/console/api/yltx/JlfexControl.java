@@ -98,70 +98,70 @@ public class JlfexControl {
 		return "credit/importLoan";
 	} 
 	
-	@RequestMapping("/queryRepayPlan")
-	public String queryRepayPlan(Model model) throws Exception {
-		String id = "17113";
-		String type = "1";
-		String jsonOrder = jlfexService.queryRepayPlan(id,type);
-		System.out.println(jsonOrder);
-		return "credit/index";
-	}
-	
-	@RequestMapping("/order2pay")
-	public String order2pay(Model model) throws Exception {
-		
-		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
-		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
-		return "credit/index";
-	}
-	
-	@RequestMapping("/queryOrder")
-	public String queryOrder(Model model) throws Exception {
-		String orderCode = "2015030102332";
-		String result  = jlfexService.queryOrderStatus(orderCode);
-		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
-		List<OrderVo>  lists = responVo.getContent();
-		
-		return "credit/index";
-	}
-	
-	@RequestMapping("/queryFile")
-	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String fileId = "73489";
-		OutputStream ouputStream = null;
-		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
-		InputStream  inputSm = jlfexService.queryProtocolFile(fileId);
-		
-		byte[] bytes = new byte[2048];
-		try{
-		int len = -1;
-		while ((len = inputSm.read(bytes)) != -1) {
-			bytesarray.write(bytes, 0, len);
-		}
-		ouputStream = response.getOutputStream();
-		ouputStream.write(bytesarray.toByteArray());
-		}catch(Exception e){
-			
-	   } finally {
-		try {
-			if (bytesarray != null) {
-				bytesarray.flush();
-				bytesarray.close();
-			}
-			if (ouputStream != null) {
-				ouputStream.flush();
-				ouputStream.close();
-			}
-			if (inputSm != null) {
-				inputSm.close();
-			}
-		} catch (IOException e) {
-			Logger.error("file  Exception ：",e);
-		}
-	}
-		
-	}
-	
+//	@RequestMapping("/queryRepayPlan")
+//	public String queryRepayPlan(Model model) throws Exception {
+//		String id = "17113";
+//		String type = "1";
+//		String jsonOrder = jlfexService.queryRepayPlan(id,type);
+//		System.out.println(jsonOrder);
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/order2pay")
+//	public String order2pay(Model model) throws Exception {
+//		
+//		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
+//		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/queryOrder")
+//	public String queryOrder(Model model) throws Exception {
+//		String orderCode = "2015030102332";
+//		String result  = jlfexService.queryOrderStatus(orderCode);
+//		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
+//		List<OrderVo>  lists = responVo.getContent();
+//		
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/queryFile")
+//	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String fileId = "73489";
+//		OutputStream ouputStream = null;
+//		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
+//		InputStream  inputSm = jlfexService.queryProtocolFile(fileId);
+//		
+//		byte[] bytes = new byte[2048];
+//		try{
+//		int len = -1;
+//		while ((len = inputSm.read(bytes)) != -1) {
+//			bytesarray.write(bytes, 0, len);
+//		}
+//		ouputStream = response.getOutputStream();
+//		ouputStream.write(bytesarray.toByteArray());
+//		}catch(Exception e){
+//			
+//	   } finally {
+//		try {
+//			if (bytesarray != null) {
+//				bytesarray.flush();
+//				bytesarray.close();
+//			}
+//			if (ouputStream != null) {
+//				ouputStream.flush();
+//				ouputStream.close();
+//			}
+//			if (inputSm != null) {
+//				inputSm.close();
+//			}
+//		} catch (IOException e) {
+//			Logger.error("file  Exception ：",e);
+//		}
+//	}
+//		
+//	}
+//	
 	
 	
 	
