@@ -67,22 +67,22 @@
        <div class="bank" style="border-bottom:none; border-top:1px solid #e2e2e2;">
        		<p class="spBank">支持以下银行</p>
             <ul>
-                <li><img src="${app.theme}/public/images/bank/bank01.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank02.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank03.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank04.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank05.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank06.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank07.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank08.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank09.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank10.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank11.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank12.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank13.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank14.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank15.png"></li>
-                <li><img src="${app.theme}/public/images/bank/bank16.png"></li>                
+                <li><img src="${app.theme}/public/images/bank/CMB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/ICBC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/CCB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/BCM.png"></li>
+                <li><img src="${app.theme}/public/images/bank/BOC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/SPDB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/CMBC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/CEB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/ECITIC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/ABC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/PSBC.png"></li>
+                <li><img src="${app.theme}/public/images/bank/PAB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/BOB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/CGB.png"></li>
+                <li><img src="${app.theme}/public/images/bank/BOS.png"></li>
+                <li><img src="${app.theme}/public/images/bank/CIB.png"></li>                
             </ul>
             <div class="clearfix"></div>
        </div>

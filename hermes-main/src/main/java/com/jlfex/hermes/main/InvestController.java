@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +47,7 @@ import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
+import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
@@ -62,6 +64,7 @@ import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
+import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
 import com.jlfex.hermes.service.pojo.yltx.response.OrderPayResponseVo;
@@ -105,6 +108,8 @@ public class InvestController {
 	private UserPropertiesService userPropertiesService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private JlfexOrderService jlfexOrderService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 
@@ -490,6 +495,7 @@ public class InvestController {
 		}
 		String guaranteeType = null;
 		String validFlag = "00";
+		validFlag = validIsAuth(model, validFlag);
 		Loan loan = loanService.loadById(loanid);
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
@@ -510,17 +516,12 @@ public class InvestController {
 				validFlag = "01";
 				model.addAttribute("tipMsg", "提示：债权标有效投标时间为[" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseStartTime()) + "—" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseEndTime()) + "]");
 			}
-		}
+		}	
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication = investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
 		if (!bidAuthentication) {
 			validFlag = "02";
 			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
-		}
-		UserProperties userPro = userPropertiesService.queryByUser(curUser.getId());
-		if (!userPro.getAuthName().equals(Auth.PASS)) {
-			validFlag = "03";
-			model.addAttribute("tipMsg", "提示：您尚且还未进行实名认证");
 		}
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
@@ -548,6 +549,22 @@ public class InvestController {
 		model.addAttribute("guaranteeType", guaranteeType);
 		model.addAttribute("loanKind", loan.getLoanKind());
 		return "invest/info";
+	}
+
+	public String validIsAuth(Model model, String validFlag) throws Exception {
+		AppUser curUser = App.current().getUser();
+		UserProperties userPro = userPropertiesService.queryByUser(curUser.getId());
+		if (!userPro.getAuthName().equals(Auth.PASS)) {
+			validFlag = "03";
+			model.addAttribute("tipMsg", "提示：您尚且还未进行实名认证");
+		}else if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+			validFlag = "04";
+			model.addAttribute("tipMsg", "提示：您尚且还未进行手机认证");
+		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+			validFlag = "05";
+			model.addAttribute("tipMsg", "提示：您尚且还未绑定银行卡");
+		}
+		return validFlag;
 	}
 
 	/**
@@ -735,10 +752,18 @@ public class InvestController {
 		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
+		List<JlfexOrder> jlfexOrders = new ArrayList<JlfexOrder>();
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
 				investSuccessCount = investSuccessCount + 1;
+			}
+			try {
+				if(StringUtils.isNotEmpty(investInfo.getId())){
+				   jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
+				}
+			} catch (Exception e) {
+				Logger.error("获取理财产品异常", e);
 			}
 		}
 		if (allProfitSum == null)
@@ -754,6 +779,7 @@ public class InvestController {
 
 		model.addAttribute("invests", investInfoList);
 		model.addAttribute("nav", "invest");
+		model.addAttribute("jlfexOrders", jlfexOrders);
 		// 返回视图
 		return "invest/mycredit";
 	}
