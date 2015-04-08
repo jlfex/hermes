@@ -1166,3 +1166,35 @@ insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `upd
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('5630749e-d749-11e4-ba26-5590d26eaf24','2015-03-31 10:01:52',NULL,'2015-03-31 10:01:55',NULL,NULL,'apiLog','日志管理','2','@/apiLog/index',NULL,'_main','28f18352-d9af-11e4-bef1-6a2a967171e6','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 insert into `hm_navigation` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `code`, `name`, `order_`, `path`, `subname`, `target`, `parent`, `type`) values('e1e00d9e-d832-11e4-b0b8-000c29285d86','2015-04-01 13:48:12',NULL,'2015-04-01 13:48:16',NULL,NULL,'apiConfig','接口配置','3','@/apiConfig/index',NULL,'_main','28f18352-d9af-11e4-bef1-6a2a967171e6','0aaafbb0-7fb7-11e3-ae10-6cae8b21aeaa');
 
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10000','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'a8587ebe-73f0-11e3-ae10-6cae8b21aeaa','ZJ',50000,50000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10001','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'1d9ebe3a-74bf-11e3-ae10-6cae8b21aeaa','ZJ',200000,500000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10002','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'a858c05e-73f0-11e3-ae10-6cae8b21aeaa','ZJ',200000,500000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10003','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'067ca118-74bf-11e3-ae10-6cae8b21aeaa','ZJ',1000000,NULL);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10004','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'a9045456-d50d-11e4-9e18-e7c00bf6b194','ZJ',20000,20000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10005','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'949aba63-d50d-11e4-9e18-e7c00bf6b194','ZJ',1000000,1000000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10006','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'c05bfdf4-d50d-11e4-9e18-e7c00bf6b194','ZJ',1000000,NULL);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10007','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'b920617c-d50e-11e4-9e18-e7c00bf6b194','ZJ',50000,500000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10008','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'c69819be-d50d-11e4-9e18-e7c00bf6b194','ZJ',1000000,NULL);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10009','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'dcfdaefb-d50d-11e4-9e18-e7c00bf6b194','ZJ',1000000,NULL);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10010','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'d5dffd19-d50d-11e4-9e18-e7c00bf6b194','ZJ',50000,200000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10011','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'b81ea469-d50d-11e4-9e18-e7c00bf6b194','ZJ',50000,50000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10012','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'ce65263e-d50d-11e4-9e18-e7c00bf6b194','ZJ',5000,50000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10013','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'af5604f5-d50e-11e4-9e18-e7c00bf6b194','ZJ',5000,50000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10014','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'e5e1003b-d50d-11e4-9e18-e7c00bf6b194','ZJ',5000,50000);
+insert into `hm_pp_limit` (`id`, `create_time`, `creator`, `update_time`, `updater`, `version`, `bank_id`, `ppOrg`, `single_limit`,`day_total_limit`) 
+values('10015','2015-03-25 14:23:24',NULL,'2015-03-26 14:23:24',NULL,NULL,'f2fb5f5a-d50d-11e4-9e18-e7c00bf6b194','ZJ',1000000,NULL);

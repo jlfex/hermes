@@ -22,6 +22,10 @@
 		<div class="m_fp_bid">
 			<img src="${app.theme}/public/other/images/icon1/myInvest_bid.png" />
 			 投标并支付失败！
+			  <#if err_msg??>
+			    ${err_msg!''}
+			  </#if>
+			  <span> </span>
 			 <span>你可以通过资金明细查询支付结果，也可以通过 我的债权 查询投标结果 </span>
 			 <div><a href="#">资金明细</a>  <a href="#">我的债权</a></div>
 		</div>

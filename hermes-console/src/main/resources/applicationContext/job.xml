@@ -114,7 +114,7 @@
 		<property name="cronExpression" value="0 0 3 * * ?" />
 	</bean>
 
-	<!-- 中金支付查询接口 执行时间：每隔一分钟执行一次 -->
+	<!-- 中金支付查询接口 执行时间：每隔2分钟执行一次 -->
 	<bean id="autoCollectionQueryJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
@@ -124,6 +124,6 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 0/1 * * * ?" />
+		<property name="cronExpression" value="0 0/2 * * * ?" />
 	</bean>
 </beans>

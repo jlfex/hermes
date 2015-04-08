@@ -78,7 +78,7 @@ jQuery(function($) {
 	    			    var loanId = $("#loanid").val();
 	    			    var otherRepay = $("#otherrepayselect").val();
 	    		
-	    				window.location.href="${app}/invest/goJlfexBid?investAmount="+investAmount+"&loanId="+loanid+"&otherRepay="+otherRepay;
+	    				window.location.href="${app}/invest/balInsuff?investAmount="+investAmount+"&loanId="+loanId+"&otherRepay="+otherRepay;
 	    			}
 	    		}
 	    	});
@@ -131,21 +131,33 @@ jQuery(function($) {
 		$('#investamount').blur(function()
 		{
 			var investamount =$("#investamount").val();
-			var loanid =$("#loanid").val();
-			var msg =$('#investamount').siblings("span").text();
-			if(msg.length==1)
-			{
-			  	htmlobj=$.ajax({
-			  			url:'${app}/invest/calmaturegain',
-			  			data: {"investamount":investamount,"loanid":loanid},
+			$.ajax({
+			  			url:'${app}/invest/isLimitValid',
+			  			data: {"investAmount":investamount},
 			  			dataType: "json",
-			  			async:false});
-				$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
-			}
-			else
-			{
-				$("#maturegain").html('');
-			}
+			  			success:function(data) {
+			  					if(data.type == "FAILURE") {
+			  						$("#limitValidResult").html(data.messages[0]);
+			  					} else {
+			  						$("#limitValidResult").html("");
+			  						var loanid =$("#loanid").val();
+									var msg =$('#investamount').siblings("span").text();
+									if(msg.length==0)
+									{
+									  	htmlobj=$.ajax({
+									  			url:'${app}/invest/calmaturegain',
+									  			data: {"investamount":investamount,"loanid":loanid},
+									  			dataType: "json",
+									  			async:false});
+										$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
+									}
+									else
+									{
+										$("#maturegain").html('');
+									}
+			  					}
+			  				}
+			  			});	
 	  });
 });
 
@@ -282,8 +294,8 @@ jQuery(function($) {
                 	</table>
                 	<table>
                 		<tr>
-                			<td  colspan="3" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money_loan">&nbsp;&nbsp;
-							<span class="mv_msg"></span></td>
+                			<td  colspan="2" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money_loan">&nbsp;&nbsp;
+							<span class="mv_msg"></span></td><td><span id="limitValidResult"></span></td>
                 		<tr>
                 		<tr><td class="td_height"><@messages key="invest.yield.to.maturity" />：<span id="maturegain"></span></td><td colspan="2">&nbsp;</td></tr>
                 		<td colspan="3" class="td_ht1"><span class="lighrgray"><@messages key="account.info.user.cash" />：</span><span class="yellow">

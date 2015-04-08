@@ -1,12 +1,22 @@
 package com.jlfex.hermes.console.api.yltx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -37,7 +47,7 @@ public class JlfexControl {
 		int dealSucSize = 0;       //处理成功数
 		int dealFailSize = 0;      //处理失败数
 		int undoSize= 0;           //重复订单，不需处理数
-		String createDate = Calendars.format(HermesConstants.FORMAT_19);
+		String createDate = Calendars.format(HermesConstants.FORMAT_10);
 		QueryFinanceRspVo queryFinanceRspVo = null;
 		try{
 			String jsonOrder = jlfexService.queryFinanceOrder(null, createDate, HermesConstants.JL_PAGE_SIZE, HermesConstants.JL_PAGE_NUM);
@@ -88,32 +98,70 @@ public class JlfexControl {
 		return "credit/importLoan";
 	} 
 	
-	@RequestMapping("/queryRepayPlan")
-	public String queryRepayPlan(Model model) throws Exception {
-		String id = "17113";
-		String type = "1";
-		String jsonOrder = jlfexService.queryRepayPlan(id,type);
-		System.out.println(jsonOrder);
-		return "credit/index";
-	}
-	
-	@RequestMapping("/order2pay")
-	public String order2pay(Model model) throws Exception {
-		
-		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
-		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
-		return "credit/index";
-	}
-	
-	@RequestMapping("/queryOrder")
-	public String queryOrder(Model model) throws Exception {
-		String orderCode = "2015030102332";
-		String result  = jlfexService.queryOrderStatus(orderCode);
-		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
-		List<OrderVo>  lists = responVo.getContent();
-		
-		return "credit/index";
-	}
+//	@RequestMapping("/queryRepayPlan")
+//	public String queryRepayPlan(Model model) throws Exception {
+//		String id = "17113";
+//		String type = "1";
+//		String jsonOrder = jlfexService.queryRepayPlan(id,type);
+//		System.out.println(jsonOrder);
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/order2pay")
+//	public String order2pay(Model model) throws Exception {
+//		
+//		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
+//		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/queryOrder")
+//	public String queryOrder(Model model) throws Exception {
+//		String orderCode = "2015030102332";
+//		String result  = jlfexService.queryOrderStatus(orderCode);
+//		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
+//		List<OrderVo>  lists = responVo.getContent();
+//		
+//		return "credit/index";
+//	}
+//	
+//	@RequestMapping("/queryFile")
+//	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String fileId = "73489";
+//		OutputStream ouputStream = null;
+//		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
+//		InputStream  inputSm = jlfexService.queryProtocolFile(fileId);
+//		
+//		byte[] bytes = new byte[2048];
+//		try{
+//		int len = -1;
+//		while ((len = inputSm.read(bytes)) != -1) {
+//			bytesarray.write(bytes, 0, len);
+//		}
+//		ouputStream = response.getOutputStream();
+//		ouputStream.write(bytesarray.toByteArray());
+//		}catch(Exception e){
+//			
+//	   } finally {
+//		try {
+//			if (bytesarray != null) {
+//				bytesarray.flush();
+//				bytesarray.close();
+//			}
+//			if (ouputStream != null) {
+//				ouputStream.flush();
+//				ouputStream.close();
+//			}
+//			if (inputSm != null) {
+//				inputSm.close();
+//			}
+//		} catch (IOException e) {
+//			Logger.error("file  Exception ：",e);
+//		}
+//	}
+//		
+//	}
+//	
 	
 	
 	

@@ -339,4 +339,13 @@ public class Transaction extends Model {
 		@Element("收入")
 		public static final String IN				= "60";
 	}
+	
+	public static final class Status {
+		@Element("充值成功")
+		public static final String RECHARGE_SUCC = "充值成功";
+		@Element("充值中")
+		public static final String WAIT = "充值中";
+		@Element("充值失败")
+		public static final String RECHARGE_FAIL = "充值失败";
+	}
 }
