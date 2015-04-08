@@ -923,9 +923,16 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/bid2PayResult")
-	public String bid2PayResult(String message, Model model) {
+	public String bid2PayResult(String message, String type, Model model) {
 		App.checkUser();
 		model.addAttribute("message", message);
+		if (type.equals(Type.SUCCESS)) {
+			model.addAttribute("type", "2.png");
+		} else if (type.equals(Type.FAILURE)) {
+			model.addAttribute("type", "3.png");
+		} else {
+			model.addAttribute("type", "4.png");
+		}
 
 		return "invest/bid2PayResult";
 	}

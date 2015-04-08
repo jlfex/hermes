@@ -29,6 +29,7 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.PPOrg;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -42,6 +43,7 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
+import com.jlfex.hermes.model.PPLimit;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -60,6 +62,7 @@ import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
 import com.jlfex.hermes.repository.LoanRepository;
+import com.jlfex.hermes.repository.PPLimitRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserLogRepository;
@@ -97,8 +100,6 @@ import com.jlfex.hermes.service.userAccount.UserAccountService;
 @Service
 @Transactional
 public class InvestServiceImpl implements InvestService {
-	public static int count = 0;
-
 	@Autowired
 	private InvestRepository investRepository;
 
@@ -160,6 +161,8 @@ public class InvestServiceImpl implements InvestService {
 	private CFCAOrderRepository cFCAOrderRepository;
 	@Autowired
 	private ThirdPPService thirdPPService;
+	@Autowired
+	private PPLimitRepository pPLimitRepository;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -926,7 +929,9 @@ public class InvestServiceImpl implements InvestService {
 		AppUser curUser = App.current().getUser();
 		User user = userRepository.findOne(curUser.getId());
 		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
-		if (investAmount.compareTo(bankAccount.getBank().getSingleLimit()) > 0) {
+		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
+		
+		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "超过单笔限额！");
 
@@ -937,7 +942,7 @@ public class InvestServiceImpl implements InvestService {
 		Date endDate = DateUtils.addDays(startDate, 24);
 		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
 
-		if (totalAmount.compareTo(bankAccount.getBank().getDayTotalLimit()) > 0) {
+		if (ppLimit.getDayTotalLimit() != null && totalAmount.compareTo(ppLimit.getDayTotalLimit()) > 0) {
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "超过日累计限额！");
 
@@ -979,20 +984,14 @@ public class InvestServiceImpl implements InvestService {
 			Tx1361Request tx1361Request = this.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
 			response = thirdPPService.invokeTx1361(tx1361Request);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
-				Random random = new Random();
-				int i = random.nextInt(100);
 				BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
-				if (InvestServiceImpl.count == 0) {
+				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
 					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.WAIT);
 					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.WAIT);
 					backMap.put("code", Tx1361Status.IN_PROCESSING.getStatus().toString());
 					backMap.put("msg", "您的投标并支付申请已提交成功，正在确认中！");
 					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.WAIT);
-					InvestServiceImpl.count++;
-				} else if (/*
-							 * response.getStatus() ==
-							 * Tx1361Status.WithholdingSuccess.getOrdinal()
-							 */InvestServiceImpl.count == 1) {
+				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
 					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
 					// 投标冻结
 					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_SUCC);
@@ -1000,7 +999,6 @@ public class InvestServiceImpl implements InvestService {
 					backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
 					backMap.put("msg", "您已投标并支付成功！");
 					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
-					InvestServiceImpl.count++;
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 					backMap.put("msg", "投标并支付失败！");

@@ -1,7 +1,5 @@
 package com.jlfex.hermes.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -37,19 +35,7 @@ public class Bank extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-
-	/**
-	 * 代笔限额
-	 */
-	@Column(name = "single_limit")
-	private BigDecimal singleLimit;
-
-	/**
-	 * 日累计限额
-	 */
-	@Column(name = "day_total_limit")
-	private BigDecimal dayTotalLimit;
-
+	
 	/**
 	 * 读取名称
 	 * 
@@ -137,42 +123,6 @@ public class Bank extends Model {
 	 */
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
-	}
-
-	/**
-	 * 读取单笔限额
-	 * 
-	 * @return
-	 */
-	public BigDecimal getSingleLimit() {
-		return singleLimit;
-	}
-
-	/**
-	 * 设置单笔限额
-	 * 
-	 * @param singleLimit
-	 */
-	public void setSingleLimit(BigDecimal singleLimit) {
-		this.singleLimit = singleLimit;
-	}
-
-	/**
-	 * 读取日累计限额
-	 * 
-	 * @return
-	 */
-	public BigDecimal getDayTotalLimit() {
-		return dayTotalLimit;
-	}
-
-	/**
-	 * 设置日累计限额
-	 * 
-	 * @param dayTotalLimit
-	 */
-	public void setDayTotalLimit(BigDecimal dayTotalLimit) {
-		this.dayTotalLimit = dayTotalLimit;
 	}
 
 	/**
