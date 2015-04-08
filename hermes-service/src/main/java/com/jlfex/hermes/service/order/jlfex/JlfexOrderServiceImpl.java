@@ -36,6 +36,10 @@ public class JlfexOrderServiceImpl implements  JlfexOrderService {
 	public List<JlfexOrder> queryOrderByPayStatus(List<String> satatusList) throws Exception {
 		return  jlfexOrderRepository.findByPayStatusIn(satatusList) ;
 	}
+	@Override
+	public JlfexOrder findByInvest(String investId) throws Exception {
+		return jlfexOrderRepository.findByInvest(investId);
+	}
 	
 	
 

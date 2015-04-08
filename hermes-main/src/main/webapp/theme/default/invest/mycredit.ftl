@@ -31,31 +31,35 @@ jQuery(function($) {
 	<div class="body-sm">
 		<h4>投标记录</h4>
 	
-		<table class="table table-hover">
+		<table class="table table-hover" style="font-size:12px;">
 			<thead>
 				<tr>
-					<th>债权名称</th>
-					<th>投标金额(<@messages key="common.unit.cny" />)</th>
-					<th>年利率</th>
-					<th>期限(天)</th>
-					<th>应收本息(<@messages key="common.unit.cny" />)</th>
-					<th>已收本息(<@messages key="common.unit.cny" />)</th>
-					<th>待收本息(<@messages key="common.unit.cny" />)</th>
-					<th>状态</th>
+					<th style="width:65px;">债权名称</th>
+					<th class="center" style="width:85px;">投标金额(<@messages key="common.unit.cny" />)</th>
+					<th style="width:60px;">年利率</th>
+					<th style="width:60px;">期限(天)</th>
+					<th style="width:85px;">应收本息(<@messages key="common.unit.cny" />)</th>
+					<th style="width:70px;">已收本息(<@messages key="common.unit.cny" />)</th>
+					<th style="width:70px;">待收本息(<@messages key="common.unit.cny" />)</th>
+					<th style="width:70px;">状态</th>
+					<th style="width:70px;">协议</th>
 				</tr>
 			</thead>
 			<tbody>
 			  <#list invests as i>  
 				<tr>
-					<td><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose}</a>
+					<td style="width:65px;"><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose}</a>
 					</td>
 					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
-					<td class="right">${i.rate}</td>
-					<td class="right">${i.period}</td>
+					<td class="right" style="width:60px;">${i.rate}</td>
+					<td class="right" style="width:60px;">${i.period}</td>
 					<td class="right">${i.shouldReceivePI}</td>
 					<td class="right">${i.receivedPI}</td>
 					<td class="right">${i.waitReceivePI}</td>
-					<td class="right">${i.investStatusName}</td>
+					<td class="center" style="width:65px;">${i.investStatusName}</td>
+					<#list jlfexOrders as j> 
+					<td class="center" style="width:120px;">${(j.loanPdfId)!'-'}</br>${(j.guaranteePdfId)!'-'}</td>
+					</#list>
 				</tr>
 				</#list>
 			</tbody>

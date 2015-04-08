@@ -14,6 +14,19 @@
 <script type="text/javascript">
 jQuery(function($) {
     var  validFlag = '${validFlag!''}';
+    if(validFlag == '03'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+       $("#authName_msg").show();
+    }else if(validFlag == '04'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+       $("#authCellphone_msg").show();   
+    }else if(validFlag == '05'){
+       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+       $("#authBankcard_msg").show();        
+    }    
     if(validFlag == '01'){
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
        $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
@@ -21,11 +34,6 @@ jQuery(function($) {
     if(validFlag == '02'){
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
        $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-    }
-    if(validFlag == '03'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-       $("#auth_msg").show();
     }
     
     $('#funanceProtocol').click(function(){
@@ -318,7 +326,10 @@ jQuery(function($) {
 	                		<span class="confirm">
 								<a href="#"  class="m_btn1 bt_red a_middle mv_submit"><@messages key="invest.loan.bid" /></a>
 							</span>
-							&nbsp;&nbsp;<span id="err_msg" ></span><span id="auth_msg" style="color:#F00;display:none;">&nbsp;!&nbsp;&nbsp;&nbsp;点击<a href="${app}/account/index?type=auth" style="text-decoration:underline;">认证中心</a>进行认证</span>
+							&nbsp;&nbsp;<span id="err_msg" ></span>
+							<span id="authName_msg" style="color:#F00;display:none;">&nbsp;!&nbsp;&nbsp;&nbsp;点击<a href="${app}/account/index?type=auth" style="text-decoration:underline;">认证中心</a>完成认证</span>
+							<span id="authCellphone_msg" style="color:#F00;display:none;">&nbsp;!&nbsp;&nbsp;&nbsp;点击<a href="${app}/account/index?type=auth" style="text-decoration:underline;">认证中心</a>完成认证</span>
+							<span id="authBankcard_msg" style="color:#F00;display:none;">&nbsp;!&nbsp;&nbsp;&nbsp;点击<a href="${app}/account/index?type=auth1" style="text-decoration:underline;">银行卡管理</a>完成绑定</span>
 							</td>
 						</tr>
                 	</table>
