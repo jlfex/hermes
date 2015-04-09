@@ -55,7 +55,6 @@ jQuery(function($) {
 	}
 	
 	 $('.confirm').click(function(){
-	 	debugger;
 	  	var investamount =$("#investamount").val();
 	 	var cr = $("#cr").is(':checked');
 	 	if(!cr || investamount.length == 0) {
