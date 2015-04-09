@@ -43,6 +43,8 @@ import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
+import com.jlfex.hermes.model.ApiConfig;
+import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.PPLimit;
@@ -77,6 +79,7 @@ import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
+import com.jlfex.hermes.service.apiLog.ApiLogService;
 import com.jlfex.hermes.service.cfca.CFCAOrderService;
 import com.jlfex.hermes.service.cfca.ThirdPPService;
 import com.jlfex.hermes.service.common.Pageables;
@@ -165,6 +168,8 @@ public class InvestServiceImpl implements InvestService {
 	private ThirdPPService thirdPPService;
 	@Autowired
 	private PPLimitRepository pPLimitRepository;
+	@Autowired
+	private ApiLogService apiLogService;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -406,9 +411,9 @@ public class InvestServiceImpl implements InvestService {
 		// 调用下单并支付接口
 		Map<String, String> orderPayMap = jlfexService.createOrderAndPay(reqVo);
 		if (!HermesConstants.CODE_00.equals(orderPayMap.get("code"))) {
-			 throw new Exception(orderPayMap.get("msg"));
+			throw new Exception(orderPayMap.get("msg"));
 		}
-		return  JSON.parseObject(orderPayMap.get("msg"), OrderPayResponseVo.class);
+		return JSON.parseObject(orderPayMap.get("msg"), OrderPayResponseVo.class);
 	}
 
 	/**
@@ -927,7 +932,7 @@ public class InvestServiceImpl implements InvestService {
 		User user = userRepository.findOne(curUser.getId());
 		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
-		
+
 		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "超过单笔限额！");
@@ -965,64 +970,78 @@ public class InvestServiceImpl implements InvestService {
 		Tx1361Response response = null;
 		Invest invest = null;
 		String txSN = cFCAOrderService.genOrderTxSN();
-		if (updateRecord == 1) {
-			// 判断假如借款金额与已筹金额相等，更新状态为满标
-			if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
-				loan.setStatus(Loan.Status.FULL);
-				loanRepository.save(loan);
-				// 插入借款日志表(满标)
-				this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
-			}
+		// 请求日志
+		Map<String, String> recodeMap = new HashMap<String, String>();
+		ApiLog apiLog = null;
+		try {
+			if (updateRecord == 1) {
+				// 判断假如借款金额与已筹金额相等，更新状态为满标
+				if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
+					loan.setStatus(Loan.Status.FULL);
+					loanRepository.save(loan);
+					// 插入借款日志表(满标)
+					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
+				}
 
-			BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
-			UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
-			UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
+				BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
+				UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
+				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
 
-			Tx1361Request tx1361Request = this.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
-			response = thirdPPService.invokeTx1361(tx1361Request);
-			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
-				BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
-				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
-					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.WAIT);
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.WAIT);
-					backMap.put("code", Tx1361Status.IN_PROCESSING.getStatus().toString());
-					backMap.put("msg", "您的投标并支付申请已提交成功，正在确认中！");
-					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.WAIT);
-				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
-					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
-					// 投标冻结
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_SUCC);
-					transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
-					backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
-					backMap.put("msg", "您已投标并支付成功！");
-					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
+				Tx1361Request tx1361Request = this.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
+				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
+				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
+				apiLog = cFCAOrderService.recordApiLog(recodeMap);
+				response = thirdPPService.invokeTx1361(tx1361Request);
+				if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
+					BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
+					if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
+						invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.WAIT);
+						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.WAIT);
+						backMap.put("code", Tx1361Status.IN_PROCESSING.getStatus().toString());
+						backMap.put("msg", "您的投标并支付申请已提交成功，正在确认中！");
+						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.WAIT);
+					} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+						invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
+						// 投标冻结
+						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_SUCC);
+						transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
+						backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
+						backMap.put("msg", "您已投标并支付成功！");
+						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
+					} else {
+						backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
+						backMap.put("msg", "投标并支付失败！");
+
+						invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FAIL);
+						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_FAIL);
+						loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
+						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FAIL);
+					}
+
+					this.genCFCAOrder(response, invest, investAmount, txSN);
+					this.saveUserLog(investUser);
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
-					backMap.put("msg", "投标并支付失败！");
-
-					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FAIL);
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_FAIL);
+					backMap.put("msg", response.getMessage());
+					this.genCFCAOrder(response, invest, investAmount, txSN);
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
-					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FAIL);
 				}
-				this.genCFCAOrder(response, invest, investAmount, txSN);
-				this.saveUserLog(investUser);
 			} else {
-				backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
-				backMap.put("msg", response.getMessage());
-				this.genCFCAOrder(response, invest, investAmount, txSN);
+				String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
+				Logger.info(var);
+				backMap.put("code", "99");
+				backMap.put("msg", var);
+
 				loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
-
-				return backMap;
 			}
-		} else {
-			String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
-			Logger.info(var);
-			backMap.put("code", "99");
-			backMap.put("msg", var);
+			apiLog.setDealFlag(ApiLog.DealResult.SUC);
+		} catch (Exception e) {
 
-			throw new Exception();
 		}
+
+		apiLog.setResponseMessage(response.getResponsePlainText());
+		apiLog.setResponseTime(new Date());
+		apiLogService.saveApiLog(apiLog);
 
 		return backMap;
 	}
@@ -1079,5 +1098,32 @@ public class InvestServiceImpl implements InvestService {
 		tx1361Request.setIdentificationType("1");
 
 		return tx1361Request;
+	}
+
+	public ApiLog recordApiLog(ApiConfig apiConfig, Map<String, String> map) {
+		ApiLog apiLog = new ApiLog();
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setRequestTime(new Date());
+		apiLog.setDealFlag(ApiLog.DealResult.FAIL);// 默认
+		if (!Strings.empty(map.get("interfaceMethod"))) {
+			apiLog.setInterfaceName(map.get("interfaceMethod"));
+		}
+		if (!Strings.empty(map.get("requestMsg"))) {
+			apiLog.setRequestMessage(map.get("requestMsg"));
+		}
+		if (!Strings.empty(map.get("serialNo"))) {
+			apiLog.setSerialNo(map.get("serialNo"));
+		}
+		if (!Strings.empty(map.get("exception"))) {
+			apiLog.setException(map.get("exception"));
+		}
+		try {
+			return apiLogService.saveApiLog(apiLog);
+		} catch (Exception e) {
+			Logger.error("接口日志对象保存异常：", e);
+			return null;
+		}
 	}
 }

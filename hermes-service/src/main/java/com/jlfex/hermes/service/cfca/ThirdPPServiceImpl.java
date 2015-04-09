@@ -3,6 +3,8 @@ package com.jlfex.hermes.service.cfca;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.Logger;
+
 import cfca.payment.api.system.TxMessenger;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
@@ -22,12 +24,14 @@ public class ThirdPPServiceImpl implements ThirdPPService {
 	@Override
 	public Tx1361Response invokeTx1361(Tx1361Request request) {
 		try {
+			Logger.info("调用中金支付接口，请求消息："+"订单流水号："+request.getTxSN()+"金额："+request.getAmount()+"账户名称："+request.getAccountName());
 			request.process();
 
 			TxMessenger messenger = new TxMessenger();
 			String[] respMsg = messenger.send(request.getRequestMessage(), request.getRequestSignature());
 
 			Tx1361Response response = new Tx1361Response(respMsg[0], respMsg[1]);
+			Logger.info("中金支付返回信息："+ response.getResponsePlainText());
 
 			return response;
 		} catch (Exception e) {

@@ -55,12 +55,17 @@ jQuery(function($) {
 	}
 	
 	 $('.confirm').click(function(){
+	  	var investamount =$("#investamount").val();
+	 	var cr = $("#cr").is(':checked');
+	 	if(!cr || investamount.length == 0) {
+	 		return;
+	 	}
 	    var loanKind = '${loanKind!''}' ;
 	    if(validFlag == 'false'){
 	       return ;
 	    }
 	    if(loanKind == '03'){
-	       var investamount =$("#investamount").val();
+	     
 		   var loanid =$("#loanid").val();
 	       window.location.href="${app}/invest/goJlfexBid?investamount="+investamount+"&loanid="+loanid;
 	    }else{

@@ -59,7 +59,7 @@
         <p>还需支付金额：<span class="colorred fs_18">${needAmount}</span> 元</p>
         <p class="mtb_30px">
         	<a href="#" class="m_btn3 m_bg1" id="confirm">确认</a>
-            <a href="#" class="m_btn3 m_bg2 ml_20px" id="Button2">取消</a>
+            <a href="#" class="m_btn3 m_bg2 ml_20px" id="Button2" onclick="window.history.go(-1)">取消</a>
         </p>   
 	</div>
 </div>

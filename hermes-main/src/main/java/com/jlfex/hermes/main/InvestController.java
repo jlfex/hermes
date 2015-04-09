@@ -963,9 +963,9 @@ public class InvestController {
 	public String bid2PayResult(String message, String type, Model model) {
 		App.checkUser();
 		model.addAttribute("message", message);
-		if (type.equals(Type.SUCCESS)) {
+		if (type.equals(Type.SUCCESS.name())) {
 			model.addAttribute("type", "2.png");
-		} else if (type.equals(Type.FAILURE)) {
+		} else if (type.equals(Type.FAILURE.name())) {
 			model.addAttribute("type", "3.png");
 		} else {
 			model.addAttribute("type", "4.png");

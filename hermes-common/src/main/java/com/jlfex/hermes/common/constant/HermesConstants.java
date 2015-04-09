@@ -84,6 +84,12 @@ public final class HermesConstants {
 	public  static final String TYPE_ASSET_REPAY_PLAN = "2";                       //资产还款计划
 	public  static final String TYPE_ORDER_REPAY_PLAN = "3";                       //订单还款计划
 	
+	//中金接口
+	/**
+	 * 单笔代收
+	 */
+	public static final String ZJ_INTERFACE_TX1361 = "Tx1361";
+	
 	/**
 	 * 订单状态
 	 */
