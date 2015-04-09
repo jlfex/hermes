@@ -147,15 +147,25 @@ $(function(){
 						<td class="td_04"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
                         <td class="td_04">${l.rate}</td>
                         <td class="td_04">${l.period}天</td>
-                        
-                        <td class="td_04">
-                            <div class="layer_box">
-                                <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
-                                <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
-                            </div>
-                        </td>
-                       <td class="td_04">${l.remain} <@messages key="common.unit.cny" /></td>
-                      <td class="td_04"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                        <#if l.loanKind == '03' && l.outOfDate >
+	                         <td class="td_04">
+	                            <div class="layer_box">
+	                                <div class="layer1">100</div>
+	                                <div class="layer2" style="height:100"></div>
+	                            </div>
+	                        </td>
+		                    <td class="td_04">0<@messages key="common.unit.cny" /></td>
+		                    <td class="td_04"><a class="i_btn1 i_bg2" >${l.statusName}</a></td>
+                        <#else>
+	                         <td class="td_04">
+	                            <div class="layer_box">
+	                                <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
+	                                <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
+	                            </div>
+	                        </td>
+		                    <td class="td_04">${l.remain} <@messages key="common.unit.cny" /></td>
+		                    <td class="td_04"><a class="i_btn1 i_bg1"  data-id="${l.id}" href="#">${l.statusName}</a> </td>
+                        </#if>
 					</tr>
 					</#list>
                 </table>

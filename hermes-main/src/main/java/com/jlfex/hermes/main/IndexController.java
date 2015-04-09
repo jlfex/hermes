@@ -23,10 +23,6 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
  * 索引控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-18
- * @since 1.0
  */
 @Controller
 public class IndexController {
@@ -54,13 +50,13 @@ public class IndexController {
 	@RequestMapping("/index")
 	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
-		List<String> normalKind = new ArrayList<String>();
-		normalKind.add(Loan.LoanKinds.NORML_LOAN);
-		model.addAttribute("loans", loanService.findForIndex(normalKind));
-		normalKind.clear();
-		normalKind.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
-		normalKind.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
-		model.addAttribute("assignLoans", loanService.findForIndex(normalKind));
+		List<String> loanKindList = new ArrayList<String>();
+		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
+		model.addAttribute("loans", loanService.findForIndex(loanKindList));
+		loanKindList.clear();
+		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		model.addAttribute("assignLoans", loanService.findForIndex(loanKindList));
 		model.addAttribute("bannerPicture", contentService.findOneByCode(HermesConstants.INDEX_BANNER));
 		model.addAttribute("investPicture", contentService.findOneByCode(HermesConstants.INDEX_INVEST));
 		model.addAttribute("loanPicture", contentService.findOneByCode(HermesConstants.INDEX_LOAN));
