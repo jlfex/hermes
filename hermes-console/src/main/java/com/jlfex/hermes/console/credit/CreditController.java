@@ -139,9 +139,16 @@ public class CreditController {
 	 */
 	@RequestMapping("/detail/{id}")
 	public String detail(@PathVariable("id") String id, Model model) {
+		
 		Creditor creditor = new Creditor();
 		try {
-			creditor = creditorService.loadById(id);
+			 creditor = creditorService.loadById(id);
+			 List<CrediteInfo> lists = creditInfoService.findByCreditor(creditor);
+			 if(lists!= null && lists.size() >0){
+				 if(CrediteInfo.CreditKind.YLTX_API.equals(lists.get(0).getCreditKind())){
+					model.addAttribute("creditorKind", CrediteInfo.CreditKind.YLTX_API);
+				 }
+			 }
 		} catch (Exception e) {
 			Logger.error("债权人 新增异常：", e);
 		}

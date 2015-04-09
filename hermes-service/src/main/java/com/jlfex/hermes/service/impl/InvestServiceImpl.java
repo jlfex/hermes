@@ -432,7 +432,7 @@ public class InvestServiceImpl implements InvestService {
 			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
-			return resultFlag;
+			return "投标失败,订单信息为空";
 		}
 		Logger.info("易联债权标投标:开始 ：loanNo=" + loan.getLoanNo() + ", 下单并支付接口返回:订单状态=" + responseVo.getOrderStatus() + ",支付状态=" + responseVo.getPayStatus());
 		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
@@ -450,7 +450,7 @@ public class InvestServiceImpl implements InvestService {
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
 			Logger.info("撤单成功!");
-			return resultFlag;
+			return "支付失败，已撤单";
 		}
 		// 2:成功
 		Invest invest = null;
