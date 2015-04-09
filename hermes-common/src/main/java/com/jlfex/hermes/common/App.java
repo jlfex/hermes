@@ -12,9 +12,6 @@ import com.jlfex.hermes.common.utils.Strings;
 /**
  * 应用信息
  * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public abstract class App {
 

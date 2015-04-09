@@ -296,6 +296,8 @@ public class InvestController {
 			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
 		} else {
 			bankAccount = bankAccountList.get(0);
+			String account = bankAccount.getAccount();
+			bankAccount.setAccount("*"+account.substring(account.length()-4));
 			if (Strings.empty(bankAccount.getName()) || Strings.empty(bankAccount.getBank().getName()) || Strings.empty(bankAccount.getDeposit()) || Strings.empty(bankAccount.getAccount())) {
 				Logger.info("银行卡绑定认证：信息不完整 或没有通过绑卡认证。");
 				bankAccount = null;
@@ -328,7 +330,6 @@ public class InvestController {
 	@RequestMapping("/jlfexBid")
 	public String jlfexBid(String loanId, String investAmount, Model model) throws Exception {
 		App.checkUser();
-		String resultView = "";
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount);
@@ -341,15 +342,22 @@ public class InvestController {
 			Logger.error(e.getMessage());
 			error_Msg = e.getMessage();
 		}
+		String backInfo = null;
+		String icon = null;
 		if ("00".equals(flag)){
-			resultView = "invest/bidAndPaySuc";
+			icon = "2.png";
+			backInfo = "您已投标并支付成功!";
 		} else if ("01".equals(flag)) {
-			resultView = "invest/bidAndPayWait";
-		} else {
-			resultView = "invest/bidAndPayFail";
+			icon = "4.png";
+			backInfo = "  您的投标并支付申请已经提交成功，正在确认中!";
+		}else{
+			icon = "3.png";
+			backInfo = "投标并支付失败！";
 			model.addAttribute("err_msg", "错误提示:"+error_Msg);
 		}
-		return resultView;
+		model.addAttribute("backInfo", backInfo);
+		model.addAttribute("icon", icon);
+		return "invest/bidAndPayResult";
 	}
 
 	/**
