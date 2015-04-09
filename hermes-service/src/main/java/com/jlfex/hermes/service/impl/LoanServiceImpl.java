@@ -102,10 +102,6 @@ import com.jlfex.hermes.service.repay.RepayMethod;
 /**
  * 
  * 借款业务实现
- * 
- * @author Ray
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 @Service
 @Transactional

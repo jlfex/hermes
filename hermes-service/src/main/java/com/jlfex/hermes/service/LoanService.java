@@ -21,9 +21,6 @@ import com.jlfex.hermes.service.pojo.LoanUserInfo;
 /**
  * 借款业务接口
  * 
- * @author ultrafrog
- * @version 1.0, 2013-12-11
- * @since 1.0
  */
 public interface LoanService {
 

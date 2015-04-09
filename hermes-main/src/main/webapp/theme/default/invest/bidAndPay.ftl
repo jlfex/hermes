@@ -52,7 +52,7 @@ jQuery(function($){
                 <div class="title">投标并支付</div>
                     <div class="related-bank">
                         <span class="bank-title">关联银行卡</span>
-                        <span class="bank-name"><img src="${app.theme}/public/images/bank/bank01.png" width="142" height="41" /></span>	
+                        <span class="bank-name"><img src="${app.theme}/public/images/bank/${bankAccount.bank.logo!''}" width="142" height="41" /></span>	
                         <span class="bank-num">${(bankAccount.account)!''}</span>
                     </div>
                     <div class="block">

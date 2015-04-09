@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,13 +15,9 @@ import com.jlfex.hermes.model.User;
 /**
  * 
  * 借款信息仓库
- * 
- * @author Ray
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 @Repository
-public interface LoanRepository extends JpaRepository<Loan, String> {
+public interface LoanRepository extends JpaRepository<Loan, String> , JpaSpecificationExecutor<Loan> {
 
 	/**
 	 * 通过状态查询借款
@@ -99,4 +96,6 @@ public interface LoanRepository extends JpaRepository<Loan, String> {
 	 */
 	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2  and t.status !='30' ")
 	public List<Loan> findByCreditInfoAndLoanKind(String creditInfoId, String loanKind );
+	
+	
 }
