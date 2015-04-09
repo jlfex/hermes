@@ -10,11 +10,13 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Invest;
+import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
+import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
@@ -40,6 +42,8 @@ public class ScanJlfexWaitOrderJob extends Job {
     private InvestService investService;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+	private LoanNativeRepository loanNativeRepository;
 	
 	@Override
 	public Result run() {
@@ -66,11 +70,14 @@ public class ScanJlfexWaitOrderJob extends Job {
 						String orderDealStatus = null;
 						if(HermesConstants.PAY_SUC.equals(vo.getPayStatus().trim())){
 							//支付成功
+							Loan loan = order.getInvest().getLoan();
+							//更新投标进度
+							loanNativeRepository.updateProceeds(loan.getId(), order.getOrderAmount());
 							transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE,investUser , UserAccount.Type.JLFEX_FEE, order.getOrderAmount(),investUser.getId() , "JLfex代扣充值成功");
-							transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), order.getOrderAmount(), order.getInvest().getLoan().getId(), "投标冻结");
+							transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), order.getOrderAmount(), loan.getId(), "投标冻结");
 							Logger.info("资金流水记录成功  理财ID investId="+order.getInvest().getId());
 							//保存操作日志
-							investService.saveLoanLog(investUser, order.getOrderAmount(), order.getInvest().getLoan(), LoanLog.Type.INVEST, "投标成功");
+							investService.saveLoanLog(investUser, order.getOrderAmount(), loan, LoanLog.Type.INVEST, "投标成功");
 							investService.saveUserLog(investUser);	
 							investStatus = Invest.Status.FREEZE;
 							payStatus = HermesConstants.PAY_SUC;

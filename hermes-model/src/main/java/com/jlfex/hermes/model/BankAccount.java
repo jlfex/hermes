@@ -12,10 +12,6 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 银行帐号信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_bank_account")

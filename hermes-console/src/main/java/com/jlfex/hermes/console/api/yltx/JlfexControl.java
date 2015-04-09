@@ -47,6 +47,7 @@ public class JlfexControl {
 		int dealSucSize = 0;       //处理成功数
 		int dealFailSize = 0;      //处理失败数
 		int undoSize= 0;           //重复订单，不需处理数
+		int invalidSize = 0;           //无效的理财产品
 		String createDate = Calendars.format(HermesConstants.FORMAT_10);
 		QueryFinanceRspVo queryFinanceRspVo = null;
 		try{
@@ -73,6 +74,12 @@ public class JlfexControl {
 					 Logger.info("理财产品id="+obj.getUniqId()+", 状态为="+obj.getStatus()+",不进行处理");
 					continue ;
 				}
+				int assetSize = obj.getAssetsList().size();
+				if(assetSize>1){
+					invalidSize ++ ;
+					Logger.info("业务规则：只同步含一个资产的理财产品，理财产品id="+obj.getUniqId()+",含有子资产数="+assetSize);
+					continue ;
+				}
 				String  resultCode = jlfexService.sellCreditDeal(obj);
 				if("00".equals(resultCode)){
 					resultVal = "发售失败";
@@ -94,7 +101,7 @@ public class JlfexControl {
 				continue;
 			}
 		}
-		model.addAttribute("synchResult", "本次同步理财产品总数:"+financeOrderSize+"，发售成功数："+dealSucSize+",发售失败数:"+dealFailSize+"，不需重复发售数:"+undoSize);
+		model.addAttribute("synchResult", "本次同步理财产品总数:"+financeOrderSize+"，发售成功数："+dealSucSize+",发售失败数:"+dealFailSize+"，不需重复发售数:"+undoSize+",不符合业务规则数："+invalidSize);
 		return "credit/importLoan";
 	} 
 	

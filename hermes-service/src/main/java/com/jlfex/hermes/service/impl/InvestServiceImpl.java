@@ -76,6 +76,7 @@ import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.repository.n.LoanNativeRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.InvestService;
+import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
@@ -97,10 +98,6 @@ import com.jlfex.hermes.service.userAccount.UserAccountService;
 /**
  * 
  * 理财业务实现
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 @Service
 @Transactional
@@ -170,6 +167,8 @@ public class InvestServiceImpl implements InvestService {
 	private PPLimitRepository pPLimitRepository;
 	@Autowired
 	private ApiLogService apiLogService;
+	@Autowired
+	private LoanService loanService;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -393,6 +392,11 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
+		//判断标剩余金额是否足够
+		BigDecimal  remain = new BigDecimal(loan.getRemain().trim());
+		if(remain.compareTo(investAmount) < 0){
+			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
+		}
 		// 判断假如借款金额与已筹金额相等，更新状态为满标
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 			loan.setStatus(Loan.Status.FULL);
@@ -430,10 +434,6 @@ public class InvestServiceImpl implements InvestService {
 			saveUserLog(investUser);
 			return resultFlag;
 		}
-		int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
-		if (updateRecord != 1) {
-			throw new Exception("投标失败,当前标 可投金额不足,投标金额: " + investAmount + " > 可投金额：" + loan.getAmount().subtract(loan.getProceeds()));
-		}
 		Logger.info("易联债权标投标:开始 ：loanNo=" + loan.getLoanNo() + ", 下单并支付接口返回:订单状态=" + responseVo.getOrderStatus() + ",支付状态=" + responseVo.getPayStatus());
 		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
 		// 1:撤单
@@ -464,7 +464,11 @@ public class InvestServiceImpl implements InvestService {
 			saveUserLog(investUser);
 			resultFlag = "00";
 			Logger.info("资金流水记录成功  理财ID investId=" + invest.getId());
-		} else {
+			int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
+			if (updateRecord != 1) {
+				throw new Exception("投标失败,当前标 可投金额不足,投标金额: " + investAmount + " > 可投金额：" + loan.getAmount().subtract(loan.getProceeds()));
+			}
+		}else{
 			// 3:处理中
 			// 保存理财信息
 			resultFlag = "01";
@@ -483,6 +487,7 @@ public class InvestServiceImpl implements InvestService {
 			loanRepository.save(loan);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 		}
+		
 		return resultFlag;
 	}
 
