@@ -14,7 +14,7 @@ public class CFCAPaymentInitListener implements ServletContextListener {
 		Logger.info("开始初始化中金支付环境");
 		try {
 			// 初始化支付环境
-			String path = Class.class.getClass().getResource("/").getPath() + PAYMENT_CONFIG_PATH;
+			String path = getClass().getClassLoader().getResource("/").getPath() + PAYMENT_CONFIG_PATH;
 			PaymentEnvironment.initialize(path);
 		} catch (Exception e) {
 			Logger.error("初始化中金支付环境异常:", e);
