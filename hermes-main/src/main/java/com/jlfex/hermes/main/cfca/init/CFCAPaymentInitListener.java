@@ -11,10 +11,10 @@ public class CFCAPaymentInitListener implements ServletContextListener {
 	private static final String PAYMENT_CONFIG_PATH = "payment";
 
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		Logger.info("开始初始化中金支付环境");
+		Logger.info("开始初始化中金支付环境了");
 		try {
 			// 初始化支付环境
-			String path = Class.class.getClass().getResource("/").getPath() + PAYMENT_CONFIG_PATH;
+			String path = getClass().getClassLoader().getResource("/").getPath() + PAYMENT_CONFIG_PATH;
 			Logger.info("中金配置文件路径："+path);
 			PaymentEnvironment.initialize(path);
 		} catch (Exception e) {
@@ -26,9 +26,4 @@ public class CFCAPaymentInitListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(Class.class.getClass().getResource("/").getPath() + PAYMENT_CONFIG_PATH);
-	}
-
 }
