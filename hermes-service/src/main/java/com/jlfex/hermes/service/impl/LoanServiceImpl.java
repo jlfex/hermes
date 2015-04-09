@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -610,7 +611,7 @@ public class LoanServiceImpl implements LoanService {
 			// 普通标
 			loan.setStatus(Loan.Status.AUDIT_FIRST);
 			loan.setProceeds(BigDecimal.ZERO);
-			loan.setDeadline(loan.getProduct().getDeadline());
+			loan.setDeadline(loan.getProduct().getDeadline().toString());
 			loan.setManageFee(loan.getProduct().getManageFee());
 			loan.setManageFeeType(loan.getProduct().getManageFeeType());
 		}
@@ -686,6 +687,17 @@ public class LoanServiceImpl implements LoanService {
 		info.setProgress(String.valueOf(loan.getProgress()));
 		info.setStatus(Strings.equals(Loan.Status.BID, loan.getStatus()) ? LoanInfo.Status.BID : LoanInfo.Status.COMPLETED);
         info.setApplicationNo(loan.getLoanNo());
+        info.setLoanKind(loan.getLoanKind());
+        if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())){
+        	Calendar deadDate = Calendar.getInstance();
+            try {
+    			deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, loan.getDeadline()));
+    		} catch (ParseException e) {
+    			Logger.error("债权表判断是否过期异常",e);
+    		}
+    		Calendar nowDate = Calendar.getInstance();
+            info.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
+        }
 		return info;
 	}
 

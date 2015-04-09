@@ -16,7 +16,29 @@
 		<td class="th_04"><a href="${app}/invest/info?loanid=${l.id}">${l.purpose!'-'}</a></td>
 		<td class="th_04">${l.rate}</td>
 		<td class="th_04">${l.period}天</td>
-		<td class="th_04">
+		<#if l.loanKind == '03' && l.outOfDate >
+	       <td class="td_04">
+	        <div class="layer_box">
+	        <div class="layer1">100</div>
+	        <div class="layer2" style="height:100"></div>
+	       </div>
+	       </td>
+		   <td class="td_04">0<@messages key="common.unit.cny" /></td>
+		   <td class="td_04"><a class="i_btn1 i_bg2" >
+		        <#if l.status=="10">
+				    <@messages key="invest.loan.bid" /> 
+				<#elseif l.status=='11'>
+				   <@messages key="invest.loan.full.scale" />
+				<#elseif l.status=='12'>
+				     <@messages key="invest.loan.full.repayment" />
+				<#elseif l.status=='99'>
+				     完成
+				<#else>
+				   无
+				</#if>
+		   </a></td>
+        <#else>
+           <td class="th_04">
 			<div class="layer_box">
                 <div class="layer1"><@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/></div>
                 <div class="layer2" style="height:<@percent total="${l.amount!'0'}" remain="${l.remain!'0'}"/>"></div>
@@ -35,6 +57,7 @@
 				<#else>
 				</#if>
 		</td>
+		</#if>
 	</tr>
 	</#list>
 </table>

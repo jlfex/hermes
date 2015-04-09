@@ -641,7 +641,7 @@ public class JlfexServiceImpl implements JlfexService {
 		loan.setRepay(repay);
 		loan.setAmount(order.getLimit());
 		loan.setPeriod(Integer.parseInt(order.getTimeLimit().replace("D", "").trim()));
-		loan.setDeadline(Integer.parseInt(order.getTimeLimit().replace("D", "").trim()));
+		loan.setDeadline(Calendars.format(HermesConstants.FORMAT_19, order.getRaiseEndTime()));
 		loan.setRate(order.getInterestRate());
 		loan.setPurpose(order.getFinanceProductName());
 		loan.setDescription(order.getFinanceProductName());

@@ -19,10 +19,6 @@ import com.jlfex.hermes.common.utils.Numbers;
 
 /**
  * 借款信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_loan")
@@ -73,7 +69,7 @@ public class Loan extends Model {
 	
 	/** 招标期限 */
 	@Column(name = "deadline")
-	private Integer deadline;
+	private String deadline;
 	
 	/** 发布日期 */
 	@Column(name = "datetime")
@@ -310,26 +306,15 @@ public class Loan extends Model {
 		this.rate = rate;
 	}
 	
-	/**
-	 * 读取招标期限
-	 * 
-	 * @return
-	 * @see #deadline
-	 */
-	public Integer getDeadline() {
+	
+	public String getDeadline() {
 		return deadline;
 	}
-	
-	/**
-	 * 设置招标期限
-	 * 
-	 * @param deadline
-	 * @see #deadline
-	 */
-	public void setDeadline(Integer deadline) {
+
+	public void setDeadline(String deadline) {
 		this.deadline = deadline;
 	}
-	
+
 	/**
 	 * 读取发布日期
 	 * 

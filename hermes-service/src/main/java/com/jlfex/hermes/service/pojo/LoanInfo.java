@@ -1,6 +1,7 @@
 package com.jlfex.hermes.service.pojo;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.jlfex.hermes.common.dict.Dicts;
@@ -9,18 +10,8 @@ import com.jlfex.hermes.model.Loan;
 
 /**
  * 借款信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-30
- * @since 1.0
  */
-/**
- * 
- * 
- * @author Aether
- * @version 1.0, 2014-1-27
- * @since 1.0
- */
+
 public class LoanInfo implements Serializable {
 
 	private static final long serialVersionUID = 2738596796196493682L;
@@ -78,6 +69,11 @@ public class LoanInfo implements Serializable {
 
 	/** 借款日期 */
 	private Date datetime;
+	//标类型
+	private String loanKind;
+	//招标截止期限
+	private boolean outOfDate;
+	
 	/**
 	 * 读取编号
 	 * 
@@ -399,6 +395,7 @@ public class LoanInfo implements Serializable {
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
+	
 
 	/**
 	 * 读取状态名称
@@ -409,12 +406,27 @@ public class LoanInfo implements Serializable {
 		return Dicts.name(status, Loan.Status.class);
 	}
 	
+	
+	public String getLoanKind() {
+		return loanKind;
+	}
+
+	public void setLoanKind(String loanKind) {
+		this.loanKind = loanKind;
+	}
+
+
+	public boolean isOutOfDate() {
+		return outOfDate;
+	}
+
+	public void setOutOfDate(boolean outOfDate) {
+		this.outOfDate = outOfDate;
+	}
+
+
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-30
-	 * @since 1.0
 	 */
 	public static final class Status {
 		

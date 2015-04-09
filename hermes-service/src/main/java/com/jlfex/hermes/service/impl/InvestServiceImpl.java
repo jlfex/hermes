@@ -2,6 +2,7 @@ package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,6 +33,7 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.PPOrg;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
+import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.BankAccount;
@@ -882,8 +884,19 @@ public class InvestServiceImpl implements InvestService {
 			if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)) {
 				String purposeStr = String.valueOf(object[11]);
 				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
+				if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(String.valueOf(object[13]))){
+					Calendar deadDate = Calendar.getInstance();
+		            try {
+		    			deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
+		    		} catch (ParseException e) {
+		    			Logger.error("债权表判断是否过期异常",e);
+		    		}
+		    		Calendar nowDate = Calendar.getInstance();
+		    		loanInfo.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
+				}
 			}
 			loanInfo.setApplicationNo(String.valueOf(object[12]));
+			loanInfo.setLoanKind(String.valueOf(object[13]));
 			loans.add(loanInfo);
 		}
 		// 返回结果

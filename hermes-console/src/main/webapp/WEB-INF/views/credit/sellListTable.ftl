@@ -49,7 +49,7 @@
 	                                   <#if l.status == '00' &&  !l.outOfDate>
 	                                   <a href="#" data-url="${app}/credit/goSell/${l.id}"  data-target="main">发售</a>
 	                                   <#else>
-	                                   <span style="color:#CDCDCD">发售</a>
+	                                   <span style="color:#CDCDCD">发售</span>
 	                                   </#if>
 	                            </#if>
 	                        </td>    
