@@ -45,4 +45,12 @@ public interface CreditInfoRepository extends JpaRepository<CrediteInfo, String>
 	 * @return
 	 */
 	public CrediteInfo  findByCrediteCode(String crediteCode);
+	
+	/**
+	 * 根据：债权人  获取债权信息
+	 * @param creditor
+	 * @param crediteCode
+	 * @return
+	 */
+	public  List<CrediteInfo>  findByCreditor(Creditor creditor);
 }

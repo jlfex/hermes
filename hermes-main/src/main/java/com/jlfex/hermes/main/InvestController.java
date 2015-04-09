@@ -530,7 +530,6 @@ public class InvestController {
 		}
 		String guaranteeType = null;
 		String validFlag = "00";
-		validFlag = validIsAuth(model, validFlag);
 		Loan loan = loanService.loadById(loanid);
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
@@ -558,6 +557,7 @@ public class InvestController {
 			validFlag = "02";
 			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
 		}
+		validFlag = validIsAuth(model, validFlag); //认证
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -811,7 +811,6 @@ public class InvestController {
 		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
 		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
 		model.addAttribute("successCount", investSuccessCount);
-
 		model.addAttribute("invests", investInfoList);
 		model.addAttribute("nav", "invest");
 		model.addAttribute("jlfexOrders", jlfexOrders);

@@ -49,13 +49,13 @@
 						<ul>
 							<li><a href="#" class="icon loan" data-url="${app}/loan/myloan" data-target="main"><@messages key="account.biz.loan" /></a></li>
 							<li><a href="#" class="icon invest" data-url="${app}/invest/myinvest" data-target="main"><@messages key="account.biz.invest" /></a></li>
-							<li><a href="#" class="icon invest" data-url="${app}/invest/myCredit" data-target="main">我的债权</a></li>
+							<li><a href="#" class="icon invest mycredit" data-url="${app}/invest/myCredit" data-target="main">我的债权</a></li>
 						</ul>
 					</div>
 					<div class="item">
 						<h4><@messages key="account.fund" /></h4>
 						<ul>
-							<li><a href="#" class="icon detail" data-url="${app}/account/detail" data-target="main"><@messages key="account.fund.detail" /></a></li>
+							<li><a href="#" class="icon detail myfund" data-url="${app}/account/detail" data-target="main"><@messages key="account.fund.detail" /></a></li>
 							<li><a href="#" class="icon charge" data-url="${app}/account/charge" data-target="main"><@messages key="account.fund.charge" /></a></li>
 							<li><a href="#" class="icon withdraw" data-url="${app}/account/withdraw" data-target="main"><@messages key="account.fund.withdraw" /></a></li>
 						</ul>

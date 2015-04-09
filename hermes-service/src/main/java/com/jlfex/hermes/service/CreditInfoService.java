@@ -144,4 +144,8 @@ public interface CreditInfoService {
 	 * @throws Exception
 	 */
 	public CrediteInfo findByCrediteCode(String crediteCode) throws Exception;
+	/**
+	 * 根据：债权人 获取债权信息
+	 */
+	public List<CrediteInfo> findByCreditor(Creditor creditor);
 }

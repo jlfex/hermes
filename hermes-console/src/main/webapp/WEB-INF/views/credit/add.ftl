@@ -111,9 +111,13 @@
 				    <textarea class="form-control" rows="5" cols="3" name="remark" id="description">${(creditor.remark)!}</textarea>
 				</div>
 			</div>
+			
 			<div class="row hm-row form-group">
 				<div class="col-xs-offset-1 col-xs-3">
-					<button id="pushIn" type="button" class="btn btn-promary">提交</button>
+				     <#if creditorKind?? && creditorKind=='01' >
+				     <#else>
+				      <button id="pushIn" type="button" class="btn btn-promary">提交</button>
+				     </#if>
 					<button id="retreat" type="button" class="btn btn-promary">取消</button>
 				</div>
 			</div>

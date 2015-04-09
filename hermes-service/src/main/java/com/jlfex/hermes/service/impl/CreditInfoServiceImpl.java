@@ -365,4 +365,9 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	public CrediteInfo findByCrediteCode(String crediteCode) throws Exception {
 		return creditInfoRepository.findByCrediteCode(crediteCode);
 	}
+	
+	@Override
+	public List<CrediteInfo> findByCreditor(Creditor creditor)  {
+		return creditInfoRepository.findByCreditor(creditor);
+	}
 }
