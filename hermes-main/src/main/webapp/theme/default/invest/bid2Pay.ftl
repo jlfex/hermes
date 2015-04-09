@@ -34,7 +34,7 @@ jQuery(function($) {
      		type:"POST",
      		dataType:'json',
      		success:function(data) {
-     			 window.location.href="${app}/invest/bid2PayResult?message="+data.messages[0]+"&type="+data.TYPE;
+     			 window.location.href="${app}/invest/bid2PayResult?message="+data.messages[0]+"&type="+data.type;
      		}
      	});
      });
