@@ -3,6 +3,8 @@ package com.jlfex.hermes.service.cfca;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.Logger;
+
 import cfca.payment.api.system.TxMessenger;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
@@ -18,7 +20,6 @@ import cfca.payment.api.tx.Tx1362Response;
 @Service
 @Transactional
 public class ThirdPPServiceImpl implements ThirdPPService {
-
 	@Override
 	public Tx1361Response invokeTx1361(Tx1361Request request) {
 		try {
@@ -26,8 +27,8 @@ public class ThirdPPServiceImpl implements ThirdPPService {
 
 			TxMessenger messenger = new TxMessenger();
 			String[] respMsg = messenger.send(request.getRequestMessage(), request.getRequestSignature());
-
 			Tx1361Response response = new Tx1361Response(respMsg[0], respMsg[1]);
+			Logger.info("中金返回结果"+response.getResponsePlainText());
 
 			return response;
 		} catch (Exception e) {
