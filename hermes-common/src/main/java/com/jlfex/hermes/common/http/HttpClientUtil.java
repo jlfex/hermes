@@ -1,8 +1,12 @@
 package com.jlfex.hermes.common.http;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -248,17 +252,24 @@ public class HttpClientUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public static InputStream doFileGetHttps(String url) throws  Exception {
+	public static ByteArrayOutputStream doFileGetHttps(String url) throws  Exception {
 		initSSLContext();
 		HttpGet httpGet = new HttpGet(url);
 		HttpResponse response = httpClient.execute(httpGet);
 		int responseCode = response.getStatusLine().getStatusCode();
 		Logger.info("httpClient get 响应状态responseCode="+responseCode+", 请求 URL="+url);
-		HttpEntity respEntity = response.getEntity();
 		if(responseCode == RSP_200 || responseCode == RSP_400){
-			InputStream ins = respEntity.getContent();
+		    InputStream inputStream = response.getEntity().getContent();  
+		    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();  
+		    byte buff[] = new byte[4096];  
+		    int counts = 0;  
+		    while ((counts = inputStream.read(buff)) != -1) {  
+		    	outputStream.write(buff, 0, counts);  
+		    }  
+		    outputStream.flush();  
+		    outputStream.close();  
 			httpGet.releaseConnection();
-			return ins;
+			return outputStream;
 		}else{
 			httpGet.releaseConnection();
 			throw new Exception("接口请求异常：接口响应状态="+responseCode);
