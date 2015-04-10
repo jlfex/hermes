@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.api.yltx;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public interface JlfexService {
 	 * @param fileId  最大长度19
 	 * @throws Exception
 	 */
-	public InputStream queryProtocolFile(String fileId) throws Exception ;
+	public ByteArrayOutputStream queryProtocolFile(String fileId) throws Exception ;
 	
 	/**
 	 * 还款计划查询接口

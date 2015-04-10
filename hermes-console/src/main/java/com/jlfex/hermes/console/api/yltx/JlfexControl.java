@@ -1,12 +1,14 @@
 package com.jlfex.hermes.console.api.yltx;
 
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,17 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
-import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
-import com.jlfex.hermes.service.pojo.yltx.response.OrderResponseVo;
-import com.jlfex.hermes.service.pojo.yltx.response.OrderVo;
 import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
@@ -132,43 +129,19 @@ public class JlfexControl {
 //		return "credit/index";
 //	}
 //	
-//	@RequestMapping("/queryFile")
-//	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		String fileId = "73489";
-//		OutputStream ouputStream = null;
-//		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
-//		InputStream  inputSm = jlfexService.queryProtocolFile(fileId);
-//		
-//		byte[] bytes = new byte[2048];
-//		try{
-//		int len = -1;
-//		while ((len = inputSm.read(bytes)) != -1) {
-//			bytesarray.write(bytes, 0, len);
-//		}
-//		ouputStream = response.getOutputStream();
-//		ouputStream.write(bytesarray.toByteArray());
-//		}catch(Exception e){
-//			
-//	   } finally {
-//		try {
-//			if (bytesarray != null) {
-//				bytesarray.flush();
-//				bytesarray.close();
-//			}
-//			if (ouputStream != null) {
-//				ouputStream.flush();
-//				ouputStream.close();
-//			}
-//			if (inputSm != null) {
-//				inputSm.close();
-//			}
-//		} catch (IOException e) {
-//			Logger.error("file  Exception ：",e);
-//		}
-//	}
-//		
-//	}
-//	
+	@RequestMapping("/queryFile")
+	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String fileId = "75979";
+		OutputStream ouputStream = null;
+		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
+		ByteArrayOutputStream  outStream =  jlfexService.queryProtocolFile(fileId);
+		OutputStream os = response.getOutputStream();
+		os.write(outStream.toByteArray());
+		os.flush();
+		os.close();
+		
+	}
+	
 	
 	
 	

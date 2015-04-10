@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.api.yltx;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -327,7 +328,7 @@ public class JlfexServiceImpl implements JlfexService {
 	 * 查询文件协议
 	 */
 	@Override
-	public InputStream queryProtocolFile(String fileId) throws Exception {
+	public ByteArrayOutputStream queryProtocolFile(String fileId) throws Exception {
 		String var = "查询文件协议接口:";
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
@@ -346,21 +347,10 @@ public class JlfexServiceImpl implements JlfexService {
 	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
 	  	recodeMap.put("serialNo", serialNo);
 	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
-	  	InputStream inputSM = null;
+	  	ByteArrayOutputStream inputSM = null;
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    inputSM = HttpClientUtil.doFileGetHttps(reqUrlBuffer.toString().trim());
-		    
-		    File  file = new File("D:/testFile.pdf");
-		    OutputStream  outputSM = new FileOutputStream(file);
-		    byte[] buffer = new byte[2048];
-		    int count = 0;
-		    while((count=inputSM.read(buffer)) != -1 ){
-		    	outputSM.write(buffer, 0, count);
-		    }
-		    outputSM.flush();
-		    outputSM.close();
-		    
 		    apiLog.setResponseMessage("");
 		    apiLog.setResponseTime(new Date());
 		    apiLog.setDealFlag(ApiLog.DealResult.SUC);
