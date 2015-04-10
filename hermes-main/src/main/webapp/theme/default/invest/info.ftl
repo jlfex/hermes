@@ -12,7 +12,43 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
+<script type="text/javascript">
 jQuery(function($) {
+	$('.pagination').each(function() {
+		var _elem = $(this).empty(),
+			_opts = $.extend({}, _elem.data()),
+			_number = _opts.number,
+			_pages = _opts.totalPages - 1,
+			_begin = ((_number - 3) < 0) ? 0 : (_number - 3),
+			_end = ((_number + 3) > _pages) ? _pages : (_number + 3),
+			_tag = $('<li />').append($('<a />').attr('href', '#'));
+			
+		if (_begin > 0) {
+			_tag.clone().appendTo(_elem).find('a').attr('data-page', 0).text(1);
+			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
+		}
+		
+		for (var _idx = _begin; _idx <= _end; _idx++) {
+			if (_idx === _number) {
+				_tag.clone().appendTo(_elem).addClass('active').find('a').text(_idx + 1);
+			} else {
+				_tag.clone().appendTo(_elem).find('a').attr('data-page', _idx).text(_idx + 1);
+			}
+		}
+		
+		if (_end < _pages) {
+			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
+			_tag.clone().appendTo(_elem).find('a').attr('data-page', _pages).text(_pages + 1);
+		}
+		
+		_elem.find('a').on('click', function() {
+			var $form = $(this).parents("form");
+			$form.find("#page").val($(this).data().page);
+			$form.trigger('submit');
+		});
+	});
+
+
     var  validFlag = '${validFlag!''}';
     if(validFlag == '03'){
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
@@ -448,7 +484,7 @@ jQuery(function($) {
 			                        <th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
 			                        <th>投标状态</th>
 			                        <th>投标时间</th></tr>
-			                        <#list invests as i>  
+			                        <#list invests.content as i>  
 									<tr>
 										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
 										<td>${i.amount?string('#,##0.00')}</td>
@@ -457,6 +493,7 @@ jQuery(function($) {
 									</tr>
 									</#list>
 			                    </table>
+			                   	<ul class="pagination" data-number="${invests.number}" data-total-pages="${invests.totalPages}"></ul>					                   
                 			</div>	
 						</div>
 						<div style="display: none;">

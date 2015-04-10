@@ -69,6 +69,15 @@ public class InvestInfo implements Serializable {
 	/** 用户昵称*/
 	private String account;
 	
+	/** 标类型*/
+	private String loanKind;
+	
+	/** 债权转让及回购协议编号*/
+	private  String   loanPdfId;
+	
+	/** 担保承诺函编号*/
+	private  String   guaranteePdfId;				
+	
 	
 
 
@@ -243,4 +252,29 @@ public class InvestInfo implements Serializable {
 	public void setAccount(String account) {
 		this.account = account;
 	}
+
+	public String getLoanKind() {
+		return loanKind;
+	}
+
+	public void setLoanKind(String loanKind) {
+		this.loanKind = loanKind;
+	}
+
+	public String getLoanPdfId() {
+		return loanPdfId;
+	}
+
+	public void setLoanPdfId(String loanPdfId) {
+		this.loanPdfId = loanPdfId;
+	}
+
+	public String getGuaranteePdfId() {
+		return guaranteePdfId;
+	}
+
+	public void setGuaranteePdfId(String guaranteePdfId) {
+		this.guaranteePdfId = guaranteePdfId;
+	}
+	
 }

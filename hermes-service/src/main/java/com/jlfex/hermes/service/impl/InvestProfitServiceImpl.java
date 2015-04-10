@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,8 @@ import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.LoanOverdueRepository;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.RepayService;
+import com.jlfex.hermes.service.common.Pageables;
+import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.InvestProfitInfo;
 import com.jlfex.hermes.service.repay.RepayMethod;
 
@@ -97,7 +102,8 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 	 * @param loan
 	 * @return
 	 */
-	public List<InvestProfitInfo> getInvestProfitRecords(Invest invest) {
+	public Page<InvestProfitInfo> getInvestProfitRecords(Invest invest,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 		List<InvestProfit> investProfitRecords = new ArrayList<InvestProfit>();
 
@@ -168,7 +174,10 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 			investProfitInfo.setStatus(investProfit.getStatus());
 			investProfitInfoRecords.add(investProfitInfo);
 		}
-		return investProfitInfoRecords;
+		Long total = Long.valueOf(investProfitInfoRecords.size());
+		Page<InvestProfitInfo> pageInvestProfit = new PageImpl<InvestProfitInfo>(investProfitInfoRecords, pageable, total);
+		return pageInvestProfit;
+
 	}
 	
 	@Override

@@ -3,6 +3,8 @@ package com.jlfex.hermes.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Repay;
@@ -69,7 +71,7 @@ public interface RepayService {
 	 * @param loan
 	 * @return
 	 */
-	public List<LoanRepay> getloanRepayRecords(Loan loan);
+	public Page<LoanRepay> getloanRepayRecords(Loan loan,Integer page, Integer size);
 
 	/**
 	 * 查询所有还款方式

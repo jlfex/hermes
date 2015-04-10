@@ -38,7 +38,7 @@ public class JlfexOrderServiceImpl implements  JlfexOrderService {
 	}
 	
 	@Override
-	public JlfexOrder findByInvest(String investId) throws Exception {
+	public JlfexOrder findByInvest(String investId){
 		return jlfexOrderRepository.findByInvestId(investId);
 	}
 	

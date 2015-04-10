@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,11 +105,11 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/myloan")
-	public String myloan(Model model) {
+	public String myloan(Model model,Integer page, Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		List<LoanInfo> loanInfoList = loanService.findByUser(user);
+		Page<LoanInfo> loanInfoList = loanService.findByUser(user,page,size);
 		int loanSuccessCount = 0;
 		BigDecimal loanAmount = BigDecimal.ZERO;
 		for (LoanInfo loanInfo : loanInfoList) {
@@ -117,7 +118,7 @@ public class LoanController {
 				loanAmount = loanAmount.add(Numbers.parseCurrency(loanInfo.getAmount()));
 			}
 		}
-		int loanCount = loanInfoList.size();
+		int loanCount = loanInfoList.getSize();
 		model.addAttribute("loanSuccessCount", loanSuccessCount);
 		model.addAttribute("loanCount", loanCount);
 		model.addAttribute("loanAmount", loanAmount);
@@ -137,10 +138,10 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/myloaninfo/{loanid}")
-	public String myloaninfo(@PathVariable("loanid") String loanid, Model model) {
+	public String myloaninfo(@PathVariable("loanid") String loanid, Model model,Integer page, Integer size) {
 		App.checkUser();
 		Loan loan = loanService.loadById(loanid);
-		List<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan);
+		Page<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan,page,size);
 		model.addAttribute("loan", loan);
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());

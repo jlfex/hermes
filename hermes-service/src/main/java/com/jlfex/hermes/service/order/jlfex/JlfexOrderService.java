@@ -15,6 +15,6 @@ public interface JlfexOrderService {
 	
 	public List<JlfexOrder>  queryOrderByPayStatus(List<String> satatusList) throws Exception  ;
 		
-	public JlfexOrder  findByInvest(String investId) throws Exception;
+	public JlfexOrder  findByInvest(String investId);
 
 }

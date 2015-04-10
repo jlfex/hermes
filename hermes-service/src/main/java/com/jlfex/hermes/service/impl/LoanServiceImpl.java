@@ -92,6 +92,7 @@ import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.common.Query;
+import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanAuditInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
@@ -729,7 +730,8 @@ public class LoanServiceImpl implements LoanService {
 	 * @param user
 	 */
 	@Override
-	public List<LoanInfo> findByUser(User user) {
+	public Page<LoanInfo> findByUser(User user,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<LoanInfo> loaninfoList = new ArrayList<LoanInfo>();
 		List<Loan> loanList = loanRepository.findByUser(user);
 		LoanInfo loanInfo = null;
@@ -759,7 +761,9 @@ public class LoanServiceImpl implements LoanService {
 			loanInfo.setUnRepayPI(Numbers.toCurrency(unRepayPI.doubleValue()));
 			loaninfoList.add(loanInfo);
 		}
-		return loaninfoList;
+		Long total = Long.valueOf(loaninfoList.size());
+		Page<LoanInfo> pageLoan = new PageImpl<LoanInfo>(loaninfoList, pageable, total);
+		return pageLoan;
 	}
 
 	@Override

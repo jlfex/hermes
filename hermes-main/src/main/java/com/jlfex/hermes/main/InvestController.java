@@ -1,5 +1,9 @@
 package com.jlfex.hermes.main;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +70,7 @@ import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
+import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
@@ -112,6 +119,8 @@ public class InvestController {
 	private UserService userService;
 	@Autowired
 	private JlfexOrderService jlfexOrderService;
+	@Autowired
+	private JlfexService jlfexService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 	@Autowired
@@ -522,7 +531,7 @@ public class InvestController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/info")
-	public String info(Model model, String loanid) throws Exception {
+	public String info(Model model, String loanid,Integer page,Integer size) throws Exception {
 		try {
 			App.checkUser();
 		} catch (Exception e) {
@@ -567,7 +576,7 @@ public class InvestController {
 		model.addAttribute("user", loan.getUser());
 		LoanUserInfo loanUserInfo = loanService.loadLoanUserInfoByUserId(App.user().getId());
 		model.addAttribute("loanUserInfo", loanUserInfo);
-		List<Invest> investList = investService.findByLoan(loan);
+		Page<Invest> investList = investService.queryByLoan(loan, page, size);
 		model.addAttribute("invests", investList);
 		List<LoanAuth> loanAuthlist = loanService.findLoanAuthByLoan(loan);
 		model.addAttribute("loanauths", loanAuthlist);
@@ -685,7 +694,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/myinvest")
-	public String myinvest(Model model) {
+	public String myinvest(Model model,Integer page, Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 
@@ -698,7 +707,7 @@ public class InvestController {
 		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
-		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page,size);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -731,7 +740,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/myinvestinfo/{invest}")
-	public String myinvestinfo(@PathVariable("invest") String investid, HttpServletRequest request, Model model) {
+	public String myinvestinfo(@PathVariable("invest") String investid, HttpServletRequest request, Model model,Integer page, Integer size) {
 		App.checkUser();
 		Invest invest = investService.loadById(investid);
 		// String page = request.getParameter("page");
@@ -748,7 +757,7 @@ public class InvestController {
 
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
-		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest));
+		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest,page,size));
 		model.addAttribute("nav", "invest");
 		// 返回视图
 		return "invest/myinvestinfo";
@@ -762,7 +771,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/myCredit")
-	public String myCredit(Model model) {
+	public String myCredit(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
@@ -786,7 +795,7 @@ public class InvestController {
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
-		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page, size);
 		List<JlfexOrder> jlfexOrders = new ArrayList<JlfexOrder>();
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
@@ -986,4 +995,34 @@ public class InvestController {
 
 		return investService.isLimitValid(investAmount);
 	}
+	/**
+	 * 查看PDF协议文件
+	 * 
+	 * @return
+	 */	
+	@RequestMapping("/queryFile/{pdfId}")
+	public void queryProtocolFile(@PathVariable("pdfId") String pdfId,HttpServletResponse response) throws Exception {
+		OutputStream ouputStream = null;
+		ByteArrayOutputStream  bytesarray = jlfexService.queryProtocolFile(pdfId);		
+		try{
+			ouputStream = response.getOutputStream();
+			ouputStream.write(bytesarray.toByteArray());
+		}catch(Exception e){
+			Logger.error("读取PDF协议文件异常",e);
+	    } finally {
+		try {
+			if (ouputStream != null) {
+				ouputStream.flush();
+				ouputStream.close();
+			}
+			if (bytesarray != null) {
+				bytesarray.flush();
+				bytesarray.close();
+			}
+		} catch (IOException e) {
+			Logger.error("读取PDF协议文件关闭流时异常！",e);
+		}
+	    }
+	}
+
 }

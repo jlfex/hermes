@@ -2,10 +2,14 @@ package com.jlfex.hermes.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
@@ -19,7 +23,7 @@ import com.jlfex.hermes.model.User;
  * @since 1.0
  */
 @Repository
-public interface InvestRepository extends JpaRepository<Invest, String> {
+public interface InvestRepository extends  PagingAndSortingRepository<Invest, String>, JpaSpecificationExecutor<Invest> {
 
 	/**
 	 * 通过用户信息查找对应理财信息
@@ -38,7 +42,7 @@ public interface InvestRepository extends JpaRepository<Invest, String> {
 	 */
 	@Query("from Invest  where loan = ?1 order by datetime desc")
 	public List<Invest> findByLoan(Loan loan);
-
+	
 	/**
 	 * 通过用户id和状态统计记录数
 	 * 

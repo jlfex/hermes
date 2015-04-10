@@ -23,6 +23,6 @@ public interface JlfexOrderRepository extends JpaRepository<JlfexOrder, String>,
 	 */
 	public List<JlfexOrder>   findByPayStatusIn(List<String> statusList) throws Exception;
 	
-	public JlfexOrder  findByInvestId(String investId) throws Exception;
+	public JlfexOrder  findByInvestId(String investId);
 	
 }
