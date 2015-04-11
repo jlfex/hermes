@@ -66,8 +66,8 @@ public class JlfexControl {
 		for(FinanceOrder obj: financeOrderList){
 			try{
 				String  resultVal = null;
-				if(!(HermesConstants.FINANCE_FUNDRAISING.equals(obj.getStatus().trim()) ||
-				     HermesConstants.FINANCE_WAIT_PAY.equals(obj.getStatus().trim()))	){
+				if(!( HermesConstants.FINANCE_FUNDRAISING.equals(obj.getStatus().trim()) ||
+				      HermesConstants.FINANCE_WAIT_PAY.equals(obj.getStatus().trim()))	){
 					 Logger.info("理财产品id="+obj.getUniqId()+", 状态为="+obj.getStatus()+",不进行处理");
 					continue ;
 				}
