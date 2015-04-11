@@ -1,10 +1,6 @@
 package com.jlfex.hermes.service.api.yltx;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.text.ParseException;
@@ -16,13 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -48,6 +41,7 @@ import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.repository.DictionaryTypeRepository;
 import com.jlfex.hermes.repository.LoanRepayRepository;
+import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.service.CreditInfoService;
@@ -64,6 +58,7 @@ import com.jlfex.hermes.service.asset.AssetService;
 import com.jlfex.hermes.service.assetRepay.AssetRepayPlanService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
+import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.yltx.request.OrderPayRequestVo;
 import com.jlfex.hermes.service.pojo.yltx.response.AssetVo;
 import com.jlfex.hermes.service.pojo.yltx.response.FinanceOrderVo;
@@ -76,7 +71,6 @@ import com.jlfex.hermes.service.sequence.SequenceService;
 /**
  * 易联天下 对接
  * @author Administrator
- * @since 1.0 20150310
  */
 @Service
 @Transactional
@@ -124,6 +118,8 @@ public class JlfexServiceImpl implements JlfexService {
 	private  LoanRepayRepository loanRepayRepository;
 	@Autowired
 	private  UserService userService;
+	@Autowired
+	private  LoanRepository loanRepository;
 	//接口配置
 	public static ApiConfig  apiConfig = null;
 	
@@ -498,6 +494,11 @@ public class JlfexServiceImpl implements JlfexService {
 	@Override
 	public String sellCreditDeal(FinanceOrder obj) throws Exception {
 		String  flag = "00";
+		//判断理财是否募资截止
+		if(obj.getRaiseEndTime().before(new Date())){
+			throw  new Exception("理财产品："+obj.getUniqId()+"募资截止时间："+obj.getRaiseEndTime()+"< 当前系统时间："
+		    +Calendars.format(HermesConstants.FORMAT_19)+",已经募资截止,不进行同步处理。");
+		}
 		if(obj != null){
 			FinanceOrder existOrder = financeOrderService.queryByUniqId(obj.getUniqId());
 			//判断理财产品是否存在
@@ -869,12 +870,6 @@ public class JlfexServiceImpl implements JlfexService {
 			FinanceOrder  order = new FinanceOrder();
 			if(vo!=null){
 				vo.toString();
-				//过滤状态： 只取 募资中 和 待付款
-				if(!(HermesConstants.FINANCE_FUNDRAISING.equals(vo.getStatus()) ||
-				   HermesConstants.FINANCE_WAIT_PAY.equals(vo.getStatus())) ){
-					Logger.info("跳过处理：理财产品编号：id="+vo.getId()+", 状态="+vo.getStatus());
-					continue ;
-				}
 				order.setFinanceProductName(vo.getFinanceProductName());
 				order.setInterestRate(vo.getInterestRate().divide(new BigDecimal("100")));
 				order.setTimeLimit(vo.getTimeLimit());
@@ -1009,19 +1004,83 @@ public class JlfexServiceImpl implements JlfexService {
 	 */
 	@Transactional(rollbackFor=Exception.class)
 	@Override
-	public boolean updateFinishedFinance(FinanceOrder obj) throws Exception {
-		String var = "理财产品id="+obj.getUniqId();
-		Logger.info(var+" 开始进行实际募资金额更新，理财产品起息日："+obj.getDateOfValue());
-		if(new Date().before(obj.getDateOfValue())){
-			throw new Exception("理财产品没有起息,跳过处理：当前系统时间:"+Calendars.format(HermesConstants.FORMAT_19)+"< 理财产品起息日:"+obj.getDateOfValue());
+	public boolean updateFinishedFinance(FinanceOrder synchObj) throws Exception {
+		String var = "理财产品id="+synchObj.getUniqId();
+		Logger.info(var+" 开始进行实际募资金额更新，理财产品起息日："+Calendars.format(HermesConstants.FORMAT_19, synchObj.getDateOfValue()));
+		if(new Date().before(synchObj.getDateOfValue())){
+			throw new Exception("理财产品没有起息,跳过处理：当前系统时间:"+Calendars.format(HermesConstants.FORMAT_19)+"< 理财产品起息日:"+synchObj.getDateOfValue());
 		}
-		FinanceOrder existOrder = financeOrderService.queryByUniqId(obj.getUniqId());
+		FinanceOrder existOrder = financeOrderService.queryByUniqId(synchObj.getUniqId());
 		if(existOrder == null){
-		   Logger.info("当前理财产品id="+obj.getUniqId()+", 状态="+obj.getStatus()+", 系统不存在，不需更新处理");
+		   Logger.info("当前理财产品id="+synchObj.getUniqId()+", 状态="+synchObj.getStatus()+", 系统不存在，不需更新处理");
+		}else{
+			if(HermesConstants.FINANCE_FINISHED.equals(existOrder.getStatus())){
+				Logger.info(var+",已经同步处理过不需要再次同步, 数据中状态是"+existOrder.getStatus());
+				return  false;
+			}
 		}
-		existOrder.setLabelVolmoney(obj.getLabelVolmoney());
-		financeOrderService.save(existOrder);
-		Logger.info(var+" 实际募资金额更新为："+obj.getLabelVolmoney());
+		existOrder.setLabelVolmoney(synchObj.getLabelVolmoney());
+		//更新实际募资金额
+		existOrder = updateJlfexLoanAmount(synchObj, existOrder);
+		Logger.info(var+" 实际募资金额更新为："+synchObj.getLabelVolmoney());
+		//更新 理财产品还款计划
+		updateFinancePlan(existOrder);
+		//更新 子资产 还款计划 Set<Asset>
+		updateAssetAndPlan(existOrder,synchObj);
+		return  true;
+	}
+    /**
+     * 更新理财产品 的子资产 及 子资产还款计划
+     * @param existOrder
+     * @throws Exception
+     */
+	public void updateAssetAndPlan(FinanceOrder existOrder, FinanceOrder synchObj) throws Exception {
+		List<Asset>  assetList = CollectionUtil.switchSet2List(existOrder.getAssetsList());
+		for(Asset asset_obj: assetList){
+			Set<AssetRepayPlan> exists_Plans =  asset_obj.getAssetRepayList();
+			if(exists_Plans!= null && exists_Plans.size() >0){
+				List<AssetRepayPlan> existsPlan = CollectionUtil.switchSet2List(exists_Plans);  
+				//更新子资产金额
+				List<Asset>  _assetList = new ArrayList<Asset>();
+				Iterator<Asset> iterator = synchObj.getAssetsList().iterator();
+				while(iterator.hasNext()){
+					Asset synchAsset = (Asset) iterator.next();
+					if(asset_obj.getCode().equals(synchAsset.getCode())){
+						asset_obj.setLabelVolmoney(synchAsset.getLabelVolmoney());
+						_assetList.add(asset_obj);
+					}
+				}
+				assetService.save(_assetList);
+				Logger.info("子资产成交金额更新成功");
+				String assetPlanJson = queryRepayPlan(asset_obj.getCode(),HermesConstants.TYPE_ASSET_REPAY_PLAN);
+				if(assetPlanJson!=null){
+					PlanResponseVo  assetRepayPlan = JSON.parseObject(assetPlanJson,PlanResponseVo.class);
+					List<RepayPlanVo> repayPlanVoLists = assetRepayPlan.getContent(); 
+					for(RepayPlanVo vo :repayPlanVoLists){
+						String id = vo.getId();
+						for(AssetRepayPlan plan :existsPlan){
+							if(id.equals(plan.getUniqId())){
+								plan.setRepaymentInterest(vo.getRepaymentInterest());
+								plan.setRepaymentMoney(vo.getRepaymentMoney());
+								plan.setRepaymentPrincipal(vo.getRepaymentPrincipal());
+							}
+						}
+					}
+					assetRepayPlanService.save(existsPlan);
+				}else{
+				    Logger.info("资产编号code="+asset_obj.getCode()+",对应的还款计划，还款计划为空");
+				}
+			}else{
+				Logger.warn("子资产编号="+asset_obj.getCode()+",对应的还款计划数据库中不存在，无法进行更新");
+			}
+		}
+	}
+    /**
+     * 更新理财产品还款计划
+     * @param existOrder
+     * @throws Exception
+     */
+	public void updateFinancePlan(FinanceOrder existOrder) throws Exception {
 		String financePlanJson = queryRepayPlan(existOrder.getUniqId(),HermesConstants.TYPE_FINANCE_REPAY_PLAN);
 		if(financePlanJson != null){
 			 PlanResponseVo  finceRepayPlan = JSON.parseObject(financePlanJson,PlanResponseVo.class);
@@ -1045,35 +1104,31 @@ public class JlfexServiceImpl implements JlfexService {
 		}else{
 			Logger.info("理财产品还款计划获取为空");
 		}
-		//更新 子资产 还款计划 Set<Asset>
-		List<Asset>  assetList = CollectionUtil.switchSet2List(existOrder.getAssetsList());
-		for(Asset asset_obj: assetList){
-			Set<AssetRepayPlan> exists_Plans =  asset_obj.getAssetRepayList();
-			if(exists_Plans!= null && exists_Plans.size() >0){
-				List<AssetRepayPlan> existsPlan = CollectionUtil.switchSet2List(exists_Plans);  
-				String assetPlanJson = queryRepayPlan(asset_obj.getCode(),HermesConstants.TYPE_ASSET_REPAY_PLAN);
-				if(assetPlanJson!=null){
-					PlanResponseVo  assetRepayPlan = JSON.parseObject(assetPlanJson,PlanResponseVo.class);
-					List<RepayPlanVo> repayPlanVoLists = assetRepayPlan.getContent(); 
-					for(RepayPlanVo vo :repayPlanVoLists){
-						String id = vo.getId();
-						for(AssetRepayPlan plan :existsPlan){
-							if(id.equals(plan.getUniqId())){
-								plan.setRepaymentInterest(vo.getRepaymentInterest());
-								plan.setRepaymentMoney(vo.getRepaymentMoney());
-								plan.setRepaymentPrincipal(vo.getRepaymentPrincipal());
-							}
-						}
-					}
-					assetRepayPlanService.save(existsPlan);
-				}else{
-				    Logger.info("资产编号code="+asset_obj.getCode()+",对应的还款计划，还款计划为空");
-				}
+	}
+
+	/**
+	 * 更新理财产品时间募资金额，同时更新loan金额
+	 * @param obj
+	 * @param existOrder
+	 */
+	public FinanceOrder updateJlfexLoanAmount(FinanceOrder synchObj, FinanceOrder existOrder) {
+		try {
+			List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+			if(loanList==null || loanList.size() != 1){
+				Logger.error("jlfexLoan更新loan金额: 根据理财产品:"+existOrder.getUniqId()+",获取标数据不唯一或空");
+				return null;
 			}else{
-				Logger.warn("子资产编号="+asset_obj.getCode()+",对应的还款计划数据库中不存在，无法进行更新");
+				Loan loan = loanList.get(0);
+				loan.setAmount(synchObj.getLabelVolmoney());
+				loanService.save(loan);
+				existOrder.setLabelVolmoney(synchObj.getLabelVolmoney());
+				existOrder.setStatus(synchObj.getStatus());
+				return financeOrderService.save(existOrder);
 			}
+		} catch (Exception e) {
+			Logger.error("更新jlfexLoan发售金额异常：", e);
+			return null;
 		}
-		return   true;
 	}
 
 }

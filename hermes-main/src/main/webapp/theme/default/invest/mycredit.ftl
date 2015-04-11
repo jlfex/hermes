@@ -56,7 +56,7 @@ jQuery(function($) {
 					<td class="right">${i.shouldReceivePI}</td>
 					<td class="right">${i.receivedPI}</td>
 					<td class="right">${i.waitReceivePI}</td>
-					<td class="center" style="width:65px;">${i.investStatusName}</td>
+					<td class="center" style="width:65px;">${i.investStatusName!''}</td>
 					<#list jlfexOrders as j> 
 					<td class="center" style="width:120px;">${(j.loanPdfId)!'-'}</br>${(j.guaranteePdfId)!'-'}</td>
 					</#list>

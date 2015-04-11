@@ -29,7 +29,7 @@ public class AutoSynchFinanceJob extends Job {
 	
 	@Override
 	public Result run() {
-		String var = "同步查询理财产品接口JOB：";
+		String var = "自动同步T-1天理财产品JOB：";
 		int financeOrderSize = 0;  //理财产品总数
 		int dealSucSize = 0;       //处理成功数
 		int dealFailSize = 0;      //处理失败数

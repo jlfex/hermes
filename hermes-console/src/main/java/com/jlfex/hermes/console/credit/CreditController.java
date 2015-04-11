@@ -198,8 +198,8 @@ public class CreditController {
 	@ResponseBody
 	public Map<String, String> creditImport(@RequestParam MultipartFile file, Model model) {
 		String msg = "", code = "";
-		int sheet1AllNum = 0, sheet1SucNum = 0, sheet1ErrNum = 0;
-		int sheet2AllNum = 0, sheet2SucNum = 0, sheet2ErrNum = 0;
+		int sheet1AllNum = 0, sheet1SucNum = 0;
+		int sheet2AllNum = 0, sheet2SucNum = 0;
 		Map<String, String> resultMap = new HashMap<String, String>();
 		String fileName = file.getOriginalFilename();
 		Map<String,String> sheet1Map = new  HashMap<String,String>();

@@ -99,7 +99,7 @@ public class Loan extends Model {
 	@Column(name = "loan_kind",length=2)
 	private String loanKind;
 	
-	/** 标 对应的债权id: 普通标：该字段可为空 */
+	/** 标索引： import债权表：对应的债权id; jlfex债权标：对应理财产品id;  普通标：为空 */
 	@Column(name = "credit_info_id", length=50)
 	private String creditInfoId;
 	
