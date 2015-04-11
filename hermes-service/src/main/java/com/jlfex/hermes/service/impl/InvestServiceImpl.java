@@ -944,7 +944,6 @@ public class InvestServiceImpl implements InvestService {
 
 			return result;
 		}
-
 		Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
 		Date endDate = DateUtils.addDays(startDate, 24);
 		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
@@ -955,9 +954,7 @@ public class InvestServiceImpl implements InvestService {
 
 			return result;
 		}
-
 		result.setType(Type.SUCCESS);
-
 		return result;
 	}
 
