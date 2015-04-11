@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.order.jlfex.JlfexOrderRepository;
 
@@ -41,6 +42,14 @@ public class JlfexOrderServiceImpl implements  JlfexOrderService {
 	public JlfexOrder findByInvest(String investId) throws Exception {
 		return jlfexOrderRepository.findByInvestId(investId);
 	}
+	/**
+	 * 获取 理财人+支付状态  订单信息
+	 */
+	@Override
+	public List<JlfexOrder> queryByInvestUserAndPayStatus(User user,String payStatus) throws Exception {
+		return jlfexOrderRepository.findByUserAndPayStatus(user, payStatus);
+	}
+	
 	
 	
 

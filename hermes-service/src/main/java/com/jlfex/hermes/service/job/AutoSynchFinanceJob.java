@@ -17,7 +17,7 @@ import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
- * 自动同步 理财产品JOB
+ * 自动同步  T-1天  理财产品JOB
  */
 @Component("autoSynchFinanceJob")
 public class AutoSynchFinanceJob extends Job {
@@ -61,7 +61,7 @@ public class AutoSynchFinanceJob extends Job {
 							continue ;
 						}
 						String  financeStatus = obj.getStatus().trim();
-						if(HermesConstants.FINANCE_FINISHED.equals(financeStatus)){
+						if( HermesConstants.FINANCE_FINISHED.equals(financeStatus)){
 							// 更新理财产品
 							boolean result = jlfexService.updateFinishedFinance(obj);
 							if(result){

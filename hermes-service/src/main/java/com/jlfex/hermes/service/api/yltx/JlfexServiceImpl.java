@@ -1011,7 +1011,10 @@ public class JlfexServiceImpl implements JlfexService {
 	@Override
 	public boolean updateFinishedFinance(FinanceOrder obj) throws Exception {
 		String var = "理财产品id="+obj.getUniqId();
-		Logger.info(var+" 开始进行实际募资金额更新");
+		Logger.info(var+" 开始进行实际募资金额更新，理财产品起息日："+obj.getDateOfValue());
+		if(new Date().before(obj.getDateOfValue())){
+			throw new Exception("理财产品没有起息,跳过处理：当前系统时间:"+Calendars.format(HermesConstants.FORMAT_19)+"< 理财产品起息日:"+obj.getDateOfValue());
+		}
 		FinanceOrder existOrder = financeOrderService.queryByUniqId(obj.getUniqId());
 		if(existOrder == null){
 		   Logger.info("当前理财产品id="+obj.getUniqId()+", 状态="+obj.getStatus()+", 系统不存在，不需更新处理");

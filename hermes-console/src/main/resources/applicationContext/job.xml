@@ -19,8 +19,7 @@
 			</list>
 		</property>
 		<property name="taskExecutor">
-			<bean
-				class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+			<bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 				<property name="corePoolSize" value="10" />
 				<property name="maxPoolSize" value="100" />
 				<property name="queueCapacity" value="500" />
@@ -32,8 +31,7 @@
 	<bean id="sampleJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="sampleJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -45,8 +43,7 @@
 	<bean id="autoRepayJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoRepayJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -58,8 +55,7 @@
 	<bean id="autoBidFailureJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoBidFailureJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -70,8 +66,7 @@
 	<bean id="autoOverdueCalcJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoOverdueCalcJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -81,8 +76,7 @@
 	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个2分钟运行一次  -->
 	<bean id="scanJlfexWaitOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanJlfexWaitOrderJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -93,8 +87,7 @@
 	<bean id="scanJlfexRepayOrderJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanJlfexRepayOrderJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -105,8 +98,7 @@
 	<bean id="autoSynchFinanceJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoSynchFinanceJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
@@ -118,8 +110,7 @@
 	<bean id="autoCollectionQueryJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
-			<bean
-				class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoCollectionQueryJob" />
 				<property name="targetMethod" value="doJob" />
 			</bean>
