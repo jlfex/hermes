@@ -353,7 +353,7 @@ public class InvestController {
 		}else{
 			icon = "3.png";
 			backInfo = "投标并支付失败！";
-			model.addAttribute("err_msg", "错误提示:"+error_Msg);
+			model.addAttribute("err_msg", "错误提示:"+error_Msg+(flag!=null?flag:""));
 		}
 		model.addAttribute("backInfo", backInfo);
 		model.addAttribute("icon", icon);
