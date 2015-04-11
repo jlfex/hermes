@@ -47,7 +47,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 	
 	@Override
 	public Result run() {
-		String var = "jlfex支付确认中订单扫描JOB：";
+ 		String var = "jlfex支付确认中订单扫描JOB：";
 		try {
 			List<String> payStatusList = new ArrayList<String>();
 			payStatusList.add(HermesConstants.PAY_WAIT_CONFIRM);
@@ -59,15 +59,19 @@ public class ScanJlfexWaitOrderJob extends Job {
 					if(Strings.notEmpty(result)){
 						OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
 						List<OrderVo>   orderVoList = responVo.getContent();
-						if(orderVoList==null || orderVoList.size() != 1){
-							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数不唯一");
+						if(orderVoList==null){
+							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数为空!");
+						}
+						if(orderVoList.size() != 1){
+							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数:"+orderVoList.size());
 						}
 						OrderVo vo = orderVoList.get(0);
 						Invest updateInvest = order.getInvest();
 						User investUser = order.getInvest().getUser();
 						String investStatus  = null;
-						String payStatus = null;
-						String orderDealStatus = null;
+						String orderStatus = vo.getOrderStatus();
+						String payStatus = vo.getPayStatus();
+						String orderDealStatus = JlfexOrder.Status.FIN_DEAL;
 						if(HermesConstants.PAY_SUC.equals(vo.getPayStatus().trim())){
 							//支付成功
 							Loan loan = order.getInvest().getLoan();
@@ -81,7 +85,6 @@ public class ScanJlfexWaitOrderJob extends Job {
 							investService.saveUserLog(investUser);	
 							investStatus = Invest.Status.FREEZE;
 							payStatus = HermesConstants.PAY_SUC;
-							orderDealStatus = JlfexOrder.Status.FIN_DEAL;
 						}else if(HermesConstants.PAY_FAIL.equals(vo.getPayStatus().trim())){
 							//支付失败 撤单
 							UserAccount cropAccount = userAccountService.findByUserIdAndType(HermesConstants.CROP_USER_ID, UserAccount.Type.ZHONGJIN_FEE);
@@ -96,6 +99,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 						}
 						//更新订单状态
 						order.setPayStatus(payStatus);
+						order.setOrderStatus(orderStatus);
 						order.setStatus(orderDealStatus);
 						jlfexOrderService.saveOrder(order);
 						//更新理财信息
