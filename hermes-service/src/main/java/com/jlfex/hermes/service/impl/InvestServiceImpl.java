@@ -392,6 +392,11 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
+		//判断是否有在途单
+		List<JlfexOrder> payingOrderList =  jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
+		if(payingOrderList !=null && payingOrderList.size() >0){
+			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
+		}
 		//判断标剩余金额是否足够
 		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
 		if(remain.compareTo(investAmount) < 0){
@@ -590,7 +595,7 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 
+	 * 保存 jlfex订单
 	 * @param vo
 	 * @param financeOrder
 	 * @param invest
@@ -601,6 +606,7 @@ public class InvestServiceImpl implements InvestService {
 		JlfexOrder entity = new JlfexOrder();
 		entity.setFinanceOrder(financeOrder);
 		entity.setInvest(invest);
+		entity.setUser(invest.getUser());
 		entity.setOrderCode(vo.getOrderCode());
 		entity.setGuaranteePdfId(vo.getGuaranteePdfId());
 		entity.setLoanPdfId(vo.getLoanPdfId());
