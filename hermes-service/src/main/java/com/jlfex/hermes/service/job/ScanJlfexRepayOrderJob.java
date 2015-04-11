@@ -21,6 +21,7 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.service.CreditInfoService;
@@ -87,7 +88,7 @@ public class ScanJlfexRepayOrderJob extends Job {
 						//若订单状态为“已回款”+支付状态为“结算成功” 则进行还款业务操作
 						if(HermesConstants.CLEARING_SUC.equals(vo.getPayStatus().trim()) && 
 						   HermesConstants.ORDER_FINISH_REPAY.equals(vo.getOrderStatus().trim())){
-							 //更新理财人收益信息
+							//更新理财人收益信息
 							List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 							for (InvestProfit investProfit : investProfitList){
 								if(!investProfit.getStatus().equals(InvestProfit.Status.WAIT)){
@@ -95,8 +96,10 @@ public class ScanJlfexRepayOrderJob extends Job {
 									continue ;
 								}
 								// 还本金
+								transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, creditUser, UserAccount.Type.JLFEX_FEE, investProfit.getPrincipal(), investProfit.getId(), "JLfex回购本金充值成功");
 								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "jlfex正常还本金");
 								// 还利息
+								transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, creditUser, UserAccount.Type.JLFEX_FEE, investProfit.getInterest(), investProfit.getId(), "JLfex回购利息充值成功");
 								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "jlfex正常还利息");
 								//更新理财收益表
 								investProfit.setStatus(InvestProfit.Status.ALREADY);
