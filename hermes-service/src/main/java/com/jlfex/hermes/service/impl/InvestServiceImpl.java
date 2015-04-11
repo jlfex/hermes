@@ -393,7 +393,7 @@ public class InvestServiceImpl implements InvestService {
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
 		//判断标剩余金额是否足够
-		BigDecimal  remain = new BigDecimal(loan.getRemain().trim());
+		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
 		if(remain.compareTo(investAmount) < 0){
 			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
 		}
@@ -429,9 +429,9 @@ public class InvestServiceImpl implements InvestService {
 		String resultFlag = "99";
 		Loan loan = loanRepository.findOne(loanId);
 		if (responseVo == null) {
-//			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
-//			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
-//			saveUserLog(investUser);
+			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
+			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
+			saveUserLog(investUser);
 			return "投标失败,订单信息为空";
 		}
 		Logger.info("易联债权标投标:开始 ：loanNo=" + loan.getLoanNo() + ", 下单并支付接口返回:订单状态=" + responseVo.getOrderStatus() + ",支付状态=" + responseVo.getPayStatus());
@@ -450,7 +450,7 @@ public class InvestServiceImpl implements InvestService {
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
 			Logger.info("撤单成功!");
-			return "支付失败，已撤单";
+			return "订单支付失败";
 		}
 		// 2:成功
 		Invest invest = null;

@@ -334,12 +334,12 @@ public class InvestController {
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount);
 		String flag = null;
-		String error_Msg = null;
+		String error_Msg = "";
 		try {
 			OrderPayResponseVo responseVo = investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
 			flag = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
-		} catch (Exception e) {
-			Logger.error(e.getMessage());
+		}catch(Exception e) {
+			Logger.error("jlfex投标异常", e);
 			error_Msg = e.getMessage();
 		}
 		String backInfo = null;
@@ -353,7 +353,7 @@ public class InvestController {
 		}else{
 			icon = "3.png";
 			backInfo = "投标并支付失败！";
-			model.addAttribute("err_msg", "错误提示:"+error_Msg);
+			model.addAttribute("err_msg", "错误提示:"+error_Msg+(flag!=null?flag:""));
 		}
 		model.addAttribute("backInfo", backInfo);
 		model.addAttribute("icon", icon);
