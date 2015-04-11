@@ -55,6 +55,11 @@ public class AutoSynchFinanceJob extends Job {
 				for(FinanceOrder obj: financeOrderList){
 					try{
 						String  resultVal = null;
+						int assetSize = obj.getAssetsList().size();
+						if(assetSize>1){
+							Logger.info("业务规则：JOB只同步含一个资产的理财产品，理财产品id="+obj.getUniqId()+",含有子资产数="+assetSize);
+							continue ;
+						}
 						String  financeStatus = obj.getStatus().trim();
 						if(HermesConstants.FINANCE_FINISHED.equals(financeStatus)){
 							// 更新理财产品
