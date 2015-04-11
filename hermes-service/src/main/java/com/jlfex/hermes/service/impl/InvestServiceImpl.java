@@ -393,7 +393,7 @@ public class InvestServiceImpl implements InvestService {
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
 		//判断标剩余金额是否足够
-		BigDecimal  remain = new BigDecimal(loan.getRemain().trim());
+		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
 		if(remain.compareTo(investAmount) < 0){
 			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
 		}
