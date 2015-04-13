@@ -113,16 +113,16 @@ public class ScanJlfexRepayOrderJob extends Job {
 							//更新理财记录
 							invest.setStatus(Invest.Status.COMPLETE);
 							investService.save(invest);
+							//更新债权信息
+							crediteInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
+							creditInfoService.save(crediteInfo);
+							//更新债权还款计划
+							List<CreditRepayPlan> creditPlanList = creditRepayPlanService.queryByCreditInfo(crediteInfo);
+							for(CreditRepayPlan creditPlan: creditPlanList){
+								creditPlan.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
+							}
+							creditRepayPlanService.saveBatch(creditPlanList);
 						}
-						//更新债权信息
-						crediteInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
-						creditInfoService.save(crediteInfo);
-						//更新债权还款计划
-						List<CreditRepayPlan> creditPlanList = creditRepayPlanService.queryByCreditInfo(crediteInfo);
-						for(CreditRepayPlan creditPlan: creditPlanList){
-							creditPlan.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
-						}
-						creditRepayPlanService.saveBatch(creditPlanList);
 					}
 				}catch(Exception e){
 					Logger.error(var+",异常", e);
