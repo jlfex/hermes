@@ -46,11 +46,13 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
+import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
@@ -116,6 +118,8 @@ public class InvestController {
 	private UserAccountRepository userAccountRepository;
 	@Autowired
 	private UserPropertiesRepository userPropertiesRepository;
+	@Autowired
+	private CFCAOrderRepository cfcaOrderRepository;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -840,6 +844,7 @@ public class InvestController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/isBalanceEnough")
+	
 	@ResponseBody
 	public Result isBalanceEnough(BigDecimal investamount) {
 		Result result = new Result();
@@ -975,20 +980,67 @@ public class InvestController {
 	}
 
 	/**
-	 * 限额是否合法
+	 * 单笔限额是否合法
 	 * 
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/isLimitValid")
+	@RequestMapping(value = "/isSingleLimitValid")
 	@ResponseBody
-	public JSONObject isLimitValid(BigDecimal investamount) {
+	public JSONObject isSingleLimitValid(BigDecimal investamount) {
 		App.checkUser();
 
 		JSONObject jsonObject = new JSONObject();
-		Result result = investService.isLimitValid(investamount);
+		Result result = investService.isSingleLimitValid(investamount);
 
 		if (result.getType().equals(Type.SUCCESS)) {
+			jsonObject.put("investamount", true);
+		} else {
+			jsonObject.put("investamount", false);
+		}
+
+		return jsonObject;
+	}
+	
+	/**
+	 * 当日限额是否合法
+	 * @param investamount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/isDayLimitValid")
+	@ResponseBody
+	public JSONObject isDayLimitValid(BigDecimal investamount) {
+		App.checkUser();
+
+		JSONObject jsonObject = new JSONObject();
+		Result result = investService.isDayLimitValid(investamount);
+
+		if (result.getType().equals(Type.SUCCESS)) {
+			jsonObject.put("investamount", true);
+		} else {
+			jsonObject.put("investamount", false);
+		}
+
+		return jsonObject;
+	}
+	
+	/**
+	 * 是否有处理中的订单
+	 * @return
+	 */
+	@RequestMapping(value = "/isHaveInProcessOrder")
+	@ResponseBody
+	public JSONObject isHaveInProcessOrder(BigDecimal investamount) {
+		App.checkUser();
+		
+		JSONObject jsonObject = new JSONObject();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		
+		List<CFCAOrder> orders = cfcaOrderRepository.findAllByInvestUserAndStatus(user, Tx1361Status.IN_PROCESSING.getStatus());
+		
+		if (orders != null && orders.size() > 0) {
 			jsonObject.put("investamount", false);
 		} else {
 			jsonObject.put("investamount", true);
