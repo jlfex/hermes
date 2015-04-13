@@ -933,41 +933,6 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 限额是否合法
-	 * 
-	 * @param investAmount
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public Result isLimitValid(BigDecimal investAmount) {
-		Result result = new Result();
-
-		AppUser curUser = App.current().getUser();
-		User user = userRepository.findOne(curUser.getId());
-		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
-		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
-
-		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
-			result.setType(Type.FAILURE);
-			result.addMessage(0, "超过单笔限额！");
-
-			return result;
-		}
-		Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
-		Date endDate = DateUtils.addDays(startDate, 24);
-		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
-
-		if (ppLimit.getDayTotalLimit() != null && totalAmount.compareTo(ppLimit.getDayTotalLimit()) > 0) {
-			result.setType(Type.FAILURE);
-			result.addMessage(0, "超过日累计限额！");
-
-			return result;
-		}
-		result.setType(Type.SUCCESS);
-		return result;
-	}
-
-	/**
 	 * 投标并支付
 	 */
 	@Transactional(rollbackFor = Exception.class)
@@ -1011,6 +976,14 @@ public class InvestServiceImpl implements InvestService {
 						backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
 						backMap.put("msg", "您已投标并支付成功！");
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
+						
+						// 判断假如借款金额与已筹金额相等，更新状态为满标
+						if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
+							loan.setStatus(Loan.Status.FULL);
+							loanRepository.save(loan);
+							// 插入借款日志表(满标)
+							this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
+						}
 					} else {
 						backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 						backMap.put("msg", "投标并支付失败！");
@@ -1028,13 +1001,6 @@ public class InvestServiceImpl implements InvestService {
 					backMap.put("msg", response.getMessage());
 					this.genCFCAOrder(response, invest, investAmount, txSN);
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
-				}
-				// 判断假如借款金额与已筹金额相等，更新状态为满标
-				if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
-					loan.setStatus(Loan.Status.FULL);
-					loanRepository.save(loan);
-					// 插入借款日志表(满标)
-					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 				}
 			} else {
 				String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
@@ -1135,5 +1101,55 @@ public class InvestServiceImpl implements InvestService {
 			Logger.error("接口日志对象保存异常：", e);
 			return null;
 		}
+	}
+
+	/**
+	 * 限额是否合法
+	 * 
+	 * @param investAmount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result isSingleLimitValid(BigDecimal investAmount) {
+		Result result = new Result();
+
+		AppUser curUser = App.current().getUser();
+		User user = userRepository.findOne(curUser.getId());
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
+
+		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "超过单笔限额！");
+
+			return result;
+		}
+		
+		result.setType(Type.SUCCESS);
+		return result;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Result isDayLimitValid(BigDecimal investAmount) {
+		Result result = new Result();
+
+		AppUser curUser = App.current().getUser();
+		User user = userRepository.findOne(curUser.getId());
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
+
+		Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
+		Date endDate = DateUtils.addDays(startDate, 24);
+		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
+
+		if (ppLimit.getDayTotalLimit() != null && totalAmount.compareTo(ppLimit.getDayTotalLimit()) > 0) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "超过日累计限额！");
+
+			return result;
+		}
+		result.setType(Type.SUCCESS);
+		return result;
 	}
 }

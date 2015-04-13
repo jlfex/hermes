@@ -167,8 +167,14 @@
 			  				errorMsg: '余额不足，请先充值',
 			  				ajax: opts.moneyLessAjax
 			    		},{
-			    			errorMsg:'超出限额',
-			    			ajax:opts.isLimitValid
+			  				errorMsg: '您有处理中的订单',
+			  				ajax: opts.isHaveInProcessOrder
+			    		},{
+			    			errorMsg:'超出单笔限额',
+			    			ajax:opts.isSingleLimitValid
+			    		},{
+			    			errorMsg:'超出当日投资限额',
+			    			ajax:opts.isDayLimitValid
 			    		}]
 			  		},
 			  		mv_money: {
@@ -279,7 +285,9 @@
     nameUniqueAjax: {},
     moneyMoreAjax: {},
     moneyLessAjax: {},
-    isLimitValid:{},
+    isSingleLimitValid:{},
+    isDayLimitValid:{},
+    isHaveInProcessOrder:{},
 	emailInitText: '常用电子邮箱',
     pwdInitText: '密码'
   };      
@@ -354,8 +362,16 @@
 			 * "checkMoneyLess?loanid="+$("#loanid").val(), dataType: 'json',
 			 * key: 'investamount' }
 			 */,
-	    isLimitValid:{
-	    	  url: "isLimitValid",  
+			 isSingleLimitValid:{
+	    	  url: "isSingleLimitValid",  
+		      dataType: 'json',
+		      key: 'investamount'
+	    }, isDayLimitValid:{
+	    	  url: "isDayLimitValid",  
+		      dataType: 'json',
+		      key: 'investamount'
+	    }, isHaveInProcessOrder:{
+	    	  url: "isHaveInProcessOrder",  
 		      dataType: 'json',
 		      key: 'investamount'
 	    }
