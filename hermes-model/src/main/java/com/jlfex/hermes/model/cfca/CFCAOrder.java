@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Model;
+import com.jlfex.hermes.model.User;
 
 @Entity
 @Table(name = "hm_order_cfca")
@@ -67,7 +69,19 @@ public class CFCAOrder extends Model {
 	 * 响应消息
 	 */
 	private String responseMessage;
-
+	
+	/**
+	 * 类型：00充值，01投标
+	 */
+	private String type;
+	
+	/**
+	 * 投资人
+	 */
+	@ManyToOne
+	@JoinColumn(name = "user")                    
+	private User user;
+	
 	public Invest getInvest() {
 		return invest;
 	}
@@ -146,5 +160,31 @@ public class CFCAOrder extends Model {
 
 	public void setResponseMessage(String responseMessage) {
 		this.responseMessage = responseMessage;
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+
+	public static final class Type {
+		@Element("充值")
+		public static final String RECHARGE = "00";
+
+		@Element("投标")
+		public static final String BID = "01";
 	}
 }
