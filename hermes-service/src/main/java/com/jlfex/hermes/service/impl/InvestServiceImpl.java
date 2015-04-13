@@ -397,9 +397,9 @@ public class InvestServiceImpl implements InvestService {
 		Loan loan = loanRepository.findOne(loanId);
 		//判断是否有在途单
 		List<JlfexOrder> payingOrderList =  jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
-		if(payingOrderList !=null && payingOrderList.size() >0){
-			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
-		}
+//		if(payingOrderList !=null && payingOrderList.size() >0){
+//			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
+//		}
 		//判断标剩余金额是否足够
 		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
 		if(remain.compareTo(investAmount) < 0){
