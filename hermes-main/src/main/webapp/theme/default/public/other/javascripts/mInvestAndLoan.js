@@ -166,6 +166,9 @@
 			    		},{
 			  				errorMsg: '余额不足，请先充值',
 			  				ajax: opts.moneyLessAjax
+			    		},{
+			    			errorMsg:'超出限额',
+			    			ajax:opts.isLimitValid
 			    		}]
 			  		},
 			  		mv_money: {
@@ -177,10 +180,10 @@
 			    		}]
 			  		}
 			 }, errorOperate = function(el, msg) {
-    			//console.log("error:"+msg);
+    			// console.log("error:"+msg);
 	    		el.nextAll('.mv_msg').removeClass('mv_right').addClass('mv_error').html(msg)
 	     }, rightOperate = function(el) {
-	    		//console.log("right:");
+	    		// console.log("right:");
 	    		el.nextAll('.mv_msg').removeClass('mv_error').addClass('mv_right').html('&nbsp;')
 	     };
 
@@ -196,7 +199,8 @@
 	    				, flag = true
 	    				, hasAjax = false;
 
-	        	// $(this).hasClass('mv_require') && text === '' && errorOperate($(this), '必填项,不能为空！') && return;
+	        	// $(this).hasClass('mv_require') && text === '' &&
+				// errorOperate($(this), '必填项,不能为空！') && return;
 
 	        	opts.isInitText && text === '' && $(this).val(value.initText);
 
@@ -275,12 +279,13 @@
     nameUniqueAjax: {},
     moneyMoreAjax: {},
     moneyLessAjax: {},
-		emailInitText: '常用电子邮箱',
+    isLimitValid:{},
+	emailInitText: '常用电子邮箱',
     pwdInitText: '密码'
   };      
 })(jQuery);
 
-//tab
+// tab
 
 ;(function($) {   
   $.fn.mTab = function(options) { 
@@ -306,26 +311,26 @@
 	 // var _submit=_info.find(':submit');
 	 var _max=_area.attr('maxlength');
 	 var _val,_cur,_count,_warn;
-	 //_submit.attr('disabled',true);
-	 _area.bind('keyup change',function(){ //绑定keyup和change事件
+	 // _submit.attr('disabled',true);
+	 _area.bind('keyup change',function(){ // 绑定keyup和change事件
 	 // _submit.attr('disabled',false);
-	  if(_info.find('span').size()<1){//避免每次弹起都会插入一条提示信息
+	  if(_info.find('span').size()<1){// 避免每次弹起都会插入一条提示信息
 	   _info.append('<span>还可输入<em>'+ _max +'</em>个字</span>');
 	  }
 	  _val=$(this).val();
 	  _cur=_val.length;
 	  _count=_info.find('em');
-	  //_warn=_info.find('font');
+	  // _warn=_info.find('font');
 	  
-	  if(_cur==0){//当默认值长度为0时,可输入数为默认maxlength值,此时不可提交
+	  if(_cur==0){// 当默认值长度为0时,可输入数为默认maxlength值,此时不可提交
 	   _count.text(_max);
 	  // _submit.attr('disabled',true);
-	  }else if(_cur<_max){//当默认值小于限制数时,可输入数为max-cur
+	  }else if(_cur<_max){// 当默认值小于限制数时,可输入数为max-cur
 	   _count.text(_max-_cur);
 	  // _warn.text('不区分中英文字符数');
-	  }else{//当默认值大于等于限制数时,插入一条提示信息并截取限制数内的值
+	  }else{// 当默认值大于等于限制数时,插入一条提示信息并截取限制数内的值
 	   _count.text(0);
-	   //_warn.text('不可再输入!');
+	   // _warn.text('不可再输入!');
 	   $(this).val(_val.substring(0,_max));
 	  }
 	 });
@@ -338,19 +343,23 @@
 	    
 	
     // 投标金额验证
- /*   $('#invest').mValidator({
+    $('#invest').mValidator({
         isInitMsg: true,
         moneyMoreAjax: {
             url: "checkMoneyMore?loanid="+$("#loanid").val(), 
             dataType: 'json',
             key: 'investamount'
-        },
-	    moneyLessAjax: {
-	        url: "checkMoneyLess?loanid="+$("#loanid").val(),  
-	        dataType: 'json',
-	        key: 'investamount'
+        }/*
+			 * , moneyLessAjax: { url:
+			 * "checkMoneyLess?loanid="+$("#loanid").val(), dataType: 'json',
+			 * key: 'investamount' }
+			 */,
+	    isLimitValid:{
+	    	  url: "isLimitValid",  
+		      dataType: 'json',
+		      key: 'investamount'
 	    }
-    });*/
+    });
     function loadData(){
     	 $('#loanData').fadeOut('fast').load('search', $('#investForm').serialize(), function(html) {
 			 	$(this).fadeIn('fast');
