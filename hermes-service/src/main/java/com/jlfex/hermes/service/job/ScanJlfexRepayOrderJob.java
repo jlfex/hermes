@@ -106,6 +106,8 @@ public class ScanJlfexRepayOrderJob extends Job {
 								investProfitRepository.save(investProfit);
 							}
 							//更新订单信息
+							order.setOrderStatus(vo.getOrderStatus().trim());
+							order.setPayStatus(vo.getPayStatus().trim());
 							order.setStatus(JlfexOrder.Status.FIN_DEAL);
 							jlfexOrderService.saveOrder(order);
 							//更新理财记录
