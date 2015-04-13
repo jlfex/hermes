@@ -297,7 +297,7 @@ public class InvestController {
 		} else {
 			bankAccount = bankAccountList.get(0);
 			String account = bankAccount.getAccount();
-			bankAccount.setAccount("*"+account.substring(account.length()-4));
+			bankAccount.setAccount("*" + account.substring(account.length() - 4));
 			if (Strings.empty(bankAccount.getName()) || Strings.empty(bankAccount.getBank().getName()) || Strings.empty(bankAccount.getDeposit()) || Strings.empty(bankAccount.getAccount())) {
 				Logger.info("银行卡绑定认证：信息不完整 或没有通过绑卡认证。");
 				bankAccount = null;
@@ -344,16 +344,16 @@ public class InvestController {
 		}
 		String backInfo = null;
 		String icon = null;
-		if ("00".equals(flag)){
+		if ("00".equals(flag)) {
 			icon = "2.png";
 			backInfo = "您已投标并支付成功!";
 		} else if ("01".equals(flag)) {
 			icon = "4.png";
 			backInfo = "  您的投标并支付申请已经提交成功，正在确认中!";
-		}else{
+		} else {
 			icon = "3.png";
 			backInfo = "投标并支付失败！";
-			model.addAttribute("err_msg", "错误提示:"+error_Msg);
+			model.addAttribute("err_msg", "错误提示:" + error_Msg);
 		}
 		model.addAttribute("backInfo", backInfo);
 		model.addAttribute("icon", icon);
@@ -550,14 +550,14 @@ public class InvestController {
 				validFlag = "01";
 				model.addAttribute("tipMsg", "提示：债权标有效投标时间为[" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseStartTime()) + "—" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseEndTime()) + "]");
 			}
-		}	
+		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication = investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
 		if (!bidAuthentication) {
 			validFlag = "02";
 			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
 		}
-		validFlag = validIsAuth(model, validFlag); //认证
+		validFlag = validIsAuth(model, validFlag); // 认证
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -592,10 +592,10 @@ public class InvestController {
 		if (!userPro.getAuthName().equals(Auth.PASS)) {
 			validFlag = "03";
 			model.addAttribute("tipMsg", "提示：您尚且还未进行实名认证");
-		}else if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+		} else if (!userPro.getAuthCellphone().equals(Auth.PASS)) {
 			validFlag = "04";
 			model.addAttribute("tipMsg", "提示：您尚且还未进行手机认证");
-		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+		} else if (!userPro.getAuthBankcard().equals(Auth.PASS)) {
 			validFlag = "05";
 			model.addAttribute("tipMsg", "提示：您尚且还未绑定银行卡");
 		}
@@ -794,8 +794,8 @@ public class InvestController {
 				investSuccessCount = investSuccessCount + 1;
 			}
 			try {
-				if(StringUtils.isNotEmpty(investInfo.getId())){
-				   jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
+				if (StringUtils.isNotEmpty(investInfo.getId())) {
+					jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
 				}
 			} catch (Exception e) {
 				Logger.error("获取理财产品异常", e);
@@ -906,6 +906,7 @@ public class InvestController {
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
 		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		model.addAttribute("bankAccount", bankAccount);
+		model.addAttribute("bankMask", "**" + bankAccount.getAccount().substring(bankAccount.getAccount().length() - 4));
 		model.addAttribute("userProperties", userProperties);
 
 		return "invest/bid2Pay";
@@ -981,9 +982,18 @@ public class InvestController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/isLimitValid")
 	@ResponseBody
-	public Result isLimitValid(BigDecimal investAmount) {
+	public JSONObject isLimitValid(BigDecimal investamount) {
 		App.checkUser();
 
-		return investService.isLimitValid(investAmount);
+		JSONObject jsonObject = new JSONObject();
+		Result result = investService.isLimitValid(investamount);
+
+		if (result.getType().equals(Type.SUCCESS)) {
+			jsonObject.put("investamount", false);
+		} else {
+			jsonObject.put("investamount", true);
+		}
+
+		return jsonObject;
 	}
 }
