@@ -17,27 +17,27 @@
 	<script type="text/javascript" charset="utf-8">
 	<!--
 	jQuery(function($) {
-		// ³õÊ¼»¯
+		// åˆå§‹åŒ–
 		var _list = $('#channelList'),
 			_body = _list.find('.panel-body'),
 			_tabs = _list.find('.nav-tabs li');
 		
-		// °ó¶¨Ñ¡ÔñÖ§¸¶·½Ê½·ÖÀàÊÂ¼þ
+		// ç»‘å®šé€‰æ‹©æ”¯ä»˜æ–¹å¼åˆ†ç±»äº‹ä»¶
 		_tabs.on('click', function() {
 			_tabs.filter('.active').append(_body.find('.current').removeClass('current').hide()).removeClass('active');
 			$(this).addClass('active').find('.channels').addClass('current').show().appendTo(_body);
 		}).filter(':first').trigger('click');
 		
-		// °ó¶¨Ñ¡ÔñÖ§¸¶·½Ê½ÊÂ¼þ
+		// ç»‘å®šé€‰æ‹©æ”¯ä»˜æ–¹å¼äº‹ä»¶
 		_list.find('.channel').on('click', function() {
-			// ³õÊ¼»¯
+			// åˆå§‹åŒ–
 			var _elem = $(this),
 				_img = _elem.find('img'),
 				_payment = $('#channel'),
 				_selected = $('#selectedChannel'),
 				_select = $('#selectChannel');
 			
-			// ÊôÐÔÉèÖÃ
+			// å±žæ€§è®¾ç½®
 			_selected.show().find('img').prop({'alt': _img.prop('alt'), 'src': _img.prop('src')});
 			_payment.val(_elem.data().id);
 			_list.hide('fast', function() { _list.remove(); _select.show(); });

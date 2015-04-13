@@ -46,10 +46,10 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
-	// ¸ñÊ½»¯Êı×Ö
+	// æ ¼å¼åŒ–æ•°å­—
 	$('#balance, #fee, #sum').formatNumber();
 	
-	// °ó¶¨Ñ¡ÔñÖ§¸¶·½Ê½ÊÂ¼ş
+	// ç»‘å®šé€‰æ‹©æ”¯ä»˜æ–¹å¼äº‹ä»¶
 	$('#selectChannel').on('click', function() {
 		var _elem = $(this);
 		$.ajax('${app}/account/channels', {
@@ -63,21 +63,21 @@ jQuery(function($) {
 		});
 	});
 	
-	// ¼ÆËã³äÖµ·ÑÓÃ
+	// è®¡ç®—å……å€¼è´¹ç”¨
 	$('#amount').on('blur', function() {
-		// ³õÊ¼»¯
+		// åˆå§‹åŒ–
 		var _elem = $(this),
 			_fee = $('#fee'),
 			_sum = $('#sum');
 		
-		// ÅĞ¶ÏÊäÈëÊÇ·ñÓĞĞ§
+		// åˆ¤æ–­è¾“å…¥æ˜¯å¦æœ‰æ•ˆ
 		if (_elem.val() === '') return;
 		
-		// ¼ÓÔØÍ¼±ê
+		// åŠ è½½å›¾æ ‡
 		_fee.html('<i class="fa fa-spinner fa-spin"></i>');
 		_sum.html('<i class="fa fa-spinner fa-spin"></i>');
 		
-		// Òì²½¼ÓÔØ
+		// å¼‚æ­¥åŠ è½½
 		$.ajax('${app}/account/charge/calc', {
 			data: { amount: _elem.val() },
 			type: 'post',
@@ -95,9 +95,9 @@ jQuery(function($) {
 		});
 	});
 	
-	// °ó¶¨Ìí¼Ó³äÖµ·½·¨
+	// ç»‘å®šæ·»åŠ å……å€¼æ–¹æ³•
 	$('#addChargeBtn').on('click', function() {
-		$.ajax('${app}/account/charge/add', {
+		$.ajax('${app}/account/charge/zjCharge', {
 			data: $('#chargeForm').serialize(),
 			type: 'post',
 			dataType: 'html',
@@ -110,7 +110,7 @@ jQuery(function($) {
 		});
 	});
 	
-	// ·ÑÓÃÌáÊ¾´¦Àí
+	// è´¹ç”¨æç¤ºå¤„ç†
 	$('#info').popover({
 		html: true,
 		placement: 'right',
