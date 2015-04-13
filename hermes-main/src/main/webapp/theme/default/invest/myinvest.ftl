@@ -1,10 +1,5 @@
-<script type="text/javascript">
-jQuery(function($) {
-	// 绑定链接点击事件
-	$('a').link().on('click', function() {
-	});
-});
-</script>
+<form id="searchForm" method="post" action="#" class="form-horizontal">
+<input id="page" name="page" type="hidden" value="0">
 <!-- loan info -->
 <div class="block">
 	<div class="body-xs">
@@ -26,39 +21,28 @@ jQuery(function($) {
 		</div>
 	</div>
 </div>
-
-<div class="block">
-	<div class="body-sm">
-		<h4>投标记录</h4>
+</form>
+<div id="data"></div>
+<script type="text/javascript" charset="utf-8">
+<!--
+jQuery(function($) {
+	// 绑定表单提交事件
+	$('#searchForm').on('submit', function() {
+		$.ajax('${app}/invest/myinvest/table', {
+			data: $(this).serialize(),
+			type: 'post',
+			dataType: 'html',
+			timeout: 5000,
+			success: function(data, textStatus, xhr) {
+				$('#data').fadeOut('fast', function() {
+					$(this).html(data).fadeIn('fast');
+				});
+			}
+		});
+		return false;
+	});	
 	
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th><@messages key="model.loan.purpose" /></th>
-					<th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="model.loan.rate" /></th>
-					<th><@messages key="model.loan.period" /></th>
-					<th><@messages key="invest.should.receive.pi" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="invest.received.pi" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="invest.wait.receive.pi" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="common.status" /></th>
-				</tr>
-			</thead>
-			<tbody>
-			  <#list invests as i>  
-				<tr>
-					<td><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose!''}</a>
-					</td>
-					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
-					<td class="right">${i.rate}</td>
-					<td class="right">${i.period}<@messages key="common.unit.month" /></td>
-					<td class="right">${i.shouldReceivePI}</td>
-					<td class="right">${i.receivedPI}</td>
-					<td class="right">${i.waitReceivePI}</td>
-					<td class="right">${i.investStatusName}</td>
-				</tr>
-				</#list>
-			</tbody>
-		</table>
-	</div>
-</div>
+	$('#searchForm').submit();
+});
+//-->
+</script>

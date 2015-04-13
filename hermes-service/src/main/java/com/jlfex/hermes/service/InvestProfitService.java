@@ -3,6 +3,8 @@ package com.jlfex.hermes.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.User;
@@ -70,7 +72,7 @@ public interface InvestProfitService {
 	 * @param invest
 	 * @return
 	 */
-	public List<InvestProfitInfo> getInvestProfitRecords(Invest invest);
+	public Page<InvestProfitInfo> getInvestProfitRecords(Invest invest,Integer page, Integer size);
 	/**
 	 * 债权标    统计所有收益和
 	 * @param user

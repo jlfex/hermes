@@ -12,11 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +56,7 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
+import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.PPLimit;
@@ -340,10 +349,15 @@ public class InvestServiceImpl implements InvestService {
 	 */
 	@Override
 	public List<Invest> findByLoan(Loan loan) {
-		List<Invest> invests = investRepository.findByLoan(loan);
-		return invests;
+		return investRepository.findByLoan(loan);
 	}
-
+	@Override
+	public Page<Invest> queryByLoan(final Loan loan, Integer page, Integer size) {		
+		// 初始化
+		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "updateTime");
+		// 查询数据并返回结果
+        return investRepository.findByLoan(loan, pageable);
+	}
 	/**
 	 * 投标: 普通标 外部债权标
 	 * 
@@ -722,9 +736,17 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	@Override
-	public List<InvestInfo> findByUser(User user, List<String> loanKindList) {
+	public Page<InvestInfo> findByUser(final User user,final List<String> loanKindList,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<InvestInfo> investinfoList = new ArrayList<InvestInfo>();
-		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKindList, user);
+		Page<Invest> investList = investRepository.findAll(new Specification<Invest>() {			
+			@Override
+			public Predicate toPredicate(Root<Invest> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p1 = root.get("loan").get("loanKind").in(loanKindList);
+				Predicate p2 = cb.equal(root.get("user"), user) ;				
+				return cb.and(p1,p2);
+			}
+		}, pageable);		
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
@@ -741,6 +763,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatus());
+			investInfo.setLoanKind(loanStatus);
 			List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 			BigDecimal shouldReceivePI = BigDecimal.ZERO;
 			BigDecimal receivedPI = BigDecimal.ZERO;
@@ -757,9 +780,15 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setShouldReceivePI(Numbers.toCurrency(shouldReceivePI.doubleValue()));
 			investInfo.setWaitReceivePI(Numbers.toCurrency(waitReceivePI.doubleValue()));
 			investInfo.setReceivedPI(Numbers.toCurrency(receivedPI.doubleValue()));
+			JlfexOrder jlfexOrder = jlfexOrderService.findByInvest(invest.getId());
+			if(jlfexOrder!=null){
+			   investInfo.setLoanPdfId(jlfexOrder.getLoanPdfId());
+			   investInfo.setGuaranteePdfId(jlfexOrder.getGuaranteePdfId());
+			}
 			investinfoList.add(investInfo);
 		}
-		return investinfoList;
+		Page<InvestInfo> pageInvest = new PageImpl<InvestInfo>(investinfoList, pageable, investList.getTotalElements());
+		return pageInvest;
 	}
 
 	/*
@@ -900,13 +929,13 @@ public class InvestServiceImpl implements InvestService {
 				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
 				if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(String.valueOf(object[13]))) {
 					Calendar deadDate = Calendar.getInstance();
-					try {
-						deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
-					} catch (ParseException e) {
-						Logger.error("债权表判断是否过期异常", e);
-					}
-					Calendar nowDate = Calendar.getInstance();
-					loanInfo.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
+		            try {
+		    			deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
+		    		} catch (ParseException e) {
+		    			Logger.error("债权判断是否过期异常",e);
+		    		}
+		    		Calendar nowDate = Calendar.getInstance();
+		    		loanInfo.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
 				}
 			}
 			loanInfo.setApplicationNo(String.valueOf(object[12]));

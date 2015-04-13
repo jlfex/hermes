@@ -29,7 +29,7 @@ public interface LoanService {
 	 * 
 	 * @return
 	 */
-	public List<Loan> findAll();
+	//public List<Loan> findAll();
 
 	/**
 	 * 通过状态统计
@@ -160,7 +160,7 @@ public interface LoanService {
 	 * 
 	 * @return
 	 */
-	public List<LoanInfo> findByUser(User user);
+	public Page<LoanInfo> findByUser(User user,Integer page, Integer size);
 
 	/**
 	 * 获取还款计划

@@ -12,12 +12,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,6 +98,7 @@ import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.common.Query;
+import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanAuditInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
@@ -222,11 +229,11 @@ public class LoanServiceImpl implements LoanService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.jlfex.hermes.service.LoanService#findAll()
-	 */
+	 
 	@Override
 	public List<Loan> findAll() {
 		return loanRepository.findAll();
-	}
+	}*/
 
 	/*
 	 * (non-Javadoc)
@@ -729,9 +736,16 @@ public class LoanServiceImpl implements LoanService {
 	 * @param user
 	 */
 	@Override
-	public List<LoanInfo> findByUser(User user) {
+	public Page<LoanInfo> findByUser(final User user,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<LoanInfo> loaninfoList = new ArrayList<LoanInfo>();
-		List<Loan> loanList = loanRepository.findByUser(user);
+		Page<Loan> loanList = loanRepository.findAll(new Specification<Loan>() {			
+			@Override
+			public Predicate toPredicate(Root<Loan> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p1 = cb.equal(root.get("user"), user) ;				
+				return cb.and(p1);
+			}
+		}, pageable);		
 		LoanInfo loanInfo = null;
 		for (Loan loan : loanList) {
 			loanInfo = new LoanInfo();
@@ -759,7 +773,8 @@ public class LoanServiceImpl implements LoanService {
 			loanInfo.setUnRepayPI(Numbers.toCurrency(unRepayPI.doubleValue()));
 			loaninfoList.add(loanInfo);
 		}
-		return loaninfoList;
+		Page<LoanInfo> pageLoan = new PageImpl<LoanInfo>(loaninfoList, pageable, loanList.getTotalElements());
+		return pageLoan;
 	}
 
 	@Override

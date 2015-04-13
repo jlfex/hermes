@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
 
@@ -17,7 +19,7 @@ import com.jlfex.hermes.model.User;
  * 借款信息仓库
  */
 @Repository
-public interface LoanRepository extends JpaRepository<Loan, String> , JpaSpecificationExecutor<Loan> {
+public interface LoanRepository extends PagingAndSortingRepository<Loan, String>, JpaSpecificationExecutor<Loan> {
 
 	/**
 	 * 通过状态查询借款

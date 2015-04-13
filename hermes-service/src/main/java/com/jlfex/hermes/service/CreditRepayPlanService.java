@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
+import com.jlfex.hermes.model.Creditor;
 
 
 
@@ -89,5 +90,8 @@ public interface CreditRepayPlanService {
 	 * @throws Exception
 	 */
 	public List<CreditRepayPlan> findByCreditInfoAscPeriod(CrediteInfo creditInfo) throws Exception;
+	
+	public List<CreditRepayPlan> findByCrediteInfo(CrediteInfo crediteInfo) throws Exception;
+
 	
 }

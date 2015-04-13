@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -37,6 +40,7 @@ import com.jlfex.hermes.repository.n.LoanRepayNativeRepository;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
+import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.repay.RepayMethod;
 
 /**
@@ -123,7 +127,8 @@ public class RepayServiceImpl implements RepayService {
 	 * @param loan
 	 * @return
 	 */
-	public List<LoanRepay> getloanRepayRecords(Loan loan) {
+	public Page<LoanRepay> getloanRepayRecords(Loan loan,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<LoanRepay> loanRepayList = findLoanRepay(loan);
 		List<LoanRepay> loanRepayRecords = new ArrayList<LoanRepay>();
 		int count = loanRepayList.size();
@@ -171,9 +176,13 @@ public class RepayServiceImpl implements RepayService {
 			} else {
 				loanRepayRecords.remove(0);
 			}
-			return loanRepayRecords;
+			Long total = Long.valueOf(loanRepayRecords.size());
+			Page<LoanRepay> pageLoanRepay = new PageImpl<LoanRepay>(loanRepayRecords, pageable, total);
+			return pageLoanRepay;
 		} else {
-			return loanRepayRecords;
+			Long total = Long.valueOf(loanRepayRecords.size());
+			Page<LoanRepay> pageLoanRepay = new PageImpl<LoanRepay>(loanRepayRecords, pageable, total);
+			return pageLoanRepay;
 		}
 	}
 
