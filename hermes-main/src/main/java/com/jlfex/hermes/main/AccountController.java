@@ -458,4 +458,16 @@ public class AccountController {
 		PropertiesFilter.clear();
 		response.getWriter().write("success");
 	}
+	
+	/**
+	 * 中金代扣充值
+	 * @param channel
+	 * @param amount
+	 * @return
+	 */
+	@RequestMapping("/charge/zjCharge")
+	public String zjCharge(Double amount, Model model) {
+		
+		return "account/index";
+	}
 }
