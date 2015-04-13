@@ -1043,6 +1043,8 @@ public class InvestServiceImpl implements InvestService {
 		cfcaOrder.setResponseMessage(response.getResponseMessage());
 		cfcaOrder.setStatus(response.getStatus());
 		cfcaOrder.setTxSN(txSN);
+		cfcaOrder.setUser(invest.getUser());
+		cfcaOrder.setType(CFCAOrder.Type.BID);
 		cFCAOrderRepository.save(cfcaOrder);
 	}
 
