@@ -497,6 +497,7 @@ public class AccountController {
 			model.addAttribute("type", "4.png");
 		}
 
+		
 		return "account/chargeResult";
 	}
 }
