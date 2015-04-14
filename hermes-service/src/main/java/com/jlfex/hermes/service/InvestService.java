@@ -56,6 +56,8 @@ public interface InvestService {
 	 * @return
 	 */
 	public List<Invest> findByLoan(Loan loan);
+	
+	public Page<Invest> queryByLoan(Loan loan,Integer page,Integer size);
 
 	/**
 	 * 投标操作
@@ -82,7 +84,7 @@ public interface InvestService {
 	 * 
 	 * @return
 	 */
-	public List<InvestInfo> findByUser(User user, List<String> loanKindList);
+	public Page<InvestInfo> findByUser(User user, List<String> loanKindList,Integer page, Integer size);
 
 	/**
 	 * 加载用户投标记录（分页）

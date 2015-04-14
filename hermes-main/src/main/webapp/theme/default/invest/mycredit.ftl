@@ -1,10 +1,5 @@
-<script type="text/javascript">
-jQuery(function($) {
-	// 绑定链接点击事件
-	$('a').link().on('click', function() {
-	});
-});
-</script>
+<form id="searchForm" method="post" action="#" class="form-horizontal">
+<input id="page" name="page" type="hidden" value="0">
 <!-- loan info -->
 <div class="block">
 	<div class="body-xs">
@@ -19,50 +14,35 @@ jQuery(function($) {
 						利息：&nbsp;<span class="currency">${interestSum}</span><@messages key="common.unit.cny" />&nbsp;<#t>
 						&nbsp;&nbsp;<#t>
 						罚息：&nbsp;<span class="currency">${overdueInterestSum}</span><@messages key="common.unit.cny" />&nbsp;<#t>
-					</p>
-					
+					</p>					
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+</form>
+<div id="data"></div>
 
-<div class="block">
-	<div class="body-sm">
-		<h4>投标记录</h4>
-	
-		<table class="table table-hover" style="font-size:12px;">
-			<thead>
-				<tr>
-					<th style="width:65px;">债权名称</th>
-					<th class="center" style="width:85px;">投标金额(<@messages key="common.unit.cny" />)</th>
-					<th style="width:60px;">年利率</th>
-					<th style="width:60px;">期限(天)</th>
-					<th style="width:85px;">应收本息(<@messages key="common.unit.cny" />)</th>
-					<th style="width:70px;">已收本息(<@messages key="common.unit.cny" />)</th>
-					<th style="width:70px;">待收本息(<@messages key="common.unit.cny" />)</th>
-					<th style="width:70px;">状态</th>
-					<th style="width:70px;">协议</th>
-				</tr>
-			</thead>
-			<tbody>
-			  <#list invests as i>  
-				<tr>
-					<td style="width:65px;"><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose}</a>
-					</td>
-					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
-					<td class="right" style="width:60px;">${i.rate}</td>
-					<td class="right" style="width:60px;">${i.period}</td>
-					<td class="right">${i.shouldReceivePI}</td>
-					<td class="right">${i.receivedPI}</td>
-					<td class="right">${i.waitReceivePI}</td>
-					<td class="center" style="width:65px;">${i.investStatusName!''}</td>
-					<#list jlfexOrders as j> 
-					<td class="center" style="width:120px;">${(j.loanPdfId)!'-'}</br>${(j.guaranteePdfId)!'-'}</td>
-					</#list>
-				</tr>
-				</#list>
-			</tbody>
-		</table>
-	</div>
-</div>
+<script type="text/javascript" charset="utf-8">
+<!--
+jQuery(function($) {
+	// 绑定表单提交事件
+	$('#searchForm').on('submit', function() {
+		$.ajax('${app}/invest/myCredit/table', {
+			data: $(this).serialize(),
+			type: 'post',
+			dataType: 'html',
+			timeout: 5000,
+			success: function(data, textStatus, xhr) {
+				$('#data').fadeOut('fast', function() {
+					$(this).html(data).fadeIn('fast');
+				});
+			}
+		});
+		return false;
+	});	
+	$('#searchForm').submit();
+});
+//-->
+</script>
+

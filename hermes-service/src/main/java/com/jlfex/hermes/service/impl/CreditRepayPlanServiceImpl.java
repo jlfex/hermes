@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
+import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.repository.CreditorRepayPlanRepository;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.common.Pageables;
@@ -270,5 +271,11 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	@Override
 	public List<CreditRepayPlan> findByCreditInfoAscPeriod(CrediteInfo creditInfo) throws Exception{
 		return creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
+	}
+
+	@Override
+	public List<CreditRepayPlan> findByCrediteInfo(CrediteInfo crediteInfo) throws Exception {
+		// TODO Auto-generated method stub
+		return creditorRepayPlanRepository.findByCreditInfo(crediteInfo);
 	}
 }

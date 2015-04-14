@@ -1,5 +1,9 @@
 package com.jlfex.hermes.main;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +72,7 @@ import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
+import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
@@ -114,6 +121,8 @@ public class InvestController {
 	private UserService userService;
 	@Autowired
 	private JlfexOrderService jlfexOrderService;
+	@Autowired
+	private JlfexService jlfexService;
 	@Autowired
 	private UserAccountRepository userAccountRepository;
 	@Autowired
@@ -207,6 +216,13 @@ public class InvestController {
 	public String indexAssignLoanFgt(@RequestParam(defaultValue = "0") String page, @RequestParam(defaultValue = "10") String size, Model model) {
 		model.addAttribute("assignLoan", investService.investIndexLoanList(page, size, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN));
 		return "invest/indexAssignLoanFgt";
+	}
+
+	@RequestMapping("/bidRecord")
+	public String bidRecord(String loanId,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "5") Integer size, Model model) {
+		Loan loan = loanService.loadById(loanId);
+		model.addAttribute("invests", investService.queryByLoan(loan, page, size));
+		return "invest/bidRecord";
 	}
 
 	/**
@@ -526,7 +542,7 @@ public class InvestController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/info")
-	public String info(Model model, String loanid) throws Exception {
+	public String info(Model model, String loanid,Integer page,Integer size) throws Exception {
 		try {
 			App.checkUser();
 		} catch (Exception e) {
@@ -688,8 +704,8 @@ public class InvestController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/myinvest")
-	public String myinvest(Model model) {
+	@RequestMapping("/myinvest/table")
+	public String myinvestTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 
@@ -702,7 +718,7 @@ public class InvestController {
 		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
-		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page,size);
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
 			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
@@ -724,6 +740,47 @@ public class InvestController {
 		model.addAttribute("invests", investInfoList);
 		model.addAttribute("nav", "invest");
 		// 返回视图
+		return "invest/myinvest-table";
+	}
+	/**
+	 * 我的理财
+	 * 
+	 * @param userid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/myinvest")
+	public String myinvest(Model model,Integer page, Integer size) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+
+		User user = userInfoService.findByUserId(curUser.getId());
+		// 已获收益
+		BigDecimal allProfitSum = investProfitService.loadSumAllProfitByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		// 利息
+		BigDecimal interestSum = investProfitService.loadInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		// 罚息
+		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		List<String> loanKindList = new ArrayList<String>();
+		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page,size);
+		int investSuccessCount = 0;
+		for (InvestInfo investInfo : investInfoList) {
+			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
+				investSuccessCount = investSuccessCount + 1;
+			}
+		}
+		if (allProfitSum == null)
+			allProfitSum = BigDecimal.ZERO;
+		if (interestSum == null)
+			interestSum = BigDecimal.ZERO;
+		if (overdueInterestSum == null)
+			overdueInterestSum = BigDecimal.ZERO;
+		model.addAttribute("allProfitSum", allProfitSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("successCount", investSuccessCount);
+		// 返回视图
 		return "invest/myinvest";
 	}
 
@@ -735,7 +792,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/myinvestinfo/{invest}")
-	public String myinvestinfo(@PathVariable("invest") String investid, HttpServletRequest request, Model model) {
+	public String myinvestinfo(@PathVariable("invest") String investid, HttpServletRequest request, Model model,Integer page, Integer size) {
 		App.checkUser();
 		Invest invest = investService.loadById(investid);
 		// String page = request.getParameter("page");
@@ -752,7 +809,7 @@ public class InvestController {
 
 		model.addAttribute("repay", loan.getProduct().getRepay());
 		model.addAttribute("user", loan.getUser());
-		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest));
+		model.addAttribute("investprofitinfos", investProfitService.getInvestProfitRecords(invest,page,size));
 		model.addAttribute("nav", "invest");
 		// 返回视图
 		return "invest/myinvestinfo";
@@ -765,8 +822,8 @@ public class InvestController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/myCredit")
-	public String myCredit(Model model) {
+	@RequestMapping("/myCredit/table")
+	public String myCreditTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
@@ -790,7 +847,7 @@ public class InvestController {
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
-		List<InvestInfo> investInfoList = investService.findByUser(user, loanKindList);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page, size);
 		List<JlfexOrder> jlfexOrders = new ArrayList<JlfexOrder>();
 		int investSuccessCount = 0;
 		for (InvestInfo investInfo : investInfoList) {
@@ -818,6 +875,59 @@ public class InvestController {
 		model.addAttribute("invests", investInfoList);
 		model.addAttribute("nav", "invest");
 		model.addAttribute("jlfexOrders", jlfexOrders);
+		// 返回视图
+		return "invest/mycredit-table";
+	}
+
+	/**
+	 * 我的债权
+	 * 
+	 * @param userid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/myCredit")
+	public String myCredit(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		// 已获收益
+		List<String> loanKinds = new ArrayList<String>();
+		loanKinds.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		loanKinds.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, loanKinds, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
+		BigDecimal allProfitSum = BigDecimal.ZERO;// 总收益
+		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
+		BigDecimal overdueInterestSum = BigDecimal.ZERO; // 罚息收益总数
+		if (investProfit != null) {
+			if (investProfit.getInterestAmount() != null) {
+				interestSum = investProfit.getInterestAmount();
+			}
+			if (investProfit.getOverdueAmount() != null) {
+				overdueInterestSum = investProfit.getOverdueAmount();
+			}
+			allProfitSum = allProfitSum.add(interestSum).add(overdueInterestSum);
+		}
+		List<String> loanKindList = new ArrayList<String>();
+		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page, size);
+		int investSuccessCount = 0;
+		for (InvestInfo investInfo : investInfoList) {
+			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
+				investSuccessCount = investSuccessCount + 1;
+			}
+		}
+		if (allProfitSum == null)
+			allProfitSum = BigDecimal.ZERO;
+		if (interestSum == null)
+			interestSum = BigDecimal.ZERO;
+		if (overdueInterestSum == null)
+			overdueInterestSum = BigDecimal.ZERO;
+		model.addAttribute("allProfitSum", allProfitSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
+		model.addAttribute("successCount", investSuccessCount);
 		// 返回视图
 		return "invest/mycredit";
 	}
@@ -1048,4 +1158,63 @@ public class InvestController {
 
 		return jsonObject;
 	}
+	/**
+	 * 查看PDF协议文件
+	 * 
+	 * @return
+	 */	
+	@RequestMapping("/queryFile/{pdfId}")
+	public void queryProtocolFile(@PathVariable("pdfId") String pdfId,HttpServletResponse response) throws Exception {
+		OutputStream ouputStream = null;
+		ByteArrayOutputStream  bytesarray = jlfexService.queryProtocolFile(pdfId);		
+		try{
+			ouputStream = response.getOutputStream();
+			ouputStream.write(bytesarray.toByteArray());
+		}catch(Exception e){
+			Logger.error("读取PDF协议文件异常",e);
+	    } finally {
+		try {
+			if (ouputStream != null) {
+				ouputStream.flush();
+				ouputStream.close();
+			}
+			if (bytesarray != null) {
+				bytesarray.flush();
+				bytesarray.close();
+			}
+		} catch (IOException e) {
+			Logger.error("读取PDF协议文件关闭流时异常！",e);
+		}
+	    }
+	}
+
+	@RequestMapping("/assignProtocol")
+	public String assignProtocol(@RequestParam(value = "id", required = true) String id,Model model) throws Exception{
+		CrediteInfo crediteInfo=null;
+		List<CreditRepayPlan> creditRepayPlanList=new ArrayList<CreditRepayPlan>();
+		Invest invest = investService.loadById(id);
+		Loan loan = loanService.loadById(invest.getLoan().getId());
+		try {
+			if(StringUtils.isNotEmpty(loan.getCreditInfoId())){
+				crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
+			}
+			if(crediteInfo !=null){
+				creditRepayPlanList = creditRepayPlanService.findByCrediteInfo(crediteInfo);
+			}
+		} catch (Exception e) {
+			Logger.error("获取外部债权信息异常",e);
+		}
+		int year = crediteInfo.getAssignTime().getYear()+1900;
+		int month = crediteInfo.getAssignTime().getMonth() + 1;
+		int day = crediteInfo.getAssignTime().getDate();
+		model.addAttribute("invest", invest);
+		model.addAttribute("loan", loan);
+		model.addAttribute("creditInfo", crediteInfo);
+		model.addAttribute("creditRepayPlanList", creditRepayPlanList);
+		model.addAttribute("year", year);
+		model.addAttribute("month", month);
+		model.addAttribute("day", day);
+		return "invest/assignProtocol";
+	}
+	
 }

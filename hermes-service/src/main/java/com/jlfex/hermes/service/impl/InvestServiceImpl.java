@@ -10,11 +10,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cfca.payment.api.tx.Tx1361Request;
@@ -44,6 +51,7 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
+import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.PPLimit;
@@ -339,10 +347,15 @@ public class InvestServiceImpl implements InvestService {
 	 */
 	@Override
 	public List<Invest> findByLoan(Loan loan) {
-		List<Invest> invests = investRepository.findByLoan(loan);
-		return invests;
+		return investRepository.findByLoan(loan);
 	}
-
+	@Override
+	public Page<Invest> queryByLoan(final Loan loan, Integer page, Integer size) {		
+		// 初始化
+		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "updateTime");
+		// 查询数据并返回结果
+        return investRepository.findByLoan(loan, pageable);
+	}
 	/**
 	 * 投标: 普通标 外部债权标
 	 * 
@@ -394,15 +407,16 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
-		//判断是否有在途单
-		List<JlfexOrder> payingOrderList =  jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
-//		if(payingOrderList !=null && payingOrderList.size() >0){
-//			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
-//		}
-		//判断标剩余金额是否足够
-		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
-		if(remain.compareTo(investAmount) < 0){
-			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
+		// 判断是否有在途单
+		List<JlfexOrder> payingOrderList = jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
+		// if(payingOrderList !=null && payingOrderList.size() >0){
+		// throw new
+		// Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
+		// }
+		// 判断标剩余金额是否足够
+		BigDecimal remain = Numbers.parseCurrency(loan.getRemain());
+		if (remain.compareTo(investAmount) < 0) {
+			throw new Exception("投标失败，标的可投金额不足，剩余金额：" + remain + " < 投标金额:" + investAmount);
 		}
 		// 判断假如借款金额与已筹金额相等，更新状态为满标
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
@@ -599,6 +613,7 @@ public class InvestServiceImpl implements InvestService {
 
 	/**
 	 * 保存 jlfex订单
+	 * 
 	 * @param vo
 	 * @param financeOrder
 	 * @param invest
@@ -722,9 +737,17 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	@Override
-	public List<InvestInfo> findByUser(User user, List<String> loanKindList) {
+	public Page<InvestInfo> findByUser(final User user,final List<String> loanKindList,Integer page, Integer size) {
+		Pageable pageable = Pageables.pageable(page, size);
 		List<InvestInfo> investinfoList = new ArrayList<InvestInfo>();
-		List<Invest> investList = investRepository.findByUserAndLoanKind(loanKindList, user);
+		Page<Invest> investList = investRepository.findAll(new Specification<Invest>() {			
+			@Override
+			public Predicate toPredicate(Root<Invest> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate p1 = root.get("loan").get("loanKind").in(loanKindList);
+				Predicate p2 = cb.equal(root.get("user"), user) ;				
+				return cb.and(p1,p2);
+			}
+		}, pageable);		
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
@@ -741,6 +764,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatus());
+			investInfo.setLoanKind(loanStatus);
 			List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 			BigDecimal shouldReceivePI = BigDecimal.ZERO;
 			BigDecimal receivedPI = BigDecimal.ZERO;
@@ -757,9 +781,15 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setShouldReceivePI(Numbers.toCurrency(shouldReceivePI.doubleValue()));
 			investInfo.setWaitReceivePI(Numbers.toCurrency(waitReceivePI.doubleValue()));
 			investInfo.setReceivedPI(Numbers.toCurrency(receivedPI.doubleValue()));
+			JlfexOrder jlfexOrder = jlfexOrderService.findByInvest(invest.getId());
+			if(jlfexOrder!=null){
+			   investInfo.setLoanPdfId(jlfexOrder.getLoanPdfId());
+			   investInfo.setGuaranteePdfId(jlfexOrder.getGuaranteePdfId());
+			}
 			investinfoList.add(investInfo);
 		}
-		return investinfoList;
+		Page<InvestInfo> pageInvest = new PageImpl<InvestInfo>(investinfoList, pageable, investList.getTotalElements());
+		return pageInvest;
 	}
 
 	/*
@@ -900,13 +930,13 @@ public class InvestServiceImpl implements InvestService {
 				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
 				if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(String.valueOf(object[13]))) {
 					Calendar deadDate = Calendar.getInstance();
-					try {
-						deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
-					} catch (ParseException e) {
-						Logger.error("债权表判断是否过期异常", e);
-					}
-					Calendar nowDate = Calendar.getInstance();
-					loanInfo.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
+		            try {
+		    			deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
+		    		} catch (ParseException e) {
+		    			Logger.error("债权判断是否过期异常",e);
+		    		}
+		    		Calendar nowDate = Calendar.getInstance();
+		    		loanInfo.setOutOfDate(deadDate.getTimeInMillis() < nowDate.getTimeInMillis());
 				}
 			}
 			loanInfo.setApplicationNo(String.valueOf(object[12]));
@@ -955,7 +985,7 @@ public class InvestServiceImpl implements InvestService {
 				UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
 				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
 
-				Tx1361Request tx1361Request = this.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
+				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
 				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 				apiLog = cFCAOrderService.recordApiLog(recodeMap);
@@ -976,7 +1006,7 @@ public class InvestServiceImpl implements InvestService {
 						backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
 						backMap.put("msg", "您已投标并支付成功！");
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
-						
+
 						// 判断假如借款金额与已筹金额相等，更新状态为满标
 						if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 							loan.setStatus(Loan.Status.FULL);
@@ -994,14 +1024,14 @@ public class InvestServiceImpl implements InvestService {
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FAIL);
 					}
 
-					this.genCFCAOrder(response, invest, investAmount, txSN);
 					this.saveUserLog(investUser);
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 					backMap.put("msg", response.getMessage());
-					this.genCFCAOrder(response, invest, investAmount, txSN);
+
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 				}
+				cFCAOrderService.genCFCAOrder(response, invest, investAmount, txSN, CFCAOrder.Type.BID);
 			} else {
 				String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
 				Logger.info(var);
@@ -1106,7 +1136,8 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 限额是否合法
+	 * 
+	 * 单笔限额是否合法
 	 * 
 	 * @param investAmount
 	 * @return
@@ -1126,11 +1157,14 @@ public class InvestServiceImpl implements InvestService {
 
 			return result;
 		}
-		
+
 		result.setType(Type.SUCCESS);
 		return result;
 	}
-	
+
+	/**
+	 * 当日限额是否合法
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Result isDayLimitValid(BigDecimal investAmount) {
@@ -1162,6 +1196,5 @@ public class InvestServiceImpl implements InvestService {
 	public List<Invest> findByLoanAndStatus(Loan loan, String status) throws Exception {
 		return investRepository.findByLoanAndStatus(loan, status);
 	}
-	
-	
+
 }

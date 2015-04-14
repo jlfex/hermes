@@ -16,6 +16,8 @@ import com.jlfex.hermes.model.cfca.CFCAOrder;
 public interface CFCAOrderRepository extends JpaRepository<CFCAOrder, String>,
 		JpaSpecificationExecutor<CFCAOrder> {
 	List<CFCAOrder> findAllByStatus(Integer status);
+	
+	List<CFCAOrder> findAllByStatusAndType(Integer status,String type);
 
 	@Query("select t from CFCAOrder t  where t.txSN = (select max(t1.txSN) from CFCAOrder t1 where t1.txSN is not null) ")
 	List<CFCAOrder> findAllOrderByTxSN();

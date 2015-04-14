@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,7 +99,7 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/loandetail/{id}")
-	public String loandetail(@PathVariable("id") String id, Model model) {
+	public String loandetail(@PathVariable("id") String id, Model model,Integer page,Integer size) {
 		Loan loan = loanService.loadById(id);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
 		UserProperties userProperties = userInfoService.loadPropertiesByUserId(loan.getUser().getId());
@@ -117,7 +118,7 @@ public class LoanController {
 		model.addAttribute("loanaudits", loanAuditList);
 		List<Invest> invests = investService.findByLoan(loan);
 		model.addAttribute("invests", invests);
-		List<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan);
+		Page<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan,page,size);
 		model.addAttribute("loanRepays", loanRepayList);
 		return "loan/loandetail";
 	}

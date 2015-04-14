@@ -25,13 +25,14 @@ public interface JlfexOrderService {
 	 * @throws Exception
 	 */
 	public List<JlfexOrder>  queryOrderByPayStatus(List<String> satatusList) throws Exception  ;
+
 	/**
 	 * 根据理财信息ID 查询
 	 * @param investId
 	 * @return
 	 * @throws Exception
 	 */
-	public JlfexOrder  findByInvest(String investId) throws Exception;
+	public JlfexOrder  findByInvest(String investId);
 	/**
 	 * 根据理财人 + 支付状态  获取订单
 	 * @param user
@@ -39,5 +40,6 @@ public interface JlfexOrderService {
 	 * @throws Exception
 	 */
 	public List<JlfexOrder>  queryByInvestUserAndPayStatus(User user, String payStatus) throws Exception  ;
+
 
 }

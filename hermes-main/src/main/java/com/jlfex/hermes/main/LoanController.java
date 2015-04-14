@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -103,12 +105,12 @@ public class LoanController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/myloan")
-	public String myloan(Model model) {
+	@RequestMapping("/myloan/table")
+	public String myloanTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		List<LoanInfo> loanInfoList = loanService.findByUser(user);
+		Page<LoanInfo> loanInfoList = loanService.findByUser(user,page,size);
 		int loanSuccessCount = 0;
 		BigDecimal loanAmount = BigDecimal.ZERO;
 		for (LoanInfo loanInfo : loanInfoList) {
@@ -117,13 +119,42 @@ public class LoanController {
 				loanAmount = loanAmount.add(Numbers.parseCurrency(loanInfo.getAmount()));
 			}
 		}
-		int loanCount = loanInfoList.size();
+		int loanCount = loanInfoList.getSize();
 		model.addAttribute("loanSuccessCount", loanSuccessCount);
 		model.addAttribute("loanCount", loanCount);
 		model.addAttribute("loanAmount", loanAmount);
 		model.addAttribute("loans", loanInfoList);
 		model.addAttribute("nav", "loan");
 
+		// 返回视图
+		return "loan/myloan-table";
+	}
+
+	/**
+	 * 我的借款
+	 * 
+	 * @param userid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/myloan")
+	public String myloan(Model model,Integer page, Integer size) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		Page<LoanInfo> loanInfoList = loanService.findByUser(user,page,size);
+		int loanSuccessCount = 0;
+		BigDecimal loanAmount = BigDecimal.ZERO;
+		for (LoanInfo loanInfo : loanInfoList) {
+			if (Loan.Status.REPAYING.equals(loanInfo.getStatus()) || Loan.Status.COMPLETED.equals(loanInfo.getStatus())) {
+				loanSuccessCount = loanSuccessCount + 1;
+				loanAmount = loanAmount.add(Numbers.parseCurrency(loanInfo.getAmount()));
+			}
+		}
+		int loanCount = loanInfoList.getSize();
+		model.addAttribute("loanSuccessCount", loanSuccessCount);
+		model.addAttribute("loanCount", loanCount);
+		model.addAttribute("loanAmount", loanAmount);
 		// 返回视图
 		return "loan/myloan";
 	}
@@ -137,10 +168,10 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/myloaninfo/{loanid}")
-	public String myloaninfo(@PathVariable("loanid") String loanid, Model model) {
+	public String myloaninfo(@PathVariable("loanid") String loanid, Model model,Integer page, Integer size) {
 		App.checkUser();
 		Loan loan = loanService.loadById(loanid);
-		List<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan);
+		Page<LoanRepay> loanRepayList = repayService.getloanRepayRecords(loan,page,size);
 		model.addAttribute("loan", loan);
 		model.addAttribute("product", loan.getProduct());
 		model.addAttribute("repay", loan.getProduct().getRepay());
