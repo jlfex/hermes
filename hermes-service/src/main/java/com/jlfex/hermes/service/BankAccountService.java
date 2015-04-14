@@ -104,9 +104,10 @@ public interface BankAccountService {
 	
 	/**
 	 * 中金充值
-	 * @param amount
+	 * @param amount 
+	 * @param fee
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public Result zjCharge(BigDecimal amount) ;
+	public Result zjCharge(BigDecimal amount,BigDecimal fee) ;
 }

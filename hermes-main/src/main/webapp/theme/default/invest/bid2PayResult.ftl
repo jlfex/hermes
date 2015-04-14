@@ -42,8 +42,8 @@
      	<p>您可通过 资金明细 查询充值结果</p>
         <p>通过 我的债权 查询交易结果</p>
         <p>
-        	<a href="#" class="a_dec">资金明细</a>
-            <a href="#" class="a_dec ml_20px">我的债权</a>
+        	<a href="${app}/account/index?type=myfund" class="a_dec">资金明细</a>
+            <a href="${app}/account/index?type=mycredit" class="a_dec ml_20px">我的债权</a>
         </p>   
 	</div>
 </div>
