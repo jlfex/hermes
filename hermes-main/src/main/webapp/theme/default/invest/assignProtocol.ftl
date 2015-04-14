@@ -29,18 +29,21 @@
 					<thead>
 						<tr>
 							<th>用户名</th>
-							<th>出借金额</th>
-							<th>每月应还本息</th>
+							<th>应还本金</th>
+							<th>每月应还总额</th>
 						</tr>
 					</thead>
 					<tbody>
 					<#list creditRepayPlanList as l>
 						<tr>
 							<td>${(l.creditor.creditorName)!}</td>
-							<td>${(l.repayPrincipal)!}</td>
-							<td>${(l.repayAllmount)!}</td>
+							<td>￥${(l.repayPrincipal)!}</td>
+							<td>￥${(l.repayAllmount)!}</td>
 						</tr>
                    </#list>
+                        <td>总计</td>
+                        <td>￥${totalAmount}</td>
+                        <td>￥${totalAllAmount}</td>
 					</tbody>
 				</table>
 			</div>

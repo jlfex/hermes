@@ -1,6 +1,12 @@
+<style>
+ul#paged li{width:34px; height:34px; border:none; line-height:34px; text-align:center;}
+ul#paged li.active{background-color: #428bca;border-color: #428bca;}
+    ul#paged li.active a{ color:#ffffff;}
+</style>
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
+
 <div class="m_tda table_mar">
     <table cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -17,7 +23,7 @@
 		</tr>
 		</#list>
     </table>
-   	<ul class="pagination" data-number="${invests.number}" data-total-pages="${invests.totalPages}"></ul>					                   
+   	<ul class="pagination" id="paged" data-number="${invests.number}" data-total-pages="${invests.totalPages}"></ul>					                   
 </div>	
 <script type="text/javascript">
 <!--

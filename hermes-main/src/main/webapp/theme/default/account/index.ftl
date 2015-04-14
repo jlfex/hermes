@@ -64,7 +64,10 @@
 					<a href="#" class="icon addBankCard sr-only" data-url="${app}/account/addBankCard" data-target="main"></a>
 					<#list bankAccounts as b>
 					<a href="#" class="icon editBankCard sr-only" data-url="${app}/account/editBankCard/${b.id}" data-target="main"></a>
-					</#list> 					
+					</#list> 				
+					<a href="#" class="icon investinfo sr-only" data-url="${app}/invest/myinvestinfo/${invests!''}" data-target="main"></a>
+					<a href="#" class="icon loaninfo sr-only" data-url="${app}/loan/myloaninfo/${loans!''}" data-target="main"></a>
+					<a href="#" class="icon info sr-only" data-url="${app}/invest/myinvestinfo/${infos!}" data-target="main"></a>																																			
 				</div>
 			</div>
 			<!-- /account menu -->

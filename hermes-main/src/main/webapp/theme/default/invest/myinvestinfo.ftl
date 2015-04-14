@@ -1,4 +1,3 @@
-
 <!-- invest info -->
 <div class="block">
 	<div class="body-xs">
@@ -64,7 +63,11 @@
 			<tbody>
 			  <#list investprofitinfos.content as i>  
 	                <tr>
-	                    <td class="th_00">${i.sequence}/${i.period}</td>
+	                    <#if i.loanKind == '03'>
+	                       <td class="th_00">${i.sequence}/1</td>
+	                    <#else>
+	                       <td class="th_00">${i.sequence}/${i.period}</td>
+	                    </#if>
                         <td>${i.planDatetime?string('yyyy-MM-dd')}</td>
                     	 <td class="right">${i.principal}</td>
                     	 <td class="right">${i.interest}</td>
@@ -76,42 +79,5 @@
                 </#list>
 			</tbody>
 		</table>
-		<ul class="pagination" data-number="${investprofitinfos.number}" data-total-pages="${investprofitinfos.totalPages}"></ul>				
 	</div>
 </div>
-<script type="text/javascript">
-jQuery(function($) {
-	$('.pagination').each(function() {
-		var _elem = $(this).empty(),
-			_opts = $.extend({}, _elem.data()),
-			_number = _opts.number,
-			_pages = _opts.totalPages - 1,
-			_begin = ((_number - 3) < 0) ? 0 : (_number - 3),
-			_end = ((_number + 3) > _pages) ? _pages : (_number + 3),
-			_tag = $('<li />').append($('<a />').attr('href', '#'));
-			
-		if (_begin > 0) {
-			_tag.clone().appendTo(_elem).find('a').attr('data-page', 0).text(1);
-			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
-		}
-		
-		for (var _idx = _begin; _idx <= _end; _idx++) {
-			if (_idx === _number) {
-				_tag.clone().appendTo(_elem).addClass('active').find('a').text(_idx + 1);
-			} else {
-				_tag.clone().appendTo(_elem).find('a').attr('data-page', _idx).text(_idx + 1);
-			}
-		}
-		
-		if (_end < _pages) {
-			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
-			_tag.clone().appendTo(_elem).find('a').attr('data-page', _pages).text(_pages + 1);
-		}
-		
-		_elem.find('a').on('click', function() {
-			var $form = $(this).parents("form");
-			$form.find("#page").val($(this).data().page);
-			$form.trigger('submit');
-		});
-	});
-});

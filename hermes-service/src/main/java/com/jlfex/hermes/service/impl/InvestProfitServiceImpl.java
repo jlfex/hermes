@@ -172,6 +172,7 @@ public class InvestProfitServiceImpl implements InvestProfitService {
 			investProfitInfo.setOverdueInterest(Numbers.toCurrency(investProfit.getOverdueInterest().doubleValue()));
 			investProfitInfo.setOverdueDays(Strings.toString(investProfit.getLoanRepay().getOverdueDays()));
 			investProfitInfo.setStatus(investProfit.getStatus());
+			investProfitInfo.setLoanKind(invest.getLoan().getLoanKind());
 			investProfitInfoRecords.add(investProfitInfo);
 		}
 		Long total = Long.valueOf(investProfitInfoRecords.size());

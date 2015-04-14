@@ -99,8 +99,11 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/index")
-	public String index(String type, Model model) {
+	public String index(String type, Model model,String id,String loanId,String infoId) {
 		App.checkUser();
+		model.addAttribute("invests", id);
+		model.addAttribute("loans", loanId);
+		model.addAttribute("infos", infoId);
 		model.addAttribute("nav", HomeNav.ACCOUNT);
 		model.addAttribute("type", Strings.empty(type, null));
 		model.addAttribute("bankAccounts", bankAccountService.findByUserIdAndStatus(App.user().getId(), Status.ENABLED));

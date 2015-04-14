@@ -18,7 +18,7 @@
 			<tbody>
 			  	<#list loans.content as l>  
 				<tr>
-					<td><a href="#" class="icon loan" data-url="${app}/loan/myloaninfo/${l.id}" data-target="main">${l.purpose}</a>
+					<td><a href="#" class="icon loan loaninfo" data-id="${l.id}">${l.purpose}</a>
 					</td>
 					<td class="right">${l.amount}</td>
 					<td class="right">${l.rate}</td>
@@ -31,12 +31,15 @@
 				</#list>
 			</tbody>
 		</table>
-		<ul class="pagination" data-number="${loans.number}" data-total-pages="${loans.totalPages}"></ul>		
 	</div>
 </div>
 <script type="text/javascript">
 <!--
 jQuery(function($) {
+		$(".loaninfo").on("click",function(){
+		    var loanId = $(this).attr("data-id");
+			window.location.href="${app}/account/index?type=loaninfo&loanId="+loanId;				
+		});
 	// 处理分页
 	$('.pagination').each(function() {
 		// 初始化
