@@ -56,7 +56,7 @@ public class AutoCollectionQueryJob extends Job {
 	@Override
 	public Result run() {
 		try {
-			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatus(Tx1361Status.IN_PROCESSING.getStatus());
+			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(),CFCAOrder.Type.BID);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
 				request.setInstitutionID("001155");

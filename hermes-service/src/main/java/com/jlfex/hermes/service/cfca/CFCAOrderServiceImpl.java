@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service.cfca;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -9,13 +10,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cfca.payment.api.tx.Tx1361Request;
+import cfca.payment.api.tx.Tx1361Response;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.P2ZJBank;
+import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
+import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.Invest;
+import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
@@ -106,5 +117,69 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 			Logger.error("接口日志对象保存异常：", e);
 			return null;
 		}
+	}
+
+	/**
+	 * 生成1361报文
+	 */
+	@Override
+	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn) {
+		Tx1361Request tx1361Request = new Tx1361Request();
+		tx1361Request.setInstitutionID("001155");
+		tx1361Request.setTxSN(txSn);
+		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
+		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
+		tx1361Request.setBankID(Dicts.name(bankAccount.getBank().getName(), "", P2ZJBank.class));
+		tx1361Request.setAccountName(bankAccount.getName());
+		tx1361Request.setAccountNumber(bankAccount.getAccount());
+		tx1361Request.setBranchName(bankAccount.getDeposit());
+		tx1361Request.setProvince(bankAccount.getCity().getName());
+		tx1361Request.setAccountType(11);
+		tx1361Request.setCity(bankAccount.getCity().getName());
+		tx1361Request.setPhoneNumber(investUser.getCellphone());
+		tx1361Request.setEmail(investUser.getEmail());
+		tx1361Request.setIdentificationNumber(userProperties.getIdNumber());
+		tx1361Request.setIdentificationType(Dicts.name(userProperties.getIdType(), P2ZJIdType.class));
+
+		return tx1361Request;
+	}
+
+	/**
+	 * 生成中金订单
+	 */
+	@Override
+	public CFCAOrder genCFCAOrder(Tx1361Response response, Invest invest, BigDecimal investAmount, String txSN, String type) {
+		CFCAOrder cfcaOrder = new CFCAOrder();
+		cfcaOrder.setAmount(investAmount);
+		cfcaOrder.setInvest(invest);
+		cfcaOrder.setBankTxTime(response.getBankTxTime());
+		cfcaOrder.setCode(response.getCode());
+		cfcaOrder.setMessage(response.getMessage());
+		cfcaOrder.setOrderNo(response.getOrderNo());
+		cfcaOrder.setResponseCode(response.getResponseCode());
+		cfcaOrder.setResponseMessage(response.getResponseMessage());
+		cfcaOrder.setStatus(response.getStatus());
+		cfcaOrder.setTxSN(txSN);
+		cfcaOrder.setUser(invest.getUser());
+		cfcaOrder.setType(type);
+		return cFCAOrderRepository.save(cfcaOrder);
+	}
+
+	@Override
+	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type) {
+		CFCAOrder cfcaOrder = new CFCAOrder();
+		cfcaOrder.setAmount(investAmount);
+		cfcaOrder.setInvest(null);
+		cfcaOrder.setBankTxTime(response.getBankTxTime());
+		cfcaOrder.setCode(response.getCode());
+		cfcaOrder.setMessage(response.getMessage());
+		cfcaOrder.setOrderNo(response.getOrderNo());
+		cfcaOrder.setResponseCode(response.getResponseCode());
+		cfcaOrder.setResponseMessage(response.getResponseMessage());
+		cfcaOrder.setStatus(response.getStatus());
+		cfcaOrder.setTxSN(txSN);
+		cfcaOrder.setUser(user);
+		cfcaOrder.setType(type);
+		return cFCAOrderRepository.save(cfcaOrder);
 	}
 }

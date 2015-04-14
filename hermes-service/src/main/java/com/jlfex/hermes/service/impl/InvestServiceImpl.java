@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -395,15 +394,16 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
-		//判断是否有在途单
-		List<JlfexOrder> payingOrderList =  jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
-//		if(payingOrderList !=null && payingOrderList.size() >0){
-//			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
-//		}
-		//判断标剩余金额是否足够
-		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
-		if(remain.compareTo(investAmount) < 0){
-			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
+		// 判断是否有在途单
+		List<JlfexOrder> payingOrderList = jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
+		// if(payingOrderList !=null && payingOrderList.size() >0){
+		// throw new
+		// Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
+		// }
+		// 判断标剩余金额是否足够
+		BigDecimal remain = Numbers.parseCurrency(loan.getRemain());
+		if (remain.compareTo(investAmount) < 0) {
+			throw new Exception("投标失败，标的可投金额不足，剩余金额：" + remain + " < 投标金额:" + investAmount);
 		}
 		// 判断假如借款金额与已筹金额相等，更新状态为满标
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
@@ -599,6 +599,7 @@ public class InvestServiceImpl implements InvestService {
 
 	/**
 	 * 保存 jlfex订单
+	 * 
 	 * @param vo
 	 * @param financeOrder
 	 * @param invest
@@ -955,7 +956,7 @@ public class InvestServiceImpl implements InvestService {
 				UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
 				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
 
-				Tx1361Request tx1361Request = this.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
+				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
 				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 				apiLog = cFCAOrderService.recordApiLog(recodeMap);
@@ -976,7 +977,7 @@ public class InvestServiceImpl implements InvestService {
 						backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
 						backMap.put("msg", "您已投标并支付成功！");
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
-						
+
 						// 判断假如借款金额与已筹金额相等，更新状态为满标
 						if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 							loan.setStatus(Loan.Status.FULL);
@@ -994,14 +995,14 @@ public class InvestServiceImpl implements InvestService {
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FAIL);
 					}
 
-					this.genCFCAOrder(response, invest, investAmount, txSN);
 					this.saveUserLog(investUser);
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 					backMap.put("msg", response.getMessage());
-					this.genCFCAOrder(response, invest, investAmount, txSN);
+
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 				}
+				cFCAOrderService.genCFCAOrder(response, invest, investAmount, txSN, CFCAOrder.Type.BID);
 			} else {
 				String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
 				Logger.info(var);
@@ -1023,90 +1024,7 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 保存订单记录
-	 * 
-	 * @param response
-	 * @param invest
-	 * @param investAmount
-	 * @param txSN
-	 */
-	@Transactional
-	public void genCFCAOrder(Tx1361Response response, Invest invest, BigDecimal investAmount, String txSN) {
-		CFCAOrder cfcaOrder = new CFCAOrder();
-		cfcaOrder.setAmount(investAmount);
-		cfcaOrder.setInvest(invest);
-		cfcaOrder.setBankTxTime(response.getBankTxTime());
-		cfcaOrder.setCode(response.getCode());
-		cfcaOrder.setMessage(response.getMessage());
-		cfcaOrder.setOrderNo(response.getOrderNo());
-		cfcaOrder.setResponseCode(response.getResponseCode());
-		cfcaOrder.setResponseMessage(response.getResponseMessage());
-		cfcaOrder.setStatus(response.getStatus());
-		cfcaOrder.setTxSN(txSN);
-		cfcaOrder.setUser(invest.getUser());
-		cfcaOrder.setType(CFCAOrder.Type.BID);
-		cFCAOrderRepository.save(cfcaOrder);
-	}
-
-	/**
-	 * 生成1361请求报文
-	 * 
-	 * @param investUser
-	 * @param investAmount
-	 * @param bankAccount
-	 * @param userProperties
-	 * @return
-	 */
-	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn) {
-		Tx1361Request tx1361Request = new Tx1361Request();
-		tx1361Request.setInstitutionID("001155");
-		tx1361Request.setTxSN(txSn);
-		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
-		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
-		tx1361Request.setBankID(Dicts.name(bankAccount.getBank().getName(), "", P2ZJBank.class));
-		tx1361Request.setAccountName(bankAccount.getName());
-		tx1361Request.setAccountNumber(bankAccount.getAccount());
-		tx1361Request.setBranchName(bankAccount.getDeposit());
-		tx1361Request.setProvince(bankAccount.getCity().getName());
-		tx1361Request.setAccountType(11);
-		tx1361Request.setCity(bankAccount.getCity().getName());
-		tx1361Request.setPhoneNumber(investUser.getCellphone());
-		tx1361Request.setEmail(investUser.getEmail());
-		tx1361Request.setIdentificationNumber(userProperties.getIdNumber());
-		tx1361Request.setIdentificationType(Dicts.name(userProperties.getIdType(), P2ZJIdType.class));
-
-		return tx1361Request;
-	}
-
-	public ApiLog recordApiLog(ApiConfig apiConfig, Map<String, String> map) {
-		ApiLog apiLog = new ApiLog();
-		apiLog.setApiConfig(apiConfig);
-		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
-		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
-		apiLog.setRequestTime(new Date());
-		apiLog.setDealFlag(ApiLog.DealResult.FAIL);// 默认
-		if (!Strings.empty(map.get("interfaceMethod"))) {
-			apiLog.setInterfaceName(map.get("interfaceMethod"));
-		}
-		if (!Strings.empty(map.get("requestMsg"))) {
-			apiLog.setRequestMessage(map.get("requestMsg"));
-		}
-		if (!Strings.empty(map.get("serialNo"))) {
-			apiLog.setSerialNo(map.get("serialNo"));
-		}
-		if (!Strings.empty(map.get("exception"))) {
-			apiLog.setException(map.get("exception"));
-		}
-		try {
-			return apiLogService.saveApiLog(apiLog);
-		} catch (Exception e) {
-			Logger.error("接口日志对象保存异常：", e);
-			return null;
-		}
-	}
-
-	/**
-	 * 限额是否合法
+	 * 单笔限额是否合法
 	 * 
 	 * @param investAmount
 	 * @return
@@ -1126,11 +1044,14 @@ public class InvestServiceImpl implements InvestService {
 
 			return result;
 		}
-		
+
 		result.setType(Type.SUCCESS);
 		return result;
 	}
-	
+
+	/**
+	 * 当日限额是否合法
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Result isDayLimitValid(BigDecimal investAmount) {
