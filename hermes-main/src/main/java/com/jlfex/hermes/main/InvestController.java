@@ -219,7 +219,7 @@ public class InvestController {
 	}
 
 	@RequestMapping("/bidRecord")
-	public String bidRecord(String loanId,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "5") Integer size, Model model) {
+	public String bidRecord(String loanId,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, Model model) {
 		Loan loan = loanService.loadById(loanId);
 		model.addAttribute("invests", investService.queryByLoan(loan, page, size));
 		return "invest/bidRecord";
