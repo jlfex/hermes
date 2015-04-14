@@ -513,9 +513,6 @@ public class Loan extends Model {
 
 	/**
 	 * 借款状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
 	 * @since 1.0
 	 */
 	public static final class Status {

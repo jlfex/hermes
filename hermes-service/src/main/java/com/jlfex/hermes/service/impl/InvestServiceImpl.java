@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -89,6 +85,7 @@ import com.jlfex.hermes.service.cfca.ThirdPPService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
+import com.jlfex.hermes.service.loanRepay.LoanRepayService;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
@@ -172,6 +169,8 @@ public class InvestServiceImpl implements InvestService {
 	private ApiLogService apiLogService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private LoanRepayService loanRepayService;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -526,9 +525,10 @@ public class InvestServiceImpl implements InvestService {
 	 * @param loanRepayList
 	 * @throws Exception
 	 */
+	@Override
 	public void saveInvestProfit(Invest invest, List<LoanRepay> loanRepayList) throws Exception {
 		if (loanRepayList == null || loanRepayList.size() == 0) {
-			throw new Exception("投标收益保存异常：还款计划明细为空");
+			throw new Exception("投标收益保存异常：标还款计划明细为空");
 		}
 		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
 		for (LoanRepay loanRepay : loanRepayList) {
@@ -642,7 +642,7 @@ public class InvestServiceImpl implements InvestService {
 		invest.setStatus(status);
 		return save(invest);
 	}
-
+	
 	/**
 	 * 插入借款日志表
 	 * 
@@ -1154,4 +1154,14 @@ public class InvestServiceImpl implements InvestService {
 		result.setType(Type.SUCCESS);
 		return result;
 	}
+
+	/**
+	 * 根据标+状态 获取理财信息
+	 */
+	@Override
+	public List<Invest> findByLoanAndStatus(Loan loan, String status) throws Exception {
+		return investRepository.findByLoanAndStatus(loan, status);
+	}
+	
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
@@ -216,4 +217,14 @@ public interface InvestService {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Result isDayLimitValid(BigDecimal investAmount);
+    
+	public void saveInvestProfit(Invest invest, List<LoanRepay> loanRepayList) throws Exception;
+	/**
+	 * 标+ 状态 获取理财信息
+	 * @param loan
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Invest>  findByLoanAndStatus(Loan loan, String status) throws Exception;
 }

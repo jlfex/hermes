@@ -342,5 +342,12 @@ public interface LoanService {
      * @return
      */
 	public List<LoanLog>  loadLogByLoanIdAndTypeIn(Loan loan , List<String> typeList);
+	/**
+     * jlfex满标处理
+     * @param loanId
+     * @param typeList
+     * @return
+     */
+	public Loan jlfexLoanOut(String id) throws Exception;
     
 }
