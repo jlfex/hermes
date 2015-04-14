@@ -295,7 +295,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	 */
 	@Override
 	@SuppressWarnings("rawtypes")
-	public Result zjCharge(BigDecimal amount) {
+	public Result zjCharge(BigDecimal amount,BigDecimal fee) {
 		Result result = new Result();
 		
 		User user = userRepository.findOne(App.user().getId());
@@ -318,6 +318,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 					result.setType(Type.WITHHOLDING_PROCESSING);
 					result.addMessage(0,"充值处理中");
 				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, fee, cfcaOrder.getId(), "中金代扣手续费");
 					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
 					result.setType(Type.SUCCESS);
 					result.addMessage(0,"充值成功");

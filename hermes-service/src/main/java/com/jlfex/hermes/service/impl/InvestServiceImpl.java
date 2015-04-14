@@ -987,11 +987,11 @@ public class InvestServiceImpl implements InvestService {
 
 				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
 				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
+				response = thirdPPService.invokeTx1361(tx1361Request);
 				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 				apiLog = cFCAOrderService.recordApiLog(recodeMap);
-				response = thirdPPService.invokeTx1361(tx1361Request);
+				BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
 				if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
-					BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
 					if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
 						invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.WAIT);
 						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.WAIT);
@@ -1028,7 +1028,8 @@ public class InvestServiceImpl implements InvestService {
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 					backMap.put("msg", response.getMessage());
-
+					invest = this.saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FAIL);
+					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_FAIL);
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 				}
 				cFCAOrderService.genCFCAOrder(response, invest, investAmount, txSN, CFCAOrder.Type.BID);
