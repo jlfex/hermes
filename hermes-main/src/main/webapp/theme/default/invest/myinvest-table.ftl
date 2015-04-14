@@ -18,7 +18,7 @@
 			<tbody>
 			  <#list invests.content as i>  
 				<tr>
-					<td><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose!''}</a>
+					<td><a href="#" class="icon loan info" data-id="${i.id}">${i.purpose!''}</a>
 					</td>
 					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
 					<td class="right">${i.rate}</td>
@@ -37,6 +37,11 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
+		$(".info").on("click",function(){
+		    var infoId = $(this).attr("data-id");
+			window.location.href="${app}/account/index?type=info&infoId="+infoId;				
+		});
+
 	// 处理分页
 	$('.pagination').each(function() {
 		// 初始化

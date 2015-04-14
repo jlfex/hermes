@@ -705,7 +705,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/myinvest/table")
-	public String myinvestTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size) {
+	public String myinvestTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 
@@ -1191,6 +1191,8 @@ public class InvestController {
 	@RequestMapping("/assignProtocol")
 	public String assignProtocol(@RequestParam(value = "id", required = true) String id,Model model) throws Exception{
 		CrediteInfo crediteInfo=null;
+		BigDecimal totalAmount = new BigDecimal(0);
+		BigDecimal totalAllAmount = new BigDecimal(0);
 		List<CreditRepayPlan> creditRepayPlanList=new ArrayList<CreditRepayPlan>();
 		Invest invest = investService.loadById(id);
 		Loan loan = loanService.loadById(invest.getLoan().getId());
@@ -1200,6 +1202,10 @@ public class InvestController {
 			}
 			if(crediteInfo !=null){
 				creditRepayPlanList = creditRepayPlanService.findByCrediteInfo(crediteInfo);
+				for (CreditRepayPlan creditRepayPlan : creditRepayPlanList) {
+					totalAmount = totalAmount.add(creditRepayPlan.getRepayPrincipal());
+					totalAllAmount= totalAllAmount.add(creditRepayPlan.getRepayAllmount());
+				}
 			}
 		} catch (Exception e) {
 			Logger.error("获取外部债权信息异常",e);
@@ -1214,6 +1220,8 @@ public class InvestController {
 		model.addAttribute("year", year);
 		model.addAttribute("month", month);
 		model.addAttribute("day", day);
+		model.addAttribute("totalAmount", totalAmount);
+		model.addAttribute("totalAllAmount", totalAllAmount);
 		return "invest/assignProtocol";
 	}
 	

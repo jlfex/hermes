@@ -19,7 +19,8 @@
 			<tbody>
 			  <#list invests.content as i>  
 				<tr>
-					<td class="center" style="width:65px;"><a href="#" class="icon loan" data-url="${app}/invest/myinvestinfo/${i.id}" data-target="main">${i.purpose}</a>
+					<td class="center" style="width:65px;">
+					    <a href="#" class="icon loan investinfo" data-id="${i.id}">${i.purpose}</a>
 					</td>
 					<td class="center">${i.amount}<@messages key="common.unit.cny" /></td>
 					<td class="center" style="width:60px;">${(i.rate)!}</td>
@@ -50,8 +51,12 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
+		$(".investinfo").on("click",function(){
+		    var investId = $(this).attr("data-id");
+			window.location.href="${app}/account/index?type=investinfo&id="+investId;				
+		});
 	// 处理分页
-	$('.pagination').each(function() {
+	$('.pagination').each(function() {                
 		// 初始化
 		var _elem = $(this).empty(),
 			_opts = $.extend({}, _elem.data()),

@@ -47,6 +47,9 @@ public class InvestProfitInfo implements Serializable {
 	/** 状态*/
 	private String status;
 	
+	/** 标的类型*/
+	private String loanKind;
+	
 	public String getStatus() {
 		return status;
 	}
@@ -120,4 +123,11 @@ public class InvestProfitInfo implements Serializable {
 	public void setOverdueDays(String overdueDays) {
 		this.overdueDays = overdueDays;
 	}
+	public String getLoanKind() {
+		return loanKind;
+	}
+	public void setLoanKind(String loanKind) {
+		this.loanKind = loanKind;
+	}
+	
 }

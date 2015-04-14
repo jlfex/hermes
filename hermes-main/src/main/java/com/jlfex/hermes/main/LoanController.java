@@ -106,7 +106,7 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/myloan/table")
-	public String myloanTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size) {
+	public String myloanTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
