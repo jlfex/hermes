@@ -361,7 +361,7 @@ public class TransactionServiceImpl implements TransactionService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addCashAccountRecord(String type, UserAccount sourceUserAccount,UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
 		Transaction transaction = new Transaction();
 		transaction.setSourceUserAccount(targetUserAccount);
 		transaction.setTargetUserAccount(sourceUserAccount);
@@ -383,7 +383,7 @@ public class TransactionServiceImpl implements TransactionService {
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transact(type, cropAccount, userAccount, amount, reference, remark);
 	}
-	
+
 	@Override
 	public List<Transaction> cropAccountToJlfexPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
@@ -392,18 +392,14 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<Transaction> cropAccountToZJPay(String type, User user,
-			String cropAccountType, BigDecimal amount, String reference,
-			String remark) {
+	public List<Transaction> cropAccountToZJPay(String type, User user, String cropAccountType, BigDecimal amount, String reference, String remark) {
 		UserAccount userAccount = userAccountRepository.findByUserAndType(user, UserAccount.Type.CASH);
 		UserAccount cropAccount = userAccountRepository.findByUserIdAndType(HermesConstants.CROP_USER_ID, cropAccountType);
 		return transactToZJPay(type, cropAccount, userAccount, amount, reference, remark);
 	}
 
 	@Override
-	public List<Transaction> transactToZJPay(String type,
-			UserAccount sourceUserAccount, UserAccount targetUserAccount,
-			BigDecimal amount, String reference, String remark) {
+	public List<Transaction> transactToZJPay(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
 		// 验证参数
 		Assert.notEmpty(type, "type is empty.", "exception.transaction.type.empty");
 		Assert.notNull(sourceUserAccount, "source user account is null", "exception.transaction.user.account.null");
@@ -413,7 +409,6 @@ public class TransactionServiceImpl implements TransactionService {
 		Assert.equals(User.Status.ENABLED, targetUserAccount.getUser().getStatus(), "target user is not enabled.", "exception.transaction.user.status");
 		Assert.equals(UserAccount.Status.VALID, targetUserAccount.getStatus(), "target user account is not enabled.", "exception.transaction.user.account.status");
 		Assert.notNull(amount, "amount is null", "exception.transaction.amount.null");
-
 
 		// 交易流水
 		Transaction source = new Transaction();
@@ -432,12 +427,12 @@ public class TransactionServiceImpl implements TransactionService {
 		target.setTargetUserAccount(sourceUserAccount);
 		target.setReference(reference);
 		target.setType(String.valueOf(Integer.valueOf(type) + TYPE_SPAN));
-		target.setDatetime(source.getDatetime());	
+		target.setDatetime(source.getDatetime());
 		target.setAmount(amount);
 		target.setSourceBeforeBalance(targetUserAccount.getBalance());
 		target.setTargetBeforeBalance(sourceUserAccount.getBalance());
 		target.setRemark(remark);
-		if(remark.equals(Transaction.Status.RECHARGE_SUCC)) {
+		if (remark.equals(Transaction.Status.RECHARGE_SUCC)) {
 			sourceUserAccount.setBalance(sourceUserAccount.getBalance().subtract(amount));
 			targetUserAccount.setBalance(targetUserAccount.getBalance().add(amount));
 		}
@@ -454,6 +449,26 @@ public class TransactionServiceImpl implements TransactionService {
 		transactionRepository.save(target);
 
 		// 返回结果
-		return Arrays.asList(source, target);		
+		return Arrays.asList(source, target);
+	}
+
+	@Override
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark) {
+		Transaction transaction = new Transaction();
+		transaction.setTargetUserAccount(sourceUserAccount);
+		transaction.setReference(reference);
+		transaction.setType(type);
+		transaction.setDatetime(new Date());
+		transaction.setAmount(amount.negate());
+		if (remark.equals(Transaction.Status.RECHARGE_SUCC)) {
+			transaction.setSourceBeforeBalance(sourceUserAccount.getBalance());
+			transaction.setSourceAfterBalance(sourceUserAccount.getBalance().add(amount));
+		} else {
+			transaction.setSourceBeforeBalance(sourceUserAccount.getBalance());
+			transaction.setSourceAfterBalance(sourceUserAccount.getBalance());
+		}
+
+		transaction.setRemark(remark);
+		transactionRepository.save(transaction);
 	}
 }

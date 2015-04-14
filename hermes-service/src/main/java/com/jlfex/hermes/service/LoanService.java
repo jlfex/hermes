@@ -342,5 +342,5 @@ public interface LoanService {
      * @return
      */
 	public List<LoanLog>  loadLogByLoanIdAndTypeIn(Loan loan , List<String> typeList);
-    
+	
 }

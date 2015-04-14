@@ -267,7 +267,6 @@ public class InvestProfit extends Model {
 	/**
 	 * 
 	 * @author Aether
-	 * @date 2013-11-12 下午2:44:37
 	 * @return description:取得状态名称
 	 */
 	public String getStatusName() {

@@ -29,12 +29,16 @@ import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
+import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.Sequence;
+import com.jlfex.hermes.model.Transaction;
+import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.yltx.Asset;
 import com.jlfex.hermes.model.yltx.AssetRepayPlan;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
@@ -43,14 +47,17 @@ import com.jlfex.hermes.repository.DictionaryTypeRepository;
 import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.RateRepository;
+import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.CreditorService;
 import com.jlfex.hermes.service.DictionaryService;
+import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.RepayService;
+import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
@@ -120,6 +127,12 @@ public class JlfexServiceImpl implements JlfexService {
 	private  UserService userService;
 	@Autowired
 	private  LoanRepository loanRepository;
+	@Autowired
+	private  InvestService investService;
+	@Autowired
+	private  TransactionService transactionService;
+	@Autowired
+	private  UserAccountRepository userAccountRepository;
 	//接口配置
 	public static ApiConfig  apiConfig = null;
 	
@@ -1025,9 +1038,42 @@ public class JlfexServiceImpl implements JlfexService {
 		Logger.info(var+" 实际募资金额更新为："+synchObj.getLabelVolmoney());
 		//更新 理财产品还款计划
 		updateFinancePlan(existOrder);
-		//更新 子资产 还款计划 Set<Asset>
+		//更新 子资产 还款计划 
 		updateAssetAndPlan(existOrder,synchObj);
+		//理财人冻结金额转账给债权人
+		freeAndTransferInvest(existOrder);
 		return  true;
+	}
+
+	/**
+	 * 理财人冻结金额转账给债权人
+	 * @param existOrder
+	 * @throws Exception
+	 */
+	public void freeAndTransferInvest(FinanceOrder existOrder) throws Exception {
+		List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		if(loanList!=null && loanList.size() == 1){
+			Loan loan = loanList.get(0);
+			Set<Asset>  assetSet =  existOrder.getAssetsList(); 
+			if(assetSet==null || assetSet.size() != 1){
+				throw new Exception("理财id="+existOrder.getUniqId()+",资产数不唯一");
+			}
+			Asset asset = CollectionUtil.switchSet2List(assetSet).get(0);
+			User loanUser = creditInfoService.findByCrediteCode(asset.getCode()).getCreditor().getUser();
+			List<Invest> investList = investService.findByLoanAndStatus(loan, Invest.Status.FREEZE);
+			if(investList!= null && investList.size() > 0){
+				for(Invest invest : investList){
+					// 解冻
+					transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "jlfex放款解冻投标金额");
+					// 转账
+					transactionService.transact(Transaction.Type.OUT, invest.getUser(), loanUser, invest.getAmount(), invest.getId(), "jlfex放款理财人到借款人");
+				}
+			}
+			//jlfex债权人现金账户重置0
+			UserAccount sourceUserAccount = userAccountRepository.findByUserAndType(loanUser, UserAccount.Type.CASH);
+			sourceUserAccount.setBalance(BigDecimal.ZERO);
+			userAccountRepository.save(sourceUserAccount);
+		}
 	}
     /**
      * 更新理财产品 的子资产 及 子资产还款计划

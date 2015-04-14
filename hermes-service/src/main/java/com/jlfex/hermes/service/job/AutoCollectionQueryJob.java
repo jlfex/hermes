@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
@@ -26,7 +25,6 @@ import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.cfca.ThirdPPService;
-import com.jlfex.hermes.service.job.Job.Result;
 
 /**
  * 自动代收查询
@@ -56,7 +54,7 @@ public class AutoCollectionQueryJob extends Job {
 	@Override
 	public Result run() {
 		try {
-			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatus(Tx1361Status.IN_PROCESSING.getStatus());
+			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(),CFCAOrder.Type.BID);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
 				request.setInstitutionID("001155");
@@ -98,6 +96,7 @@ public class AutoCollectionQueryJob extends Job {
 					investRepository.save(invest);
 					cFCAOrderRepository.save(cfcaOrder);
 					transactionRepository.save(transaction);
+					loanRepository.save(loan);
 				}
 			}
 			return new Result(true, true, "");

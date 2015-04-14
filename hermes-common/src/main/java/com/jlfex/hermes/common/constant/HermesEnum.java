@@ -67,37 +67,37 @@ public class HermesEnum {
 	 *
 	 */
 	public static final class P2ZJBank {
-		@Element("中国建设银行")
-		public static final String CCB = "105";
-		@Element("中国农业银行")
-		public static final String ABC = "103";
-		@Element("招商银行")
-		public static final String CMB = "308";
+		@Element("105")
+		public static final String CCB = "中国建设银行";
+		@Element("103")
+		public static final String ABC = "中国农业银行";
+		@Element("308")
+		public static final String CMB = "招商银行";
 		@Element("102")
 		public static final String ICBC = "中国工商银行";
-		@Element("中国银行")
-		public static final String BOC = "104";
-		@Element("交通银行")
-		public static final String BCM = "301";
-		@Element("上海银行")
-		public static final String BOS = "401";
-		@Element("浦发银行")
-		public static final String SPDB = "310";
-		@Element("兴业银行")
-		public static final String CIB = "309";
-		@Element("中国民生银行")
-		public static final String CMBC = "305";
-		@Element("中国光大银行")
-		public static final String CEB = "303";
-		@Element("中信银行")
-		public static final String ECITIC = "302";
-		@Element("中国邮政储蓄银行")
-		public static final String PSBC = "100";
-		@Element("平安银行")
-		public static final String PAB = "307";
-		@Element("北京银行")
-		public static final String BOB = "403";
-		@Element("广发银行")
-		public static final String CGB = "306";
+		@Element("104")
+		public static final String BOC = "中国银行";
+		@Element("301")
+		public static final String BCM = "交通银行";
+		@Element("401")
+		public static final String BOS = "上海银行";
+		@Element("310")
+		public static final String SPDB = "浦发银行";
+		@Element("309")
+		public static final String CIB = "兴业银行";
+		@Element("305")
+		public static final String CMBC = "中国民生银行";
+		@Element("303")
+		public static final String CEB = "中国光大银行";
+		@Element("302")
+		public static final String ECITIC = "中信银行";
+		@Element("100")
+		public static final String PSBC = "中国邮政储蓄银行";
+		@Element("307")
+		public static final String PAB = "平安银行";
+		@Element("403")
+		public static final String BOB = "北京银行";
+		@Element("306")
+		public static final String CGB = "广发银行";
 	}
 }

@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cfca.payment.api.tx.Tx1361Request;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -43,6 +47,7 @@ import com.jlfex.hermes.service.PaymentService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
+import com.jlfex.hermes.service.cfca.CFCAOrderService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
@@ -85,6 +90,8 @@ public class AccountController {
 	private BankService bankService;
 	@Autowired
 	private AuthService authService;
+	@Autowired
+	private CFCAOrderService cFCAOrderService;
 
 	/**
 	 * 索引
@@ -134,10 +141,10 @@ public class AccountController {
 	public String bankCardManage(Model model) {
 		// 查询用户数据
 		App.checkUser();
-		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(App.user().getId(),Status.ENABLED);
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(App.user().getId(), Status.ENABLED);
 		// 设置属性并渲染视图
-		if(bankAccount !=null){
-		   model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
+		if (bankAccount != null) {
+			model.addAttribute("area", areaService.loadById(bankAccount.getCity().getParentId()));
 		}
 		model.addAttribute("bankAccount", bankAccount);
 		return "account/bankCardManage";
@@ -169,8 +176,11 @@ public class AccountController {
 		model.addAttribute("bankAccount", bankAccountService.loadBankAccountById(id));
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
-	  //model.addAttribute("areaRoots", areaService.findByParentIsNull());// 查询area根级数据
-	  //model.addAttribute("areaChildrens", areaService.loadByParentId(bankAccountService.loadBankAccountById(id).getCity().getParent().getId()));// 查询area子数据
+		// model.addAttribute("areaRoots", areaService.findByParentIsNull());//
+		// 查询area根级数据
+		// model.addAttribute("areaChildrens",
+		// areaService.loadByParentId(bankAccountService.loadBankAccountById(id).getCity().getParent().getId()));//
+		// 查询area子数据
 		return "account/editBankCard";
 	}
 
@@ -187,7 +197,7 @@ public class AccountController {
 		String deposit = request.getParameter("deposit");
 		String account = request.getParameter("account");
 		String isdefault = request.getParameter("isdefault");
-	 // AppUser curUser = App.current().getUser();
+		// AppUser curUser = App.current().getUser();
 		return authService.editBankCard(id, bankId, cityId, deposit, account, isdefault);
 	}
 
@@ -461,16 +471,36 @@ public class AccountController {
 		PropertiesFilter.clear();
 		response.getWriter().write("success");
 	}
-	
+
 	/**
 	 * 中金代扣充值
+	 * 
 	 * @param channel
 	 * @param amount
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	@RequestMapping("/charge/zjCharge")
-	public String zjCharge(Double amount, Model model) {
+	@ResponseBody
+	public Result zjCharge(BigDecimal amount,BigDecimal fee) {
+		Result result = bankAccountService.zjCharge(amount,fee);
 		
-		return "account/index";
+		return result;
+	}
+	
+	@RequestMapping("/charge/chargeResult")
+	public String chargeResult(String message, String type, Model model) {
+		App.checkUser();
+		model.addAttribute("message", message);
+		if (type.equals(Type.SUCCESS.name())) {
+			model.addAttribute("type", "2.png");
+		} else if (type.equals(Type.FAILURE.name())) {
+			model.addAttribute("type", "3.png");
+		} else {
+			model.addAttribute("type", "4.png");
+		}
+
+		
+		return "account/chargeResult";
 	}
 }

@@ -1,6 +1,7 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,14 +15,10 @@ import com.jlfex.hermes.model.User;
 /**
  * 
  * 理财信息仓库
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
  * @since 1.0
  */
 @Repository
 public interface InvestRepository extends  PagingAndSortingRepository<Invest, String>, JpaSpecificationExecutor<Invest> {
-
 	/**
 	 * 通过用户信息查找对应理财信息
 	 * 
@@ -67,6 +64,16 @@ public interface InvestRepository extends  PagingAndSortingRepository<Invest, St
 	@Query("SELECT  t  FROM Invest  t  where t.loan.loanKind in ?1 and t.user=?2 order by t.status asc")
 	public List<Invest> findByUserAndLoanKind(List<String> loanKindList, User user);
 
+    /**
+    * 根据 标 和状态 获取 理财信息
+    * @param loan
+    * @param status
+    * @return
+    */
+	public List<Invest> findByLoanAndStatus(Loan loan, String status);
+
+
 	public Page<Invest> findByLoan(Loan loan,Pageable pageable);
+
 
 }

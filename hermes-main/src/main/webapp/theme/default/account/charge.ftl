@@ -100,12 +100,10 @@ jQuery(function($) {
 		$.ajax('${app}/account/charge/zjCharge', {
 			data: $('#chargeForm').serialize(),
 			type: 'post',
-			dataType: 'html',
-			timeout: 5000,
-			success: function(data, textStatus, xhr) {
-				$('#main').fadeOut('fast', function() {
-					$(this).html(data).fadeIn('fast');
-				});
+			dataType: 'json',
+			timeout: 50000,
+			success: function(data) {
+			 window.location.href="${app}/account/charge/chargeResult?message="+data.messages[0]+"&type="+data.type;
 			}
 		});
 	});

@@ -36,15 +36,9 @@
 <#include "/header.ftl" />
 
 <!-- middle start-->
-<div class="m_con m_fp">
+<div class="m_con m_fp" style="min-height:200px;">
 	<div class="content">
     	<p><img src="${app.theme}/public/other/images/icon2/${type}" width="24" height="24" alt="" /> ${message}<p>
-     	<p>您可通过 资金明细 查询充值结果</p>
-        <p>通过 我的债权 查询交易结果</p>
-        <p>
-        	<a href="${app}/account/index?type=myfund" class="a_dec">资金明细</a>
-            <a href="${app}/account/index?type=mycredit" class="a_dec ml_20px">我的债权</a>
-        </p>   
 	</div>
 </div>
 <#include "/footer.ftl" />
