@@ -2,34 +2,50 @@ package com.jlfex.hermes.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cfca.payment.api.tx.Tx1361Request;
+import cfca.payment.api.tx.Tx1361Response;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.Result.Type;
+import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.support.spring.SpringWebApp;
 import com.jlfex.hermes.common.utils.Numbers;
+import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.Withdraw;
+import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.repository.AreaRepository;
 import com.jlfex.hermes.repository.BankAccountRepository;
 import com.jlfex.hermes.repository.BankRepository;
+import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.repository.WithdrawRepository;
 import com.jlfex.hermes.service.BankAccountService;
+import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
+import com.jlfex.hermes.service.apiLog.ApiLogService;
+import com.jlfex.hermes.service.cfca.CFCAOrderService;
+import com.jlfex.hermes.service.cfca.ThirdPPService;
 import com.jlfex.hermes.service.withdraw.WithdrawFee;
 
 /**
@@ -73,6 +89,21 @@ public class BankAccountServiceImpl implements BankAccountService {
 	/** 交易业务接口 */
 	@Autowired
 	private TransactionService transactionService;
+
+	@Autowired
+	private UserAccountRepository userAccountRepository;
+
+	@Autowired
+	private CFCAOrderService cFCAOrderService;
+
+	@Autowired
+	private ThirdPPService thirdPPService;
+
+	@Autowired
+	private ApiLogService apiLogService;
+	
+	@Autowired
+	private InvestService investService;
 
 	/*
 	 * (non-Javadoc)
@@ -252,9 +283,63 @@ public class BankAccountServiceImpl implements BankAccountService {
 	}
 
 	@Override
-	public BankAccount findOneByUserIdAndStatus(String userId,String status) {
+	public BankAccount findOneByUserIdAndStatus(String userId, String status) {
 		// TODO Auto-generated method stub
-		return bankAccountRepository.findOneByUserIdAndStatus(userId,status);
+		return bankAccountRepository.findOneByUserIdAndStatus(userId, status);
 	}
 
+	/**
+	 * 中金充值
+	 * @param amount
+	 * @return
+	 */
+	@Override
+	@SuppressWarnings("rawtypes")
+	public Result zjCharge(BigDecimal amount) {
+		Result result = new Result();
+		
+		User user = userRepository.findOne(App.user().getId());
+		BankAccount bankAccount = this.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		UserProperties userProperties = userPropertiesRepository.findByUser(user);
+		// 请求日志
+		Map<String, String> recodeMap = new HashMap<String, String>();
+		Tx1361Response response = null;
+		try {
+			String txSN = cFCAOrderService.genOrderTxSN();
+			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount, bankAccount, userProperties, txSN);
+			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
+			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
+			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
+			response = thirdPPService.invokeTx1361(tx1361Request);
+			CFCAOrder cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE);
+			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
+				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
+					//transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.WAIT);
+					result.setType(Type.WITHHOLDING_PROCESSING);
+					result.addMessage(0,"充值处理中");
+				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
+					result.setType(Type.SUCCESS);
+					result.addMessage(0,"充值成功");
+				} else {
+					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
+					result.setType(Type.FAILURE);
+					result.addMessage(0,"充值失败");
+				}
+
+				investService.saveUserLog(user);
+			} else {
+				result.setType(Type.FAILURE);
+				result.addMessage(0, response.getResponseMessage());
+			}
+			apiLog.setResponseMessage(response.getResponsePlainText());
+			apiLog.setResponseTime(new Date());
+			apiLogService.saveApiLog(apiLog);
+		} catch (Exception e) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, response.getResponseMessage());
+		}
+
+		return result;
+	}
 }

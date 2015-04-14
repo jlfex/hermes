@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jlfex.hermes.common.Result;
@@ -100,4 +101,12 @@ public interface BankAccountService {
 	public Withdraw addWithdraw(String bankAccountId, Double amount);
 	
 	public BankAccount findOneByUserIdAndStatus(String userId,String status);
+	
+	/**
+	 * 中金充值
+	 * @param amount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result zjCharge(BigDecimal amount) ;
 }

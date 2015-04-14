@@ -267,4 +267,15 @@ public interface TransactionService {
 	 * @return
 	 */
 	public List<Transaction> transactToZJPay(String type, UserAccount sourceUserAccount, UserAccount targetUserAccount, BigDecimal amount, String reference, String remark);
+
+	/**
+	 * 充值
+	 * 
+	 * @param type
+	 * @param sourceUserAccount
+	 * @param amount
+	 * @param reference
+	 * @param remark
+	 */
+	public void addCashAccountRecord(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
 }
