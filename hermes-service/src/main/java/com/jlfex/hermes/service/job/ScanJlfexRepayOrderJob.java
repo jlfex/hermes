@@ -90,16 +90,22 @@ public class ScanJlfexRepayOrderJob extends Job {
 						   HermesConstants.ORDER_FINISH_REPAY.equals(vo.getOrderStatus().trim())){
 							//更新理财人收益信息
 							List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
-							for (InvestProfit investProfit : investProfitList){
+							BigDecimal totolAmount = BigDecimal.ZERO;
+							for(InvestProfit investProfit : investProfitList){
+								if(!investProfit.getStatus().equals(InvestProfit.Status.WAIT)){
+									continue ;
+								}
+								totolAmount = totolAmount.add(investProfit.getAmount());
+							}
+							transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, creditUser, UserAccount.Type.JLFEX_FEE, totolAmount, invest.getId(), "JLfex回购充值成功");
+							for(InvestProfit investProfit : investProfitList){
 								if(!investProfit.getStatus().equals(InvestProfit.Status.WAIT)){
 									Logger.info("跳过还款处理：状态不对, 当前理财收益investProfitId="+investProfit.getId()+" 状态为="+investProfit.getStatus());
 									continue ;
 								}
 								// 还本金
-								transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, creditUser, UserAccount.Type.JLFEX_FEE, investProfit.getPrincipal(), investProfit.getId(), "JLfex回购本金充值成功");
 								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getPrincipal(), investProfit.getId(), "jlfex正常还本金");
 								// 还利息
-								transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, creditUser, UserAccount.Type.JLFEX_FEE, investProfit.getInterest(), investProfit.getId(), "JLfex回购利息充值成功");
 								transactionService.transact(Transaction.Type.OUT, creditUser, investProfit.getUser(), investProfit.getInterest(), investProfit.getId(), "jlfex正常还利息");
 								//更新理财收益表
 								investProfit.setStatus(InvestProfit.Status.ALREADY);
@@ -113,16 +119,16 @@ public class ScanJlfexRepayOrderJob extends Job {
 							//更新理财记录
 							invest.setStatus(Invest.Status.COMPLETE);
 							investService.save(invest);
+							//更新债权信息
+							crediteInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
+							creditInfoService.save(crediteInfo);
+							//更新债权还款计划
+							List<CreditRepayPlan> creditPlanList = creditRepayPlanService.queryByCreditInfo(crediteInfo);
+							for(CreditRepayPlan creditPlan: creditPlanList){
+								creditPlan.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
+							}
+							creditRepayPlanService.saveBatch(creditPlanList);
 						}
-						//更新债权信息
-						crediteInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
-						creditInfoService.save(crediteInfo);
-						//更新债权还款计划
-						List<CreditRepayPlan> creditPlanList = creditRepayPlanService.queryByCreditInfo(crediteInfo);
-						for(CreditRepayPlan creditPlan: creditPlanList){
-							creditPlan.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
-						}
-						creditRepayPlanService.saveBatch(creditPlanList);
 					}
 				}catch(Exception e){
 					Logger.error(var+",异常", e);

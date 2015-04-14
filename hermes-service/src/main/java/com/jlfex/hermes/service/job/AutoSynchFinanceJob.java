@@ -30,10 +30,6 @@ public class AutoSynchFinanceJob extends Job {
 	@Override
 	public Result run() {
 		String var = "自动同步T-1天理财产品JOB：";
-		int financeOrderSize = 0;  //理财产品总数
-		int dealSucSize = 0;       //处理成功数
-		int dealFailSize = 0;      //处理失败数
-		int undoSize= 0;           //重复订单，不需处理数
 		try {
 			Logger.info(var+Calendars.format(HermesConstants.FORMAT_19)+"开始....");
 			Date now = new Date();
@@ -51,7 +47,6 @@ public class AutoSynchFinanceJob extends Job {
 				//数据处理
 				List<FinanceOrder> financeOrderList = new  ArrayList<FinanceOrder>();
 				jlfexService.buildFinanceOrder(financeOrderList, queryFunanceOrderVo);
-				financeOrderSize = financeOrderList.size();
 				for(FinanceOrder obj: financeOrderList){
 					try{
 						String  resultVal = null;
@@ -73,15 +68,11 @@ public class AutoSynchFinanceJob extends Job {
 							String  resultCode = jlfexService.sellCreditDeal(obj);
 							if("00".equals(resultCode)){
 								resultVal = "发售失败";
-								dealFailSize ++ ;
 							}else if("01".equals(resultCode)){
 								resultVal = "发售成功";
-								dealSucSize ++ ;
 							}else if("02".equals(resultCode)){
 								resultVal = "不需重复发售";
-								undoSize ++ ;
 							}else{
-								dealFailSize ++ ;
 								resultVal = "发售失败";
 							}
 							Logger.info("理财产品id="+obj.getUniqId()+"处理结果： "+resultVal);
@@ -89,7 +80,6 @@ public class AutoSynchFinanceJob extends Job {
 							Logger.info("当前理财产品id="+obj.getUniqId()+",状态="+obj.getStatus()+", 跳过处理");
 						}
 					}catch(Exception e){
-						dealFailSize ++ ;
 						Logger.error(var+" 理财产品id="+obj.getUniqId()+"处理异常：",e);
 						continue;
 					}
