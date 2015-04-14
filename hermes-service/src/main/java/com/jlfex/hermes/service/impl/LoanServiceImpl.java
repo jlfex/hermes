@@ -442,7 +442,7 @@ public class LoanServiceImpl implements LoanService {
 		loanRepayList = repayServiceImpl.getRepayMethod(loan.getRepay().getId()).generatePlan(loan, paramMap);
 		loanRepayRepository.save(loanRepayList);
 		// 2: 生成理财收益计划
-		investList = investRepository.findByLoan(loan);
+		investList = investRepository.findByLoanAndStatus(loan, Invest.Status.FREEZE);
 		InvestProfit investProfit = null;
 		for (Invest invest : investList) {
 			invest.setStatus(Invest.Status.COMPLETE);
@@ -502,7 +502,7 @@ public class LoanServiceImpl implements LoanService {
 		}
 		loanRepayRepository.save(loanRepayList);
 		// 2:生成理财收益计划
-		investList = investRepository.findByLoan(loan);
+		investList = investRepository.findByLoanAndStatus(loan, Invest.Status.FREEZE);
 		InvestProfit investProfit = null;
 		for (Invest invest : investList) {
 			invest.setStatus(Invest.Status.COMPLETE);
