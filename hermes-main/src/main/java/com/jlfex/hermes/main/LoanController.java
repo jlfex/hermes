@@ -19,6 +19,7 @@ import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
@@ -29,7 +30,9 @@ import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.repository.AreaRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
+import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LoanService;
@@ -43,10 +46,6 @@ import com.jlfex.hermes.service.pojo.ProductInfo;
 /**
  * 
  * 借款控制器
- * 
- * @author Ray
- * @version 1.0, 2014-1-2
- * @since 1.0
  */
 @Controller
 @RequestMapping("/loan")
@@ -70,6 +69,10 @@ public class LoanController {
 	private UserPropertiesRepository userPropertiesRepository;
 	@Autowired
 	private InvestService investService;
+	@Autowired
+	private BankAccountService bankAccountService;
+	@Autowired 
+	private AreaRepository areaRepository;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String COMPANY_ADDRESS = "app.company.address";
@@ -441,5 +444,31 @@ public class LoanController {
 		model.addAttribute("companyName", companyName);
 		model.addAttribute("companyAddress", companyAddress);
 		return "agree/loan";
+	}
+	/**
+	 * 支付委托协议
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/payEntrustProtocol")
+	public String payEntrustProtocol(Model model) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		BankAccount bankAccount = null;
+		String city = null,province=null; 
+		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(App.current().getUser().getId(), BankAccount.Status.ENABLED);
+		if (bankAccountList == null || bankAccountList.size() != 1) {
+			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
+		} else {
+			bankAccount = bankAccountList.get(0);
+			city = bankAccount.getCity().getName();
+			province = areaRepository.findOne(bankAccount.getCity().getParentId()).getName();
+		}
+		model.addAttribute("user", userPropertiesRepository.findByUserId(curUser.getId()));
+		model.addAttribute("nowDate", Calendars.date());
+		model.addAttribute("bankAccount", bankAccount);
+		model.addAttribute("city", city);
+		model.addAttribute("province", province);
+		return "agree/payEntrustProtocol";
 	}
 }
