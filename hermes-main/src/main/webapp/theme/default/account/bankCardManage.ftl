@@ -24,6 +24,7 @@
                     <td style="border:none;">
                     	<button type="button" class="btn btn-link editBtn" id="editBtn">更换</button>
                     </td>
+                    <input type="hidden" value="${bankAccount.id}" id="id" name="id">
                 </tr>
                 <tr>                
                     <td colspan="6" style="border:none;"></td>
@@ -52,7 +53,8 @@
 		});
 		//更改银行卡
 		$(".editBtn").on("click",function(){
-			window.location.href="${app}/account/index?type=editBankCard";						
+		    var id=$("#id").val();
+			window.location.href="${app}/account/index?type=editBankCard&bankAccountId="+id;						
 		});						
 	});
 </script> 

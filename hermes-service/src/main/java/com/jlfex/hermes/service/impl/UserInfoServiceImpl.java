@@ -204,7 +204,6 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		}
 		userBasic.setId(userPro.getId());
 		BeanUtils.copyProperties(userBasic, userPro);
-		userPro.getUser().setCellphone(userBasic.getCellphone());
 
 		UserAddress userAdd = userAddressRepository.findByUserIdAndType(user.getId(), Type.COMMON);
 		if (userAdd == null) {

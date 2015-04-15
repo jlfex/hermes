@@ -49,9 +49,9 @@
   </div>
   <div class="form-group">
      <label for="cellphone" class="col-sm-2 control-label">*<@messages key="model.basic.cellphone"/></label>
-     <label for="cellphone"class="form-control-static">${userBasic.cellphone!''}</label>
+     <label for="cellphone" class="form-control-static">${userBasic.cellphone!''}</label>
 	<div  class="col-xs-4 u-col eidt-group edit-input">
-		<input type="text" class="form-control " id="cellphone" name="cellphone" value="<#if userBasic?exists>${userBasic.cellphone!''}</#if>" data-auth="${userBasic.authCellphone!''}" >
+		<input type="text" class="form-control " id="cellphone" name="cellphone" readonly="true" value="<#if userBasic?exists>${userBasic.cellphone!''}</#if>">
 		<label for="cellphone" generated="true" class="error valid"></label>
 	</div>
   </div>

@@ -708,38 +708,11 @@ public class InvestController {
 	public String myinvestTable(Model model,@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size) {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
-
 		User user = userInfoService.findByUserId(curUser.getId());
-		// 已获收益
-		BigDecimal allProfitSum = investProfitService.loadSumAllProfitByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
-		// 利息
-		BigDecimal interestSum = investProfitService.loadInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
-		// 罚息
-		BigDecimal overdueInterestSum = investProfitService.loadOverdueInterestSumByUserAndInStatus(user, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
 		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page,size);
-		int investSuccessCount = 0;
-		for (InvestInfo investInfo : investInfoList) {
-			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
-				investSuccessCount = investSuccessCount + 1;
-			}
-
-		}
-		if (allProfitSum == null)
-			allProfitSum = BigDecimal.ZERO;
-		if (interestSum == null)
-			interestSum = BigDecimal.ZERO;
-		if (overdueInterestSum == null)
-			overdueInterestSum = BigDecimal.ZERO;
-		model.addAttribute("allProfitSum", allProfitSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("successCount", investSuccessCount);
-
 		model.addAttribute("invests", investInfoList);
-		model.addAttribute("nav", "invest");
-		// 返回视图
 		return "invest/myinvest-table";
 	}
 	/**
@@ -827,55 +800,11 @@ public class InvestController {
 		App.checkUser();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		// 已获收益
-		List<String> loanKinds = new ArrayList<String>();
-		loanKinds.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
-		loanKinds.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
-		InvestProfit investProfit = investProfitService.sumAllProfitByAssignLoan(user, loanKinds, new String[] { InvestProfit.Status.ALREADY, InvestProfit.Status.OVERDUE, InvestProfit.Status.ADVANCE });
-		BigDecimal allProfitSum = BigDecimal.ZERO;// 总收益
-		BigDecimal interestSum = BigDecimal.ZERO;// 利息收益总数
-		BigDecimal overdueInterestSum = BigDecimal.ZERO; // 罚息收益总数
-		if (investProfit != null) {
-			if (investProfit.getInterestAmount() != null) {
-				interestSum = investProfit.getInterestAmount();
-			}
-			if (investProfit.getOverdueAmount() != null) {
-				overdueInterestSum = investProfit.getOverdueAmount();
-			}
-			allProfitSum = allProfitSum.add(interestSum).add(overdueInterestSum);
-		}
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		loanKindList.add(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 		Page<InvestInfo> investInfoList = investService.findByUser(user, loanKindList,page, size);
-		List<JlfexOrder> jlfexOrders = new ArrayList<JlfexOrder>();
-		int investSuccessCount = 0;
-		for (InvestInfo investInfo : investInfoList) {
-			if (Invest.Status.COMPLETE.equals(investInfo.getStatus())) {
-				investSuccessCount = investSuccessCount + 1;
-			}
-			try {
-				if (StringUtils.isNotEmpty(investInfo.getId())) {
-					jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
-				}
-			} catch (Exception e) {
-				Logger.error("获取理财产品异常", e);
-			}
-		}
-		if (allProfitSum == null)
-			allProfitSum = BigDecimal.ZERO;
-		if (interestSum == null)
-			interestSum = BigDecimal.ZERO;
-		if (overdueInterestSum == null)
-			overdueInterestSum = BigDecimal.ZERO;
-		model.addAttribute("allProfitSum", allProfitSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("interestSum", interestSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("overdueInterestSum", overdueInterestSum.setScale(2, BigDecimal.ROUND_UP));
-		model.addAttribute("successCount", investSuccessCount);
 		model.addAttribute("invests", investInfoList);
-		model.addAttribute("nav", "invest");
-		model.addAttribute("jlfexOrders", jlfexOrders);
-		// 返回视图
 		return "invest/mycredit-table";
 	}
 
