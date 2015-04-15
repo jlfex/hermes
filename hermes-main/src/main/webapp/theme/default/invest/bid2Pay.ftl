@@ -27,7 +27,23 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
+	$('#cr').click(function() {
+	   var cr = $("#cr").is(':checked');
+		if(!cr) {
+			$("#err_msg").addClass("mv_error").html('请勾选代扣委托书');
+		} else {
+			$("#err_msg").removeClass("mv_error");
+			$("#err_msg").html('');
+		}
+	});
+     
      $('#confirm').click(function(){
+     var cr = $("#cr").is(':checked');
+     if(!cr) {
+     	 $("#err_msg").addClass("mv_error").html('请勾选代扣委托书');
+     	 return;
+     }
+     
      	$.ajax({
      		data:$("#loanDetail").serialize(),
      		url:"${app}/invest/bid2Pay",
@@ -86,7 +102,7 @@ jQuery(function($) {
                     </div>
                     <div class="block">
                         <label>&nbsp;</label>
-                        <input type="checkbox" />我已阅读并同意 <a href="#" id="payEntrustProtocol" class="blue">《代扣委托书》</a>
+                        <input type="checkbox" id="cr"/>我已阅读并同意 <a href="#" id="payEntrustProtocol" class="blue">《代扣委托书》</a><span id="err_msg"></span>
                     </div>
                     <div class="block">
                         <label>&nbsp;</label>
