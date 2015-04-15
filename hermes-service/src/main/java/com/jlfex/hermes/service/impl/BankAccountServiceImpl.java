@@ -315,14 +315,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 			CFCAOrder cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE, fee);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
-					// transactionService.cropAccountToZJPay(Transaction.Type.CHARGE,
-					// user, UserAccount.Type.ZHONGJIN_FEE, amount,
-					// cfcaOrder.getId(), Transaction.Status.WAIT);
 					result.setType(Type.WITHHOLDING_PROCESSING);
 					result.addMessage(0, "充值处理中");
 				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
-					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, fee, cfcaOrder.getId(), "中金代扣手续费");
+					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount.add(fee), cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
+					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, fee, cfcaOrder.getId(), "充值手续费");
 					result.setType(Type.SUCCESS);
 					result.addMessage(0, "充值成功");
 				} else {
