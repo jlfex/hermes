@@ -1041,7 +1041,7 @@ public class InvestServiceImpl implements InvestService {
 			}
 			apiLog.setDealFlag(ApiLog.DealResult.SUC);
 		} catch (Exception e) {
-			Logger.info("投标并支付出现异常"+e.getMessage());
+			Logger.error("投标并支付出现异常"+e.getMessage());
 		}
 
 		apiLog.setResponseMessage(response.getResponsePlainText());
