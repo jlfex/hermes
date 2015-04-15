@@ -458,7 +458,7 @@ public class LoanController {
 		String city = null,province=null; 
 		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(App.current().getUser().getId(), BankAccount.Status.ENABLED);
 		if (bankAccountList == null || bankAccountList.size() != 1) {
-			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
+			Logger.info("支付协议异常：没有找到有效的银行卡信息");
 		} else {
 			bankAccount = bankAccountList.get(0);
 			city = bankAccount.getCity().getName();
