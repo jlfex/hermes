@@ -27,6 +27,7 @@ import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.BankAccount.Status;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -172,7 +173,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 		bankAccount.setDeposit(deposit);
 		bankAccount.setName(userProperties.getRealName());
 		bankAccount.setAccount(account);
-		bankAccount.setStatus(BankAccount.Status.ENABLED);
+		
+		List<BankAccount> bankAccountList = bankAccountRepository.findByUserId(App.user().getId());
+		for (BankAccount bankinfo : bankAccountList) {
+			bankinfo.setStatus(Status.DISABLED);
+		}
+		bankAccount.setStatus(Status.ENABLED);
 
 		// 返回数据
 		return save(bankAccount);

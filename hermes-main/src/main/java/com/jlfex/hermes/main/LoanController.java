@@ -111,22 +111,7 @@ public class LoanController {
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		Page<LoanInfo> loanInfoList = loanService.findByUser(user,page,size);
-		int loanSuccessCount = 0;
-		BigDecimal loanAmount = BigDecimal.ZERO;
-		for (LoanInfo loanInfo : loanInfoList) {
-			if (Loan.Status.REPAYING.equals(loanInfo.getStatus()) || Loan.Status.COMPLETED.equals(loanInfo.getStatus())) {
-				loanSuccessCount = loanSuccessCount + 1;
-				loanAmount = loanAmount.add(Numbers.parseCurrency(loanInfo.getAmount()));
-			}
-		}
-		int loanCount = loanInfoList.getSize();
-		model.addAttribute("loanSuccessCount", loanSuccessCount);
-		model.addAttribute("loanCount", loanCount);
-		model.addAttribute("loanAmount", loanAmount);
 		model.addAttribute("loans", loanInfoList);
-		model.addAttribute("nav", "loan");
-
-		// 返回视图
 		return "loan/myloan-table";
 	}
 
