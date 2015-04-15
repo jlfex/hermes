@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,6 @@ import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
-import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Invest;
@@ -47,7 +47,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	private CFCAOrderRepository cFCAOrderRepository;
 	@Autowired
 	private ApiLogService apiLogService;
-
+	
 	/**
 	 * 生成下一个订单流水
 	 */
@@ -125,7 +125,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	@Override
 	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn) {
 		Tx1361Request tx1361Request = new Tx1361Request();
-		tx1361Request.setInstitutionID("001155");
+		tx1361Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 		tx1361Request.setTxSN(txSn);
 		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
 		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
@@ -166,10 +166,11 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	}
 
 	@Override
-	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type) {
+	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type, BigDecimal fee) {
 		CFCAOrder cfcaOrder = new CFCAOrder();
 		cfcaOrder.setAmount(investAmount);
 		cfcaOrder.setInvest(null);
+		cfcaOrder.setFee(fee);
 		cfcaOrder.setBankTxTime(response.getBankTxTime());
 		cfcaOrder.setCode(response.getCode());
 		cfcaOrder.setMessage(response.getMessage());
