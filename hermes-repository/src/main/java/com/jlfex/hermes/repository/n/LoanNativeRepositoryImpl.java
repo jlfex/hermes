@@ -12,9 +12,6 @@ import com.jlfex.hermes.model.Loan;
 /**
  * 
  * 借款信息仓库扩展接口实现
- * 
- * @author Ray
- * @version 1.0, 2013-12-30
  * @since 1.0
  */
 @Component
