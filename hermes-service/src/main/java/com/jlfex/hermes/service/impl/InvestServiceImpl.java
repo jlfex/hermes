@@ -1037,12 +1037,11 @@ public class InvestServiceImpl implements InvestService {
 				Logger.info(var);
 				backMap.put("code", "99");
 				backMap.put("msg", var);
-
 				loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 			}
 			apiLog.setDealFlag(ApiLog.DealResult.SUC);
 		} catch (Exception e) {
-
+			Logger.info("投标并支付出现异常"+e.getMessage());
 		}
 
 		apiLog.setResponseMessage(response.getResponsePlainText());
