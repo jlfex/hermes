@@ -31,6 +31,7 @@
 				</#list>
 			</tbody>
 		</table>
+		<ul class="pagination" data-number="${loans.number}" data-total-pages="${loans.totalPages}"></ul>						
 	</div>
 </div>
 <script type="text/javascript">
