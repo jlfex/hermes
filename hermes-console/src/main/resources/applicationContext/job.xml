@@ -16,6 +16,7 @@
 				<ref bean="scanJlfexRepayOrderJobTrigger" />
 				<ref bean="autoSynchFinanceJobTrigger" />
 				<ref bean="autoCollectionQueryJobTrigger" />
+				<ref bean="autoChargeQueryJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -116,5 +117,17 @@
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0/2 * * * ?" />
+	</bean>
+	
+		<!-- 充值接口 执行时间：每隔2分钟执行一次 -->
+	<bean id="autoChargeQueryJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoChargeQueryJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
 </beans>

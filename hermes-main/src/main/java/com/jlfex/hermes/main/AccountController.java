@@ -479,7 +479,8 @@ public class AccountController {
 	@SuppressWarnings("rawtypes")
 	@RequestMapping("/charge/zjCharge")
 	@ResponseBody
-	public Result zjCharge(BigDecimal amount,BigDecimal fee) {
+	public Result zjCharge(BigDecimal amount) {
+		BigDecimal fee = paymentService.calcChargeFee(amount.doubleValue());
 		Result result = bankAccountService.zjCharge(amount,fee);
 		
 		return result;
