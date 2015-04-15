@@ -71,5 +71,5 @@ public interface CFCAOrderService {
 	 * @param type
 	 *            类型：01，投标，00充值
 	 */
-	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type);
+	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type, BigDecimal fee);
 }

@@ -102,7 +102,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	@Autowired
 	private ApiLogService apiLogService;
-	
+
 	@Autowired
 	private InvestService investService;
 
@@ -296,14 +296,15 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	/**
 	 * 中金充值
+	 * 
 	 * @param amount
 	 * @return
 	 */
 	@Override
 	@SuppressWarnings("rawtypes")
-	public Result zjCharge(BigDecimal amount,BigDecimal fee) {
+	public Result zjCharge(BigDecimal amount, BigDecimal fee) {
 		Result result = new Result();
-		
+
 		User user = userRepository.findOne(App.user().getId());
 		BankAccount bankAccount = this.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
@@ -312,39 +313,38 @@ public class BankAccountServiceImpl implements BankAccountService {
 		Tx1361Response response = null;
 		try {
 			String txSN = cFCAOrderService.genOrderTxSN();
-			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount, bankAccount, userProperties, txSN);
+			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, txSN);
 			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
-			CFCAOrder cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE);
+			CFCAOrder cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE, fee);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
-					//transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.WAIT);
 					result.setType(Type.WITHHOLDING_PROCESSING);
-					result.addMessage(0,"充值处理中");
+					result.addMessage(0, "充值处理中");
 				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
-					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, fee, cfcaOrder.getId(), "中金代扣手续费");
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
+					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount.add(fee), cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
+					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, fee, cfcaOrder.getId(), "充值手续费");
 					result.setType(Type.SUCCESS);
-					result.addMessage(0,"充值成功");
+					result.addMessage(0, "充值成功");
 				} else {
 					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
 					result.setType(Type.FAILURE);
-					result.addMessage(0,"充值失败");
+					result.addMessage(0, "充值失败");
 				}
 
 				investService.saveUserLog(user);
 			} else {
 				result.setType(Type.FAILURE);
-				result.addMessage(0, response.getResponseMessage());
+				result.addMessage(0, "充值失败");
 			}
 			apiLog.setResponseMessage(response.getResponsePlainText());
 			apiLog.setResponseTime(new Date());
 			apiLogService.saveApiLog(apiLog);
 		} catch (Exception e) {
 			result.setType(Type.FAILURE);
-			result.addMessage(0, response.getResponseMessage());
+			result.addMessage(0, "充值失败");
 		}
 
 		return result;

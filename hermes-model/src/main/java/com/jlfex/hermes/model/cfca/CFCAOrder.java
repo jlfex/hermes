@@ -69,19 +69,24 @@ public class CFCAOrder extends Model {
 	 * 响应消息
 	 */
 	private String responseMessage;
-	
+
 	/**
 	 * 类型：00充值，01投标
 	 */
 	private String type;
-	
+
+	/**
+	 * 费
+	 */
+	private BigDecimal fee;
+
 	/**
 	 * 投资人
 	 */
 	@ManyToOne
-	@JoinColumn(name = "user")                    
+	@JoinColumn(name = "user")
 	private User user;
-	
+
 	public Invest getInvest() {
 		return invest;
 	}
@@ -161,7 +166,7 @@ public class CFCAOrder extends Model {
 	public void setResponseMessage(String responseMessage) {
 		this.responseMessage = responseMessage;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
@@ -178,7 +183,13 @@ public class CFCAOrder extends Model {
 		this.user = user;
 	}
 
+	public BigDecimal getFee() {
+		return fee;
+	}
 
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
 
 	public static final class Type {
 		@Element("充值")
