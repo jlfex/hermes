@@ -9,9 +9,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 支付渠道信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
  * @since 1.0
  */
 @Entity
@@ -33,7 +30,7 @@ public class PaymentChannel extends Model {
 	private String code;
 
 	/** 图片 */
-	@Column(name = "logo", length = 10000)
+	@Column(name = "logo", length = 40000)
 	private String logo;
 
 	/** 顺序 */
