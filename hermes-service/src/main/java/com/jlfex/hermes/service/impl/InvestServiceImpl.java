@@ -1037,12 +1037,11 @@ public class InvestServiceImpl implements InvestService {
 				Logger.info(var);
 				backMap.put("code", "99");
 				backMap.put("msg", var);
-
 				loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 			}
 			apiLog.setDealFlag(ApiLog.DealResult.SUC);
 		} catch (Exception e) {
-
+			Logger.error("投标并支付出现异常"+e.getMessage());
 		}
 
 		apiLog.setResponseMessage(response.getResponsePlainText());
@@ -1089,7 +1088,7 @@ public class InvestServiceImpl implements InvestService {
 	 */
 	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn) {
 		Tx1361Request tx1361Request = new Tx1361Request();
-		tx1361Request.setInstitutionID("001155");
+		tx1361Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 		tx1361Request.setTxSN(txSn);
 		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
 		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());

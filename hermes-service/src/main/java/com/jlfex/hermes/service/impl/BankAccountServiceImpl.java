@@ -333,9 +333,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 					result.setType(Type.FAILURE);
 					result.addMessage(0, "充值失败");
 				}
-
 				investService.saveUserLog(user);
 			} else {
+				transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
 				result.setType(Type.FAILURE);
 				result.addMessage(0, "充值失败");
 			}
@@ -343,6 +343,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			apiLog.setResponseTime(new Date());
 			apiLogService.saveApiLog(apiLog);
 		} catch (Exception e) {
+			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "充值失败");
 		}
