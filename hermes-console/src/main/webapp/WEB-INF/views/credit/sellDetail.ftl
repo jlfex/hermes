@@ -34,7 +34,7 @@
                         <div class="spanblock"><span class="wd_100">债权人编号：</span>${(creditInfo.creditor.creditorNo)!''}</div>
                         <div class="spanblock"><span class="wd_100">联系人：</span>${(creditInfo.creditor.contacter)!''}</div>
                         <div class="spanblock"><span class="wd_100">可用余额：</span>${reMainCash!'0'} 元 &nbsp;&nbsp;
-                         <#if creditInfo.creditKind == '00'>
+                         <#if creditInfo.creditKind?? && creditInfo.creditKind == '00'>
                          <button type="button" id="creditorCharge"  class="btn btn-primary" data-id="${(creditInfo.creditor.id)!''}">充值</button>
                          </#if>
                        </div>

@@ -775,6 +775,7 @@ public class CreditController {
 				//转让时间
 				entity.setAssignTime(Calendars.parse("yyyy-MM-dd HH:mm:ss", Calendars.format("yyyy-MM-dd HH:mm:ss", new Date())));
 				entity.setProductDesc(creditInfo.getProductDesc());
+				entity.setCreditKind(CrediteInfo.CreditKind.EXECEL_IMP);
 				if(creditInfoService.sellCredit(entity)){
 					Logger.info("发售债权人"+entity.getCreditor().getCreditorNo()+"，债权编号:"+entity.getCertificateNo()+",发售成功");
 				}
