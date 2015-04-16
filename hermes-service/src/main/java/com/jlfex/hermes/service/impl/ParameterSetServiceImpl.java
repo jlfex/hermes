@@ -83,12 +83,12 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		StringBuilder condition = new StringBuilder();
 
 		if (!Strings.empty(parameterType)) {
-			condition.append(" where h2.name = :parameterType");
-			params.put("parameterType", parameterType);
+			condition.append(" where h2.name like :parameterType");
+			params.put("parameterType", "%"+parameterType+"%");
 		}
 		if (!Strings.empty(parameterValue)) {
-			condition.append(" where h1.name = :parameterValue");
-			params.put("parameterValue", parameterValue);
+			condition.append(" where h1.name like :parameterValue");
+			params.put("parameterValue", "%"+parameterValue+"%");
 		}
 		return condition.toString();
 	}
@@ -227,6 +227,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	@Override
 	public List<DictionaryType> findByName(String name) {
 		return dictionaryTypeRepository.findByName(name);
+	}
+
+	@Override
+	public List<DictionaryType> findAll() {
+		return dictionaryTypeRepository.findAll();
 	}
 
 }

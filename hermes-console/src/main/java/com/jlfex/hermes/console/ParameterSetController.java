@@ -56,6 +56,8 @@ public class ParameterSetController {
 	 */
 	@RequestMapping("/addParameter")
 	public String addDictionary(Model model) {
+		List<DictionaryType> dicTypes = parameterSetService.findAll();
+		model.addAttribute("dicTypes", dicTypes);
 		return "/parameterset/addParameter";
 	}
 	/**
