@@ -490,15 +490,16 @@ public class AccountController {
 	}
 	
 	@RequestMapping("/charge/chargeResult")
-	public String chargeResult(String message, String type, Model model) {
+	public String chargeResult(String message, String type,BigDecimal amount, Model model) {
 		App.checkUser();
 		model.addAttribute("message", message);
+		model.addAttribute("amount", amount);
 		if (type.equals(Type.SUCCESS.name())) {
-			model.addAttribute("type", "2.png");
+			model.addAttribute("type", "ico8.png");
 		} else if (type.equals(Type.FAILURE.name())) {
-			model.addAttribute("type", "3.png");
+			model.addAttribute("type", "ico9.png");
 		} else {
-			model.addAttribute("type", "4.png");
+			model.addAttribute("type", "ico7.png");
 		}
 
 		

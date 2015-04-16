@@ -36,7 +36,7 @@
 <#include "/header.ftl" />
 
 <!-- middle start-->
-<div class="m_con m_fp">
+<div class="m_con m_fp" style="min-height:500px">
 	<div class="content">
     	<p><img src="${app.theme}/public/other/images/icon2/${type}" width="24" height="24" alt="" /> ${message}<p>
      	<p>您可通过 资金明细 查询充值结果</p>

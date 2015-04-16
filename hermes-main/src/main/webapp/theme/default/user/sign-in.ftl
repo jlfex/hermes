@@ -22,7 +22,7 @@
 <#include "../header.ftl" />
 <br/>
 
-<div id="content" class="content">
+<div id="content" class="content" style="min-height:500px;">
 	<div class="u-container row" style=" margin-top:100px;">
 		<div class="col-xs-8">
 			<img src="${(loginPicture.image)!}">

@@ -41,7 +41,7 @@ box-sizing: content-box;
 
 <#include "/header.ftl" />
 
-<div class="sub_main" style="margin-top:133px;">
+<div class="sub_main" style="margin-top:133px;min-height:500px;">
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
