@@ -1,9 +1,11 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-				<th width="10%" class="align-center">参数类型</th>
-				<th width="10%" class="align-center">参数值</th>
-				<th width="10%" class="align-center">参数状态</th>
+		        <th width="10%" class="align-center">类型编码</th>
+				<th width="10%" class="align-center">类型名称</th>
+				<th width="10%" class="align-center">字典项名称</th>
+				<th width="10%" class="align-center">字典项编码</th>				
+				<th width="10%" class="align-center">状态</th>
 				<th width="10%" class="align-center">操作</th>
 		</tr>
 	</thead>
@@ -14,8 +16,10 @@
 		<#else>
 		<#list parameterSet.content as p>
 		<tr>
+			<td class="align-center">${(p.typeCode)!''}</td>		
 			<td class="align-center">${(p.parameterType)!''}</td>
 			<td class="align-center">${(p.parameterValue)!''}</td>
+			<td class="align-center">${(p.code)!''}</td>			
 			<#if p.status == "00">
 			  <td class="align-center">启用</td>			  
 			<#elseif p.status == "09">
@@ -37,7 +41,8 @@
                   <button type="button" class="btn btn-link forbiddenBtn"  fid="${(p.dicId)!''}">禁用</button>
                 <#elseif p.status == "09" && p.parameterValue?exists>
                   <button type="button" class="btn btn-link enabledBtn"  eid="${(p.dicId)!''}">启用</button>
-                </#if>				  
+                </#if>	
+                <button type="button" class="btn btn-link addBtn"  aid="${(p.id)!''}">新增</button>                			  
 			</td>			
 		</tr>
 		</#list>
@@ -61,6 +66,15 @@ $(".editBtn").on("click",function(){
 		target: 'main'
 	});
 });	
+
+	$(".addBtn").on("click",function(){
+		var aid = $(this).attr("aid");
+		$.link.html(null, {
+			url: '${app}/parameter/addParameter?id='+aid,
+			target: 'main'
+		});
+	});
+
 $(".editTypeBtn").on("click",function(){
 	var oid = $(this).attr("oid");
 	$.link.html(null, {

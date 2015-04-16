@@ -30,6 +30,8 @@ public interface ParameterSetService {
 	public DictionaryType findOneById(String id);
 
 	public DictionaryType findOneByName(String name);
+	
+	public List<DictionaryType> findAll();
 
 	// 根据id改变字典状态
 	public void switchDictionary(String id);
@@ -38,9 +40,9 @@ public interface ParameterSetService {
 	
 	public List<DictionaryType> findByName(String name);
 	
-	public DictionaryType addDictionaryType(String name,String status);
+	public DictionaryType addDictionaryType(String name,String status,String typeCode);
 	
-	public DictionaryType updateDicType(String parameterType,String id);
+	public DictionaryType updateDicType(String parameterType,String id,String typeCode);
 
 
 }

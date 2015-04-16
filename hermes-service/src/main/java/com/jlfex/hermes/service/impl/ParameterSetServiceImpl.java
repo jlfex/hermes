@@ -72,6 +72,8 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 			parameterSetInfo.setStatus(String.valueOf(object[3]));
 			parameterSetInfo.setDicId(String.valueOf(object[4]));
 			parameterSetInfo.setTypeStatus(String.valueOf(object[5]));
+			parameterSetInfo.setCode(object[6]==null?null:String.valueOf(object[6]));
+			parameterSetInfo.setTypeCode(object[7]==null?null:String.valueOf(object[7]));
 			parameterSetInfos.add(parameterSetInfo);
 		}
 		// 返回结果
@@ -83,12 +85,12 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		StringBuilder condition = new StringBuilder();
 
 		if (!Strings.empty(parameterType)) {
-			condition.append(" where h2.name = :parameterType");
-			params.put("parameterType", parameterType);
+			condition.append(" where h2.name like :parameterType");
+			params.put("parameterType", "%"+parameterType+"%");
 		}
 		if (!Strings.empty(parameterValue)) {
-			condition.append(" where h1.name = :parameterValue");
-			params.put("parameterValue", parameterValue);
+			condition.append(" where h1.name like :parameterValue");
+			params.put("parameterValue", "%"+parameterValue+"%");
 		}
 		return condition.toString();
 	}
@@ -98,10 +100,10 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	 */
 	public Dictionary addParameterSet(ParameterSetInfo parameterSetInfo) {
 		Dictionary dictionary = new Dictionary();
-		DictionaryType dictionaryType = dictionaryTypeRepository.findOne(parameterSetInfo.getParameterType());
+		DictionaryType dictionaryType = dictionaryTypeRepository.findOne(parameterSetInfo.getId());
 		dictionary.setType(dictionaryType);
 		dictionary.setName(parameterSetInfo.getParameterValue());
-		dictionary.setCode(nextDataCode(dictionaryType.getCode()));
+		dictionary.setCode(parameterSetInfo.getCode());
 		dictionary.setStatus(parameterSetInfo.getStatus());
 		dictionary.setOrder(nextOrder(dictionaryType.getId()));
 		dictionaryRepository.save(dictionary);
@@ -111,10 +113,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	/**
 	 * 添加参数类型
 	 */
-	public DictionaryType addDictionaryType(String name,String status) {
+	public DictionaryType addDictionaryType(String name,String status,String typeCode) {
 		DictionaryType dicType = new DictionaryType();
 		dicType.setName(name);
 		dicType.setStatus(status);
+		dicType.setCode(typeCode);
 		dictionaryTypeRepository.save(dicType);
 		return dicType;
 	}
@@ -183,9 +186,10 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	 * 修改参数类型
 	 * 
 	 */
-	public DictionaryType updateDicType(String parameterType,String id) {
+	public DictionaryType updateDicType(String parameterType,String id,String typeCode) {
 		DictionaryType dicType = dictionaryTypeRepository.findOne(id);
 		dicType.setName(parameterType);
+		dicType.setCode(typeCode);
 		dictionaryTypeRepository.save(dicType);
 		return dicType;
 	}
@@ -227,6 +231,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	@Override
 	public List<DictionaryType> findByName(String name) {
 		return dictionaryTypeRepository.findByName(name);
+	}
+
+	@Override
+	public List<DictionaryType> findAll() {
+		return dictionaryTypeRepository.findAll();
 	}
 
 }
