@@ -80,8 +80,7 @@ jQuery(function($) {
 
 
 <!-- middle start-->
-<div class="control">
-<div class="middle_content">
+<div class="middle_content" style="min-height:500px">
 	<#if bankAccount?? && userProperties??>
     <div class="detail">
 		<div class="flow">
@@ -126,7 +125,7 @@ jQuery(function($) {
     	请先到认证中心进行《银行卡绑定》，<a href="${app}/account/index" class="ck">认证中心</a>
     </#if>
 </div>
-</div>
+
 
 <form id="loanDetail" name="loanDetail">
 	<input id="investAmount" name="investAmount" type="hidden" value="${investAmount}" ></input>	

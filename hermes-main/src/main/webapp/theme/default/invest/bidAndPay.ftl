@@ -58,8 +58,7 @@ jQuery(function($){
 
 <#include "/header.ftl" />
 
-<div class="control">
-<div class="middle_content">
+<div class="middle_content" style="min-height:500px">
 	<#if bankAccount?? && userProperties??>
     <div class="detail">
 		<div class="flow">
@@ -116,6 +115,6 @@ jQuery(function($){
 <input id="investamount" name="investamount" type="hidden" value="${investAmount!''}" >
 </form> 
 <#include "/footer.ftl" />
-</div>
+
 </body>
 </html>

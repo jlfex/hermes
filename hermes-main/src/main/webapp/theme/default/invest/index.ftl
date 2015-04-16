@@ -33,7 +33,7 @@
 
 <#include "../header.ftl" />
 
-<div id="content" class="content" style="margin-top:133px;">
+<div id="content" class="content" style="margin-top:133px; min-height:600px;">
 	<div class="u-container">
 		<div class="flow">
 			<h3>流程简图</h3>
