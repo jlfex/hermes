@@ -1088,7 +1088,7 @@ public class InvestServiceImpl implements InvestService {
 	 */
 	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn) {
 		Tx1361Request tx1361Request = new Tx1361Request();
-		tx1361Request.setInstitutionID("001155");
+		tx1361Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 		tx1361Request.setTxSN(txSn);
 		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
 		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
