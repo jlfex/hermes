@@ -24,11 +24,13 @@ import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.BankAccount;
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
+import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
 
 /**
@@ -47,6 +49,8 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	private CFCAOrderRepository cFCAOrderRepository;
 	@Autowired
 	private ApiLogService apiLogService;
+	@Autowired
+	private DictionaryService dictionaryService;
 	
 	/**
 	 * 生成下一个订单流水

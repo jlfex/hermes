@@ -173,7 +173,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		bankAccount.setDeposit(deposit);
 		bankAccount.setName(userProperties.getRealName());
 		bankAccount.setAccount(account);
-		
+
 		List<BankAccount> bankAccountList = bankAccountRepository.findByUserId(App.user().getId());
 		for (BankAccount bankinfo : bankAccountList) {
 			bankinfo.setStatus(Status.DISABLED);
@@ -311,14 +311,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 		// 请求日志
 		Map<String, String> recodeMap = new HashMap<String, String>();
 		Tx1361Response response = null;
+		String txSN = cFCAOrderService.genOrderTxSN();
+		CFCAOrder cfcaOrder = null;
 		try {
-			String txSN = cFCAOrderService.genOrderTxSN();
 			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, txSN);
 			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
-			CFCAOrder cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE, fee);
+			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE, fee);
+			investService.saveUserLog(user);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
 					result.setType(Type.WITHHOLDING_PROCESSING);
@@ -333,11 +335,10 @@ public class BankAccountServiceImpl implements BankAccountService {
 					result.setType(Type.FAILURE);
 					result.addMessage(0, "充值失败");
 				}
-
-				investService.saveUserLog(user);
 			} else {
 				result.setType(Type.FAILURE);
 				result.addMessage(0, "充值失败");
+				transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
 			}
 			apiLog.setResponseMessage(response.getResponsePlainText());
 			apiLog.setResponseTime(new Date());
@@ -345,8 +346,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 		} catch (Exception e) {
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "充值失败");
+			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
 		}
-
+		result.addMessage(1, amount.toString());
 		return result;
 	}
 }
