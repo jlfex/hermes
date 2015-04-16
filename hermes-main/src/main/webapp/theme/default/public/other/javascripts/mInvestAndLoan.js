@@ -166,10 +166,10 @@
 			    		},{
 			  				errorMsg: '余额不足，请先充值',
 			  				ajax: opts.moneyLessAjax
-			    		}/*,{
+			    		},{
 			  				errorMsg: '您有处理中的订单',
 			  				ajax: opts.isHaveInProcessOrder
-			    		}*/,{
+			    		},{
 			    			errorMsg:'超出单笔限额',
 			    			ajax:opts.isSingleLimitValid
 			    		},{

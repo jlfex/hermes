@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
 
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.model.Invest;
@@ -57,7 +58,7 @@ public class AutoCollectionQueryJob extends Job {
 			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(),CFCAOrder.Type.BID);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
-				request.setInstitutionID("001155");
+				request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 				request.setTxSN(cfcaOrder.getTxSN());
 				Tx1362Response response = (Tx1362Response) thirdPPService.invokeTx1362(request);
 				if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
