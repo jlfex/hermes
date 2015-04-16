@@ -103,7 +103,7 @@ jQuery(function($) {
 			dataType: 'json',
 			timeout: 50000,
 			success: function(data) {
-			 window.location.href="${app}/account/charge/chargeResult?message="+data.messages[0]+"&type="+data.type;
+			 window.location.href="${app}/account/charge/chargeResult?message="+data.messages[0]+"&type="+data.type+"&amount="+data.messages[1];
 			}
 		});
 	});

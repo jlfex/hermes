@@ -10,37 +10,25 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-<style>
-	.related-bank{ border:1px solid #d8d8d8; border-radius:3px; margin-top:20px; height:60px; line-height:60px; vertical-align:middle;}
-	.related-bank span{ display:inline-block;vertical-align:middle; margin-right:10px;}
-	.related-bank span img{display:inline-block;}
-	.related-bank span.bank-title{ font-size:16px; vertical-align:middle; margin:0 10px;}
-	#bank-pay .block{ margin:20px; border:0;}
-	#bank-pay .block label,#bank-pay .block span{ display:inline-block;}
-	#bank-pay .block label{ font-size:14px; width:80px;}
-	#bank-pay .block a.a_dec{ color:#018dc8; text-decoration:none;}
-	.fs_18{ font-size:18px;}
-	.fc_orange{ color:#ff4520;}
-	.ml_20px{ margin-left:20px;}
-	.sweet-tip{ margin:40px 0px; border-top:1px solid #d8d8d8; padding-top:10px; }
-	.sweet-tip p{ line-height:25px;color:#727272;}
-</style>
-<style>
-   .content{ margin:0 20px;}
-   .content p{ line-height:40px; text-align:center;}
-   .mtb_30px{ margin:30px 0;}
-  .content p img{ display:inline-block; vertical-align:middle;}
-</style>
 </head>
+
 <body>
+
 <#include "/header.ftl" />
 
+
 <!-- middle start-->
-<div class="m_con m_fp" style="min-height:200px;">
-	<div class="content">
-    	<p><img src="${app.theme}/public/other/images/icon2/${type}" width="24" height="24" alt="" /> ${message}<p>
+<div class="m_con m_fp m_fp2">
+		<div class="m_fp_box">
+		<div class="m_fp_s2">
+			<img src="${app.theme}/public/other/images/m/icon1/${type}" />
+			 ${message}&nbsp;&nbsp;<span class="lightyellow">${amount}元!</span>&nbsp;&nbsp;<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle">继续充值</a>
+		</div>
 	</div>
+	<p class="a_pa_lt"><a href="javascript:history.go(-1)" class="q_btn1 q_bg1">返回</a></p>
 </div>
+
+
 <#include "/footer.ftl" />
 </body>
 </html>
