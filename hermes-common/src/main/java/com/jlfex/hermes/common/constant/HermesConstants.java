@@ -150,7 +150,7 @@ public final class HermesConstants {
 	/**
 	 * 中金市场订单号
 	 */
-	public static final String CFCA_MARKET_ORDER_NO = "H-001155-000001";
+	public static final String CFCA_MARKET_ORDER_NO = "H-100000-000001";
 
 	/**
 	 * 中金机构号
