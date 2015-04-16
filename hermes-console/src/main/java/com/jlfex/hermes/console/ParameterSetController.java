@@ -55,9 +55,9 @@ public class ParameterSetController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/addParameter")
-	public String addDictionary(Model model) {
-		List<DictionaryType> dicTypes = parameterSetService.findAll();
-		model.addAttribute("dicTypes", dicTypes);
+	public String addDictionary(@RequestParam(value = "id", required = true) String id,Model model) {
+		DictionaryType dicType = parameterSetService.findOneById(id);
+		model.addAttribute("dicType", dicType);
 		return "/parameterset/addParameter";
 	}
 	/**
@@ -78,22 +78,27 @@ public class ParameterSetController {
 	@RequestMapping("/handerAddDictionary")
 	public String handerAddDictionary(ParameterSetInfo psVo, RedirectAttributes attr, Model model) {
 		try {
-			DictionaryType dictionaryType = parameterSetService.findOneById(psVo.getParameterType());
-			List<Dictionary> dicList = parameterSetService.findByNameAndType(psVo.getParameterValue(), dictionaryType.getId());
+			List<Dictionary> dicList = parameterSetService.findByNameAndType(psVo.getParameterValue(),psVo.getId());
+			for(Dictionary dic:dicList){
+				if(psVo.getCode().equals(dic.getCode())){
+					attr.addFlashAttribute("msg", "类型编码已存在");
+					return "redirect:/parameter/addParameter";
+				}
+			}
 			if (dicList.size() > 0) {
-				attr.addFlashAttribute("msg", "参数值已经存在");
+				attr.addFlashAttribute("msg", "字典项已经存在");
 				return "redirect:/parameter/addParameter";
 			} else if (psVo.getParameterValue().equals("")) {
-				attr.addFlashAttribute("msg", "参数值不能为空");
+				attr.addFlashAttribute("msg", "字典项不能为空");
 				return "redirect:/parameter/addParameter";
 			} else {
 				parameterSetService.addParameterSet(psVo);
-				attr.addFlashAttribute("msg", "新增参数配置成功");
+				attr.addFlashAttribute("msg", "新增字典项成功");
 				return "redirect:/parameter/index";
 			}
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "新增参数配置失败");
-			Logger.error("新增参数配置失败：", e);
+			attr.addFlashAttribute("msg", "新增字典项失败");
+			Logger.error("新增字典项失败：", e);
 			return "redirect:/parameter/addParameter";
 		}
 	}
@@ -103,23 +108,29 @@ public class ParameterSetController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/handerAddParameterType")
-	public String handerAddParameterType(String parameterType,String status, RedirectAttributes attr, Model model) {
+	public String handerAddParameterType(String parameterType,String status,String typeCode,RedirectAttributes attr, Model model) {
 		try {
 			List<DictionaryType> dicList = parameterSetService.findByName(parameterType);
+			for(DictionaryType dicType:dicList){
+				if(typeCode.equals(dicType.getCode())){
+					attr.addFlashAttribute("msg", "类型编码已存在");
+					return "redirect:/parameter/addParameterType";
+				}
+			}
 			if (dicList.size() > 0) {
-				attr.addFlashAttribute("msg", "参数类型已经存在");
+				attr.addFlashAttribute("msg", "类型名称已经存在");
 				return "redirect:/parameter/addParameterType";
 			} else if (StringUtils.isEmpty(parameterType)) {
-				attr.addFlashAttribute("msg", "参数类型不能为空");
+				attr.addFlashAttribute("msg", "类型名称不能为空");
 				return "redirect:/parameter/addParameterType";
 			} else {
-				parameterSetService.addDictionaryType(parameterType, status);
-				attr.addFlashAttribute("msg", "添加参数类型成功");
+				parameterSetService.addDictionaryType(parameterType, status,typeCode);
+				attr.addFlashAttribute("msg", "添加类型成功");
 				return "redirect:/parameter/index";
 			}
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "添加参数类型失败");
-			Logger.error("添加参数类型失败：", e);
+			attr.addFlashAttribute("msg", "添加类型失败");
+			Logger.error("添加类型失败：", e);
 			return "redirect:/parameter/addParameterType";
 		}
 	}
@@ -156,19 +167,25 @@ public class ParameterSetController {
 		try {
 			DictionaryType dictionaryType = parameterSetService.findOneByName(psVo.getParameterType());
 			List<Dictionary> dicList = parameterSetService.findByNameAndType(psVo.getParameterValue(), dictionaryType.getId());
-			if (dicList.size() > 0) {
-				attr.addFlashAttribute("msg", "参数值已经存在");
-				return "redirect:/parameter/editParameter";
-			} else if (psVo.getParameterValue().equals("")) {
-				attr.addFlashAttribute("msg", "参数值不能为空");
+			for(Dictionary dic:dicList){
+				if(psVo.getCode().equals(dic.getCode())){
+					attr.addFlashAttribute("msg", "字典项编码已存在");
+					return "redirect:/parameter/editParameter";
+				}else if(psVo.getParameterValue().equals(dic.getName())){
+					attr.addFlashAttribute("msg", "字典项已存在");
+					return "redirect:/parameter/editParameter";					
+				}
+			}
+            if (psVo.getParameterValue().equals("")) {
+				attr.addFlashAttribute("msg", "字典项不能为空");
 				return "redirect:/parameter/editParameter";
 			}
 			parameterSetService.updateDictionary(psVo);
-			attr.addFlashAttribute("msg", "参数配置修改成功");
+			attr.addFlashAttribute("msg", "字典项修改成功");
 			return "redirect:/parameter/index";
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "参数配置修改失败");
-			Logger.error("参数配置修改失败：", e);
+			attr.addFlashAttribute("msg", "字典项修改失败");
+			Logger.error("字典项修改失败：", e);
 			return "redirect:/parameter/editParameter";
 		}
 	}
@@ -179,22 +196,25 @@ public class ParameterSetController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/handerEditParameterType")
-	public String handerEditParameterType(String parameterType,String id, RedirectAttributes attr, Model model) {
+	public String handerEditParameterType(String parameterType,String id, String typeCode,RedirectAttributes attr, Model model) {
 		try {
 			List<DictionaryType> dicList = parameterSetService.findByName(parameterType);
-			if (dicList.size() > 0) {
-				attr.addFlashAttribute("msg", "参数类型已经存在");
-				return "redirect:/parameter/editParameterType";
-			} else if (StringUtils.isEmpty(parameterType)) {
-				attr.addFlashAttribute("msg", "参数类型不能为空");
+			for(DictionaryType dicType:dicList){
+				if(typeCode.equals(dicType.getCode())){
+					attr.addFlashAttribute("msg", "类型编码已存在");
+					return "redirect:/parameter/editParameterType";
+				}
+			}
+            if (StringUtils.isEmpty(parameterType)) {
+				attr.addFlashAttribute("msg", "类型名称不能为空");
 				return "redirect:/parameter/editParameterType";
 			}
-			parameterSetService.updateDicType(parameterType, id);
-			attr.addFlashAttribute("msg", "参数配置修改成功");
+			parameterSetService.updateDicType(parameterType, id,typeCode);
+			attr.addFlashAttribute("msg", "类型修改成功");
 			return "redirect:/parameter/index";
 		} catch (Exception e) {
-			attr.addFlashAttribute("msg", "参数配置修改失败");
-			Logger.error("参数配置修改失败：", e);
+			attr.addFlashAttribute("msg", "类型修改失败");
+			Logger.error("类型修改失败：", e);
 			return "redirect:/parameter/editParameterType";
 		}
 	}

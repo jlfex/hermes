@@ -5,16 +5,16 @@
 	</div>
 </#if>
 <div class="panel panel-primary">
-	<div class="panel-heading">参数设置</div>
+	<div class="panel-heading">字典设置</div>
 	<div class="panel-body">
 		<form id="searchForm" method="post" action="#">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterType">参数类型</label>
+					<label for="parameterType">类型名称</label>
 					<input id="parameterType" name="parameterType" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterValue">参数值</label>
+					<label for="parameterValue">字典项名称</label>
 					<input id="parameterValue" name="parameterValue" type="text" class="form-control">
 				</div>
 				<div class="col-xs-1 hm-col form-group">
@@ -23,13 +23,9 @@
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
-					<button id="addTypeBtn" type="button" class="btn btn-primary btn-block">添加参数类型</button>
+					<button id="addTypeBtn" type="button" class="btn btn-primary btn-block">新增类型</button>
+					<input id="page" name="page" type="hidden" value="0">					
 				</div>	
-			   	<div class="col-xs-1 hm-col form-group">
-					<label>&nbsp;</label>
-					<button id="addBtn" type="button" class="btn btn-primary btn-block">添加参数值</button>
-					<input id="page" name="page" type="hidden" value="0">
-				</div>				   										
 			</div>
 		</form>
 	</div>
@@ -47,14 +43,6 @@ jQuery(function($) {
 	$("#addTypeBtn").on("click",function(){
 		$.link.html(null, {
 			url: '${app}/parameter/addParameterType',
-			target: 'main'
-		});
-	});
-	
-    //点击添加参数值按钮
-	$("#addBtn").on("click",function(){
-		$.link.html(null, {
-			url: '${app}/parameter/addParameter',
 			target: 'main'
 		});
 	});

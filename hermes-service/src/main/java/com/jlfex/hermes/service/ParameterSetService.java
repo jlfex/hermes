@@ -40,9 +40,9 @@ public interface ParameterSetService {
 	
 	public List<DictionaryType> findByName(String name);
 	
-	public DictionaryType addDictionaryType(String name,String status);
+	public DictionaryType addDictionaryType(String name,String status,String typeCode);
 	
-	public DictionaryType updateDicType(String parameterType,String id);
+	public DictionaryType updateDicType(String parameterType,String id,String typeCode);
 
 
 }

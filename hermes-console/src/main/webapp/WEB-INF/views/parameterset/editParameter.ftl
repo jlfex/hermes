@@ -5,27 +5,36 @@
 	</div>
 </#if>
  <div class="panel panel-primary">
-        <div class="panel-heading">编辑参数配置</div>
+        <div class="panel-heading">修改字典项</div>
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" role="form" id="editForm" method="post">
           <input type="hidden" value="${(parameter.id)!}" name="id" />
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label">参数类型</label>
+                <label for="" class="col-sm-2 control-label">类型名称</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="parameterType1"  name="parameterType" placeholder="参数类型" readonly="readonly" value="${parameter.type.name!}">
+                  <input type="text" class="form-control" id="parameterType1"  name="parameterType"  readonly="readonly" value="${parameter.type.name!}">
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span style="color:red;">*</span>参数值</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>字典项编码</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="parameterValue1" name="parameterValue" placeholder="参数值" value="${parameter.name}">
+                  <input type="text" class="form-control" name="code" id ="code" value="${(parameter.code)!''}"/>
                 </div>
                 <div class="col-xs-2">
-					<span class="alert-danger" style="display:none;background:none">必填项，且只能输入1~100的数字</span>
+					<span class="alert-danger" style="display:none;background:none">必填项，且不能输入中文</span>
+				</div>   
+			    <div class="form-group">
+				</div>                                                                                      			                                                                                                 
+              <div class="form-group">
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">*</span>字典项名称</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="parameterValue1" name="parameterValue"  value="${parameter.name}">
+                </div>
+                <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
 				</div>                                                                                        
               </div>
-              
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" id="editParameter">保存</button></div>
@@ -53,16 +62,32 @@ jQuery(function($) {
 			target: 'main'
 		});
 	});
-	//如果参数类选择产品招标期限，在此加入校验
-	$('#parameterValue1').keyup(function(){
+	$('#parameterValue1').blur(function(){
 	   var parameterType  = $("#parameterType1").val();
 	   var parameterValue = $("#parameterValue1").val(); 
-	   if(parameterType == '产品招标期限' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
-		   $(this).parent().parent().find(".alert-danger:eq(0)").show();    
+	   if(parameterType == '176c9150-7103-11e3-ae10-6cae8b21aead' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
+		    $(this).parent().parent().find(".alert-danger:eq(0)").show();  
+		    document.getElementById("addParameter").disabled = true;		     
+	   }else if(parameterValue == '' || parameterValue == null){
+		    $(this).parent().parent().find(".alert-danger:eq(0)").show();  
+		    document.getElementById("addParameter").disabled = true;		     
 	   }else{
-	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();
+	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
+	       document.getElementById("addParameter").disabled = false;		     	              
 	   }
 	});
-	
+	$('#code').blur(function(){
+	    var code = $("#code").val();
+		if(code == '' || code == null){
+		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
+		   document.getElementById("editParameter").disabled = true;		     	              
+		}else if(code != '' && !/^[^\u4e00-\u9fa5]{0,}$/.test(code)){
+		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
+		   document.getElementById("editParameter").disabled = true;		     	              
+		}else{
+	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
+	       document.getElementById("editParameter").disabled = false;
+	    }
+	});
 });
 </script>       

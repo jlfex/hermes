@@ -16,6 +16,11 @@ public class ParameterSetInfo implements Serializable {
 	private String status;
 	/** 参数类型状态 */
 	private String typeStatus;
+	/** 字典项code */
+	private String code;
+	/** 类型code */
+	private String typeCode;
+
 
 
 	public String getId() {
@@ -64,6 +69,22 @@ public class ParameterSetInfo implements Serializable {
 
 	public void setTypeStatus(String typeStatus) {
 		this.typeStatus = typeStatus;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
 	}
 
 }
