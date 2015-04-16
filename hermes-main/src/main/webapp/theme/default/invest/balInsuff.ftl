@@ -52,7 +52,7 @@
 
 <!-- middle start-->
 <div class="m_con m_fp">
-	<div class="content">
+	<div class="content" style="min-height:500px">
     	<p><img src="${app.theme}/public/other/images/icon2/1.png" width="24" height="24" alt="" /> 您的账户余额不足<p>
      	<p>计划投标金额：<span class="blue fs_18">${investAmount}</span> 元</p>
         <p>账户可用余额：<span class="blue fs_18">${balance}</span> 元</p>
