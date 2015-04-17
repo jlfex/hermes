@@ -2,25 +2,20 @@ package com.jlfex.hermes.repository;
 
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.UserAccount;
 
 /**
  * 交易流水信息仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-06
- * @since 1.0
  */
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, String> {
+public interface TransactionRepository extends JpaRepository<Transaction, String>, JpaSpecificationExecutor<Transaction> {
 
 	/**
 	 * 通过来源账户和类型列表以及日期范围查询交易

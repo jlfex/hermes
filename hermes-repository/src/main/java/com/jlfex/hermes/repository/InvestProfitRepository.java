@@ -2,26 +2,20 @@ package com.jlfex.hermes.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.User;
 
 /**
- * 
  * 理财收益信息仓库
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 @Repository
-public interface InvestProfitRepository extends JpaRepository<InvestProfit, String> {
+public interface InvestProfitRepository extends JpaRepository<InvestProfit, String>, JpaSpecificationExecutor<InvestProfit>  {
 
 	/**
 	 * 通过还款计划表获取相应理财收益列表
@@ -100,13 +94,4 @@ public interface InvestProfitRepository extends JpaRepository<InvestProfit, Stri
 	@Query("SELECT new InvestProfit(SUM(t.interest) , SUM(t.overdueInterest))  FROM InvestProfit t where  t.status in ?1  and  t.invest.loan.loanKind in ?2 and  t.user =?3  ")
 	public InvestProfit sumAllProfitByAssignLoan(List<String> profitStatusList, List<String> loanKinds, User user);
 	
-//	/**
-//	 * 债权表：获取收益
-//	 * @param invest
-//	 * @param loanKind
-//	 * @return
-//	 */
-//	@Query("from InvestProfit ip where ip.invest = ?1 and ip.loanRepay.loan.loanKind=?2 order by ip.loanRepay.sequence desc")
-//	public List<InvestProfit> findByInvest(Invest invest,String loanKind);
-
 }

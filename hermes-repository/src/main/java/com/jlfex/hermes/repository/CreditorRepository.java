@@ -1,23 +1,18 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Creditor;
 
 /**
  * 债权人信息 仓库
- * 
  * @author Administrator
- * 
  */
 @Repository
 public interface CreditorRepository extends JpaRepository<Creditor, String>, JpaSpecificationExecutor<Creditor> {
-
 
 	@Query("select t from Creditor t  where t.creditorNo = (select max(t1.creditorNo) from Creditor t1 where t1.creditorNo is not null) ")
 	public List<Creditor> findMaxCredtorNo();
@@ -35,6 +30,5 @@ public interface CreditorRepository extends JpaRepository<Creditor, String>, Jpa
 	
 	@Query("select t from Creditor t where t.originNo =?1")
 	public Creditor  findByOriginNo(String originNo);
-
 
 }

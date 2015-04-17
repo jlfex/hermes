@@ -1,22 +1,17 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
 
 /**
  * 用户属性仓库
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Repository
-public interface UserPropertiesRepository extends JpaRepository<UserProperties, String> {
+public interface UserPropertiesRepository extends JpaRepository<UserProperties, String>, JpaSpecificationExecutor<UserProperties> {
 	
 	/**
 	 * 通过用户查询用户属性

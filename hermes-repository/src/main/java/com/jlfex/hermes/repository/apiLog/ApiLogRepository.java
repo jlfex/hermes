@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.jlfex.hermes.model.ApiLog;
 
 /**
- * api 接口日志  
+ * api接口日志仓库  
  * @author Administrator
  * 
  */

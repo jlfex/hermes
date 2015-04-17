@@ -1,18 +1,13 @@
 package com.jlfex.hermes.repository.n;
 
 import java.math.BigDecimal;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.model.Loan;
 
-/**
- * 
+/** 
  * 借款信息仓库扩展接口实现
- * @since 1.0
  */
 @Component
 public class LoanNativeRepositoryImpl implements LoanNativeRepository {
