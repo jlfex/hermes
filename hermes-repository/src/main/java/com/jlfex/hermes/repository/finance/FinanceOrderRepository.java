@@ -12,7 +12,6 @@ import com.jlfex.hermes.model.yltx.FinanceOrder;
  */
 @Repository
 public interface FinanceOrderRepository extends JpaRepository<FinanceOrder, String>, JpaSpecificationExecutor<FinanceOrder> {
-
 	/**
 	 * 根据理财产品编号 获取理财产品
 	 * @param uniqId

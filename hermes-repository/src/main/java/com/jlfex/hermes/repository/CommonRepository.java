@@ -9,23 +9,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 公共仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-04
- * @since 1.0
  */
 @Component
 @Transactional

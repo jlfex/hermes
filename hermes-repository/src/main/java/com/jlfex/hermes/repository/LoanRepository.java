@@ -1,16 +1,12 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
 
@@ -54,10 +50,6 @@ public interface LoanRepository extends PagingAndSortingRepository<Loan, String>
 	@Query("select t from Loan t  where t.loanNo = (select max(t1.loanNo) from Loan t1 where t1.loanNo is not null) ")
 	public List<Loan> findAllOrderByLoanNo();
 	
-	
-	
-	
-	
 	/**
 	 * 通过状态查询借款
 	 * 
@@ -98,6 +90,5 @@ public interface LoanRepository extends PagingAndSortingRepository<Loan, String>
 	 */
 	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2  and t.status !='30' ")
 	public List<Loan> findByCreditInfoAndLoanKind(String creditInfoId, String loanKind );
-	
 	
 }

@@ -1,22 +1,17 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.RoleResource;
 
 /**
  * 角色资源关系仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-10
- * @since 1.0
  */
 @Repository
-public interface RoleResourceRepository extends JpaRepository<RoleResource, String> {
+public interface RoleResourceRepository extends JpaRepository<RoleResource, String>, JpaSpecificationExecutor<RoleResource> {
 
 	/**
 	 * 通过资源和类型查询数据

@@ -1,23 +1,17 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserContacter;
 
 /**
  * 用户联系人信息仓库
- * 
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Repository
-public interface UserContacterRepository extends JpaRepository<UserContacter, String> {
+public interface UserContacterRepository extends JpaRepository<UserContacter, String>, JpaSpecificationExecutor<UserContacter> {
 	/**
 	 * 根据用户查找联系人信息
 	 * 

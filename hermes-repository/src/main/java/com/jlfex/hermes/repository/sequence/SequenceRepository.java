@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.jlfex.hermes.model.Sequence;
 
 /**
- * api 接口 配置
+ * 序列仓库
  * @author Administrator
  * 
  */
@@ -14,6 +14,5 @@ import com.jlfex.hermes.model.Sequence;
 public interface SequenceRepository extends JpaRepository<Sequence, String>, JpaSpecificationExecutor<Sequence> {
 
 	public Sequence findBySeqNameAndStatus(String seqName, String status);
-
 
 }

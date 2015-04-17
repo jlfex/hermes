@@ -2,18 +2,10 @@ package com.jlfex.hermes.repository.n;
 
 import java.math.BigDecimal;
 
-
-
 /**
- * 
  * 借款信息仓库扩展接口
- * 
- * @author Ray
- * @version 1.0, 2013-12-30
- * @since 1.0
  */
-public interface LoanNativeRepository {
-	
+public interface LoanNativeRepository {	
 	/**
 	 * 变更借款状态
 	 * @param id 借款ID
@@ -21,9 +13,7 @@ public interface LoanNativeRepository {
 	 * @param toStatus	变更后状态
 	 * @return
 	 */
-	int updateStatus(String id,String fromStatus,String toStatus);
-	
-	
+	int updateStatus(String id,String fromStatus,String toStatus);	
 	/**
 	 * 变更借款状态
 	 * @param id 借款ID
@@ -31,10 +21,7 @@ public interface LoanNativeRepository {
 	 * @param toStatus	变更后状态
 	 * @return
 	 */
-	int updateStatusAndAmount(String id,String fromStatus,String toStatus,BigDecimal amount);
-	
-	
-	
+	int updateStatusAndAmount(String id,String fromStatus,String toStatus,BigDecimal amount);	
 	/**
 	 * 变更借款已筹金额
 	 * @param id
@@ -43,6 +30,4 @@ public interface LoanNativeRepository {
 	 */
 	public int updateProceeds(String id,BigDecimal amount);
 	
-	
-
 }

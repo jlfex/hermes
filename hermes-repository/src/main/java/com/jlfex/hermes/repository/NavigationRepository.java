@@ -1,23 +1,18 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Navigation;
 
 /**
  * 导航信息仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-18
- * @since 1.0
  */
 @Repository
-public interface NavigationRepository extends JpaRepository<Navigation, String> {
+public interface NavigationRepository extends JpaRepository<Navigation, String>, JpaSpecificationExecutor<Navigation> {
 
 	/**
 	 * 通过类型查询顶级导航列表

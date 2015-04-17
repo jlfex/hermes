@@ -1,7 +1,6 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,9 +12,7 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
 
 /**
- * 
  * 理财信息仓库
- * @since 1.0
  */
 @Repository
 public interface InvestRepository extends  PagingAndSortingRepository<Invest, String>, JpaSpecificationExecutor<Invest> {

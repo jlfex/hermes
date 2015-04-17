@@ -1,23 +1,18 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.ArticleCategoryReference;
 
 /**
  * 文章分类关系仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-30
- * @since 1.0
  */
 @Repository
-public interface ArticleCategoryReferenceRepository extends JpaRepository<ArticleCategoryReference, String> {
+public interface ArticleCategoryReferenceRepository extends JpaRepository<ArticleCategoryReference, String> , JpaSpecificationExecutor<ArticleCategoryReference>{
 
 	/**
 	 * 通过分类代码以及文章状态查询关系
