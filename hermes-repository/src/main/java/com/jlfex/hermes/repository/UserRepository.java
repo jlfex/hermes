@@ -1,21 +1,16 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
 import com.jlfex.hermes.model.User;
 
 /**
  * 用户信息仓库
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-14
- * @since 1.0
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
 
 	/**
 	 * 根据email查询用户
