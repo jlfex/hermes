@@ -2,22 +2,16 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.web.WebApp;
 
 /**
  * 导航信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-18
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_navigation")

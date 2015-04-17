@@ -1,20 +1,14 @@
 package com.jlfex.hermes.model;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户属性模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_properties")
@@ -381,10 +375,6 @@ public class UserProperties extends Model {
 	
 	/**
 	 * 性别
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class Gender {
 		
@@ -397,10 +387,6 @@ public class UserProperties extends Model {
 	
 	/**
 	 * 婚姻状况
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class Married {
 		
@@ -419,9 +405,6 @@ public class UserProperties extends Model {
 	
 	/**
 	 * 证件类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
 	 * @since 1.0
 	 */
 	public static final class IdType {
@@ -435,10 +418,6 @@ public class UserProperties extends Model {
 	
 	/**
 	 * 认证
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class Auth {
 		
@@ -454,11 +433,6 @@ public class UserProperties extends Model {
 
 	/**
 	 * 是否为借款人
-	 * 
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2014-2-13
-	 * @since 1.0
 	 */
 	public static final class Mortgagor {
 

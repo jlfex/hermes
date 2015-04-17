@@ -5,16 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 角色资源关系信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-10
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_role_resource")
@@ -106,10 +101,6 @@ public class RoleResource extends Model {
 	
 	/**
 	 * 类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-10
-	 * @since 1.0
 	 */
 	public static final class Type {
 		

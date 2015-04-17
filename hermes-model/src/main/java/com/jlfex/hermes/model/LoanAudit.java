@@ -13,10 +13,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 借款审核信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_loan_audit")
@@ -171,8 +167,6 @@ public class LoanAudit extends Model {
 	}
 	
 	/**
-	 * @author Aether
-	 * @date 2013-11-12 下午2:27:57
 	 * @return description:取得类型名称
 	 */
 	public String getTypeName() {
@@ -180,9 +174,6 @@ public class LoanAudit extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:28:11
 	 * @return description:取得状态名称
 	 */
 	public String getStatusName() {
@@ -191,9 +182,6 @@ public class LoanAudit extends Model {
 
 	/**
 	 * 审核类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午2:25:01
 	 */
 	public static final class Type {
 		@Element("初审")
@@ -205,9 +193,6 @@ public class LoanAudit extends Model {
 
 	/**
 	 * 审核结果
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午2:26:43
 	 */
 	public static final class Status {
 		@Element("通过")

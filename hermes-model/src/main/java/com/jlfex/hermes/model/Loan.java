@@ -5,14 +5,12 @@ import java.math.RoundingMode;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -505,11 +503,6 @@ public class Loan extends Model {
 	public void setLoanKind(String loanKind) {
 		this.loanKind = loanKind;
 	}
-
-	
-
-
-
 
 	/**
 	 * 借款状态

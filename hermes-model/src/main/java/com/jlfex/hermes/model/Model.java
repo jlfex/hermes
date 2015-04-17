@@ -1,7 +1,6 @@
 package com.jlfex.hermes.model;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PostPersist;
@@ -9,16 +8,12 @@ import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Calendars;
 
 /**
  * 模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
  * @since 1.0
  */
 @MappedSuperclass

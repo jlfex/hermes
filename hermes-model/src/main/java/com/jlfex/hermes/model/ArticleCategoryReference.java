@@ -7,10 +7,6 @@ import javax.persistence.Table;
 
 /**
  * 文章分类关系信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_article_category_reference")

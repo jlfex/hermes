@@ -1,22 +1,16 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户工作信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_job")
@@ -315,9 +309,6 @@ public class UserJob extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:56:35
 	 * @return description:读取企业性质名称
 	 */
 	public String getPropertiesName() {
@@ -325,9 +316,6 @@ public class UserJob extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:57:38
 	 * @return description:读取公司规模名称
 	 */
 	public String getScaleName() {
@@ -335,9 +323,6 @@ public class UserJob extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:58:17
 	 * @return description:读取类型名称
 	 */
 	public String getTypeName() {
@@ -345,9 +330,6 @@ public class UserJob extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:59:10
 	 * @return description:读取状态名称
 	 */
 	public String getStatusName() {
@@ -356,9 +338,6 @@ public class UserJob extends Model {
 
 	/**
 	 * 企业性质
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:24:04
 	 */
 	public static final class Enterprise{
 		@Element("央企")
@@ -379,9 +358,6 @@ public class UserJob extends Model {
 
 	/**
 	 * 公司规模
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:29:08
 	 */
 	public static final class Scale {
 		@Element("0-50人")
@@ -393,9 +369,6 @@ public class UserJob extends Model {
 
 	/**
 	 * 人员类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:32:52
 	 */
 	public static final class Type {
 		@Element("企业主")
@@ -407,9 +380,6 @@ public class UserJob extends Model {
 
 	/**
 	 * 工作状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:35:40
 	 */
 	public static final class Status {
 		@Element("有效")

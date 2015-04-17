@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Strings;
@@ -213,10 +212,6 @@ public class BankAccount extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-13
-	 * @since 1.0
 	 */
 	public static final class Status {
 

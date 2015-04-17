@@ -1,13 +1,11 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -162,10 +160,6 @@ public class UserAccount extends Model {
 
 	/**
 	 * 可否为负
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Minus {
 
@@ -178,10 +172,6 @@ public class UserAccount extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Type {
 
@@ -225,10 +215,6 @@ public class UserAccount extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-13
-	 * @since 1.0
 	 */
 	public static final class Status {
 

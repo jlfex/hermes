@@ -1,7 +1,6 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,10 +9,6 @@ import javax.persistence.Table;
 
 /**
  * 产品逾期费率信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_product_overdue")

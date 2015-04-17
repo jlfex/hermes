@@ -9,10 +9,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 字典类型信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_dictionary_type")
@@ -103,10 +99,6 @@ public class DictionaryType extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-13
-	 * @since 1.0
 	 */
 	public static final class Status {
 
@@ -119,8 +111,6 @@ public class DictionaryType extends Model {
 
 	/**
 	 * 读取字典名称
-	 * 
-	 * @return
 	 */
 	public String getNames() {
 		return Dicts.name(name, name, Name.class);

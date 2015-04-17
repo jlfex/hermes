@@ -3,16 +3,11 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 银行信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_bank")

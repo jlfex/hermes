@@ -1,22 +1,16 @@
 package com.jlfex.hermes.model;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 支付日志信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-09
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_payment_log")
@@ -165,10 +159,6 @@ public class PaymentLog extends Model {
 	
 	/**
 	 * 方式
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-01-09
-	 * @since 1.0
 	 */
 	public static final class Method {
 		

@@ -7,16 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户车辆信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_car")
@@ -195,9 +190,6 @@ public class UserCar extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:39:51
 	 * @return description:获取状态名称
 	 */
 	public String getStatusName() {
@@ -205,9 +197,6 @@ public class UserCar extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:42:25
 	 * @return description:获取是否按揭名称
 	 */
 	public String getMortgageName() {
@@ -216,9 +205,6 @@ public class UserCar extends Model {
 	
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-13 上午9:31:10
 	 */
 	public static final class Status {
 		@Element("有效")
@@ -230,9 +216,6 @@ public class UserCar extends Model {
 
 	/**
 	 * 汽车是否按揭
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午13:26:57
 	 */
 	public static final class Mortgage {
 		@Element("有按揭")

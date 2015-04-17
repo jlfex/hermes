@@ -18,7 +18,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 外部：债权信息 模型
- * 
  * @author Administrator
  * 
  */

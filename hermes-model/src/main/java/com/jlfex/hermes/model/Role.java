@@ -3,16 +3,11 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 角色信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-10
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_role")
@@ -113,10 +108,6 @@ public class Role extends Model {
 	
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-10
-	 * @since 1.0
 	 */
 	public static final class Status {
 		

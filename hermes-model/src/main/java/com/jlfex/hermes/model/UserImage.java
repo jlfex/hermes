@@ -6,15 +6,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户图片信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_image")
@@ -171,10 +166,6 @@ public class UserImage extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Status {
 
@@ -187,10 +178,6 @@ public class UserImage extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Type {
 

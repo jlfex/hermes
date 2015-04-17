@@ -11,9 +11,6 @@ import javax.persistence.Table;
 
 /**
  * 费率日志信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
  * @since 1.0
  */
 @Entity

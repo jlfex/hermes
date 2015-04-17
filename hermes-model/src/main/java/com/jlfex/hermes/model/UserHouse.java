@@ -1,22 +1,16 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户房产信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_house")
@@ -277,9 +271,6 @@ public class UserHouse extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午3:10:19
 	 * @return description:读取按揭的名称
 	 */
 	public String getMortageName() {
@@ -287,9 +278,6 @@ public class UserHouse extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午3:02:25
 	 * @return description:取得状态名称
 	 */
 	public String getStatusName() {
@@ -298,9 +286,6 @@ public class UserHouse extends Model {
 
 	/**
 	 * 房产是否按揭
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:45:57
 	 */
 	public static final class Mortgage {
 		@Element("有按揭")
@@ -312,9 +297,6 @@ public class UserHouse extends Model {
 
 	/**
 	 * 房产状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:35:40
 	 */
 	public static final class Status {
 		@Element("有效")

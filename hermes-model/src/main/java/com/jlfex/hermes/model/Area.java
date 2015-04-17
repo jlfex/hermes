@@ -2,7 +2,6 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,10 +9,6 @@ import javax.persistence.Transient;
 
 /**
  * 地区信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_area")

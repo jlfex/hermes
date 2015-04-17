@@ -1,25 +1,21 @@
 package com.jlfex.hermes.model.yltx;
 
-
-
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.model.Model;
-
+/**
+ * 资产 还款计划 模型
+ */
 @Entity
 @Table(name = "hm_asset_repay_plan")
 public class AssetRepayPlan extends Model{
 
-	/**
-	 * 资产 还款计划 模型
-	 */
+	
 	private static final long serialVersionUID = -8325901215015180673L; 
 
 	

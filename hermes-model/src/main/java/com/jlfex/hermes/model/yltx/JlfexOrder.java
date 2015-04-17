@@ -1,29 +1,24 @@
 package com.jlfex.hermes.model.yltx;
 
-
-
 import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Model;
 import com.jlfex.hermes.model.User;
 
-
+/**
+ *  JLFEX  订单  实体
+ */
 @Entity
 @Table(name = "hm_order_jlfex")
 public class JlfexOrder extends Model{
 
-	/**
-	 *  JLFEX  订单  实体
-	 */
 	private static final long serialVersionUID = -7945558419475963945L;
 	
 	

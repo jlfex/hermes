@@ -5,15 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户联系人信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
  * @since 1.0
  */
 @Entity
@@ -169,9 +165,6 @@ public class UserContacter extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:39:51
 	 * @return description:获取状态名称
 	 */
 	public String getStatusName() {
@@ -180,9 +173,6 @@ public class UserContacter extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-13 上午9:31:10
 	 */
 	public static final class Status {
 		@Element("有效")

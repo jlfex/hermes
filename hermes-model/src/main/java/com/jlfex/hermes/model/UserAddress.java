@@ -5,16 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户联系地址信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_address")
@@ -62,9 +57,6 @@ public class UserAddress extends Model {
 	
 	/**
 	 * 读取用户
-	 * 
-	 * @return
-	 * @see #user
 	 */
 	public User getUser() {
 		return user;
@@ -72,9 +64,6 @@ public class UserAddress extends Model {
 	
 	/**
 	 * 设置用户
-	 * 
-	 * @param user
-	 * @see #user
 	 */
 	public void setUser(User user) {
 		this.user = user;
@@ -241,9 +230,6 @@ public class UserAddress extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:45:23
 	 * @return description:获取类型名称
 	 */
 	public String getTypeName() {
@@ -251,9 +237,6 @@ public class UserAddress extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:39:51
 	 * @return description:获取状态名称
 	 */
 	public String getStatusName() {
@@ -262,9 +245,6 @@ public class UserAddress extends Model {
 
 	/**
 	 * 地址联系类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午1:27:02 operation by: description:
 	 */
 	public static final class Type {
 		@Element("普通")
@@ -276,9 +256,6 @@ public class UserAddress extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-13 上午9:31:10
 	 */
 	public static final class Status {
 		@Element("有效")

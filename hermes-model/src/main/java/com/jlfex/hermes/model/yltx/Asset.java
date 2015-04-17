@@ -12,15 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.jlfex.hermes.model.Model;
-
-
+/**
+ * 资产模型
+ */
 @Entity
 @Table(name = "hm_asset")
 public class Asset extends Model{
 
-	/**
-	 * 资产模型
-	 */
 	private static final long serialVersionUID = -6309890297706625947L;
 
 	@ManyToOne

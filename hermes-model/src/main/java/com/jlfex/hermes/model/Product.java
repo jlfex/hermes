@@ -13,10 +13,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 产品信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_product")
@@ -398,10 +394,6 @@ public class Product extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-12-24
-	 * @since 1.0
 	 */
 	public static final class Status {
 

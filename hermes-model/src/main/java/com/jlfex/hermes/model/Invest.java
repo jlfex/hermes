@@ -2,22 +2,16 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 理财信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_invest")
@@ -232,13 +226,10 @@ public class Invest extends Model {
 	 * 状态
 	 */
 	public static final class Status {
-
 		@Element("冻结中")
 		public static final String FREEZE = "00";
-
 		@Element("完成投标")
 		public static final String COMPLETE = "10";
-
 		@Element("借款流标")
 		public static final String FAILURE = "20";
 		@Element("处理中")

@@ -9,7 +9,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 文本信息模型
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_text")
@@ -92,10 +91,6 @@ public class Text extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-18
-	 * @since 1.0
 	 */
 	public static final class Type {
 
