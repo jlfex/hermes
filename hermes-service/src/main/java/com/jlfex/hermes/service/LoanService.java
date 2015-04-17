@@ -1,10 +1,7 @@
 package com.jlfex.hermes.service;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAudit;
 import com.jlfex.hermes.model.LoanAuth;
@@ -24,12 +21,7 @@ import com.jlfex.hermes.service.pojo.LoanUserInfo;
  */
 public interface LoanService {
 
-	/**
-	 * 查询所有借款
-	 * 
-	 * @return
-	 */
-	//public List<Loan> findAll();
+	
 
 	/**
 	 * 通过状态统计

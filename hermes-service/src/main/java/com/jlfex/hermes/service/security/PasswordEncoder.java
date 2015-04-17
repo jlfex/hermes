@@ -4,10 +4,6 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 密码加密
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class PasswordEncoder implements org.springframework.security.crypto.password.PasswordEncoder {
 

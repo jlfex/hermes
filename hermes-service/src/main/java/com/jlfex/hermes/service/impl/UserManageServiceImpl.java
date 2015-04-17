@@ -1,11 +1,9 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
@@ -146,7 +143,7 @@ public class UserManageServiceImpl implements UserManageService {
 				}
 			}
 			userinfo.setId(String.valueOf(object[0]));
-			userinfo.setAccount(String.valueOf(object[1] == null ? App.message("anonymous", null) : object[1]));
+			userinfo.setAccount(String.valueOf(object[1] == null ? App.message("anonymous", "") : object[1]));
 			userinfo.setCellphone(String.valueOf(object[2] == null ? "" : object[2]));
 			userinfo.setRealName(String.valueOf(object[3] == null ? "" : object[3]));
 			userinfo.setTotal(Numbers.toCurrency(allBalance));
@@ -261,7 +258,7 @@ public class UserManageServiceImpl implements UserManageService {
 		if (user.getAccount() != null) {
 			userBasic.setAccount(user.getAccount());
 		} else {
-			userBasic.setAccount(App.message("anonymous", null));
+			userBasic.setAccount(App.message("anonymous", ""));
 		}
 		userBasic.setCellphone(user.getCellphone());
 		UserAddress userAdd = userAddressRepository.findByUserIdAndType(userId, Type.COMMON);
@@ -317,7 +314,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 账号冻结
 	 */
 	@Override
-	public Result freezeUser(String userId) {
+	public Result<String> freezeUser(String userId) {
 		Result<String> result = new Result<String>();
 		if (Strings.empty(userId)) {
 			result.setType(Result.Type.FAILURE);
@@ -335,7 +332,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 账号 解冻
 	 */
 	@Override
-	public Result unfreezeUser(String userId) {
+	public Result<String> unfreezeUser(String userId) {
 		Result<String> result = new Result<String>();
 		if (Strings.empty(userId)) {
 			result.setType(Result.Type.FAILURE);
@@ -353,8 +350,8 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 注销 账号
 	 */
 	@Override
-	public Result logOffUser(String userId) {
-		Result result = new Result();
+	public Result<String> logOffUser(String userId) {
+		Result<String> result = new Result<String>();
 		if (Strings.empty(userId)) {
 			Logger.warn("注销用户: 用户id为空!");
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);

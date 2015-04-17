@@ -1,8 +1,6 @@
 package com.jlfex.hermes.service;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
@@ -10,10 +8,6 @@ import com.jlfex.hermes.model.Withdraw;
 
 /**
  * 银行账户业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-02
- * @since 1.0
  */
 public interface BankAccountService {
 

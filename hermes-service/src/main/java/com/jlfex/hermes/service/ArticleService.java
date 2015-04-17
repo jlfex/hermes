@@ -1,19 +1,12 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategoryReference;
 
 /**
  * 文章业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-18
- * @since 1.0
  */
 public interface ArticleService {
 

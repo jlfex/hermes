@@ -1,6 +1,4 @@
 package com.jlfex.hermes.service.loanRepay;
-
-import java.util.Date;
 import java.util.List;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;

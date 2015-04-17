@@ -1,18 +1,16 @@
 package com.jlfex.hermes.service.impl;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Article;
@@ -48,6 +42,11 @@ import com.jlfex.hermes.service.pojo.PublishContentVo;
 import com.jlfex.hermes.service.pojo.ResultVo;
 import com.jlfex.hermes.service.pojo.TmpNoticeVo;
 
+/**
+ * 内容发布
+ * @author Administrator
+ *
+ */
 @Service
 public class ContentServiceImpl implements ContentService {
 	private static final String IMG_FLAG = "<img";
@@ -619,10 +618,8 @@ public class ContentServiceImpl implements ContentService {
 		if (Strings.empty(originBase64)) {
 			return null;
 		}
-		BASE64Decoder decoder = new BASE64Decoder();
-		BASE64Encoder encoder = new BASE64Encoder();
 		// Base64解码
-		byte[] originBinary = decoder.decodeBuffer(originBase64);
+		byte[] originBinary = Base64.decodeBase64(originBase64);
 		for (int i = 0; i < originBinary.length; ++i) {
 			if (originBinary[i] < 0) {// 调整异常数据
 				originBinary[i] += 256;
@@ -640,6 +637,6 @@ public class ContentServiceImpl implements ContentService {
 		os.flush();
 		byte[] newBytes = os.toByteArray();
 		os.close();
-		return encoder.encode(newBytes);
+		return  Base64.encodeBase64String(newBytes);
 	}
 }

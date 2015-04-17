@@ -1,5 +1,4 @@
 package com.jlfex.hermes.service.security;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,14 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
@@ -26,10 +22,6 @@ import com.jlfex.hermes.service.RoleService;
 
 /**
  * 安全元数据
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class SecurityMetadataSource implements org.springframework.security.access.SecurityMetadataSource {
 

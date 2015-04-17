@@ -1,7 +1,5 @@
 package com.jlfex.hermes.service.pojo.yltx.response;
-
 import java.io.Serializable;
-
 import com.jlfex.hermes.common.utils.Strings;
 
 

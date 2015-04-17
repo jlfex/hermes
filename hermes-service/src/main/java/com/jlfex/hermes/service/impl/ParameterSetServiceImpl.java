@@ -1,10 +1,8 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.DictionaryType;

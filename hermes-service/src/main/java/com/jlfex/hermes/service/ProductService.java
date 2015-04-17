@@ -1,19 +1,12 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.service.pojo.ProductInfo;
 import com.jlfex.hermes.service.pojo.SimpleProduct;
 
 /**
  * 产品业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-18
- * @since 1.0
  */
 public interface ProductService {
 
@@ -24,20 +17,8 @@ public interface ProductService {
 	 */
 	public List<ProductInfo> findAll();
 
-	/**
-	 * @author Ray
-	 * @date 2013-12-23 上午10:38:00
-	 * @param id
-	 * @return description:
-	 */
 	public Product loadByCode(String code);
 
-	/**
-	 * @author Ray
-	 * @date 2013-12-23 上午10:38:00
-	 * @param id
-	 * @return description:
-	 */
 	public Product loadById(String id);
 
 	/**

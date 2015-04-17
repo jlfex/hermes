@@ -1,9 +1,6 @@
 package com.jlfex.hermes.service.payment;
-
 import java.util.Map;
-
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.web.RequestParam;
@@ -11,10 +8,6 @@ import com.jlfex.hermes.model.Payment;
 
 /**
  * 模拟支付渠道实现
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-09
- * @since 1.0
  */
 @Component("fakePaymentChannelImpl")
 public class FakePaymentChannelImpl implements PaymentChannelImpl {

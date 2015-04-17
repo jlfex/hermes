@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -51,11 +50,6 @@ import com.jlfex.hermes.service.repay.RepayMethod;
 @Transactional
 public class RepayServiceImpl implements RepayService {
 
-	/**
-	 * 
-	 */
-	//@PersistenceContext
-	//private EntityManager em;
 	
 	/** 还款方式信息仓库 */
 	@Autowired

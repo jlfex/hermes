@@ -1,9 +1,6 @@
 package com.jlfex.hermes.service.payment;
-
 import java.util.Map;
-
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
@@ -15,10 +12,6 @@ import com.jlfex.hermes.model.Payment;
 
 /**
  * 国付宝支付渠道实现
- * 
- * @author ultrafrog
- * @version 1.0, 2014-02-17
- * @since 1.0
  */
 @Component("goPaymentChannelImpl")
 public class GoPaymentChannelImpl implements PaymentChannelImpl {

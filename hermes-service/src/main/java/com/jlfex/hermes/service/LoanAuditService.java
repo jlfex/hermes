@@ -1,5 +1,4 @@
 package com.jlfex.hermes.service;
-
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAudit;
 

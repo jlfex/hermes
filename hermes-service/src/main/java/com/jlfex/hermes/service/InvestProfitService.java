@@ -1,10 +1,7 @@
 package com.jlfex.hermes.service;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.User;
@@ -12,10 +9,6 @@ import com.jlfex.hermes.service.pojo.InvestProfitInfo;
 
 /**
  * 理财收益业务接口
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 public interface InvestProfitService {
 

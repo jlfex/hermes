@@ -1,9 +1,7 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.Loan;
 

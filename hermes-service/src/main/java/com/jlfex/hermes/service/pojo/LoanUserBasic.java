@@ -4,16 +4,10 @@ import java.io.Serializable;
 
 /**
  * 后台页面借款相关的用户基本信息
- * 
- * @author chenqi
- * @version 1.0, 2014-01-22
- * @since 1.0
  */
 public class LoanUserBasic implements Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 7129694625043492677L;
 
 	/** 昵称 */

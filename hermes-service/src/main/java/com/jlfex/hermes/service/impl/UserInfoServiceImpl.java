@@ -1,13 +1,10 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Result;
@@ -43,10 +40,6 @@ import com.jlfex.hermes.service.security.PasswordEncoder;
 
 /**
  * 用户个人信息实现
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Service
 @Transactional
@@ -294,7 +287,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 * ,java.lang.String,java.lang.String)
 	 */
 	@Override
-	public Result resetPassword(String userId, String orginalPwd, String newPwd) {
+	public Result<String> resetPassword(String userId, String orginalPwd, String newPwd) {
 		Result<String> result = new Result<String>();
 		Assert.notEmpty(userId, "user id is empty.");
 		User user = userRepository.findOne(userId);

@@ -5,16 +5,10 @@ import java.math.BigDecimal;
 
 /**
  * 前台页面借款相关的用户信息
- * 
- * @author chenqi
- * @version 1.0, 2014-01-17
- * @since 1.0
  */
 public class LoanUserInfo implements Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -1716009642124198032L;
 
 	/** 余额 */

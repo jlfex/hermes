@@ -1,21 +1,13 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
-import com.jlfex.hermes.service.pojo.UserBasic;
 
 /**
  * 用户业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public interface UserService {
 

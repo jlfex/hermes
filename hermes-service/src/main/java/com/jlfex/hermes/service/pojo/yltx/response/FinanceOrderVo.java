@@ -1,10 +1,8 @@
 package com.jlfex.hermes.service.pojo.yltx.response;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 import com.jlfex.hermes.common.utils.Strings;
 
 public class FinanceOrderVo implements  Serializable {

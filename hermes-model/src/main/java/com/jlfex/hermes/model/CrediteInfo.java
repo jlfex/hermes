@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.jlfex.hermes.common.App;
-import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -401,7 +400,6 @@ public class CrediteInfo extends Model {
 	 */
 	public String getCurrentUserName() {
 		try {
-			AppUser user = App.user();
 			String name = App.user().getName();
 			return name;
 		} catch (Exception e) {

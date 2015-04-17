@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 
 /**
  * 提现手续费接口
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-04
- * @since 1.0
  */
 public interface WithdrawFee {
 

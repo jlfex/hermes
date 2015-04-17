@@ -1,22 +1,16 @@
 package com.jlfex.hermes.service.security;
-
 import java.util.Collection;
-
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 访问决策管理器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
+
  */
 public class AccessDecisionManager implements org.springframework.security.access.AccessDecisionManager {
 

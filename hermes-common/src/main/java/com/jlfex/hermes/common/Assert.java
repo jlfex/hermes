@@ -7,10 +7,6 @@ import com.jlfex.hermes.common.utils.Strings;
 /**
  * 断言<br>
  * 断言失败抛出业务异常
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-28
- * @since 1.0
  */
 public abstract class Assert {
 

@@ -1,20 +1,16 @@
 package com.jlfex.hermes.service.web;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
@@ -28,10 +24,6 @@ import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
 
 /**
  * 系统属性过滤器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-26
- * @since 1.0
  */
 @Component
 public class PropertiesFilter implements Filter {

@@ -1,26 +1,18 @@
 package com.jlfex.hermes.service.security;
-
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
-
 import com.jlfex.hermes.common.Logger;
 
 /**
  * 安全过滤器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class SecurityFilter extends AbstractSecurityInterceptor implements Filter {
 

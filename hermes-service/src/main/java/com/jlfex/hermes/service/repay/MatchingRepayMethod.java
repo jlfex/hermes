@@ -1,7 +1,5 @@
 package com.jlfex.hermes.service.repay;
-
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,10 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
@@ -20,10 +16,6 @@ import com.jlfex.hermes.model.LoanRepay;
 /**
  * 
  * 等额本息实现
- * 
- * @author Ray
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 public class MatchingRepayMethod implements RepayMethod {
 
@@ -116,7 +108,6 @@ public class MatchingRepayMethod implements RepayMethod {
 
 	@Override
 	public void getTiqian(Loan loan, Map<String, String> params) {
-		// TODO Auto-generated method stub
 
 	}
 

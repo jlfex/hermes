@@ -1,14 +1,11 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
@@ -24,10 +21,6 @@ import com.jlfex.hermes.service.common.Query;
 
 /**
  * 提现业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-21
- * @since 1.0
  */
 @Service
 @Transactional

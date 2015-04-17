@@ -1,15 +1,10 @@
 package com.jlfex.hermes.service.payment;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  * 支付表单
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-09
- * @since 1.0
  */
 public class PaymentForm {
 

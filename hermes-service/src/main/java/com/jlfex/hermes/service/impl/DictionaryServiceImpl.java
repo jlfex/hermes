@@ -1,10 +1,7 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.repository.DictionaryRepository;
@@ -12,10 +9,6 @@ import com.jlfex.hermes.service.DictionaryService;
 
 /**
  * 字典业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-27
- * @since 1.0
  */
 @Service
 public class DictionaryServiceImpl implements DictionaryService {

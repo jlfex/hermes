@@ -4,10 +4,6 @@ import com.jlfex.hermes.model.Role;
 
 /**
  * 授权信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class GrantedAuthority implements org.springframework.security.core.GrantedAuthority {
 

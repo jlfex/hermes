@@ -1,17 +1,11 @@
 package com.jlfex.hermes.service.payment;
-
 import java.util.Map;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.web.RequestParam;
 import com.jlfex.hermes.model.Payment;
 
 /**
  * 支付渠道实现接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-17
- * @since 1.0
  */
 public interface PaymentChannelImpl {
 

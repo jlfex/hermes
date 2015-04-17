@@ -1,16 +1,9 @@
 package com.jlfex.hermes.service.job;
-
-import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
-import com.jlfex.hermes.common.Mailer;
 import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 任务
- * 
- * @author ultrafrog
- * @version 1.0, 2014-02-14
- * @since 1.0
  */
 public abstract class Job {
 
@@ -58,10 +51,6 @@ public abstract class Job {
 	
 	/**
 	 * 处理结果
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-02-18
-	 * @since 1.0
 	 */
 	public static class Result {
 		

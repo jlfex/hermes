@@ -1,17 +1,11 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.io.Serializable;
 import java.util.Date;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.InvestProfit;
 
 /**
  * 理财收益信息
- * 
- * @author chenqi
- * @version 1.0, 2014-01-07
- * @since 1.0
  */
 public class InvestProfitInfo implements Serializable {
 

@@ -4,10 +4,6 @@ import com.jlfex.hermes.model.Text;
 
 /**
  * 文本业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-19
- * @since 1.0
  */
 public interface TextService {
 

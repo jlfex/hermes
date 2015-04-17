@@ -1,14 +1,11 @@
 package com.jlfex.hermes.service.apiconfig;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,14 +16,17 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.service.CreditorService;
 import com.jlfex.hermes.service.pojo.yltx.ApiConfigVo;
 
-
+/**
+ * 接口配置
+ * @author Administrator
+ *
+ */
 @Service
 @Transactional
 public class ApiconfigServiceImpl implements ApiConfigService {
