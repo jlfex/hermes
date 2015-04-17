@@ -130,8 +130,7 @@
 						<td colspan="8" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
 				<#else>
-				   <#list loanRepays.content as l>  
-				    	
+				   <#list loanRepays.content as l>  				    	
 				        <tr>
 				            <td class="center">${l.sequence}</td>
 				            <td>${l.planDatetime?string('yyyy-MM-dd')}</td>
