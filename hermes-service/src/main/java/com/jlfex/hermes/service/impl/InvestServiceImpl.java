@@ -1,5 +1,4 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -18,7 +17,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -51,7 +49,6 @@ import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.Loan.Status;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
-import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.LoanLog;
 import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.PPLimit;
@@ -813,8 +810,6 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatusName());
-			List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
-			BigDecimal expectProfit = BigDecimal.ZERO;
 			BigDecimal rate = invest.getLoan().getRate().divide(new BigDecimal(12), 10, RoundingMode.HALF_UP).multiply(new BigDecimal(invest.getLoan().getPeriod()));
 			BigDecimal interest = invest.getAmount().multiply(rate);
 			investInfo.setExpectProfit(Numbers.toCurrency(invest.getAmount().add(interest)));
@@ -842,7 +837,6 @@ public class InvestServiceImpl implements InvestService {
 					invest.setStatus(Invest.Status.FAILURE);
 					// 投标解冻
 					transactionService.unfreeze(Transaction.Type.UNFREEZE, invest.getUser(), invest.getAmount(), invest.getId(), "投标解冻");
-
 				}
 			}
 			investRepository.save(investList);
@@ -855,7 +849,6 @@ public class InvestServiceImpl implements InvestService {
 
 	/**
 	 * 债权标 流标后 更新债权信息 状态
-	 * 
 	 * @param loan
 	 */
 	public void creditAutoBidDeal(Loan loan) {

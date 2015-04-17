@@ -1,18 +1,14 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
@@ -51,10 +47,6 @@ import com.jlfex.hermes.service.withdraw.WithdrawFee;
 
 /**
  * 银行账户业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-02
- * @since 1.0
  */
 @Service
 @Transactional
@@ -290,7 +282,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	@Override
 	public BankAccount findOneByUserIdAndStatus(String userId, String status) {
-		// TODO Auto-generated method stub
 		return bankAccountRepository.findOneByUserIdAndStatus(userId, status);
 	}
 

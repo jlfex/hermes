@@ -1,9 +1,7 @@
 package com.jlfex.hermes.service.userProperties;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 

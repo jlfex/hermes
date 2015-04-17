@@ -1,20 +1,12 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.io.Serializable;
 import java.util.List;
-
-import javax.persistence.Column;
-
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Repay;
 
 /**
  * 
  * 产品信息
- * 
- * @author Ray
- * @version 1.0, 2014-1-4
- * @since 1.0
  */
 public class ProductInfo implements Serializable{
 

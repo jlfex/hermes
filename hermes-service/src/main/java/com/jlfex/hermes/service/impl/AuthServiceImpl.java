@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.sms.SMSSender;
@@ -41,11 +39,6 @@ import com.jlfex.hermes.service.AuthService;
 
 /**
  * 认证实现
- * 
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Service
 @Transactional
@@ -94,11 +87,10 @@ public class AuthServiceImpl implements AuthService {
 	 * ,java.lang.String)
 	 */
 	@Override
-	public Result sendAuthCodeByPhone(String userId, String phone) {
+	public Result<String> sendAuthCodeByPhone(String userId, String phone) {
 		try {
-			Result result = new Result();
+			Result<String> result = new Result<String>();
 			UserAuth userAuth = new UserAuth();
-			// check whether the phone is used
 			List<User> users = userRepository.findByCellphone(phone);
 			List<UserProperties> userPros = new ArrayList<UserProperties>();
 			if (users != null && users.size() > 0) {
@@ -106,11 +98,10 @@ public class AuthServiceImpl implements AuthService {
 			}
 			if (userPros != null && userPros.size() > 0) {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage(App.message("result.failure.phone.occupy", null));
+				result.addMessage(App.message("result.failure.phone.occupy", ""));
 			} else {
 				User user = userRepository.findOne(userId);
 				user.setCellphone(phone);
-
 				Date curDate = new Date();
 				userAuth.setUser(user);
 				String validateCode = Strings.random(6, StringSet.NUMERIC);
@@ -120,21 +111,19 @@ public class AuthServiceImpl implements AuthService {
 				userAuth.setStatus(Status.WAITVERIFY);
 				userAuth.setType(Type.SMS);
 				userAuth.setExpire(expire);
-
 				userRepository.save(user);
 				userAuthRepository.save(userAuth);
-
 				// send verification code of sms
 				//sendSms(phone, validateCode);
-				result.addMessage(App.message("result.success.phone", null));
+				result.addMessage(App.message("result.success.phone", ""));
 				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 				return result;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Result result = new Result();
+			Result<String> result = new Result<String>();
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage(App.message("失败", null));
+			result.addMessage(App.message("失败", ""));
 			return result;
 		}
 		return null;
@@ -148,8 +137,8 @@ public class AuthServiceImpl implements AuthService {
 	 * lang.String,java.lang.String)
 	 */
 	@Override
-	public Result authPhone(String userId, String phone, String validCode) {
-		Result result = new Result();
+	public Result<String> authPhone(String userId, String phone, String validCode) {
+		Result<String> result = new Result<String>();
 		User user = userRepository.findOne(userId);
 		if (user.getCellphone().equals(phone)) {
 			UserAuth userAuth = userAuthRepository.findByUserAndCodeOrderByCreateTimeDesc(user, validCode);
@@ -165,16 +154,16 @@ public class AuthServiceImpl implements AuthService {
 				} else {
 					userAuth.setStatus(com.jlfex.hermes.model.UserAuth.Status.OVERDUE);
 					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-					result.addMessage(App.message("result.failure.phone.overdue", null));
+					result.addMessage(App.message("result.failure.phone.overdue", ""));
 				}
 				userAuthRepository.save(userAuth);
 			} else {
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage(App.message("result.failure.phone.error", null));
+				result.addMessage(App.message("result.failure.phone.error", ""));
 			}
 		} else {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage(App.message("result.failure.phone.unmatch", null));
+			result.addMessage(App.message("result.failure.phone.unmatch", ""));
 		}
 		return result;
 
@@ -188,14 +177,14 @@ public class AuthServiceImpl implements AuthService {
 	 * .lang.String,java.lang.String)
 	 */
 	@Override
-	public Result authIdentify(String userId, String realName, String idType, String idNumber) {
-		Result result = new Result();
+	public Result<String> authIdentify(String userId, String realName, String idType, String idNumber) {
+		Result<String> result = new Result<String>();
 		User user = userRepository.findOne(userId);
 		UserProperties userPro_c = userPropertiesRepository.findByIdNumberAndIdTypeAndAuthName(idNumber, idType, Auth.PASS);
 		if (userPro_c != null) {
 			if (!userPro_c.getUser().getId().equals(userId)) { // 证件被占用
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage(App.message("result.failure.id.occupy", null));
+				result.addMessage(App.message("result.failure.id.occupy", ""));
 			}
 		} else {
 			String res = idInterface(realName, idType, idNumber);
@@ -210,7 +199,7 @@ public class AuthServiceImpl implements AuthService {
 			} else {
 				userPro_u.setAuthName(Auth.FAILURE);
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage(App.message("result.failure.id", null));
+				result.addMessage(App.message("result.failure.id", ""));
 			}
 			userPropertiesRepository.save(userPro_u);
 		}
@@ -220,8 +209,8 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * 绑定银行卡
 	 */
-	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String realName) {
-		Result result = new Result();
+	public Result<String> bindBank(String userId, String bankId, String cityId, String deposit, String account, String realName) {
+		Result<String> result = new Result<String>();
 		User user = userRepository.findOne(userId);
 		Area city = areaRepository.findOne(cityId);
 		Bank bank = bankRepository.findOne(bankId);
@@ -249,8 +238,8 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * 新增银行卡
 	 */
-	public Result bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault,String realName) {
-		Result result = new Result();
+	public Result<String> bindBank(String userId, String bankId, String cityId, String deposit, String account, String isdefault,String realName) {
+		Result<String> result = new Result<String>();
 		User user = userRepository.findOne(userId);
 		Area city = areaRepository.findOne(cityId);
 		Bank bank = bankRepository.findOne(bankId);
@@ -292,8 +281,8 @@ public class AuthServiceImpl implements AuthService {
 	/**
 	 * 更改银行卡
 	 */
-	public Result editBankCard(String id, String bankId, String cityId, String deposit, String account, String isdefault) {
-		Result result = new Result();
+	public Result<String> editBankCard(String id, String bankId, String cityId, String deposit, String account, String isdefault) {
+		Result<String> result = new Result<String>();
 		Area city = areaRepository.findOne(cityId);
 		Bank bank = bankRepository.findOne(bankId);
 		BankAccount bankAccount = bankAccountRepository.findOne(id);
@@ -324,9 +313,6 @@ public class AuthServiceImpl implements AuthService {
 	public boolean isAuth(String code) {
 		Properties properties = propertiesRepository.findByCode(code);
 		if (properties != null) {
-			// code:auth.cellphone.switch(The phone authentication)
-			// auth.realname.switch(real name the authentication)
-			// value：1.Required 0.Not Required
 			if (properties.getValue().equals("1")) {
 				return true;
 			}
@@ -342,7 +328,6 @@ public class AuthServiceImpl implements AuthService {
 	 */
 	public void sendSms(String phone, String validateCode) {
 		Text text = textRepository.findOne("afa431f4-9a65-11e3-85fa-6cae8b21aeaa");
-
 		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("validateCode", validateCode);
 		String html = StringTemplateLoader.process(text.getText(), root);
@@ -353,9 +338,9 @@ public class AuthServiceImpl implements AuthService {
 	 * 证件验证接口
 	 */
 	private String idInterface(String realName, String idType, String idNumber) {
-		String param = realName + "," + idNumber;
-		// return Identity.verify(param);
-		return "3";
+//		 String param = realName + "," + idNumber;
+//		 return Identity.verify(param);
+		 return "3";
 	}
 
 }

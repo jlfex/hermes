@@ -2,11 +2,8 @@ package com.jlfex.hermes.service.cfca;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
-
-import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Invest;
@@ -15,7 +12,7 @@ import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 
 /**
- * 中金订单服务类
+ * 中金订单服务接口
  * 
  * @author jswu
  *

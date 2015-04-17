@@ -1,20 +1,13 @@
 package com.jlfex.hermes.service;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 
 /**
  * 交易业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-27
- * @since 1.0
  */
 public interface TransactionService {
 

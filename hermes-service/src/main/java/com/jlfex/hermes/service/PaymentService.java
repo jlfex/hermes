@@ -1,9 +1,7 @@
 package com.jlfex.hermes.service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.web.RequestParam;
 import com.jlfex.hermes.model.Payment;
@@ -13,10 +11,6 @@ import com.jlfex.hermes.service.payment.PaymentChannelImpl;
 
 /**
  * 支付业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-08
- * @since 1.0
  */
 public interface PaymentService {
 

@@ -1,20 +1,13 @@
 package com.jlfex.hermes.service.security;
-
 import java.util.Collection;
 import java.util.LinkedList;
-
 import org.springframework.security.core.GrantedAuthority;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.User;
 
 /**
  * 用户明细
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 

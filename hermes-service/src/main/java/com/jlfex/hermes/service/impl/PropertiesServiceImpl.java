@@ -1,16 +1,13 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.utils.Strings;
@@ -27,10 +24,6 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
  * 系统属性业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-26
- * @since 1.0
  */
 @Service
 @Transactional

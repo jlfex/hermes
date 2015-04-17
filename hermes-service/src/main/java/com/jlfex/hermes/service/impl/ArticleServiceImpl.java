@@ -1,14 +1,11 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +13,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategoryReference;
-import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.ArticleCategoryReferenceRepository;
 import com.jlfex.hermes.repository.ArticleRepository;
 import com.jlfex.hermes.repository.TextRepository;
@@ -28,10 +23,6 @@ import com.jlfex.hermes.service.common.Pageables;
 
 /**
  * 文章业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-30
- * @since 1.0
  */
 @Service
 @Transactional
@@ -63,11 +54,9 @@ public class ArticleServiceImpl implements ArticleService {
 	public Article loadByIdWithText(String id) {
 		// 查询数据
 		Article article = articleRepository.findOne(id);
-		Text text = textRepository.findByReferenceAndType(id, Text.Type.ARTICLE);
-
+		//Text text = textRepository.findByReferenceAndType(id, Text.Type.ARTICLE);
 		// 设置文本
 		// article.setText((text == null) ? null : text.getText());
-
 		// 返回结果
 		return article;
 	}

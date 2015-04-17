@@ -1,5 +1,4 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,16 +6,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
@@ -50,10 +46,6 @@ import com.jlfex.hermes.service.payment.PaymentChannelImpl;
 
 /**
  * 支付业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-08
- * @since 1.0
  */
 @Service
 @Transactional

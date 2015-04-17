@@ -1,14 +1,11 @@
 package com.jlfex.hermes.service.impl;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.RoleResource;
 import com.jlfex.hermes.model.UserRole;
@@ -18,10 +15,6 @@ import com.jlfex.hermes.service.RoleService;
 
 /**
  * 角色业务实现
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-10
- * @since 1.0
  */
 @Service
 @Transactional

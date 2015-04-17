@@ -5,15 +5,11 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -24,7 +20,6 @@ import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.BankAccount;
-import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
@@ -34,7 +29,7 @@ import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
 
 /**
- * 
+ * 中金订单服务
  * @author jswu
  *
  */

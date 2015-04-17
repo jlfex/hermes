@@ -1,10 +1,7 @@
 package com.jlfex.hermes.service.job;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.model.Loan;

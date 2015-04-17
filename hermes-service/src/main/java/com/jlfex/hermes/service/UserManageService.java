@@ -1,9 +1,6 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.User;
@@ -18,11 +15,6 @@ import com.jlfex.hermes.service.pojo.UserInfo;
 
 /**
  * 客户管理
- * 
- * 
- * @author Aether
- * @version 1.0, 2014-1-21
- * @since 1.0
  */
 public interface UserManageService {
 	/**
@@ -109,7 +101,7 @@ public interface UserManageService {
 	 * @param userId
 	 * @return
 	 */
-	public Result freezeUser(String userId);
+	public Result<String> freezeUser(String userId);
 
 	/**
 	 * 解冻用户
@@ -117,7 +109,7 @@ public interface UserManageService {
 	 * @param userId
 	 * @return
 	 */
-	public Result unfreezeUser(String userId);
+	public Result<String> unfreezeUser(String userId);
 
 	/**
 	 * 注销用户
@@ -125,7 +117,7 @@ public interface UserManageService {
 	 * @param userId
 	 * @return
 	 */
-	public Result logOffUser(String userId);
+	public Result<String> logOffUser(String userId);
 
 	/**
 	 * 根据用户id查询用户

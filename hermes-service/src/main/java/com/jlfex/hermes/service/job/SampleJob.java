@@ -4,11 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.jlfex.hermes.common.Logger;
 
-/**
- * @author ultrafrog
- * @version 1.0, 2014-02-14
- * @since 1.0
- */
 @Component("sampleJob")
 public class SampleJob extends Job {
 

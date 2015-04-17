@@ -1,15 +1,9 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import com.jlfex.hermes.model.Navigation;
 
 /**
  * 导航业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-18
- * @since 1.0
  */
 public interface NavigationService {
 

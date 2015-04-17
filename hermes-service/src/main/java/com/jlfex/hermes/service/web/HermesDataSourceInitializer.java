@@ -1,17 +1,13 @@
 package com.jlfex.hermes.service.web;
-
 import java.sql.SQLException;
 import java.util.HashMap;
-
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.repository.CommonRepository;
 import com.jlfex.hermes.service.common.Query;

@@ -1,16 +1,10 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.RoleResource;
 
 /**
  * 角色业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-10
- * @since 1.0
  */
 public interface RoleService {
 

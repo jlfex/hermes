@@ -1,15 +1,9 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import com.jlfex.hermes.model.Dictionary;
 
 /**
  * 字典业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-27
- * @since 1.0
  */
 public interface DictionaryService {
 

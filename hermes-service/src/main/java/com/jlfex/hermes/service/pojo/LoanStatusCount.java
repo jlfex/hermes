@@ -1,9 +1,7 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Strings;
@@ -11,10 +9,6 @@ import com.jlfex.hermes.model.Loan;
 
 /**
  * 借款状态统计
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-11
- * @since 1.0
  */
 public class LoanStatusCount {
 
@@ -125,10 +119,6 @@ public class LoanStatusCount {
 	
 	/**
 	 * 首页状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-11
-	 * @since 1.0
 	 */
 	public static final class HomeStatus {
 		

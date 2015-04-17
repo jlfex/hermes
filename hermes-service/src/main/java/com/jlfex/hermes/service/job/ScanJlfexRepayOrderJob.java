@@ -1,12 +1,9 @@
 package com.jlfex.hermes.service.job;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -17,8 +14,6 @@ import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.InvestProfit;
-import com.jlfex.hermes.model.Loan;
-import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;

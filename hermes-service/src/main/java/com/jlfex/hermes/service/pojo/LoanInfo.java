@@ -1,9 +1,6 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Loan;

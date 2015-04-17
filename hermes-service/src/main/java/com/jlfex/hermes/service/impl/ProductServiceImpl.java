@@ -1,19 +1,15 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,9 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
-import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.HermesConstants;
@@ -48,10 +42,6 @@ import com.jlfex.hermes.service.pojo.SimpleProduct;
 /**
  * 
  * 产品业务实现
- * 
- * @author Ray
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 @Service
 @Transactional
@@ -83,17 +73,16 @@ public class ProductServiceImpl implements ProductService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see com.jlfex.hermes.service.ProductService#findAll()
 	 */
 	@Override
 	public List<ProductInfo> findAll() {
 		List<ProductInfo> productInfoList = new ArrayList<ProductInfo>();
-		List validState = new ArrayList();
+		List<String> validState = new ArrayList<String>();
 		validState.add(Product.Status.VALID);
 		List<Product>  sortProductList = new ArrayList<Product>();
 		Iterable<Product> productList = productRepository.findByStatusIn(validState);
-		Iterator iterator = productList.iterator();
+		Iterator<Product> iterator = productList.iterator();
 		while(iterator.hasNext()){
 			sortProductList.add((Product)iterator.next());
 		}
@@ -106,10 +95,6 @@ public class ProductServiceImpl implements ProductService {
 		List<Repay> repayList = repayRepository.findAll();
 		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCodeAndStatus("loan_purpose", "00");
 		int displaySequence = 1; //20150211需求：固定显示五个产品
-		int productSize = 0;
-		if(sortProductList!=null && sortProductList.size() > 0){
-			productSize = sortProductList.size();
-		}
 		for(Product product : sortProductList){
 			if(displaySequence >5){
 				break;
@@ -212,7 +197,6 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findOne(new Specification<Product>() {
 			@Override
 			public Predicate toPredicate(Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				// TODO Auto-generated method stub
 				return cb.equal(root.get("code"), code);
 			}
 		});

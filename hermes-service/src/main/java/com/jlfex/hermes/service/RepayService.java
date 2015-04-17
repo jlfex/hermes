@@ -12,10 +12,6 @@ import com.jlfex.hermes.service.repay.RepayMethod;
 
 /**
  * 还款方式业务接口
- * 
- * @author chenqi
- * @version 1.0, 2013-12-24
- * @since 1.0
  */
 public interface RepayService {
 	/**
@@ -53,7 +49,7 @@ public interface RepayService {
 	 * 逾期还款实现
 	 * 
 	 * @param loanRepay
-	 *            还款计划对象（单期）
+	 * 还款计划对象（单期）
 	 */
 	// public void overdueRepayment(LoanRepay loanRepay);
 

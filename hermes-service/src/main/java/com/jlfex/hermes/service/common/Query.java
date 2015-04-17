@@ -4,17 +4,12 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 查询
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-04
- * @since 1.0
  */
 public class Query implements Serializable {
 

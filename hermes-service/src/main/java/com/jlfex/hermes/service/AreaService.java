@@ -6,10 +6,6 @@ import com.jlfex.hermes.model.Area;
 
 /**
  * 地区业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-03
- * @since 1.0
  */
 public interface AreaService {
 

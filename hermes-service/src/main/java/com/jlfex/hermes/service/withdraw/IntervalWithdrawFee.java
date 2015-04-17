@@ -1,23 +1,16 @@
 package com.jlfex.hermes.service.withdraw;
-
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.springframework.stereotype.Component;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Numbers;
 
 /**
  * 区间提现手续费
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-04
- * @since 1.0
  */
 @Component("intervalWithdrawFee")
 public class IntervalWithdrawFee implements WithdrawFee {
@@ -72,10 +65,6 @@ public class IntervalWithdrawFee implements WithdrawFee {
 	
 	/**
 	 * 区间
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-01-04
-	 * @since 1.0
 	 */
 	public class Interval {
 		

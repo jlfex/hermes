@@ -1,20 +1,16 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.PostPersist;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Assert;
@@ -47,10 +43,6 @@ import com.jlfex.hermes.service.security.PasswordEncoder;
 
 /**
  * 处理用户注册、登录、登出功能
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 @Service
 @Transactional
@@ -121,7 +113,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 */
 	@Override
 	public List<User> findByInput(String input) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -133,7 +124,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 */
 	@Override
 	public User resetPassword(String userId, String original, String reset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -192,7 +182,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	@Override
 	@PostPersist
 	public void signUp(User user) throws Exception {
-		Date createDate = new Date();
 		user.setType(Type.CLIENT);
 		user.setStatus(Status.INACTIVATE);
 		String pwd = encode(user.getSignPassword());
@@ -432,7 +421,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 * @see com.jlfex.hermes.service.UserService#saveUser(User)
 	 */
 	public void saveUser(User user) throws Exception {
-		Date createDate = new Date();
 		// 用户属性信息
 		UserProperties userProperties = new UserProperties();
 		userProperties.setUser(user);

@@ -6,10 +6,6 @@ import com.jlfex.hermes.model.Advert;
 
 /**
  * 广告业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-18
- * @since 1.0
  */
 public interface AdvertService {
 

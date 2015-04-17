@@ -4,15 +4,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-
 import com.jlfex.hermes.common.App;
 
 /**
  * 分页工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-02
- * @since 1.0
  */
 public abstract class Pageables {
 

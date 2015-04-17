@@ -1,18 +1,12 @@
 package com.jlfex.hermes.service.pojo;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.Invest;
 
 /**
  * 理财信息
- * 
- * @author chenqi
- * @version 1.0, 2014-01-04
- * @since 1.0
  */
 public class InvestInfo implements Serializable {
 

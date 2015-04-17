@@ -6,10 +6,6 @@ import com.jlfex.hermes.model.Label;
 
 /**
  * 标签业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 public interface LabelService {
 

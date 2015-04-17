@@ -1,7 +1,5 @@
 package com.jlfex.hermes.service;
-
 import java.util.List;
-
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -15,11 +13,6 @@ import com.jlfex.hermes.service.pojo.UserBasic;
 
 /**
  * 用户个人信息接口
- * 
- * 
- * @author Aether
- * @version 1.0, 2013-12-25
- * @since 1.0
  */
 public interface UserInfoService {
 
@@ -123,7 +116,7 @@ public interface UserInfoService {
 	 * @param orginalPwd
 	 * @param newPwd
 	 */
-	public Result resetPassword(String userId, String orginalPwd, String newPwd);
+	public Result<String> resetPassword(String userId, String orginalPwd, String newPwd);
 
 	/**
 	 * 用户属性信息

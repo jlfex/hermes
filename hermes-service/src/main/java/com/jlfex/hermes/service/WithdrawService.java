@@ -1,15 +1,9 @@
 package com.jlfex.hermes.service;
-
 import org.springframework.data.domain.Page;
-
 import com.jlfex.hermes.model.Withdraw;
 
 /**
  * 提现业务接口
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-21
- * @since 1.0
  */
 public interface WithdrawService {
 

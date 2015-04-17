@@ -6,10 +6,6 @@ import java.util.List;
 
 /**
  * 处理结果
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-05
- * @since 1.0
  */
 public class Result<T extends Serializable> implements Serializable {
 
@@ -173,10 +169,6 @@ public class Result<T extends Serializable> implements Serializable {
 
 	/**
 	 * 类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-05
-	 * @since 1.0
 	 */
 	public static enum Type {
 		SUCCESS("success"), 

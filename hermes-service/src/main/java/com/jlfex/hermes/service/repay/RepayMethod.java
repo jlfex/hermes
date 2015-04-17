@@ -1,18 +1,12 @@
 package com.jlfex.hermes.service.repay;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanRepay;
 
 /**
  * 还款方式接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-17
- * @since 1.0
  */
 public interface RepayMethod {
 

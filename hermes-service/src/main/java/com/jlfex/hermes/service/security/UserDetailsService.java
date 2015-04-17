@@ -1,9 +1,7 @@
 package com.jlfex.hermes.service.security;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.model.User;
@@ -12,10 +10,6 @@ import com.jlfex.hermes.service.UserService;
 
 /**
  * 用户明细业务
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 

@@ -1,5 +1,4 @@
 package com.jlfex.hermes.service.impl;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -11,12 +10,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
@@ -98,7 +94,6 @@ import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.common.Query;
-import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanAuditInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
@@ -224,16 +219,6 @@ public class LoanServiceImpl implements LoanService {
 	/** 债权人 信息仓库 */
 	@Autowired
 	private CreditorRepository creditorRepository;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.LoanService#findAll()
-	 
-	@Override
-	public List<Loan> findAll() {
-		return loanRepository.findAll();
-	}*/
 
 	/*
 	 * (non-Javadoc)
@@ -366,6 +351,7 @@ public class LoanServiceImpl implements LoanService {
 	/**
 	 * 满标处理
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Loan loanOut(String id, String remark, boolean isPass) throws Exception {
 		Logger.info("满标处理开始：loan_id =" + id + ", 处理方式：isPass=" + isPass + ",remark=" + remark);
@@ -382,19 +368,19 @@ public class LoanServiceImpl implements LoanService {
 				List<Invest> investList = new ArrayList<Invest>();
 				List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
 				if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
-					Map<String, List> resultMap = normalLoanDeal(loan, map);
+					Map<String, Object> resultMap = normalLoanDeal(loan, map);
 					if (resultMap == null) {
 						throw new Exception("满标处理:普通标loanid=" + loan.getId() + ", 处理异常");
 					}
-					investList = resultMap.get("resultMap");
-					investProfitList = resultMap.get("investProfitList");
+					investList = (List<Invest>) resultMap.get("resultMap");
+					investProfitList = (List<InvestProfit>) resultMap.get("investProfitList");
 				} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-					Map<String, List> resultMap = outCreditDeal(loan);
+					Map<String, Object> resultMap = outCreditDeal(loan);
 					if (resultMap == null) {
 						throw new Exception("满标处理:债权标loanid=" + loan.getId() + ", 处理异常");
 					}
-					investList = resultMap.get("resultMap");
-					investProfitList = resultMap.get("investProfitList");
+					investList = (List<Invest>) resultMap.get("resultMap");
+					investProfitList = (List<InvestProfit>) resultMap.get("investProfitList");
 				} else {
 					throw new Exception("id=" + loan.getId() + ",无效的标类型：loan_kind=" + loan.getLoanKind());
 				}
@@ -433,8 +419,8 @@ public class LoanServiceImpl implements LoanService {
 	 * @param paramMap
 	 * @return
 	 */
-	public Map<String, List> normalLoanDeal(Loan loan, Map<String, String> paramMap) {
-		Map<String, List> resultMap = new HashMap<String, List>();
+	public Map<String, Object> normalLoanDeal(Loan loan, Map<String, String> paramMap) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
 		List<Invest> investList = new ArrayList<Invest>();
 		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
@@ -475,8 +461,8 @@ public class LoanServiceImpl implements LoanService {
 	 * @param loan
 	 * @return
 	 */
-	public Map<String, List> outCreditDeal(Loan loan) {
-		Map<String, List> resultMap = new HashMap<String, List>();
+	public Map<String, Object> outCreditDeal(Loan loan) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
 		List<Invest> investList = new ArrayList<Invest>();
 		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
