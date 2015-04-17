@@ -2,22 +2,16 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 支付信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-09
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_payment")
@@ -206,10 +200,6 @@ public class Payment extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-01-09
-	 * @since 1.0
 	 */
 	public static final class Status {
 

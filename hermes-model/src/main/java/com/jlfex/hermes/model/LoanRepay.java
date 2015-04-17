@@ -2,14 +2,12 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -354,9 +352,6 @@ public class LoanRepay extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:14:01
 	 * @return description:获取状态名称
 	 */
 	public String getStatusName() {
@@ -382,12 +377,11 @@ public class LoanRepay extends Model {
 		@Element("逾期还款")
 		public static final String OVERDUE_REPAY = "11";
 
-//		@Element("逾期后垫付还款")
-//		public static final String OVERDUE_ADVANCEREPAY = "12";
-
 		@Element("逾期")
 		public static final String OVERDUE = "20";
 
+//		@Element("逾期后垫付还款")
+//		public static final String OVERDUE_ADVANCEREPAY = "12";
 //		@Element("逾期垫付")
 //		public static final String OVERDUE_ADVANCE = "30";
 	}

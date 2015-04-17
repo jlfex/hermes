@@ -2,13 +2,11 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -16,10 +14,6 @@ import com.jlfex.hermes.common.utils.Numbers;
 
 /**
  * 提现信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_withdraw")
@@ -241,10 +235,6 @@ public class Withdraw extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Status {
 

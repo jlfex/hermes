@@ -2,12 +2,10 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Strings;
@@ -230,9 +228,6 @@ public class User extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
 	 * @since 1.0
 	 */
 	public static final class Status {
@@ -254,9 +249,6 @@ public class User extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
 	 * @since 1.0
 	 */
 	public static final class Type {

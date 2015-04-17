@@ -10,19 +10,18 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Model;
-
+/**
+ * 理财产品 模型
+ */
 @Entity
 @Table(name = "hm_finance_order" , uniqueConstraints={@UniqueConstraint(columnNames = {"uniq_id" })}) 
 @JsonIgnoreProperties(value = {"assetsList" })
 public class FinanceOrder extends Model{
 
-	/**
-	 * 理财产品 模型
-	 */
+	
 	private static final long serialVersionUID = -8190623834091788691L;
 	
 	@Column(name = "finance_name", length=200)

@@ -7,16 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户认证信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_auth")
@@ -146,10 +141,6 @@ public class UserAuth extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-12-23 下午3:40:57
-	 * @return
 	 * @description:读取类型名称
 	 */
 	public String getTypeName() {
@@ -157,10 +148,6 @@ public class UserAuth extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-12-23 下午3:41:39
-	 * @return
 	 * @description:读取状态名称
 	 */
 	public String getStatusName() {

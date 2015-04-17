@@ -2,14 +2,12 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -180,9 +178,6 @@ public class LoanLog extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-12 下午2:23:29
 	 * @return description:取得借款类型名称
 	 */
 	public String getTypeName() {
@@ -191,9 +186,6 @@ public class LoanLog extends Model {
 
 	/**
 	 * 借款日志类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午2:22:33
 	 */
 	public static final class Type {
 		@Element("发布借款")

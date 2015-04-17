@@ -3,7 +3,6 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -229,10 +228,6 @@ public class PaymentChannel extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-13
-	 * @since 1.0
 	 */
 	public static final class Status {
 
@@ -245,10 +240,6 @@ public class PaymentChannel extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Type {
 

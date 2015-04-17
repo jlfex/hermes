@@ -1,21 +1,15 @@
 package com.jlfex.hermes.model;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 编号<br>
  * 数据主键
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 @MappedSuperclass
 public class Identity implements Serializable {

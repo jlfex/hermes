@@ -6,15 +6,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 文章信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_article")
@@ -272,10 +267,6 @@ public class Article extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-30
-	 * @since 1.0
 	 */
 	public static final class Status {
 

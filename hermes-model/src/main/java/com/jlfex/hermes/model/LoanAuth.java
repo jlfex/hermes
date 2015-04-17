@@ -11,10 +11,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 借款审核信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-24
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_loan_auth")
@@ -107,10 +103,6 @@ public class LoanAuth extends Model {
 	
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-01-24
-	 * @since 1.0
 	 */
 	public static final class Status {
 		

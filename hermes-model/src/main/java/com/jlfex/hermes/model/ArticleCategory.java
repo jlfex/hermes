@@ -2,7 +2,6 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,14 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 文章分类信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
- */
-/**
- * @author admin
- * 
  */
 @Entity
 @Table(name = "hm_article_category")
@@ -53,13 +44,7 @@ public class ArticleCategory extends Model {
 	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
 	private List<ArticleCategory> children = new LinkedList<ArticleCategory>();
 
-	/** 关系集合 */
-	/*
-	 * @OneToMany(mappedBy = "category")
-	 * 
-	 * @JsonIgnore private List<ArticleCategoryReference> references = new
-	 * LinkedList<ArticleCategoryReference>();
-	 */
+	
 	/** 分类级别 */
 	@Column(name = "level")
 	private String level;
@@ -167,10 +152,6 @@ public class ArticleCategory extends Model {
 	 * 
 	 * @return
 	 * @see #references
-	 */
-	/*
-	 * public List<ArticleCategoryReference> getReferences() { return
-	 * references; }
 	 */
 
 	public String getLevel() {

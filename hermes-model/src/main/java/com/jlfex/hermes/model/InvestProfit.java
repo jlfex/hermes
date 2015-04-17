@@ -2,23 +2,17 @@ package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 理财收益信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_invest_profit")
@@ -263,10 +257,7 @@ public class InvestProfit extends Model {
 		this.status = status;
 	}
 	
-	
 	/**
-	 * 
-	 * @author Aether
 	 * @return description:取得状态名称
 	 */
 	public String getStatusName() {
@@ -293,12 +284,8 @@ public class InvestProfit extends Model {
 		this.overdueAmount = overdueAmount;
 	}
 	
-
-
 	/**
 	 * 借款状态
-	 * 
-	 * @date: 2013-11-12 下午2:43:14 operation by: description:
 	 */
 	public static final class Status {
 		@Element("待收款")

@@ -1,25 +1,25 @@
 package com.jlfex.hermes.model.cfca;
 
 import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Model;
 import com.jlfex.hermes.model.User;
-
+/**
+ * 中金订单
+ * @author Administrator
+ *
+ */
 @Entity
 @Table(name = "hm_order_cfca")
 public class CFCAOrder extends Model {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 509403950180191714L;
 
 	@OneToOne

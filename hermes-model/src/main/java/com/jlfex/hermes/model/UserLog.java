@@ -1,22 +1,16 @@
 package com.jlfex.hermes.model;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户日志信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_user_log")
@@ -122,22 +116,13 @@ public class UserLog extends Model {
 		this.remark = remark;
 	}
 	
-	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:33:34
-	 * @return description:获取类型名称
-	 */
+	
 	public String getTypeName() {
 		return Dicts.name(type, type, LogType.class);
 	}
 
 	/**
 	 * 用户操作日志类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:08:59
-	 * @version 1.0
 	 */
 	public static final class LogType {
 		@Element("登录")

@@ -89,10 +89,6 @@ public class TmpNotice extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-30
-	 * @since 1.0
 	 */
 	public static final class Status {
 

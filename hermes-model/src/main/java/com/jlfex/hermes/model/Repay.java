@@ -3,16 +3,11 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 还款方式信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_repay")
@@ -118,9 +113,6 @@ public class Repay extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:39:51
 	 * @return description:获取状态名称
 	 */
 	public String getStatusName() {
@@ -129,9 +121,6 @@ public class Repay extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-13 上午9:31:10
 	 */
 	public static final class Status {
 		@Element("有效")

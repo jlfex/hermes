@@ -6,10 +6,6 @@ import javax.persistence.Table;
 
 /**
  * 标签信息模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-19
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_label")

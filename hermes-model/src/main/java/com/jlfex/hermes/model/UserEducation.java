@@ -5,15 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 用户学历信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
  * @since 1.0
  */
 @Entity
@@ -193,9 +189,6 @@ public class UserEducation extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:37:10
 	 * @return description:获取学历名称
 	 */
 	public String getDegreeName() {
@@ -203,9 +196,6 @@ public class UserEducation extends Model {
 	}
 
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:37:20
 	 * @return description:获取类型名称
 	 */
 	public String getTypeName() {
@@ -214,9 +204,6 @@ public class UserEducation extends Model {
 
 	/**
 	 * 学历
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:57:12
 	 */
 	public static final class Education {
 		@Element("初中及以下")
@@ -240,9 +227,6 @@ public class UserEducation extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 上午11:58:55
 	 */
 	public static final class Type {
 		@Element("一般")

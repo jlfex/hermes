@@ -7,10 +7,6 @@ import javax.persistence.Table;
 
 /**
  * 图片管理模型
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-19
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_image_manage")

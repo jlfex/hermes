@@ -2,19 +2,10 @@ package com.jlfex.hermes.model.hermes;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.jlfex.hermes.model.Area;
-import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.Model;
 /**
  * 支行信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_branch_bank")

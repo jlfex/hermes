@@ -14,10 +14,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 交易流水信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_transaction")
@@ -302,10 +298,6 @@ public class Transaction extends Model {
 
 	/**
 	 * 类型
-	 * 
-	 * @author Aether
-	 * @version 1.0, 2013-11-12
-	 * @since 1.0
 	 */
 	public static final class Type {
 		

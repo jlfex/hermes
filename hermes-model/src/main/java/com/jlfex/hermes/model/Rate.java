@@ -13,10 +13,6 @@ import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 费率信息模型
- *
- * @author ultrafrog
- * @version 1.0, 2013-11-12
- * @since 1.0
  */
 @Entity
 @Table(name = "hm_rate")
@@ -99,9 +95,6 @@ public class Rate extends Model {
 	}
 	
 	/**
-	 * 
-	 * @author Aether
-	 * @date 2013-11-13 上午9:51:14
 	 * @return description:获取类型名称
 	 */
 	public String getTypeName() {
@@ -110,9 +103,6 @@ public class Rate extends Model {
 
 	/**
 	 * 费率类型
-	 * 
-	 * @author Aether
-	 * @date: 2013-11-12 下午1:56:25
 	 */
 	public static final class RateType {
 		@Element("充值费率")
