@@ -125,13 +125,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<#if loanRepays?size == 0>
+				<#if loanRepays.numberOfElements == 0>
 					<tr>
 						<td colspan="8" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
 				<#else>
-				   <#list loanRepays as l>  
-				    	
+				   <#list loanRepays.content as l>  				    	
 				        <tr>
 				            <td class="center">${l.sequence}</td>
 				            <td>${l.planDatetime?string('yyyy-MM-dd')}</td>
