@@ -132,38 +132,7 @@ jQuery(function() {
 	   		$("#timeleft").html(str);
 	   		remaintime=remaintime-1000;
 	    	setTimeout(function(){setTime()},1000);
-		}  
-		$('#investamount').blur(function()
-		{
-			var investamount =$("#investamount").val();
-			$.ajax({
-			  			url:'${app}/invest/isLimitValid',
-			  			data: {"investAmount":investamount},
-			  			dataType: "json",
-			  			success:function(data) {
-			  					if(data.type == "FAILURE") {
-			  						$("#limitValidResult").html(data.messages[0]);
-			  					} else {
-			  						$("#limitValidResult").html("");
-			  						var loanid =$("#loanid").val();
-									var msg =$('#investamount').siblings("span").text();
-									if(msg.length==0)
-									{
-									  	htmlobj=$.ajax({
-									  			url:'${app}/invest/calmaturegain',
-									  			data: {"investamount":investamount,"loanid":loanid},
-									  			dataType: "json",
-									  			async:false});
-										$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
-									}
-									else
-									{
-										$("#maturegain").html('');
-									}
-			  					}
-			  				}
-			  			});	
-	  });
+		}
 });
 
    Date.prototype.format = function(format){ 

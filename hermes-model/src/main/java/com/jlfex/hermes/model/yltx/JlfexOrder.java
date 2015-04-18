@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Model;
+import com.jlfex.hermes.model.User;
 
 
 @Entity
@@ -32,6 +33,9 @@ public class JlfexOrder extends Model{
 	@OneToOne
 	@JoinColumn(name = "invest_id")
 	private  Invest   invest;		                //理财信息
+	@ManyToOne
+	@JoinColumn(name = "user")                      //投资人
+	private User user;
 	@JoinColumn(name = "order_amount")
 	private  BigDecimal  orderAmount;		        //订单金额
 	@Column(name =   "order_code")
@@ -59,18 +63,14 @@ public class JlfexOrder extends Model{
 	public void setFinanceOrder(FinanceOrder financeOrder) {
 		this.financeOrder = financeOrder;
 	}
-	public Invest getInvest() {
-		return invest;
-	}
+	
 	public BigDecimal getOrderAmount() {
 		return orderAmount;
 	}
 	public void setOrderAmount(BigDecimal orderAmount) {
 		this.orderAmount = orderAmount;
 	}
-	public void setInvest(Invest invest) {
-		this.invest = invest;
-	}
+	
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -119,6 +119,19 @@ public class JlfexOrder extends Model{
 	public void setAssetCode(String assetCode) {
 		this.assetCode = assetCode;
 	}
+	public Invest getInvest() {
+		return invest;
+	}
+	public void setInvest(Invest invest) {
+		this.invest = invest;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 
 	/**
 	 * 处理状态

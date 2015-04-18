@@ -90,9 +90,9 @@ jQuery(function($){
 		</div>
     </div>
     <#elseif bankAccount??>
-		      请先到认证中心进行《实名制认证》，<a href="${app}/account/index" class="ck">认证中心</a>
+		      请先到认证中心进行《实名制认证》，<a href="${app}/account/index?type=auth" class="ck">完成认证</a>
 	<#elseif userProperties??>
-	              请先到认证中心进行《银行卡绑定》，<a href="${app}/account/index" class="ck">认证中心</a>
+	              请先到认证中心进行《银行卡绑定》，<a href="${app}/account/index?type=auth1" class="ck">完成绑定</a>
 	</#if>
 </div>
 

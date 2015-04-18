@@ -52,11 +52,13 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
+import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
+import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
@@ -125,6 +127,8 @@ public class InvestController {
 	private UserAccountRepository userAccountRepository;
 	@Autowired
 	private UserPropertiesRepository userPropertiesRepository;
+	@Autowired
+	private CFCAOrderRepository cfcaOrderRepository;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -313,7 +317,7 @@ public class InvestController {
 		} else {
 			bankAccount = bankAccountList.get(0);
 			String account = bankAccount.getAccount();
-			bankAccount.setAccount("*"+account.substring(account.length()-4));
+			bankAccount.setAccount("*" + account.substring(account.length() - 4));
 			if (Strings.empty(bankAccount.getName()) || Strings.empty(bankAccount.getBank().getName()) || Strings.empty(bankAccount.getDeposit()) || Strings.empty(bankAccount.getAccount())) {
 				Logger.info("银行卡绑定认证：信息不完整 或没有通过绑卡认证。");
 				bankAccount = null;
@@ -350,26 +354,26 @@ public class InvestController {
 		User user = userInfoService.findByUserId(curUser.getId());
 		Logger.info("投标操作: loanid:" + loanId + ",investamount:" + investAmount);
 		String flag = null;
-		String error_Msg = null;
+		String error_Msg = "";
 		try {
 			OrderPayResponseVo responseVo = investService.createJlfexOrder(loanId, user, new BigDecimal(investAmount.trim()));
 			flag = investService.jlfexBid(loanId, user, new BigDecimal(investAmount.trim()), responseVo);
 		} catch (Exception e) {
-			Logger.error(e.getMessage());
+			Logger.error("jlfex投标异常", e);
 			error_Msg = e.getMessage();
 		}
 		String backInfo = null;
 		String icon = null;
-		if ("00".equals(flag)){
+		if ("00".equals(flag)) {
 			icon = "2.png";
 			backInfo = "您已投标并支付成功!";
 		} else if ("01".equals(flag)) {
 			icon = "4.png";
 			backInfo = "  您的投标并支付申请已经提交成功，正在确认中!";
-		}else{
+		} else {
 			icon = "3.png";
 			backInfo = "投标并支付失败！";
-			model.addAttribute("err_msg", "错误提示:"+error_Msg);
+			model.addAttribute("err_msg", error_Msg + (flag != null ? flag : ""));
 		}
 		model.addAttribute("backInfo", backInfo);
 		model.addAttribute("icon", icon);
@@ -566,14 +570,14 @@ public class InvestController {
 				validFlag = "01";
 				model.addAttribute("tipMsg", "提示：债权标有效投标时间为[" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseStartTime()) + "—" + Calendars.format(HermesConstants.FORMAT_10, financeOrder.getRaiseEndTime()) + "]");
 			}
-		}	
+		}
 		AppUser curUser = App.current().getUser();
 		boolean bidAuthentication = investService.bidAuthentication(loanid, userInfoService.findByUserId(curUser.getId()));
 		if (!bidAuthentication) {
 			validFlag = "02";
 			model.addAttribute("tipMsg", "提示：不能对自己发布的借款标进行投标");
 		}
-		validFlag = validIsAuth(model, validFlag); //认证
+		validFlag = validIsAuth(model, validFlag); // 认证
 		model.addAttribute("loan", loan);
 		Map<String, Object> calculateMap = calculateRemainTime(loan);
 		model.addAttribute("purpose", calculateMap.get("loanPurpose"));
@@ -608,10 +612,10 @@ public class InvestController {
 		if (!userPro.getAuthName().equals(Auth.PASS)) {
 			validFlag = "03";
 			model.addAttribute("tipMsg", "提示：您尚且还未进行实名认证");
-		}else if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+		} else if (!userPro.getAuthCellphone().equals(Auth.PASS)) {
 			validFlag = "04";
 			model.addAttribute("tipMsg", "提示：您尚且还未进行手机认证");
-		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+		} else if (!userPro.getAuthBankcard().equals(Auth.PASS)) {
 			validFlag = "05";
 			model.addAttribute("tipMsg", "提示：您尚且还未绑定银行卡");
 		}
@@ -851,8 +855,8 @@ public class InvestController {
 				investSuccessCount = investSuccessCount + 1;
 			}
 			try {
-				if(StringUtils.isNotEmpty(investInfo.getId())){
-				   jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
+				if (StringUtils.isNotEmpty(investInfo.getId())) {
+					jlfexOrders.add(jlfexOrderService.findByInvest(investInfo.getId()));
 				}
 			} catch (Exception e) {
 				Logger.error("获取理财产品异常", e);
@@ -950,6 +954,7 @@ public class InvestController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/isBalanceEnough")
+	
 	@ResponseBody
 	public Result isBalanceEnough(BigDecimal investamount) {
 		Result result = new Result();
@@ -1016,6 +1021,7 @@ public class InvestController {
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
 		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		model.addAttribute("bankAccount", bankAccount);
+		model.addAttribute("bankMask", "**" + bankAccount.getAccount().substring(bankAccount.getAccount().length() - 4));
 		model.addAttribute("userProperties", userProperties);
 
 		return "invest/bid2Pay";
@@ -1084,17 +1090,73 @@ public class InvestController {
 	}
 
 	/**
-	 * 限额是否合法
+	 * 单笔限额是否合法
 	 * 
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value = "/isLimitValid")
+	@RequestMapping(value = "/isSingleLimitValid")
 	@ResponseBody
-	public Result isLimitValid(BigDecimal investAmount) {
+	public JSONObject isSingleLimitValid(BigDecimal investamount) {
 		App.checkUser();
 
-		return investService.isLimitValid(investAmount);
+		JSONObject jsonObject = new JSONObject();
+		Result result = investService.isSingleLimitValid(investamount);
+
+		if (result.getType().equals(Type.SUCCESS)) {
+			jsonObject.put("investamount", true);
+		} else {
+			jsonObject.put("investamount", false);
+		}
+
+		return jsonObject;
+	}
+	
+	/**
+	 * 当日限额是否合法
+	 * @param investamount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/isDayLimitValid")
+	@ResponseBody
+	public JSONObject isDayLimitValid(BigDecimal investamount) {
+		App.checkUser();
+
+		JSONObject jsonObject = new JSONObject();
+		Result result = investService.isDayLimitValid(investamount);
+
+		if (result.getType().equals(Type.SUCCESS)) {
+			jsonObject.put("investamount", true);
+		} else {
+			jsonObject.put("investamount", false);
+		}
+
+		return jsonObject;
+	}
+	
+	/**
+	 * 是否有处理中的订单
+	 * @return
+	 */
+	@RequestMapping(value = "/isHaveInProcessOrder")
+	@ResponseBody
+	public JSONObject isHaveInProcessOrder(BigDecimal investamount) {
+		App.checkUser();
+		
+		JSONObject jsonObject = new JSONObject();
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		
+		List<CFCAOrder> orders = cfcaOrderRepository.findAllByInvestUserAndStatus(user, Tx1361Status.IN_PROCESSING.getStatus());
+		
+		if (orders != null && orders.size() > 0) {
+			jsonObject.put("investamount", false);
+		} else {
+			jsonObject.put("investamount", true);
+		}
+
+		return jsonObject;
 	}
 	/**
 	 * 查看PDF协议文件

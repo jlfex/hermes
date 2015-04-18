@@ -17,7 +17,7 @@ import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.response.QueryFinanceRspVo;
 
 /**
- * 自动同步 理财产品JOB
+ * 自动同步  T-1天  理财产品JOB
  */
 @Component("autoSynchFinanceJob")
 public class AutoSynchFinanceJob extends Job {
@@ -29,7 +29,7 @@ public class AutoSynchFinanceJob extends Job {
 	
 	@Override
 	public Result run() {
-		String var = "同步查询理财产品接口JOB：";
+		String var = "自动同步T-1天理财产品JOB：";
 		int financeOrderSize = 0;  //理财产品总数
 		int dealSucSize = 0;       //处理成功数
 		int dealFailSize = 0;      //处理失败数
@@ -55,8 +55,13 @@ public class AutoSynchFinanceJob extends Job {
 				for(FinanceOrder obj: financeOrderList){
 					try{
 						String  resultVal = null;
+						int assetSize = obj.getAssetsList().size();
+						if(assetSize>1){
+							Logger.info("业务规则：JOB只同步含一个资产的理财产品，理财产品id="+obj.getUniqId()+",含有子资产数="+assetSize);
+							continue ;
+						}
 						String  financeStatus = obj.getStatus().trim();
-						if(HermesConstants.FINANCE_FINISHED.equals(financeStatus)){
+						if( HermesConstants.FINANCE_FINISHED.equals(financeStatus)){
 							// 更新理财产品
 							boolean result = jlfexService.updateFinishedFinance(obj);
 							if(result){

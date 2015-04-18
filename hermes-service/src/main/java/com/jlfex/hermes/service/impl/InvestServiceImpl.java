@@ -38,8 +38,11 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.P2ZJBank;
+import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
 import com.jlfex.hermes.common.constant.HermesEnum.PPOrg;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
+import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -406,8 +409,13 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public OrderPayResponseVo createJlfexOrder(String loanId, User investUser, BigDecimal investAmount) throws Exception {
 		Loan loan = loanRepository.findOne(loanId);
+		//判断是否有在途单
+		List<JlfexOrder> payingOrderList =  jlfexOrderService.queryByInvestUserAndPayStatus(investUser, HermesConstants.PAY_WAIT_CONFIRM);
+//		if(payingOrderList !=null && payingOrderList.size() >0){
+//			throw new Exception("请稍候操作，您已经有"+payingOrderList.size()+"个投标操作付款确认中。");
+//		}
 		//判断标剩余金额是否足够
-		BigDecimal  remain = new BigDecimal(loan.getRemain().trim());
+		BigDecimal  remain = Numbers.parseCurrency(loan.getRemain());
 		if(remain.compareTo(investAmount) < 0){
 			throw new Exception("投标失败，标的可投金额不足，剩余金额："+remain+" < 投标金额:"+investAmount);
 		}
@@ -464,7 +472,7 @@ public class InvestServiceImpl implements InvestService {
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
 			saveUserLog(investUser);
 			Logger.info("撤单成功!");
-			return "支付失败，已撤单";
+			return "订单支付失败";
 		}
 		// 2:成功
 		Invest invest = null;
@@ -482,7 +490,7 @@ public class InvestServiceImpl implements InvestService {
 			if (updateRecord != 1) {
 				throw new Exception("投标失败,当前标 可投金额不足,投标金额: " + investAmount + " > 可投金额：" + loan.getAmount().subtract(loan.getProceeds()));
 			}
-		}else{
+		} else {
 			// 3:处理中
 			// 保存理财信息
 			resultFlag = "01";
@@ -501,7 +509,7 @@ public class InvestServiceImpl implements InvestService {
 			loanRepository.save(loan);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 		}
-		
+
 		return resultFlag;
 	}
 
@@ -604,7 +612,7 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 
+	 * 保存 jlfex订单
 	 * @param vo
 	 * @param financeOrder
 	 * @param invest
@@ -615,6 +623,7 @@ public class InvestServiceImpl implements InvestService {
 		JlfexOrder entity = new JlfexOrder();
 		entity.setFinanceOrder(financeOrder);
 		entity.setInvest(invest);
+		entity.setUser(invest.getUser());
 		entity.setOrderCode(vo.getOrderCode());
 		entity.setGuaranteePdfId(vo.getGuaranteePdfId());
 		entity.setLoanPdfId(vo.getLoanPdfId());
@@ -918,7 +927,7 @@ public class InvestServiceImpl implements InvestService {
 			if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loanKind)) {
 				String purposeStr = String.valueOf(object[11]);
 				loanInfo.setPurpose((purposeStr != null && purposeStr.length() > 4) ? (purposeStr.substring(0, 4) + "...") : purposeStr);
-				if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(String.valueOf(object[13]))){
+				if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(String.valueOf(object[13]))) {
 					Calendar deadDate = Calendar.getInstance();
 		            try {
 		    			deadDate.setTime(Calendars.parse(HermesConstants.FORMAT_19, String.valueOf(object[14])));
@@ -953,44 +962,6 @@ public class InvestServiceImpl implements InvestService {
 	}
 
 	/**
-	 * 限额是否合法
-	 * 
-	 * @param investAmount
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public Result isLimitValid(BigDecimal investAmount) {
-		Result result = new Result();
-
-		AppUser curUser = App.current().getUser();
-		User user = userRepository.findOne(curUser.getId());
-		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
-		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
-
-		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
-			result.setType(Type.FAILURE);
-			result.addMessage(0, "超过单笔限额！");
-
-			return result;
-		}
-
-		Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
-		Date endDate = DateUtils.addDays(startDate, 24);
-		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
-
-		if (ppLimit.getDayTotalLimit() != null && totalAmount.compareTo(ppLimit.getDayTotalLimit()) > 0) {
-			result.setType(Type.FAILURE);
-			result.addMessage(0, "超过日累计限额！");
-
-			return result;
-		}
-
-		result.setType(Type.SUCCESS);
-
-		return result;
-	}
-
-	/**
 	 * 投标并支付
 	 */
 	@Transactional(rollbackFor = Exception.class)
@@ -1009,14 +980,6 @@ public class InvestServiceImpl implements InvestService {
 		ApiLog apiLog = null;
 		try {
 			if (updateRecord == 1) {
-				// 判断假如借款金额与已筹金额相等，更新状态为满标
-				if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
-					loan.setStatus(Loan.Status.FULL);
-					loanRepository.save(loan);
-					// 插入借款日志表(满标)
-					this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
-				}
-
 				BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
 				UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
 				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
@@ -1042,6 +1005,14 @@ public class InvestServiceImpl implements InvestService {
 						backMap.put("code", Tx1361Status.WITHHOLDING_SUCC.getStatus().toString());
 						backMap.put("msg", "您已投标并支付成功！");
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FREEZE);
+						
+						// 判断假如借款金额与已筹金额相等，更新状态为满标
+						if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
+							loan.setStatus(Loan.Status.FULL);
+							loanRepository.save(loan);
+							// 插入借款日志表(满标)
+							this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
+						}
 					} else {
 						backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 						backMap.put("msg", "投标并支付失败！");
@@ -1101,6 +1072,8 @@ public class InvestServiceImpl implements InvestService {
 		cfcaOrder.setResponseMessage(response.getResponseMessage());
 		cfcaOrder.setStatus(response.getStatus());
 		cfcaOrder.setTxSN(txSN);
+		cfcaOrder.setUser(invest.getUser());
+		cfcaOrder.setType(CFCAOrder.Type.BID);
 		cFCAOrderRepository.save(cfcaOrder);
 	}
 
@@ -1118,8 +1091,8 @@ public class InvestServiceImpl implements InvestService {
 		tx1361Request.setInstitutionID("001155");
 		tx1361Request.setTxSN(txSn);
 		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
-		tx1361Request.setAmount(investAmount.longValue());
-		tx1361Request.setBankID(bankAccount.getBank().getCode());
+		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
+		tx1361Request.setBankID(Dicts.name(bankAccount.getBank().getName(), "", P2ZJBank.class));
 		tx1361Request.setAccountName(bankAccount.getName());
 		tx1361Request.setAccountNumber(bankAccount.getAccount());
 		tx1361Request.setBranchName(bankAccount.getDeposit());
@@ -1129,7 +1102,7 @@ public class InvestServiceImpl implements InvestService {
 		tx1361Request.setPhoneNumber(investUser.getCellphone());
 		tx1361Request.setEmail(investUser.getEmail());
 		tx1361Request.setIdentificationNumber(userProperties.getIdNumber());
-		tx1361Request.setIdentificationType("1");
+		tx1361Request.setIdentificationType(Dicts.name(userProperties.getIdType(), P2ZJIdType.class));
 
 		return tx1361Request;
 	}
@@ -1161,4 +1134,53 @@ public class InvestServiceImpl implements InvestService {
 		}
 	}
 
+	/**
+	 * 限额是否合法
+	 * 
+	 * @param investAmount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result isSingleLimitValid(BigDecimal investAmount) {
+		Result result = new Result();
+
+		AppUser curUser = App.current().getUser();
+		User user = userRepository.findOne(curUser.getId());
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
+
+		if (investAmount.compareTo(ppLimit.getSingleLimit()) > 0) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "超过单笔限额！");
+
+			return result;
+		}
+		
+		result.setType(Type.SUCCESS);
+		return result;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Result isDayLimitValid(BigDecimal investAmount) {
+		Result result = new Result();
+
+		AppUser curUser = App.current().getUser();
+		User user = userRepository.findOne(curUser.getId());
+		BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
+		PPLimit ppLimit = pPLimitRepository.findOneByPpOrgAndBank(PPOrg.ZJ.name(), bankAccount.getBank());
+
+		Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
+		Date endDate = DateUtils.addDays(startDate, 24);
+		BigDecimal totalAmount = cFCAOrderRepository.countTodayTotalAmountByUser(user.getId(), startDate, endDate);
+
+		if (ppLimit.getDayTotalLimit() != null && totalAmount.compareTo(ppLimit.getDayTotalLimit()) > 0) {
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "超过日累计限额！");
+
+			return result;
+		}
+		result.setType(Type.SUCCESS);
+		return result;
+	}
 }

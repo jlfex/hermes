@@ -87,7 +87,6 @@ public class TransactionServiceImpl implements TransactionService {
 		List<String> typeList = (types.length > 0) ? Arrays.asList(types) : getDefaultTypes();
 		UserAccount userAccount = userAccountRepository.findByUserIdAndType(userId, UserAccount.Type.CASH);
 		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "datetime");
-
 		// 查询数据并返回结果
 		return transactionRepository.findBySourceUserAccountAndTypeInAndDatetimeBetween(userAccount, typeList, begin, end, pageable);
 	}
@@ -364,14 +363,16 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void addCashAccountRecord(String type, UserAccount sourceUserAccount,UserAccount targetUserAccount, BigDecimal amount, String reference, String remark) {
 		Transaction transaction = new Transaction();
-		transaction.setSourceUserAccount(sourceUserAccount);
-		transaction.setTargetUserAccount(targetUserAccount);
+		transaction.setSourceUserAccount(targetUserAccount);
+		transaction.setTargetUserAccount(sourceUserAccount);
 		transaction.setReference(reference);
 		transaction.setType(type);
 		transaction.setDatetime(new Date());
 		transaction.setAmount(amount.negate());
 		transaction.setSourceBeforeBalance(sourceUserAccount.getBalance());
 		transaction.setTargetBeforeBalance(targetUserAccount.getBalance());
+		transaction.setSourceAfterBalance(sourceUserAccount.getBalance());
+		transaction.setTargetAfterBalance(targetUserAccount.getBalance());
 		transaction.setRemark(remark);
 		transactionRepository.save(transaction);
 	}

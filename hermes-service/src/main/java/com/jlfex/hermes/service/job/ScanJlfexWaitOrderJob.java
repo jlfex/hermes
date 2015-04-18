@@ -16,7 +16,7 @@ import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.yltx.JlfexOrder;
-import com.jlfex.hermes.repository.n.LoanNativeRepository;
+import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
@@ -43,11 +43,11 @@ public class ScanJlfexWaitOrderJob extends Job {
     @Autowired
     private UserAccountService userAccountService;
     @Autowired
-	private LoanNativeRepository loanNativeRepository;
+	private LoanRepository loanRepository;
 	
 	@Override
 	public Result run() {
-		String var = "jlfex支付确认中订单扫描JOB：";
+ 		String var = "jlfex支付确认中订单扫描JOB：";
 		try {
 			List<String> payStatusList = new ArrayList<String>();
 			payStatusList.add(HermesConstants.PAY_WAIT_CONFIRM);
@@ -59,20 +59,22 @@ public class ScanJlfexWaitOrderJob extends Job {
 					if(Strings.notEmpty(result)){
 						OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
 						List<OrderVo>   orderVoList = responVo.getContent();
-						if(orderVoList==null || orderVoList.size() != 1){
-							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数不唯一");
+						if(orderVoList==null){
+							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数为空!");
+						}
+						if(orderVoList.size() != 1){
+							throw new Exception(var+ "根据orderCode="+order.getOrderCode()+" jlfex接口返回订单条数:"+orderVoList.size());
 						}
 						OrderVo vo = orderVoList.get(0);
 						Invest updateInvest = order.getInvest();
 						User investUser = order.getInvest().getUser();
 						String investStatus  = null;
-						String payStatus = null;
-						String orderDealStatus = null;
+						String orderStatus = vo.getOrderStatus();
+						String payStatus = vo.getPayStatus();
+						String orderDealStatus = JlfexOrder.Status.FIN_DEAL;
 						if(HermesConstants.PAY_SUC.equals(vo.getPayStatus().trim())){
 							//支付成功
 							Loan loan = order.getInvest().getLoan();
-							//更新投标进度
-							loanNativeRepository.updateProceeds(loan.getId(), order.getOrderAmount());
 							transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE,investUser , UserAccount.Type.JLFEX_FEE, order.getOrderAmount(),investUser.getId() , "JLfex代扣充值成功");
 							transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), order.getOrderAmount(), loan.getId(), "投标冻结");
 							Logger.info("资金流水记录成功  理财ID investId="+order.getInvest().getId());
@@ -81,7 +83,9 @@ public class ScanJlfexWaitOrderJob extends Job {
 							investService.saveUserLog(investUser);	
 							investStatus = Invest.Status.FREEZE;
 							payStatus = HermesConstants.PAY_SUC;
-							orderDealStatus = JlfexOrder.Status.FIN_DEAL;
+							//更新投标进度
+							loan.setProceeds(loan.getProceeds().add(order.getOrderAmount()));
+							loanRepository.save(loan);
 						}else if(HermesConstants.PAY_FAIL.equals(vo.getPayStatus().trim())){
 							//支付失败 撤单
 							UserAccount cropAccount = userAccountService.findByUserIdAndType(HermesConstants.CROP_USER_ID, UserAccount.Type.ZHONGJIN_FEE);
@@ -96,6 +100,7 @@ public class ScanJlfexWaitOrderJob extends Job {
 						}
 						//更新订单状态
 						order.setPayStatus(payStatus);
+						order.setOrderStatus(orderStatus);
 						order.setStatus(orderDealStatus);
 						jlfexOrderService.saveOrder(order);
 						//更新理财信息

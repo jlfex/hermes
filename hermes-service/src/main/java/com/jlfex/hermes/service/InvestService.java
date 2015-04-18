@@ -203,11 +203,19 @@ public interface InvestService {
 	public Map<String, String> bid2Pay(String loanId, User investUser, BigDecimal investAmount, String otherRepay) throws Exception;
 
 	/**
-	 * 是否超过银行金额限制
+	 * 是否超过银行单笔金额限制
 	 * 
 	 * @param investAmount
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public Result isLimitValid(BigDecimal investAmount);
+	public Result isSingleLimitValid(BigDecimal investAmount);
+	
+	/**
+	 * 是否超过银行当日金额先组织
+	 * @param investAmount
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Result isDayLimitValid(BigDecimal investAmount);
 }

@@ -41,8 +41,8 @@ jQuery(function($) {
 		});
 		return false;
 	});	
-	
 	$('#searchForm').submit();
 });
 //-->
 </script>
+
