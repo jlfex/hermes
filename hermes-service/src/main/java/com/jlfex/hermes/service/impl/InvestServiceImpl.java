@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -348,13 +349,11 @@ public class InvestServiceImpl implements InvestService {
 		return investRepository.findByLoan(loan);
 	}
 	@Override
-	public Page<Invest> queryByLoan(Loan loan, Integer page, Integer size) {
+	public Page<Invest> queryByLoan(final Loan loan, Integer page, Integer size) {		
 		// 初始化
-		Pageable pageable = Pageables.pageable(page, size);
-		List<Invest> investList = investRepository.findByLoan(loan);
-		Long total = Long.valueOf(investList.size());
-		Page<Invest> pageInvest = new PageImpl<Invest>(investList, pageable, total);
-		return pageInvest;
+		Pageable pageable = Pageables.pageable(page, size, Direction.DESC, "updateTime");
+		// 查询数据并返回结果
+        return investRepository.findByLoan(loan, pageable);
 	}
 	/**
 	 * 投标: 普通标 外部债权标
@@ -755,6 +754,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatus());
+			investInfo.setLoanKind(loanStatus);
 			List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 			BigDecimal shouldReceivePI = BigDecimal.ZERO;
 			BigDecimal receivedPI = BigDecimal.ZERO;

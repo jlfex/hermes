@@ -29,7 +29,7 @@ public interface LoanService {
 	 * 
 	 * @return
 	 */
-	public List<Loan> findAll();
+	//public List<Loan> findAll();
 
 	/**
 	 * 通过状态统计

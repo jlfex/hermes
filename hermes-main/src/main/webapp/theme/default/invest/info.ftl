@@ -12,43 +12,7 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mInvestAndLoan.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
-<script type="text/javascript">
-jQuery(function($) {
-	$('.pagination').each(function() {
-		var _elem = $(this).empty(),
-			_opts = $.extend({}, _elem.data()),
-			_number = _opts.number,
-			_pages = _opts.totalPages - 1,
-			_begin = ((_number - 3) < 0) ? 0 : (_number - 3),
-			_end = ((_number + 3) > _pages) ? _pages : (_number + 3),
-			_tag = $('<li />').append($('<a />').attr('href', '#'));
-			
-		if (_begin > 0) {
-			_tag.clone().appendTo(_elem).find('a').attr('data-page', 0).text(1);
-			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
-		}
-		
-		for (var _idx = _begin; _idx <= _end; _idx++) {
-			if (_idx === _number) {
-				_tag.clone().appendTo(_elem).addClass('active').find('a').text(_idx + 1);
-			} else {
-				_tag.clone().appendTo(_elem).find('a').attr('data-page', _idx).text(_idx + 1);
-			}
-		}
-		
-		if (_end < _pages) {
-			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
-			_tag.clone().appendTo(_elem).find('a').attr('data-page', _pages).text(_pages + 1);
-		}
-		
-		_elem.find('a').on('click', function() {
-			var $form = $(this).parents("form");
-			$form.find("#page").val($(this).data().page);
-			$form.trigger('submit');
-		});
-	});
-
-
+jQuery(function() {
     var  validFlag = '${validFlag!''}';
     if(validFlag == '03'){
        $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
@@ -227,15 +191,9 @@ jQuery(function($) {
 <body>
 <#include "/header.ftl" />
 
-
 <!-- middle start-->
 
 <div id="content" class="content">	
-<form id="loanDetail" name="loanDetail">
-<input id="investBidMultiple" name="investBidMultiple" type="hidden"  value="${investBidMultiple}" ></input>
-<input id="otherrepayselect" name="otherrepayselect" type="hidden" ></input>
-<input id="loanid" name="loanid" type="hidden" value="${loan.id}" ></input>	
-<input id="remaintime" name="remaintime" type="hidden" value="${remaintime}" ></input>	
 <div class="sub_main" id="invest">
 	<div class="account_center">
 		<div class="account_nav_left">
@@ -291,6 +249,11 @@ jQuery(function($) {
 		</div>
 		<div class="account_content_right">
 			<div class="account_right">
+				<form id="loanDetail" name="loanDetail">
+				<input id="investBidMultiple" name="investBidMultiple" type="hidden"  value="${investBidMultiple}" ></input>
+				<input id="otherrepayselect" name="otherrepayselect" type="hidden" ></input>
+				<input id="loanid" name="loanid" type="hidden" value="${loan.id}" ></input>	
+				<input id="remaintime" name="remaintime" type="hidden" value="${remaintime}" ></input>								
 				<div class="my_loan_sub bgnone">
                     <div class="use_type clearfix">
                         <div class="use_type_name fl">
@@ -414,11 +377,11 @@ jQuery(function($) {
                 </div>
                 <#else> 
 				</#if>
-                
+               </form> 
 				<div id="tab3" class="account_right_part02 loan_myloan_sub">
 					<ul class="all_information m_tab_t">
 						<li class="active"> <#if loan.loanKind=='00'>借款人详情 <#else>债权信息 </#if></li>
-						<li>投标记录</li>
+						<li id="tb">投标记录</li>
 						<li class="lastnone" ><#if loan.loanKind=='00'>借款描述<#else>回款记录</#if></li>  
 					</ul>
 					<div class="m_tab_c ad_border">
@@ -477,24 +440,11 @@ jQuery(function($) {
                 			</div>
 						</div>
 						<div style="display: none;">
-							<div class="m_tda table_mar">
-			                    <table cellpadding="0" cellspacing="0" border="0">
-			                        <tr>
-			                        <th class="th_00"><@messages key="invest.user" /></th>
-			                        <th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
-			                        <th>投标状态</th>
-			                        <th>投标时间</th></tr>
-			                        <#list invests.content as i>  
-									<tr>
-										<td class="th_00"><#if (i.user.account)??>${i.user.account}</#if></td>
-										<td>${i.amount?string('#,##0.00')}</td>
-										<td>${i.statusName!''}</td>
-										<td>${i.datetime?string('yyyy-MM-dd HH:mm:ss')}</td>
-									</tr>
-									</#list>
-			                    </table>
-			                   	<ul class="pagination" data-number="${invests.number}" data-total-pages="${invests.totalPages}"></ul>					                   
-                			</div>	
+							<form id="bidRecordForm" method="post" action="#" class="form-horizontal">
+								<input id="page" name="page" type="hidden" value="0">
+								<input id="loanId" name="loanId" type="hidden" value="${loan.id}">
+								<div  id="bidRecordData"></div>
+						    </form>													
 						</div>
 						<div style="display: none;">
 						    <#if loan.loanKind=='00'> 
@@ -543,5 +493,28 @@ jQuery(function($) {
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+
+<script type="text/javascript">
+jQuery(function(){
+	$('#bidRecordForm').on('submit', function() {
+		$.ajax('${app}/invest/bidRecord', {
+			data: $(this).serialize(),
+			type: 'post',
+			dataType: 'html',
+			timeout: 5000,
+			success: function(data, textStatus, xhr) {
+				$('#bidRecordData').fadeOut('fast', function() {
+					$(this).html(data).fadeIn('fast');
+				});
+			}
+		});
+		return false;
+	});
+	
+	$('#tb').click(function(){
+		$('#bidRecordForm').submit();
+	});
+});
+</script>
 </body>
 </html>

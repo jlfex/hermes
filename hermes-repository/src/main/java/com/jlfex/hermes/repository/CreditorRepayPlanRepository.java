@@ -40,7 +40,9 @@ public interface CreditorRepayPlanRepository extends JpaRepository<CreditRepayPl
 	@Query("select t from CreditRepayPlan t where   crediteInfo = ?1 order by t.period asc ")
 	public List<CreditRepayPlan>  findByCreditInfoAscPeriod(CrediteInfo crediteInfo);
 	
-	
+	@Query("from CreditRepayPlan t where   crediteInfo = ?1")
+	public List<CreditRepayPlan> findByCreditInfo(CrediteInfo crediteInfo) ;
+
 	/**
 	 * 根据状态 查询当前债权明细 
 	 * @param crediteInfo

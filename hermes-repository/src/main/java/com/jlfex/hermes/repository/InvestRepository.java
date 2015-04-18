@@ -1,15 +1,12 @@
 package com.jlfex.hermes.repository;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-
-import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.User;
@@ -69,5 +66,7 @@ public interface InvestRepository extends  PagingAndSortingRepository<Invest, St
 	 */
 	@Query("SELECT  t  FROM Invest  t  where t.loan.loanKind in ?1 and t.user=?2 order by t.status asc")
 	public List<Invest> findByUserAndLoanKind(List<String> loanKindList, User user);
+
+	public Page<Invest> findByLoan(Loan loan,Pageable pageable);
 
 }
