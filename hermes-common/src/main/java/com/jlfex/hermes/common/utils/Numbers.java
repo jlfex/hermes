@@ -1,5 +1,4 @@
 package com.jlfex.hermes.common.utils;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -7,7 +6,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.exception.ServiceException;

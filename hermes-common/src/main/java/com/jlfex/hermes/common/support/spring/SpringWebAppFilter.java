@@ -1,7 +1,5 @@
 package com.jlfex.hermes.common.support.spring;
-
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,7 +8,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.web.WebApp;
@@ -18,10 +15,6 @@ import com.jlfex.hermes.common.web.filter.WebAppFilter;
 
 /**
  * 采用 Spring 容器的网络应用过滤器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 public class SpringWebAppFilter implements Filter {
 

@@ -1,24 +1,16 @@
 package com.jlfex.hermes.common.identity;
-
 import java.io.ByteArrayInputStream;
 import java.util.List;
-
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Cryptos;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 身份认证
- * 
- * 
- * @author Aether
- * @version 1.0, 2014-2-19
- * @since 1.0
  */
 public class Identity {
 	public static String verify(String param) {

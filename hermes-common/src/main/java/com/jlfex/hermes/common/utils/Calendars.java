@@ -1,5 +1,4 @@
 package com.jlfex.hermes.common.utils;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
@@ -15,10 +13,6 @@ import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 日历工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public abstract class Calendars {
 

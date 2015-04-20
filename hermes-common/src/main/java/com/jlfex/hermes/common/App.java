@@ -1,10 +1,8 @@
 package com.jlfex.hermes.common;
-
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-
 import com.jlfex.hermes.common.exception.NotSignInException;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;

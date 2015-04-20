@@ -3,7 +3,6 @@ package ${package};
 /**
  * ${table.name}模型
  *
- * @author ultrafrog
  * @version 1.0, ${today}
  * @since 1.0
  */

@@ -4,10 +4,6 @@ import java.util.Map;
 
 /**
  * 缓存接口
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public interface Cache {
 

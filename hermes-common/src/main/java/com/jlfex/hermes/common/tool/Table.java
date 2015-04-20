@@ -1,17 +1,11 @@
 package com.jlfex.hermes.common.tool;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 库表信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 public class Table implements Serializable {
 

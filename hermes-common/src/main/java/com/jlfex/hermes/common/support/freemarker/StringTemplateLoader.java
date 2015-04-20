@@ -1,15 +1,12 @@
 package com.jlfex.hermes.common.support.freemarker;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
-
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -17,10 +14,6 @@ import freemarker.template.TemplateException;
 
 /**
  * 字符串模版加载器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class StringTemplateLoader implements TemplateLoader {
 
