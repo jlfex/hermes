@@ -127,6 +127,7 @@ public class SMSClient implements SmsEventListener {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void onUnbound(Collection arg0) {
 		if (running) { // 仍在运行，重新绑定

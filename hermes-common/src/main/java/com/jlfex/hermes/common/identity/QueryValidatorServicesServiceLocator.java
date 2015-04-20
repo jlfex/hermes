@@ -71,6 +71,7 @@ public class QueryValidatorServicesServiceLocator extends org.apache.axis.client
 	 * If this service has no port for the given interface,
 	 * then ServiceException is thrown.
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
 		try {
@@ -92,6 +93,7 @@ public class QueryValidatorServicesServiceLocator extends org.apache.axis.client
 	 * If this service has no port for the given interface,
 	 * then ServiceException is thrown.
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public java.rmi.Remote getPort(javax.xml.namespace.QName portName, Class serviceEndpointInterface)
 			throws javax.xml.rpc.ServiceException {
@@ -116,6 +118,7 @@ public class QueryValidatorServicesServiceLocator extends org.apache.axis.client
 
 	private java.util.HashSet<QName> ports = null;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public java.util.Iterator getPorts() {
 		if (ports == null) {

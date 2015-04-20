@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
  * 
  * 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class, 被AOP过的真实类等工具函数.
  * 
- * @author calvin
  */
 public class Reflections {
 	private static final String SETTER_PREFIX = "set";
@@ -217,6 +216,7 @@ public class Reflections {
 	 * @param clazz The class to introspect
 	 * @return the first generic declaration, or Object.class if cannot be determined
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static <T> Class<T> getClassGenricType(final Class clazz) {
 		return getClassGenricType(clazz, 0);
 	}
@@ -231,6 +231,7 @@ public class Reflections {
 	 * @param index the Index of the generic ddeclaration,start from 0.
 	 * @return the index generic declaration, or Object.class if cannot be determined
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Class getClassGenricType(final Class clazz, final int index) {
 
 		Type genType = clazz.getGenericSuperclass();
@@ -255,6 +256,7 @@ public class Reflections {
 		return (Class) params[index];
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Class<?> getUserClass(Object instance) {
 		Validate.notNull(instance, "Instance must not be null");
 		Class clazz = instance.getClass();

@@ -28,15 +28,16 @@ public class Identity {
 		return parseXML(doc);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static String parseXML(Document doc) {
 		List statusList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/compStatus");
 		if ((statusList == null) || (statusList.size() == 0)) {
 			return "";
 		}
-		List nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
-		List identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
-		String name = ((Element) nameList.get(0)).getText();
-		String cardId = ((Element) identitycardList.get(0)).getText();
+		//List nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
+		//List identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
+		//String name = ((Element) nameList.get(0)).getText();
+		//String cardId = ((Element) identitycardList.get(0)).getText();
 		Element e = (Element) statusList.get(0);
 		String compStatusCode = e.getText();
 		int status;
@@ -110,6 +111,6 @@ public class Identity {
 	}
 
 	public static void main(String[] args) {
-		String res = verify("季惠,32128319880721504X");
+		//String res = verify("季惠,32128319880721504X");
 	}
 }
