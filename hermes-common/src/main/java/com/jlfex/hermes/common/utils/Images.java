@@ -1,5 +1,4 @@
 package com.jlfex.hermes.common.utils;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,26 +12,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
-
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 图形工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-26
- * @since 1.0
  */
 public abstract class Images {
 

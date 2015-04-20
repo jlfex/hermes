@@ -5,6 +5,9 @@ import javax.xml.namespace.QName;
 public class QueryValidatorServicesServiceLocator extends org.apache.axis.client.Service implements
 		QueryValidatorServicesService {
 
+	
+	private static final long serialVersionUID = -31386259409418801L;
+
 	public QueryValidatorServicesServiceLocator() {
 	}
 

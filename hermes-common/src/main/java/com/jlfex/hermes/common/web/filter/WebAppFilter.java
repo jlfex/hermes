@@ -1,7 +1,5 @@
 package com.jlfex.hermes.common.web.filter;
-
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,17 +8,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.web.WebApp;
 
 /**
  * 网络应用过滤器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 public class WebAppFilter implements Filter {
 

@@ -1,8 +1,6 @@
 package com.jlfex.hermes.common.cache;
-
 import java.io.Serializable;
 import java.util.Map;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -11,10 +9,6 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 缓存工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public abstract class Caches {
 

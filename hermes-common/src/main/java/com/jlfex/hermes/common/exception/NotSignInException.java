@@ -2,10 +2,6 @@ package com.jlfex.hermes.common.exception;
 
 /**
  * 登录异常
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-13
- * @since 1.0
  */
 public class NotSignInException extends ServiceException {
 

@@ -1,12 +1,9 @@
 package com.jlfex.hermes.common.http;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -37,6 +34,7 @@ import com.jlfex.hermes.common.utils.Strings;
  * @author Administrator
  *
  */
+@SuppressWarnings("deprecation")
 public class HttpClientUtil {
 
 	private static  HttpClient httpClient;

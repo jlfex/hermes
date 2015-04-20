@@ -6,10 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 请求参数
- * 
- * @author ultrafrog
- * @version 1.0, 2014-02-20
- * @since 1.0
  */
 public class RequestParam {
 

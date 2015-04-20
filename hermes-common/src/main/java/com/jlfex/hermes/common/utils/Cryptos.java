@@ -1,26 +1,18 @@
 package com.jlfex.hermes.common.utils;
-
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.commons.codec.binary.Base64;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 加密工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-14
- * @since 1.0
  */
 public abstract class Cryptos {
 

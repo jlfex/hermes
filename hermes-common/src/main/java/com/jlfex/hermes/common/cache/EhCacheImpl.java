@@ -1,20 +1,13 @@
 package com.jlfex.hermes.common.cache;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
-
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 /**
  * EhCache 实现
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public class EhCacheImpl implements Cache {
 

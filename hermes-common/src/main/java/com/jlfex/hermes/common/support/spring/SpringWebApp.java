@@ -1,26 +1,18 @@
 package com.jlfex.hermes.common.support.spring;
-
 import java.util.Locale;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.web.WebApp;
 
 /**
  * 采用 Spring 容器的网络应用
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 public class SpringWebApp extends WebApp {
 
