@@ -3,7 +3,6 @@ package com.jlfex.hermes.main;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -47,11 +45,6 @@ import com.jlfex.hermes.service.pojo.UserBasic;
 
 /**
  * 账户中心
- * 
- * 
- * @author Aether
- * @version 1.0, 2013-12-27
- * @since 1.0
  */
 @Controller
 @RequestMapping("/account")
@@ -109,35 +102,26 @@ public class AccountPersonalController {
 		App.checkUser();
 		String area = JSON.toJSONString(areaService.getAllChildren(null));
 		model.addAttribute("area",area);
-
 		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		// 用户属性信息
-
 		UserBasic userBasic = userInfoService.findUserInfoByUserId(curUser.getId());
 		if (userBasic.getProvince() != null && userBasic.getCity() != null && userBasic.getCounty() != null) {
 			String addressPerson = areaService.getAddress(userBasic.getAddress(), userBasic.getProvince(), userBasic.getCity(), userBasic.getCounty());
 			model.addAttribute("addressPerson", addressPerson);
 		}
-
 		model.addAttribute("userBasic", userBasic);
-
 		// 证件类型
 		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
 		model.addAttribute("idTypeMap", idTypeMap);
-
 		// 性别
 		Map<Object, String> genterMap = Dicts.elements(Gender.class);
 		model.addAttribute("genterMap", genterMap);
-
 		// 婚姻状况
 		Map<Object, String> marriedMap = Dicts.elements(Married.class);
 		model.addAttribute("marriedMap", marriedMap);
-
 		// 学历
 		Map<Object, String> eduMap = Dicts.elements(Education.class);
 		model.addAttribute("eduMap", eduMap);
-
 		return "account/basic";
 	}
 
@@ -154,9 +138,9 @@ public class AccountPersonalController {
 	 */
 	@RequestMapping("saveBasic")
 	@ResponseBody
-	public Result saveBasic(UserBasic userBasic) {
+	public Result<String> saveBasic(UserBasic userBasic) {
 		App.checkUser();
-		Result result = new Result();
+		Result<String> result = new Result<String>();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		userInfoService.saveUserBasicInfo(userBasic, user);
@@ -199,8 +183,6 @@ public class AccountPersonalController {
 	@RequestMapping("loadJobDetail/{jobid}")
 	public String loadJobDetail(@PathVariable("jobid") String jobid, Model model) {
 		App.checkUser();
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		if (jobid != null && jobid != "") {
 			UserJob job = userInfoService.loanUserJobByJobId(jobid);
 			model.addAttribute("job", job);
@@ -208,13 +190,10 @@ public class AccountPersonalController {
 			UserJob job = new UserJob();
 			model.addAttribute("job", job);
 		}
-
 		Map<Object, String> enterpriseMap = Dicts.elements(Enterprise.class);
 		model.addAttribute("enterpriseMap", enterpriseMap);
-
 		Map<Object, String> scaleMap = Dicts.elements(Scale.class);
 		model.addAttribute("scaleMap", scaleMap);
-
 		Map<Object, String> typeMap = Dicts.elements(com.jlfex.hermes.model.UserJob.Type.class);
 		model.addAttribute("typeMap", typeMap);
 		return "account/job_detail";
@@ -230,7 +209,6 @@ public class AccountPersonalController {
 	@RequestMapping("saveJob")
 	public String saveJob(UserJob userJob, Model model) {
 		App.checkUser();
-		Result result = new Result();
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
 		userJob.setUser(user);
@@ -302,11 +280,8 @@ public class AccountPersonalController {
 
 	@RequestMapping("loadHouseDetail/{houseId}")
 	public String loadHouseDetail(@PathVariable("houseId") String houseId, Model model) {
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		String area = JSON.toJSONString(areaService.getAllChildren(null));
 		model.addAttribute("area", area);
-
 		if (houseId != null && houseId != "" && !houseId.equals("null")) {
 			UserHouse house = userInfoService.loadUserHouseById(houseId);
 			model.addAttribute("house", house);
@@ -314,7 +289,6 @@ public class AccountPersonalController {
 			UserHouse house = new UserHouse();
 			model.addAttribute("house", house);
 		}
-
 		Map<Object, String> mortgageMap = Dicts.elements(Mortgage.class);
 		model.addAttribute("mortgageMap", mortgageMap);
 		return "account/house_detail";
@@ -327,9 +301,7 @@ public class AccountPersonalController {
 		User user = userInfoService.findByUserId(curUser.getId());
 		userHouse.setUser(user);
 		userInfoService.saveHouseInfo(userHouse);
-
 		List<UserHouse> houses = userInfoService.findHouseByUserId(user);
-
 		for (UserHouse house : houses) {
 			int i = 0;
 			String[] areaStr = new String[3];
@@ -373,8 +345,6 @@ public class AccountPersonalController {
 
 	@RequestMapping("loanCarDetail/{carId}")
 	public String loanCarDetail(@PathVariable("carId") String carId, Model model) {
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		if (carId != null && carId != "") {
 			UserCar car = userInfoService.loadUserCarById(carId);
 			model.addAttribute("car", car);
@@ -382,7 +352,6 @@ public class AccountPersonalController {
 			UserCar car = new UserCar();
 			model.addAttribute("car", car);
 		}
-
 		Map<Object, String> mortgageMap = Dicts.elements(Mortgage.class);
 		model.addAttribute("mortgageMap", mortgageMap);
 		return "account/car_detail";
@@ -417,8 +386,6 @@ public class AccountPersonalController {
 
 	@RequestMapping("loadContacterDetail/{contacterId}")
 	public String loadContacterDetail(@PathVariable("contacterId") String contacterId, Model model) {
-		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		if (contacterId != null && contacterId != "") {
 			UserContacter contacter = userInfoService.loanUserContacterById(contacterId);
 			model.addAttribute("contacter", contacter);
@@ -474,7 +441,7 @@ public class AccountPersonalController {
 	 */
 	@RequestMapping("resetPassword")
 	@ResponseBody
-	public Result resetPassword(String orginalPwd, String confirm) {
+	public Result<String> resetPassword(String orginalPwd, String confirm) {
 		AppUser curUser = App.current().getUser();
 		return userInfoService.resetPassword(curUser.getId(), orginalPwd, confirm);
 	}
@@ -550,7 +517,6 @@ public class AccountPersonalController {
 		String flag = "99";
 		Logger.info("进行工作信息删除操作：jobid="+jobid);
 		App.checkUser();
-		AppUser curUser = App.current().getUser();
 		if (!Strings.empty(jobid)){
 			try{
 			   userInfoService.delUserJobByJobId(jobid);

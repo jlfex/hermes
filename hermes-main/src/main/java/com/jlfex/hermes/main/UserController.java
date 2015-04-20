@@ -3,12 +3,10 @@ package com.jlfex.hermes.main;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
@@ -223,9 +220,8 @@ public class UserController {
 	 */
 	@RequestMapping("/signIn")
 	@ResponseBody
-	public Result signIn(User user) {
-		Result result = userService.signIn(user);
-		return result;
+	public Result<?> signIn(User user) {
+		return userService.signIn(user);
 	}
 
 	/**
@@ -280,14 +276,14 @@ public class UserController {
 	 */
 	@RequestMapping("/activeMail")
 	public String activeMail(@RequestParam("uuId") String userId, @RequestParam("validateCode") String validateCode, HttpServletRequest request, Model model) {
-		Result result = userService.activeMail(userId, validateCode);
+		Result<?> result = userService.activeMail(userId, validateCode);
 		if (result.getType().equals(Type.SUCCESS)) {
 			model.addAttribute("message", result.getFirstMessage());
 			model.addAttribute("userId", userId);
 			model.addAttribute("cellphone", userService.loadById(userId).getCellphone());
 			return "user/emailActive";
 		} else if (result.getType().equals(Type.WARNING)) {
-			model.addAttribute("message", App.message("message.sign.email.expire", null));
+			model.addAttribute("message", App.message("message.sign.email.expire", ""));
 			model.addAttribute("email", result.getData());
 			return "user/emailExpire";
 		} else {
@@ -306,7 +302,7 @@ public class UserController {
 	public String authCellPhone(@RequestParam("email") String email, Model model) {
 		User user = userService.loadByEmail(email);
 		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
-		Result result = userService.signIn(user);
+		Result<?> result = userService.signIn(user);
 		model.addAttribute("message", result.getFirstMessage());
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
@@ -394,8 +390,8 @@ public class UserController {
 	 */
 	@RequestMapping("checkPhone")
 	@ResponseBody
-	public Result checkPhone(@RequestParam("phone") String phone,Model model) {	
-		Result result = new Result();
+	public Result<String> checkPhone(@RequestParam("phone") String phone,Model model) {	
+		Result<String> result = new Result<String>();
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		try {
 			boolean flagPhone = userService.checkPhone(phone);
@@ -509,12 +505,12 @@ public class UserController {
 	 */
 	@RequestMapping("handleRetrive")
 	public String handleRetrieveMail(@RequestParam("uuId") String userId, @RequestParam("validateCode") String validateCode, HttpServletRequest request, Model model) {
-		Result result = userService.handleRetrieveMail(userId, validateCode);
+		Result<?> result = userService.handleRetrieveMail(userId, validateCode);
 		if (result.getType().equals(Type.SUCCESS)) {
 			model.addAttribute("uuid", userId);
 			return "user/retrievePwdStep3";
 		} else if (result.getType().equals(Type.WARNING)) {
-			model.addAttribute("message", App.message("message.retrieve.email.expire", null));
+			model.addAttribute("message", App.message("message.retrieve.email.expire", ""));
 			return "user/emailExpire";
 		} else {
 			model.addAttribute("message", result.getFirstMessage());

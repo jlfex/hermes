@@ -182,8 +182,8 @@ public class LoanController {
 	 */
 	@RequestMapping("/repayment/{repayid}")
 	@ResponseBody
-	public Result repayment(@PathVariable("repayid") String repayid) {
-		Result result = new Result();
+	public Result<String> repayment(@PathVariable("repayid") String repayid) {
+		Result<String> result = new Result<String>();
 		Logger.info("repayid:" + repayid);
 		try {
 			boolean repaymentResult = repayService.repayment(repayid);
@@ -288,8 +288,8 @@ public class LoanController {
 	 */
 	@RequestMapping("/programconfirm")
 	@ResponseBody
-	public Result programconfirm(String amount, String period, String rate, String productId, String purposeId, String repayId, String remark) {
-		Result result = new Result();
+	public Result<String> programconfirm(String amount, String period, String rate, String productId, String purposeId, String repayId, String remark) {
+		Result<String> result = new Result<String>();
 		try {
 			App.checkUser();
 			Logger.info("amount:" + amount + "period:" + period + "rate:" + rate + "productId:" + productId + "purposeId:" + purposeId + "repayId:" + repayId + "description:" + remark);

@@ -2,20 +2,18 @@ package com.jlfex.hermes.main;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -55,7 +52,6 @@ import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 import com.jlfex.hermes.model.yltx.FinanceRepayPlan;
-import com.jlfex.hermes.model.yltx.JlfexOrder;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
@@ -235,8 +231,8 @@ public class InvestController {
 	 */
 	@RequestMapping("/bid")
 	@ResponseBody
-	public Result bid(String loanid, String investamount, String otherrepayselect) throws Exception {
-		Result result = new Result();
+	public Result<String> bid(String loanid, String investamount, String otherrepayselect) throws Exception {
+		Result<String> result = new Result<String>();
 		User user = this.checkBidAuthority(loanid, investamount, otherrepayselect, result);
 		if (!result.getType().equals(Type.SUCCESS)) {
 			return result;
@@ -274,12 +270,11 @@ public class InvestController {
 	 * @param otherrepayselect
 	 * @param result
 	 */
-	private User checkBidAuthority(String loanid, String investamount, String otherrepayselect, Result result) {
+	private User checkBidAuthority(String loanid, String investamount, String otherrepayselect, Result<String> result) {
 		try {
 			App.checkUser();
 		} catch (Exception ex) {
 			result.setType(Type.WARNING);
-
 			return null;
 		}
 		AppUser curUser = App.current().getUser();
@@ -290,7 +285,6 @@ public class InvestController {
 		if (!bidAuthentication) {
 			result.setType(Type.FAILURE);
 			result.setData("自己发布的借款 不能自己投标");
-
 			return user;
 		}
 		result.setType(Type.SUCCESS);
@@ -1139,9 +1133,11 @@ public class InvestController {
 		} catch (Exception e) {
 			Logger.error("获取外部债权信息异常",e);
 		}
-		int year = crediteInfo.getAssignTime().getYear()+1900;
-		int month = crediteInfo.getAssignTime().getMonth() + 1;
-		int day = crediteInfo.getAssignTime().getDate();
+		Calendar cal_assign = Calendar.getInstance();
+		cal_assign.setTime(crediteInfo.getAssignTime());
+		int year=cal_assign.get(Calendar.YEAR); 
+		int month=cal_assign.get(Calendar.MONTH)+1;
+		int day=cal_assign.get(Calendar.DAY_OF_MONTH);
 		model.addAttribute("invest", invest);
 		model.addAttribute("loan", loan);
 		model.addAttribute("creditInfo", crediteInfo);

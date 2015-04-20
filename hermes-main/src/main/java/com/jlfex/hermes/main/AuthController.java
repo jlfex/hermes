@@ -1,10 +1,7 @@
 package com.jlfex.hermes.main;
-
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -29,11 +25,6 @@ import com.jlfex.hermes.service.UserService;
 
 /**
  * 认证中心
- * 
- * 
- * @author Aether
- * @version 1.0, 2014-1-3
- * @since 1.0
  */
 @Controller
 @RequestMapping("/auth")
@@ -113,7 +104,7 @@ public class AuthController {
 	 */
 	@RequestMapping("sendPhoneCode/{cellphone}")
 	@ResponseBody
-	public Result sendPhoneCode(@PathVariable("cellphone") String cellphone) {
+	public Result<String> sendPhoneCode(@PathVariable("cellphone") String cellphone) {
 		AppUser curUser = App.current().getUser();
 		return authService.sendAuthCodeByPhone(curUser.getId(), cellphone);
 	}
@@ -127,7 +118,7 @@ public class AuthController {
 	 */
 	@RequestMapping("sendphoneCode/{userId}")
 	@ResponseBody
-	public Result sendPhoneCode(String cellphone, @PathVariable("userId") String userId) {
+	public Result<String> sendPhoneCode(String cellphone, @PathVariable("userId") String userId) {
 		return authService.sendAuthCodeByPhone(userId, cellphone);
 	}
 
@@ -140,8 +131,7 @@ public class AuthController {
 	 */
 	@RequestMapping("authCellphone/{userId}")
 	@ResponseBody
-	public Result authCellphone(String cellphone, String validateCode, @PathVariable("userId") String userId) {
-		// AppUser curUser = App.current().getUser();
+	public Result<String> authCellphone(String cellphone, String validateCode, @PathVariable("userId") String userId) {
 		return authService.authPhone(userId, cellphone, validateCode);
 	}
 
@@ -154,7 +144,7 @@ public class AuthController {
 	 */
 	@RequestMapping("authCellphone")
 	@ResponseBody
-	public Result authCellphone(String cellphone, String validateCode) {
+	public Result<String> authCellphone(String cellphone, String validateCode) {
 		AppUser curUser = App.current().getUser();
 		return authService.authPhone(curUser.getId(), cellphone, validateCode);
 	}
@@ -169,7 +159,7 @@ public class AuthController {
 	 */
 	@RequestMapping("authId")
 	@ResponseBody
-	public Result authId(String realName, String idType, String idNumber) {
+	public Result<String> authId(String realName, String idType, String idNumber) {
 		AppUser curUser = App.current().getUser();
 		return authService.authIdentify(curUser.getId(), realName, idType, idNumber);
 	}
@@ -184,8 +174,7 @@ public class AuthController {
 	 */
 	@RequestMapping("authId/{userId}")
 	@ResponseBody
-	public Result authId(String realName, String idType, String idNumber, @PathVariable("userId") String userId) {
-		// AppUser curUser = App.current().getUser();
+	public Result<String> authId(String realName, String idType, String idNumber, @PathVariable("userId") String userId) {
 		return authService.authIdentify(userId, realName, idType, idNumber);
 	}
 
@@ -226,7 +215,7 @@ public class AuthController {
 	 */
 	@RequestMapping("handerBindBank/{userId}")
 	@ResponseBody
-	public Result handerBindBank(@PathVariable("userId") String userId, HttpServletRequest request) {
+	public Result<String> handerBindBank(@PathVariable("userId") String userId, HttpServletRequest request) {
 		String bankId = request.getParameter("bankId");
 		String cityId = request.getParameter("cityId");
 		String deposit = request.getParameter("deposit");
@@ -242,7 +231,7 @@ public class AuthController {
 	 */
 	@RequestMapping("handerAddBank/{userId}")
 	@ResponseBody
-	public Result handerAddBank(@PathVariable("userId") String userId, HttpServletRequest request) {
+	public Result<String> handerAddBank(@PathVariable("userId") String userId, HttpServletRequest request) {
 		String bankId = request.getParameter("bankId");
 		String cityId = request.getParameter("cityId");
 		String deposit = request.getParameter("deposit");
