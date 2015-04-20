@@ -4,26 +4,20 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import cfca.payment.api.tx.Tx1361Request;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
-import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -52,10 +46,6 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
  * 账户中心控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-31
- * @since 1.0
  */
 @Controller
 @RequestMapping("/account")
@@ -191,13 +181,12 @@ public class AccountController {
 	 */
 	@RequestMapping("handerEditBankCard/{id}")
 	@ResponseBody
-	public Result handerEditBankCard(@PathVariable("id") String id, HttpServletRequest request) {
+	public Result<String> handerEditBankCard(@PathVariable("id") String id, HttpServletRequest request) {
 		String bankId = request.getParameter("bankId");
 		String cityId = request.getParameter("cityId");
 		String deposit = request.getParameter("deposit");
 		String account = request.getParameter("account");
 		String isdefault = request.getParameter("isdefault");
-		// AppUser curUser = App.current().getUser();
 		return authService.editBankCard(id, bankId, cityId, deposit, account, isdefault);
 	}
 
