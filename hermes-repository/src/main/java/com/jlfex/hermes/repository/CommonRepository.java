@@ -152,10 +152,6 @@ public class CommonRepository {
 
 	/**
 	 * 脚本文件定义
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-25
-	 * @since 1.0
 	 */
 	public static final class Script {
 

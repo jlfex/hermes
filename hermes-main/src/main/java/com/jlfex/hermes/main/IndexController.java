@@ -116,10 +116,7 @@ public class IndexController {
 
 	/**
 	 * 首页导航
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-31
-	 * @since 1.0
+	 *
 	 */
 	public static final class HomeNav {
 

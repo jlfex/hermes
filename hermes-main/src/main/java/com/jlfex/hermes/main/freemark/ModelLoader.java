@@ -21,10 +21,6 @@ import freemarker.template.TemplateExceptionHandler;
 
 /**
  * 字符串模版加载器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-12
- * @since 1.0
  */
 public class ModelLoader implements TemplateLoader {
 

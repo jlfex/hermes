@@ -24,10 +24,6 @@ import com.jlfex.hermes.service.WithdrawService;
 
 /**
  * 提现控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-20
- * @since 1.0
  */
 @Controller
 @RequestMapping("/withdraw")

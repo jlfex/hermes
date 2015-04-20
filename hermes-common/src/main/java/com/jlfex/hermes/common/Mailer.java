@@ -228,10 +228,6 @@ public class Mailer {
 	
 	/**
 	 * 认证器
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-23
-	 * @since 1.0
 	 */
 	public static class Authenticator extends javax.mail.Authenticator {
 		
