@@ -259,10 +259,6 @@ public class WebApp extends App {
 	
 	/**
 	 * 闪存作用域
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-07
-	 * @since 1.0
 	 */
 	public static final class Flash {
 		

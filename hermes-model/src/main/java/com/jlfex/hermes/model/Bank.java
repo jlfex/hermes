@@ -122,10 +122,6 @@ public class Bank extends Model {
 
 	/**
 	 * 状态
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-01-02
-	 * @since 1.0
 	 */
 	public static final class Status {
 

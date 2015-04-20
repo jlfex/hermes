@@ -225,10 +225,6 @@ public abstract class Strings {
 	
 	/**
 	 * 字符串集合
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-05
-	 * @since 1.0
 	 */
 	public static final class StringSet {
 		

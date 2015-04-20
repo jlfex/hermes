@@ -11,9 +11,6 @@ import com.jlfex.hermes.model.Navigation;
 /**
  * 树型信息模型
  * 
- * @author ultrafrog
- * @version 1.0, 2013-11-28
- * @since 1.0
  */
 public class Tree implements Serializable {
 

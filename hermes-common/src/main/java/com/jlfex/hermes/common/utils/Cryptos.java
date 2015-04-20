@@ -211,10 +211,6 @@ public abstract class Cryptos {
 	
 	/**
 	 * 散列类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-14
-	 * @since 1.0
 	 */
 	public enum HashType {
 		
@@ -246,10 +242,6 @@ public abstract class Cryptos {
 	
 	/**
 	 * 加密类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2014-02-19
-	 * @since 1.0
 	 */
 	public enum EncryptType {
 		
