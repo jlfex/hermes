@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.utils.Images;
-import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.service.PropertiesService;
@@ -71,10 +69,8 @@ public class SystemController {
 	 */
 	@RequestMapping("/properties/save")
 	@ResponseBody
-	public Result saveProperties(MultipartHttpServletRequest request) {
+	public Result<String> saveProperties(MultipartHttpServletRequest request) {
 		MultipartFile file = request.getFile("logo");
-		int imgWidth = Integer.parseInt(Strings.empty(request.getParameter("imgWidth"), "0"));
-		int imgHeight = Integer.parseInt(Strings.empty(request.getParameter("imgHeight"), "0"));
 		Result<String> result = new Result<String>();
 		try {
 			propertiesService.saveConfigurableProperties(
@@ -133,8 +129,6 @@ public class SystemController {
 	@ResponseBody
 	public String showPicture(MultipartHttpServletRequest request) {
 		MultipartFile file = request.getFile("file");
-		int imgWidth = Integer.parseInt(Strings.empty(request.getParameter("imgWidth"), "0"));
-		int imgHeight = Integer.parseInt(Strings.empty(request.getParameter("imgHeight"), "0"));
 		try {
 			return Images.resizeImageToBase64(file, 0, 0, 168, 50);
 		} catch (Exception e) {
