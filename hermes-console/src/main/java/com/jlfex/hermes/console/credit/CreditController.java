@@ -194,6 +194,7 @@ public class CreditController {
 	 * @param model
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/import")
 	@ResponseBody
 	public Map<String, String> creditImport(@RequestParam MultipartFile file, Model model) {
@@ -252,7 +253,7 @@ public class CreditController {
 			}
 			//3.0 循环获取 CreditsheetMap
 			List<RepayPlanVo> validRepayplanList = fetchRepayPlanRecord(sheet1Map, fileName, repayList, repayPlanErrorMsg);
-			if(validRepayplanList != null || validRepayplanList.size() > 0){
+			if(validRepayplanList != null && validRepayplanList.size() > 0){
 				// 3.1:持久化:债权还款明细
 				List<CreditRepayPlan> entitLoanPayList = new ArrayList<CreditRepayPlan>();
 				for (RepayPlanVo vo : validRepayplanList) {

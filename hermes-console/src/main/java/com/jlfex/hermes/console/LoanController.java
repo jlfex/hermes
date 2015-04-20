@@ -327,8 +327,8 @@ public class LoanController {
 
 	@RequestMapping("/firstaudit")
 	@ResponseBody
-	public Result firstaudit(String loanId, String status, String remark, String fixAmount, Model model) {
-		Result result = new Result();
+	public Result<String> firstaudit(String loanId, String status, String remark, String fixAmount, Model model) {
+		Result<String> result = new Result<String>();
 		BigDecimal finalFixAmount = BigDecimal.ZERO;
 		Loan loan = loanService.loadById(loanId);
 		if (Strings.empty(fixAmount)) {
@@ -355,9 +355,9 @@ public class LoanController {
 
 	@RequestMapping("/finalaudit")
 	@ResponseBody
-	public Result finalaudit(String loanId, String status, String remark, String fixAmount, String labels, Model model) {
+	public Result<String> finalaudit(String loanId, String status, String remark, String fixAmount, String labels, Model model) {
 
-		Result result = new Result();
+		Result<String> result = new Result<String>();
 		BigDecimal finalFixAmount = BigDecimal.ZERO;
 
 		Loan loan = loanService.loadById(loanId);
@@ -393,8 +393,8 @@ public class LoanController {
     */
 	@RequestMapping("/fullaudit")
 	@ResponseBody
-	public Result fullaudit(String loanId, String status, String remark) {
-		Result result = new Result();
+	public Result<String> fullaudit(String loanId, String status, String remark) {
+		Result<String> result = new Result<String>();
 		Logger.info("loanId:" + loanId + ",status:" + status + ",remark :" + remark);
 		Loan loanResult = null;
 		try {
