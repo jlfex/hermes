@@ -330,7 +330,7 @@ public class UserController {
 	 */
 	@RequestMapping("/freezeUser/{id}")
 	@ResponseBody
-	public Result freezeUser(@PathVariable("id")String id){
+	public Result<String> freezeUser(@PathVariable("id")String id){
 	return userManageService.freezeUser(id);
 	}
 
@@ -341,7 +341,7 @@ public class UserController {
 	 */
 	@RequestMapping("/unfreezeUser/{id}")
 	@ResponseBody
-	public Result unfreezeUser(@PathVariable("id")String id){
+	public Result<String> unfreezeUser(@PathVariable("id")String id){
 	return userManageService.unfreezeUser(id);
 	}
 
@@ -352,7 +352,7 @@ public class UserController {
 	 */
 	@RequestMapping("/logOffUser/{id}")
 	@ResponseBody
-	public Result logOffUser(@PathVariable("id")String id){
+	public Result<String> logOffUser(@PathVariable("id")String id){
 	return userManageService.logOffUser(id);
 	}
 }

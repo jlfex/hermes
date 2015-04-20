@@ -1,18 +1,7 @@
 package com.jlfex.hermes.console.api.yltx;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,54 +89,5 @@ public class JlfexControl {
 		}
 		model.addAttribute("synchResult", "本次同步理财产品总数:"+financeOrderSize+"，发售成功数："+dealSucSize+",发售失败数:"+dealFailSize+"，不需重复发售数:"+undoSize+",不符合业务规则数："+invalidSize);
 		return "credit/importLoan";
-	} 
-	
-//	@RequestMapping("/queryRepayPlan")
-//	public String queryRepayPlan(Model model) throws Exception {
-//		String id = "17113";
-//		String type = "1";
-//		String jsonOrder = jlfexService.queryRepayPlan(id,type);
-//		System.out.println(jsonOrder);
-//		return "credit/index";
-//	}
-//	
-//	@RequestMapping("/order2pay")
-//	public String order2pay(Model model) throws Exception {
-//		
-//		Map<String,String> map = jlfexService.createOrderAndPay(new  OrderPayRequestVo());
-//		OrderPayRequestVo orderWithPayVo = JSON.parseObject( map.get("result"),OrderPayRequestVo.class);
-//		return "credit/index";
-//	}
-//	
-//	@RequestMapping("/queryOrder")
-//	public String queryOrder(Model model) throws Exception {
-//		String orderCode = "2015030102332";
-//		String result  = jlfexService.queryOrderStatus(orderCode);
-//		OrderResponseVo  responVo = JSON.parseObject(result, OrderResponseVo.class);
-//		List<OrderVo>  lists = responVo.getContent();
-//		
-//		return "credit/index";
-//	}
-//	
-	@RequestMapping("/queryFile")
-	public void queryProtocolFile(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String fileId = "75979";
-		OutputStream ouputStream = null;
-		ByteArrayOutputStream bytesarray = new ByteArrayOutputStream();
-		ByteArrayOutputStream  outStream =  jlfexService.queryProtocolFile(fileId);
-		OutputStream os = response.getOutputStream();
-		os.write(outStream.toByteArray());
-		os.flush();
-		os.close();
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-
+	} 	
 }
