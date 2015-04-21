@@ -481,7 +481,7 @@ p.clicklink{ width:120px; margin:15px 0; color:#898989;font-size:16px;}
 .bid_part{border:2px solid #e2e2e2; background:#f6f6f6; margin-top:15px;padding:20px 0 20px 20px;font-size:14px; color:#000000; position:relative;-moz-border-radius: 5px; -webkit-border-radius: 5px;border-radius: 5px; width:732px;}
 .bid_part input.inputstyle{ width:100px; color:#444444; font-size:12px; height:10px;}
 .fl_left{ text-align:left;}
-p.new_year{ margin:20px; color:#444444;}
+p.new_year{ margin:50px;padding-bottom:250px; color:#444444;}
 .table_mar{ padding-top:20px; font-size:14px; margin-left:20px;}
 .tdalign{ text-align:right; width:60px; color:#888888;}
 .td_width{ width:170px;}

@@ -35,6 +35,12 @@ box-sizing: content-box;
   .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 .notice_title{ margin:0 auto;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
+.footer {
+position:absolute;
+bottom: 0;
+width: 100%;
+clear:both;
+}
 
 </style>
 </head>

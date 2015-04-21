@@ -20,13 +20,14 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
 <style type="text/css">
 .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+.footer { position:relative;margin-top:250px;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
 <body>
 
 <#include "../header.ftl" />
 
-<div id="content" class="content" style="margin-top:133px; min-height:500px;">
+<div id="content" class="content" style="margin-top:133px;">
 	<div class="u-container row">
 		<div class="row u-row">
 			<!-- account menu -->

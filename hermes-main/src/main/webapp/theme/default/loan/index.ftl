@@ -14,6 +14,9 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery-ui.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<style type="text/css">
+.footer { margin-top:250px;bottom: 0;width: 100%;clear:both;}
+</style>
 </head>
 <body>
 
