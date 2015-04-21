@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">

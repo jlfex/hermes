@@ -11,7 +11,6 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/javascripts/jquery.validate.js"></script>
-<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/jquery.autocomplete.js"></script>
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/jquery.autocomplete.css">
 
