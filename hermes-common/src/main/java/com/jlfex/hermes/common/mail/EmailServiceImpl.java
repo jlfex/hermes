@@ -9,7 +9,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * 邮件发送的实现类
  * 
  * @author Administrator
- * @since 2014年12月30日12:48:44
  * @version 1.0
  * 
  */

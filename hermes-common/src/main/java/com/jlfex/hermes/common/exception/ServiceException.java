@@ -1,14 +1,9 @@
 package com.jlfex.hermes.common.exception;
-
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.Strings.StringSet;
 
 /**
  * 业务异常
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public class ServiceException extends RuntimeException {
 

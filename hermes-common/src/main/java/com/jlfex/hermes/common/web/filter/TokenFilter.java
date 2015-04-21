@@ -1,14 +1,11 @@
 package com.jlfex.hermes.common.web.filter;
-
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -18,9 +15,6 @@ import com.jlfex.hermes.common.web.WebApp;
 /**
  * 令牌过滤器
  * 
- * @author ultrafrog
- * @version 1.0, 2013-11-08
- * @since 1.0
  */
 public class TokenFilter implements Filter {
 

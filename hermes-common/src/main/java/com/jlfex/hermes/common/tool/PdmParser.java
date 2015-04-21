@@ -1,5 +1,4 @@
 package com.jlfex.hermes.common.tool;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,28 +7,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
  * 解析器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 public class PdmParser {
 

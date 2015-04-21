@@ -1,19 +1,13 @@
 package com.jlfex.hermes.common.dict;
-
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 字典工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public abstract class Dicts {
 

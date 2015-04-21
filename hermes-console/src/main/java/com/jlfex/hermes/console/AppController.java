@@ -5,10 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 应用控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-14
- * @since 1.0
  */
 @Controller
 @RequestMapping("/app")

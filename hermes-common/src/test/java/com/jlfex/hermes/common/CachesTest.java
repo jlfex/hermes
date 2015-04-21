@@ -1,15 +1,9 @@
 package com.jlfex.hermes.common;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import com.jlfex.hermes.common.cache.Caches;
 
-/**
- * @author ultrafrog
- * @version 1.0, 2013-11-07
- * @since 1.0
- */
+
 public class CachesTest {
 
 	/**

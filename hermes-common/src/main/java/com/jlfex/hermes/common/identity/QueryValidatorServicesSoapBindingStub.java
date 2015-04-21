@@ -1,11 +1,10 @@
 
 package com.jlfex.hermes.common.identity;
 
+import java.util.Enumeration;
+
 public class QueryValidatorServicesSoapBindingStub extends org.apache.axis.client.Stub implements QueryValidatorServices {
-    private java.util.Vector cachedSerClasses = new java.util.Vector();
-    private java.util.Vector cachedSerQNames = new java.util.Vector();
-    private java.util.Vector cachedSerFactories = new java.util.Vector();
-    private java.util.Vector cachedDeserFactories = new java.util.Vector();
+    
 
     static org.apache.axis.description.OperationDesc [] _operations;
 
@@ -92,7 +91,7 @@ public class QueryValidatorServicesSoapBindingStub extends org.apache.axis.clien
             if (super.cachedPortName != null) {
                 _call.setPortName(super.cachedPortName);
             }
-            java.util.Enumeration keys = super.cachedProperties.keys();
+            Enumeration<Object> keys = super.cachedProperties.keys();
             while (keys.hasMoreElements()) {
                 java.lang.String key = (java.lang.String) keys.nextElement();
                 _call.setProperty(key, super.cachedProperties.get(key));

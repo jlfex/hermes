@@ -5,10 +5,6 @@ import java.util.List;
 
 /**
  * 对象工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public abstract class Objects {
 

@@ -1,19 +1,13 @@
 package com.jlfex.hermes.common.tool;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 字段信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-11
- * @since 1.0
  */
 public class Column implements Serializable {
 

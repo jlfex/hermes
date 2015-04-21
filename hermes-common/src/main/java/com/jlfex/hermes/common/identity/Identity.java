@@ -1,24 +1,16 @@
 package com.jlfex.hermes.common.identity;
-
 import java.io.ByteArrayInputStream;
 import java.util.List;
-
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
-
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Cryptos;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 身份认证
- * 
- * 
- * @author Aether
- * @version 1.0, 2014-2-19
- * @since 1.0
  */
 public class Identity {
 	public static String verify(String param) {
@@ -36,15 +28,16 @@ public class Identity {
 		return parseXML(doc);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static String parseXML(Document doc) {
 		List statusList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/compStatus");
 		if ((statusList == null) || (statusList.size() == 0)) {
 			return "";
 		}
-		List nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
-		List identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
-		String name = ((Element) nameList.get(0)).getText();
-		String cardId = ((Element) identitycardList.get(0)).getText();
+		//List nameList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/name");
+		//List identitycardList = doc.selectNodes("data/policeCheckInfos/policeCheckInfo/identitycard");
+		//String name = ((Element) nameList.get(0)).getText();
+		//String cardId = ((Element) identitycardList.get(0)).getText();
 		Element e = (Element) statusList.get(0);
 		String compStatusCode = e.getText();
 		int status;
@@ -118,6 +111,6 @@ public class Identity {
 	}
 
 	public static void main(String[] args) {
-		String res = verify("季惠,32128319880721504X");
+		//String res = verify("季惠,32128319880721504X");
 	}
 }

@@ -1,7 +1,5 @@
 package com.jlfex.hermes.common.sms;
-
 import java.util.Collection;
-
 import wzsoft.sms.client.AccountReq;
 import wzsoft.sms.client.AccountRsp;
 import wzsoft.sms.client.Protocol;
@@ -106,18 +104,15 @@ public class SMSClient implements SmsEventListener {
 	@Override
 	public void onSmsMO(SmsMOReq req, SmsMORsp arg1) {
 		// process mo message, 处理手机上行信息
-
-		String content = null;
-
 		try {
 			String codeType = "GB2312";
 			if (req.getDataCoding() == 8) {
 				codeType = "UTF-16BE";
 			}
-			content = new String(req.getContent(), codeType);
-
+		String 	content = new String(req.getContent(), codeType);
+		Logger.info(content);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			Logger.error("处理手机上行信息",e1);
 		}
 
 	}
@@ -132,6 +127,7 @@ public class SMSClient implements SmsEventListener {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void onUnbound(Collection arg0) {
 		if (running) { // 仍在运行，重新绑定

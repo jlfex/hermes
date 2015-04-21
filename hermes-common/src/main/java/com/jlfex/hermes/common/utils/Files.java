@@ -1,5 +1,4 @@
 package com.jlfex.hermes.common.utils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +10,6 @@ import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
  * 文件工具
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-26
- * @since 1.0
  */
 public abstract class Files {
 

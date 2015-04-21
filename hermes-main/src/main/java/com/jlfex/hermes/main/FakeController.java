@@ -2,21 +2,14 @@ package com.jlfex.hermes.main;
 
 import java.util.Arrays;
 import java.util.Map.Entry;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.jlfex.hermes.common.Logger;
 
 /**
  * 模拟控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-09
- * @since 1.0
  */
 @Controller
 @RequestMapping("/fake")

@@ -4,10 +4,6 @@ import java.io.Serializable;
 
 /**
  * 应用用户
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public class AppUser implements Serializable {
 

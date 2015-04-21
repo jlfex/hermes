@@ -1,10 +1,8 @@
 package com.jlfex.hermes.common.cache;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
@@ -13,10 +11,6 @@ import com.whalin.MemCached.SockIOPool;
 
 /**
  * Memcached 实现
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-06
- * @since 1.0
  */
 public class MemcachedImpl implements Cache {
 

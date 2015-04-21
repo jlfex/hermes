@@ -1,15 +1,12 @@
 package com.jlfex.hermes.common.web;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
@@ -19,10 +16,6 @@ import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 网络应用信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-07
- * @since 1.0
  */
 public class WebApp extends App {
 
@@ -266,10 +259,6 @@ public class WebApp extends App {
 	
 	/**
 	 * 闪存作用域
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-07
-	 * @since 1.0
 	 */
 	public static final class Flash {
 		

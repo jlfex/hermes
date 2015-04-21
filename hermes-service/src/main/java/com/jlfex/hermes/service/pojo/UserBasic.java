@@ -542,10 +542,6 @@ public class UserBasic implements Serializable {
 
 	/**
 	 * 性别
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class Gender {
 
@@ -558,10 +554,6 @@ public class UserBasic implements Serializable {
 
 	/**
 	 * 婚姻状况
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class Married {
 
@@ -580,10 +572,6 @@ public class UserBasic implements Serializable {
 
 	/**
 	 * 证件类型
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-11-08
-	 * @since 1.0
 	 */
 	public static final class IdType {
 

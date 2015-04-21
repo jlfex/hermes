@@ -18,10 +18,6 @@ import com.jlfex.hermes.service.pojo.LoanStatusCount;
 
 /**
  * 索引控制器
- * 
- * @author ultrafrog
- * @version 1.0, 2014-01-17
- * @since 1.0
  */
 @Controller
 public class IndexController {

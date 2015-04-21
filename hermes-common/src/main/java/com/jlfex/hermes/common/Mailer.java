@@ -1,8 +1,6 @@
 package com.jlfex.hermes.common;
-
 import java.util.Date;
 import java.util.Properties;
-
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -16,16 +14,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 邮件寄送
- * 
- * @author ultrafrog
- * @version 1.0, 2013-12-23
- * @since 1.0
  */
 public class Mailer {
 
@@ -235,10 +228,6 @@ public class Mailer {
 	
 	/**
 	 * 认证器
-	 * 
-	 * @author ultrafrog
-	 * @version 1.0, 2013-12-23
-	 * @since 1.0
 	 */
 	public static class Authenticator extends javax.mail.Authenticator {
 		

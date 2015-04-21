@@ -2,10 +2,6 @@ package com.jlfex.hermes.common;
 
 /**
  * 调用信息
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-05
- * @since 1.0
  */
 public class Caller {
 

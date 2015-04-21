@@ -1,10 +1,7 @@
 package com.jlfex.hermes.common.support.freemarker;
-
 import java.io.IOException;
 import java.util.Map;
-
 import com.jlfex.hermes.common.App;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
@@ -14,10 +11,6 @@ import freemarker.template.TemplateModelException;
 
 /**
  * 国际化消息指令
- * 
- * @author ultrafrog
- * @version 1.0, 2013-11-14
- * @since 1.0
  */
 public class MessagesDirective implements TemplateDirectiveModel {
 
