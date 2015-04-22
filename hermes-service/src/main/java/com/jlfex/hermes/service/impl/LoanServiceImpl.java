@@ -1015,7 +1015,7 @@ public class LoanServiceImpl implements LoanService {
 		query.and("amount >= :startAmount", "startAmount", startAmount, startAmount != null);
 		query.and("amount <= :endAmount", "endAmount", endAmount, startAmount != null);
 		query.and("status in :statusList", "statusList", Arrays.asList(status), true);
-		query.order("datetime asc");
+		query.order("datetime desc");
 
 		Long total = commonRepository.count(query.getCount(), query.getParams());
 		List<Loan> loans = commonRepository.pageByJpql(query.getJpql(), query.getParams(), pageable.getOffset(), pageable.getPageSize(), Loan.class);
