@@ -33,6 +33,7 @@ h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 .header .top a:hover { text-decoration:underline; }
 .header .nav { height:70px; line-height:70px; background-color:#f1f1f1; box-shadow:0 1px 5px rgba(0,0,0,0.4); }
 .header .nav .logo { clear:left; float:left; }
+.header .nav .logo2 { font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 .header .nav .nav-list { clear:right; float:right; margin:0; padding:0; list-style-type:none; }
 .header .nav .nav-list li { clear:none; float:left; margin-left:20px; }
 .header .nav .nav-list li a { padding-left:20px; text-decoration:none; font-size:16px; color:#323232; }

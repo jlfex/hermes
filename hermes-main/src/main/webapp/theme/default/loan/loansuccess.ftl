@@ -8,6 +8,13 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
+<style type="text/css">
+.footer { 
+position:absolute;
+bottom: 0;
+width: 100%;
+clear:both;}
+</style>
 </head>
 
 <body>

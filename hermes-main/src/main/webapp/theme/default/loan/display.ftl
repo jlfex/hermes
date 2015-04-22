@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -99,20 +98,13 @@ jQuery(function($) {
 		$("form[name='loanDisplay']")[0].submit();  
 	});
 });
-
 </script>
 <style type="text/css">
   table th{text-align:center;}
-.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 </style>
 </head>
-
-</head>
-
 <body>
-
 <#include "/header.ftl" />
-
 <div id="content" class="content">
 <form id="loanDisplay" name="loanDisplay" action="${app}/loan/loanprogram" method="post">
 <input id="productSize" name="productSize" type="hidden" value="${productSize}"></input>
@@ -263,6 +255,7 @@ jQuery(function($) {
 </div>
 </form>
 </div>
+<br/>
 <#include "/footer.ftl" />
 </body>
 </form>

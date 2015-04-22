@@ -32,8 +32,14 @@ border-radius: 5px;}
 -moz-box-sizing: content-box;
 box-sizing: content-box;
 }
-.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 ._autoScroll{ word-wrap:break-word;}
+.footer {
+position:absolute;
+bottom: 0;
+width: 100%;
+clear:both;
+}
+
 </style>
 </head>
 
