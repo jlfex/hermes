@@ -15,7 +15,6 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style type="text/css">
-
 .content_template{width: 980px; margin:0 auto;position:relative;
 border: 2px solid #e2e2e2;
 height: auto;
@@ -27,28 +26,14 @@ border-radius: 5px;}
 .content_index .fl_right{ float: right;}
 .content_index p{ margin: 20px;}
 .tu_images{ text-align: center; margin: 20px 0;}
-*{
--webkit-box-sizing: content-box;
--moz-box-sizing: content-box;
-box-sizing: content-box;
-}
-  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+*{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
 .notice_title{ margin:0 auto;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
-.footer {
-position:absolute;
-bottom: 0;
-width: 100%;
-clear:both;
-}
-
+.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
-
 <body>
-
 <#include "/header.ftl" />
-
 <div class="sub_main" style="margin-top:133px;">
 	<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 		<div class="content_template">
@@ -59,8 +44,6 @@ clear:both;
 			</div>
 		</div>
 </div>
-
 <#include "/footer.ftl" />
-
 </body>
 </html>

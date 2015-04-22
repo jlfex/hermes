@@ -16,7 +16,6 @@
 .mr_10{margin-right:10px;}
 .low,.middle,.high{ width:60px; height:10px; display:inline-block; border:1px solid #e4e4e4;}
 .rank_bg{ background:#e68f07;}
-.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 .footer { position:absolute;bottom:0;width:100%;clear:both;}
 </style>
 <script type="text/javascript">

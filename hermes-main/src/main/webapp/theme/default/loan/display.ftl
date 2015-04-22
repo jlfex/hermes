@@ -98,20 +98,13 @@ jQuery(function($) {
 		$("form[name='loanDisplay']")[0].submit();  
 	});
 });
-
 </script>
 <style type="text/css">
   table th{text-align:center;}
-.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
 </style>
 </head>
-
-</head>
-
 <body>
-
 <#include "/header.ftl" />
-
 <div id="content" class="content">
 <form id="loanDisplay" name="loanDisplay" action="${app}/loan/loanprogram" method="post">
 <input id="productSize" name="productSize" type="hidden" value="${productSize}"></input>
@@ -262,6 +255,7 @@ jQuery(function($) {
 </div>
 </form>
 </div>
+<br/>
 <#include "/footer.ftl" />
 </body>
 </form>

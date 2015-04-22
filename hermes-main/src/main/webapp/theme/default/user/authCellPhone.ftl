@@ -27,6 +27,7 @@
 .jy_nobg_notb .jy_info .jy_tel+a{font-size: 16px; text-decoration: underline; color: #018dc8; display: inline-block; margin-left: 166px;} 
 .jy_nobg_notb .jy_btnlist{margin-left:83px;}
 .jy_nobg_notb .jy_btnlist .m_btn3{margin: 14px 20px;height:30px;width:90px;}
+.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
 <body>

@@ -15,8 +15,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/email.js"></script>
 <style type="text/css">
-  table th{text-align:center;}
-.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
+table th{text-align:center;}
 </style>
 <script type="text/javascript">
 $(function(){
@@ -25,9 +24,7 @@ $(function(){
 </script>
 </head>
 <body class="index">
-
 <#include "/header.ftl" />
-
 <div id="content" class="content">
 	<!-- banner & signin -->
 	<div class="banner">	

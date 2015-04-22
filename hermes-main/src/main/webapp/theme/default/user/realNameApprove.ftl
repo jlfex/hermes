@@ -28,16 +28,12 @@
 .jy_nobg_notb .jy_btnlist{margin-left:83px;}
 .jy_nobg_notb .jy_btnlist .m_btn3{margin: 14px 20px;height:30px;width:90px;}
 </style>
-
-
 </head>
-
 <body>
 <#include "/header.ftl" />
 
-
 <!-- middle start-->
-<div class="m_con m_fp m_fp2">
+<div class="m_con m_fp m_fp2" style="min-height:500px;">
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
@@ -84,7 +80,7 @@
 	</div>
 	<div class="m_tip_text"></div>
 </div>
-
+<br/><br/>
 
 <!-- foot start-->
 <#include "/footer.ftl" />
