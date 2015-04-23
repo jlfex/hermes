@@ -160,6 +160,8 @@ public final class HermesConstants {
 	/**
 	 * 中金账户类型,个人
 	 */
-	public static final int CFCA_ACCOUNT_TYPE = 11;
+	public static final int ZJ_ACCOUNT_TYPE = 11;
+	public static final int ZJ_ACCOUNT_TYPE_12 = 12;
+	public static final int ZJ_ACCOUNT_TYPE_20 = 20;
 
 }

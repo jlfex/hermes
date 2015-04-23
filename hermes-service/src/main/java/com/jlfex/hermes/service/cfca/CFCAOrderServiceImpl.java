@@ -133,7 +133,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 		tx1361Request.setAccountNumber(bankAccount.getAccount());
 		tx1361Request.setBranchName(bankAccount.getDeposit());
 		tx1361Request.setProvince(bankAccount.getCity().getName());
-		tx1361Request.setAccountType(HermesConstants.CFCA_ACCOUNT_TYPE);
+		tx1361Request.setAccountType(HermesConstants.ZJ_ACCOUNT_TYPE);
 		tx1361Request.setCity(bankAccount.getCity().getName());
 		tx1361Request.setPhoneNumber(investUser.getCellphone());
 		tx1361Request.setEmail(investUser.getEmail());
