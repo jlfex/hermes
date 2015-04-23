@@ -169,7 +169,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	 * 1341-市场订单结算： 创建请求
 	 */
 	@Override
-	public Tx1341Request buildTx1341Request(User investUser,BigDecimal withdrawAmount, BigDecimal fee) {
+	public Tx1341Request buildTx1341Request(User investUser,BigDecimal withdrawAmount) {
 		BankAccount  userbankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
         Tx1341Request tx1341Request = new Tx1341Request();
         tx1341Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);

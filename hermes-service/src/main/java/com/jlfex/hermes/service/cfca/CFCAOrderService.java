@@ -90,13 +90,13 @@ public interface CFCAOrderService {
 	 * @param fee            提现手续费
 	 * @return
 	 */
-	Tx1341Request buildTx1341Request(User investUser, BigDecimal withdrawAmount, BigDecimal fee);
+	public Tx1341Request buildTx1341Request(User investUser, BigDecimal withdrawAmount);
     /**
      * 1341结算：调用结算接口
      * @param request
      * @return
      */
-	Tx134xResponse invokeTx1341(Tx1341Request request) throws Exception;
+	public Tx134xResponse invokeTx1341(Tx1341Request request) throws Exception;
     /**
      * 1341结算：订单保存
      * @param response
@@ -107,7 +107,7 @@ public interface CFCAOrderService {
      * @param type
      * @return
      */
-	CFCAOrder genClearOrder(Tx134xResponse response, User investUser, BigDecimal investAmount, BigDecimal fee, String txSN, String type);
+	public CFCAOrder genClearOrder(Tx134xResponse response, User investUser, BigDecimal investAmount, BigDecimal fee, String txSN, String type);
 
 	/**
 	 * 1350结算：结果查询
@@ -116,5 +116,5 @@ public interface CFCAOrderService {
 	 * @return
 	 * @throws Exception
 	 */
-	Tx1350Response invokeTx1350Request(String serialNumber) throws Exception;
+	public Tx1350Response invokeTx1350Request(String serialNumber) throws Exception;
 }

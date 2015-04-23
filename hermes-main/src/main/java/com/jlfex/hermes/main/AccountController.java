@@ -41,6 +41,7 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.Withdraw;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.service.AreaService;
 import com.jlfex.hermes.service.AuthService;
@@ -94,7 +95,7 @@ public class AccountController {
 	private CFCAOrderService cFCAOrderService;
 	@Autowired
 	private UserAccountService userAccountService;
-
+	
 	/**
 	 * 索引
 	 * 
@@ -387,7 +388,7 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/withdraw/add")
-	public String addWithdraw(String bankAccountId, BigDecimal amount,BigDecimal amountFee, Model model) {
+	public String addWithdraw(String bankAccountId, BigDecimal amount, Model model) {
 		// 初始化
 		App.checkUser();
 		Result<String> result = new Result<String>();
@@ -403,14 +404,14 @@ public class AccountController {
 			   throw new Exception("当前现金余额不足");
 			}
 			//接入中金提现结算
-			BigDecimal zjClearAmount = new BigDecimal(amount.toString()).multiply(new BigDecimal("100")); //分为单位
-			Tx1341Request request = cFCAOrderService.buildTx1341Request(investUser,zjClearAmount, BigDecimal.ZERO);
+			BigDecimal zjClearAmount = amount.multiply(new BigDecimal("100")); //分为单位
+			Tx1341Request request = cFCAOrderService.buildTx1341Request(investUser,zjClearAmount);
 			Tx134xResponse tx1341Response =  cFCAOrderService.invokeTx1341(request);
 			if(HermesConstants.CFCA_SUCCESS_CODE.equals(tx1341Response.getCode())){
 				//资金冻结
-				bankAccountService.addWithdraw(bankAccountId, amount);
+				Withdraw withDraw = bankAccountService.addWithdraw(bankAccountId, amount);
 				//保存订单
-				cFCAOrderService.genClearOrder(tx1341Response,investUser,new BigDecimal(amount.toString()),BigDecimal.ZERO, request.getSerialNumber(),CFCAOrder.Type.CLEAR);
+				cFCAOrderService.genClearOrder(tx1341Response,investUser,amount, withDraw.getFee(), request.getSerialNumber(),CFCAOrder.Type.CLEAR);
 			}else{
 				throw new  Exception("中金结算接口异常：接口响应码="+tx1341Response.getCode());
 			}

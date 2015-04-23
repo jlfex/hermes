@@ -33,7 +33,6 @@
 				<label for="fee" class="col-xs-2 u-col control-label"><@messages key="account.fund.withdraw.fee" /></label>
 				<div class="col-xs-3 u-col">
 					<p class="form-control-static"><span id="fee">0.00&nbsp;<@messages key="common.unit.cny" /></span> <a id="info" href="#"><i class="fa fa-info-circle"></i></a></p>
-				    <input id="amountFee" name="amountFee" type="hidden" readonly="true" >
 				</div>
 			</div>
 			<div class="form-group">
@@ -89,7 +88,6 @@ jQuery(function($) {
 				if (data.typeName === 'success') {
 					_fee.html(data.messages[0] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
 					_sum.html(data.messages[1] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
-					$("#amountFee").val(data.messages[0]);
 				} else {
 					_fee.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
 					_sum.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
