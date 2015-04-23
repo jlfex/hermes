@@ -36,12 +36,10 @@ box-sizing: content-box;
 ._autoScroll{ word-wrap:break-word;}
 </style>
 </head>
-
 <body>
-
 <#include "/header.ftl" />
-
-<div class="sub_main" style="margin-top:133px;">
+<div id="content">
+<div class="sub_main" style="margin-top:180px;">
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
@@ -73,7 +71,7 @@ box-sizing: content-box;
 		<div class="clearfix"></div>
 	</div>
 </div>
-
+</div>
 <#include "/footer.ftl" />
 
 </body>

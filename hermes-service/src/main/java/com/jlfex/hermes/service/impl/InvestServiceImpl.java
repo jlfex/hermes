@@ -967,7 +967,7 @@ public class InvestServiceImpl implements InvestService {
 		Loan loan = loanRepository.findOne(loanId);
 		Tx1361Response response = null;
 		Invest invest = null;
-		String txSN = cFCAOrderService.genOrderTxSN();
+		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		// 请求日志
 		Map<String, String> recodeMap = new HashMap<String, String>();
 		ApiLog apiLog = null;
@@ -977,7 +977,7 @@ public class InvestServiceImpl implements InvestService {
 				UserProperties userProperties = userPropertiesRepository.findByUser(investUser);
 				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
 
-				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, txSN);
+				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, serialNo);
 				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 				response = thirdPPService.invokeTx1361(tx1361Request);
 				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
@@ -1024,7 +1024,7 @@ public class InvestServiceImpl implements InvestService {
 					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.ZHONGJIN_FEE, addAmount, invest.getId(), Transaction.Status.RECHARGE_FAIL);
 					loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 				}
-				cFCAOrderService.genCFCAOrder(response, invest, investAmount, txSN, CFCAOrder.Type.BID);
+				cFCAOrderService.genCFCAOrder(response, invest, investAmount, serialNo, CFCAOrder.Type.BID);
 			} else {
 				String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
 				Logger.info(var);

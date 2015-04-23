@@ -2,6 +2,9 @@ package com.jlfex.hermes.service.cfca;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import cfca.payment.api.tx.Tx1341Request;
+import cfca.payment.api.tx.Tx134xResponse;
+import cfca.payment.api.tx.Tx1350Response;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
 import com.jlfex.hermes.model.ApiLog;
@@ -18,8 +21,18 @@ import com.jlfex.hermes.model.cfca.CFCAOrder;
  *
  */
 public interface CFCAOrderService {
-	public String genOrderTxSN();
 
+	/**
+	 * 生成请求流水 
+	 * @param type
+	 * @return
+	 */
+	public String genSerialNo(String type);
+    /**
+     * 记录日志
+     * @param map
+     * @return
+     */
 	public ApiLog recordApiLog(Map<String, String> map);
 
 	/**
@@ -36,7 +49,7 @@ public interface CFCAOrderService {
 	 *            订单流水
 	 * @return
 	 */
-	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String txSn);
+	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties,String serialNo);
 
 	/**
 	 * 生成中金订单
@@ -69,4 +82,39 @@ public interface CFCAOrderService {
 	 *            类型：01，投标，00充值
 	 */
 	public CFCAOrder genCFCAOrder(Tx1361Response response, User user, BigDecimal investAmount, String txSN, String type, BigDecimal fee);
+	
+	/**
+	 * 1341结算： 创建请求
+	 * @param investUser     提现人
+	 * @param withdrawAmount 提现金额
+	 * @param fee            提现手续费
+	 * @return
+	 */
+	Tx1341Request buildTx1341Request(User investUser, BigDecimal withdrawAmount, BigDecimal fee);
+    /**
+     * 1341结算：调用结算接口
+     * @param request
+     * @return
+     */
+	Tx134xResponse invokeTx1341(Tx1341Request request) throws Exception;
+    /**
+     * 1341结算：订单保存
+     * @param response
+     * @param invest
+     * @param investAmount
+     * @param fee
+     * @param txSN
+     * @param type
+     * @return
+     */
+	CFCAOrder genClearOrder(Tx134xResponse response, User investUser, BigDecimal investAmount, BigDecimal fee, String txSN, String type);
+
+	/**
+	 * 1350结算：结果查询
+	 * @param institutionID
+	 * @param serialNumber
+	 * @return
+	 * @throws Exception
+	 */
+	Tx1350Response invokeTx1350Request(String serialNumber) throws Exception;
 }

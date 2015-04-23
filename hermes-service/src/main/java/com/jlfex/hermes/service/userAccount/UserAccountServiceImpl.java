@@ -1,9 +1,9 @@
 package com.jlfex.hermes.service.userAccount;
 
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.repository.UserAccountRepository;
@@ -43,6 +43,17 @@ public class UserAccountServiceImpl implements  UserAccountService {
 	@Override
 	public UserAccount findByUserAndType(User user, String type) {
 		return userAccountRepository.findByUserAndType(user, type);
+	}
+    /**
+     * 判断用户现金账户余额是否 大于amount
+     */
+	@Override
+	public boolean checkEnoughCash(User user, String type, BigDecimal amount) throws Exception {
+		UserAccount userAccount = userAccountRepository.findByUserAndType(user, type);
+		if(userAccount!=null && userAccount.getBalance().compareTo(amount) >= 0){
+			return true;
+		}
+		return false;
 	}
 	
 	

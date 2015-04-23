@@ -118,8 +118,7 @@
 		</property>
 		<property name="cronExpression" value="0 0/2 * * * ?" />
 	</bean>
-	
-		<!-- 充值接口 执行时间：每隔2分钟执行一次 -->
+	<!-- 充值接口 执行时间：每隔2分钟执行一次 -->
 	<bean id="autoChargeQueryJobTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
@@ -129,5 +128,16 @@
 			</bean>
 		</property>
 		<property name="cronExpression" value="0 0/1 * * * ?" />
+	</bean>
+    <!-- 结算接口 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
+	<bean id="scanZJClearOrderJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="scanZJClearOrderJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 0/5 10-18 * * ?" />
 	</bean>
 </beans>

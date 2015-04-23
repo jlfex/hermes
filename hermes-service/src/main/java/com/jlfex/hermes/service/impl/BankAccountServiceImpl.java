@@ -246,29 +246,26 @@ public class BankAccountServiceImpl implements BankAccountService {
 	 * java.lang.Double)
 	 */
 	@Override
-	public Withdraw addWithdraw(String bankAccountId, Double amount) {
+	public Withdraw addWithdraw(String bankAccountId, BigDecimal amount) {
 		// 验证数据
 		Assert.notEmpty(bankAccountId, "bank account id is empty.", "account.fund.withdraw.failure.bankaccount");
 		Assert.notNull(amount, "amount is null.", "account.fund.withdraw.failure.amount");
-
 		// 初始化并加载数据项
 		Withdraw withdraw = new Withdraw();
 		BankAccount bankAccount = bankAccountRepository.findOne(bankAccountId);
 		User user = userRepository.findOne(App.user().getId());
 		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
-
 		// 设置数据并保存数据
 		withdraw.setUser(user);
 		withdraw.setBankAccount(bankAccount);
 		withdraw.setDatetime(new Date());
-		withdraw.setAmount(Numbers.currency(amount));
+		withdraw.setAmount(amount);
 		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(PROP_WITHDRAW_FEE_CONFIG)));
 		withdraw.setStatus(Withdraw.Status.WAIT);
 		withdrawRepository.save(withdraw);
-
-		// 冻结金额
-		transactionService.freeze(Transaction.Type.FREEZE, user, withdraw.getAmount().add(withdraw.getFee()), withdraw.getId(), App.message("transaction.withdraw.freeze"));
-
+		// 冻结  手续费 + 金额
+		transactionService.freeze(Transaction.Type.FREEZE, user, withdraw.getFee(), withdraw.getId(), "提现手续费冻结");
+		transactionService.freeze(Transaction.Type.FREEZE, user, withdraw.getAmount(), withdraw.getId(), App.message("transaction.withdraw.freeze"));
 		// 返回结果
 		return withdraw;
 	}
@@ -302,15 +299,15 @@ public class BankAccountServiceImpl implements BankAccountService {
 		// 请求日志
 		Map<String, String> recodeMap = new HashMap<String, String>();
 		Tx1361Response response = null;
-		String txSN = cFCAOrderService.genOrderTxSN();
+		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		CFCAOrder cfcaOrder = null;
 		try {
-			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, txSN);
+			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, serialNo);
 			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
-			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, txSN, CFCAOrder.Type.RECHARGE, fee);
+			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
 			investService.saveUserLog(user);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {

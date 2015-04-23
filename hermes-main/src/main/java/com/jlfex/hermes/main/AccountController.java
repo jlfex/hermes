@@ -2,22 +2,30 @@ package com.jlfex.hermes.main;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import cfca.payment.api.tx.Tx1341Request;
+import cfca.payment.api.tx.Tx134xResponse;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.cache.Caches;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
@@ -33,6 +41,7 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.service.AreaService;
 import com.jlfex.hermes.service.AuthService;
 import com.jlfex.hermes.service.BankAccountService;
@@ -42,6 +51,7 @@ import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.cfca.CFCAOrderService;
+import com.jlfex.hermes.service.userAccount.UserAccountService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
@@ -82,6 +92,8 @@ public class AccountController {
 	private AuthService authService;
 	@Autowired
 	private CFCAOrderService cFCAOrderService;
+	@Autowired
+	private UserAccountService userAccountService;
 
 	/**
 	 * 索引
@@ -192,7 +204,6 @@ public class AccountController {
 
 	/**
 	 * 资金明细
-	 * 
 	 * @param model
 	 * @return
 	 */
@@ -376,16 +387,35 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping("/withdraw/add")
-	public String addWithdraw(String bankAccountId, Double amount, Model model) {
+	public String addWithdraw(String bankAccountId, BigDecimal amount,BigDecimal amountFee, Model model) {
 		// 初始化
 		App.checkUser();
 		Result<String> result = new Result<String>();
-
 		// 保存数据
 		try {
-			bankAccountService.addWithdraw(bankAccountId, amount);
+			if(amount == null || amount.compareTo(BigDecimal.ZERO) < 1){
+				throw new Exception("提现金额为空");
+			}
+			amount = amount.setScale(2, RoundingMode.HALF_EVEN);
+			User investUser = userService.loadById( App.user().getId());
+			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, amount);
+			if(!enoughFlag){
+			   throw new Exception("当前现金余额不足");
+			}
+			//接入中金提现结算
+			BigDecimal zjClearAmount = new BigDecimal(amount.toString()).multiply(new BigDecimal("100")); //分为单位
+			Tx1341Request request = cFCAOrderService.buildTx1341Request(investUser,zjClearAmount, BigDecimal.ZERO);
+			Tx134xResponse tx1341Response =  cFCAOrderService.invokeTx1341(request);
+			if(HermesConstants.CFCA_SUCCESS_CODE.equals(tx1341Response.getCode())){
+				//资金冻结
+				bankAccountService.addWithdraw(bankAccountId, amount);
+				//保存订单
+				cFCAOrderService.genClearOrder(tx1341Response,investUser,new BigDecimal(amount.toString()),BigDecimal.ZERO, request.getSerialNumber(),CFCAOrder.Type.CLEAR);
+			}else{
+				throw new  Exception("中金结算接口异常：接口响应码="+tx1341Response.getCode());
+			}
 			result.setType(Result.Type.SUCCESS);
-			result.addMessage(App.message("account.fund.withdraw.success"));
+			result.addMessage("正在处理中，请稍候...");
 		} catch (ServiceException e) {
 			result.setType(Result.Type.FAILURE);
 			result.setData(e.getCode());
@@ -395,7 +425,7 @@ public class AccountController {
 			ServiceException se = new ServiceException(e.getMessage(), e);
 			result.setType(Result.Type.FAILURE);
 			result.setData(se.getCode());
-			result.addMessage(App.message(se.getKey()));
+			result.addMessage(e.getMessage());
 			Logger.error(se.getMessage(), se);
 		}
 		// 渲染视图
@@ -477,7 +507,14 @@ public class AccountController {
 		
 		return result;
 	}
-	
+	/**
+	 * 充值结果
+	 * @param message
+	 * @param type
+	 * @param amount
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/charge/chargeResult")
 	public String chargeResult(String message, String type,BigDecimal amount, Model model) {
 		App.checkUser();
@@ -490,8 +527,7 @@ public class AccountController {
 		} else {
 			model.addAttribute("type", "ico7.png");
 		}
-
-		
 		return "account/chargeResult";
 	}
+	
 }

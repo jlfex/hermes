@@ -33,6 +33,7 @@
 				<label for="fee" class="col-xs-2 u-col control-label"><@messages key="account.fund.withdraw.fee" /></label>
 				<div class="col-xs-3 u-col">
 					<p class="form-control-static"><span id="fee">0.00&nbsp;<@messages key="common.unit.cny" /></span> <a id="info" href="#"><i class="fa fa-info-circle"></i></a></p>
+				    <input id="amountFee" name="amountFee" type="hidden" readonly="true" >
 				</div>
 			</div>
 			<div class="form-group">
@@ -58,7 +59,7 @@ jQuery(function($) {
 	// 格式化数字
 	$('#balance, #fee, #sum').formatNumber();
 	
-	// 缁戝畾娣诲姞閾惰甯愬彿鍔熻兘
+	// 
 	$('#addBankAccount').on('click', function() {
 		var _elem = $(this);
 		$.ajax('${app}/account/bank-account/form', {
@@ -72,21 +73,13 @@ jQuery(function($) {
 		});
 	});
 	
-	// 璁＄畻鎻愮幇璐圭敤
 	$('#amount').on('blur', function() {
-		// 鍒濆鍖�
 		var _elem = $(this),
 			_fee = $('#fee'),
 			_sum = $('#sum');
-		
-		// 鍒ゆ柇杈撳叆鏄惁鏈夋晥
 		if (_elem.val() === '') return;
-		
-		// 鍔犺浇鍥炬爣
 		_fee.html('<i class="fa fa-spinner fa-spin"></i>');
 		_sum.html('<i class="fa fa-spinner fa-spin"></i>');
-		
-		// 寮傛鍔犺浇
 		$.ajax('${app}/account/withdraw/calc', {
 			data: { amount: _elem.val() },
 			type: 'post',
@@ -96,6 +89,7 @@ jQuery(function($) {
 				if (data.typeName === 'success') {
 					_fee.html(data.messages[0] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
 					_sum.html(data.messages[1] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
+					$("#amountFee").val(data.messages[0]);
 				} else {
 					_fee.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
 					_sum.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');

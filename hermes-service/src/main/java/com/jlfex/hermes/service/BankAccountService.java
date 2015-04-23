@@ -92,7 +92,7 @@ public interface BankAccountService {
 	 * @param amount
 	 * @return
 	 */
-	public Withdraw addWithdraw(String bankAccountId, Double amount);
+	public Withdraw addWithdraw(String bankAccountId, BigDecimal amount);
 	
 	public BankAccount findOneByUserIdAndStatus(String userId,String status);
 	

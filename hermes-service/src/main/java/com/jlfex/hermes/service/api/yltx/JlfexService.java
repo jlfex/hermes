@@ -103,6 +103,8 @@ public interface JlfexService {
 	 * @throws Exception
 	 */
 	public boolean updateFinishedFinance(FinanceOrder obj) throws Exception;
+
+	String generateSerialNo() throws Exception;
 	
 
 }
