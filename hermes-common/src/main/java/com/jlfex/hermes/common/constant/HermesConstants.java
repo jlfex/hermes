@@ -156,5 +156,12 @@ public final class HermesConstants {
 	 * 中金机构号
 	 */
 	public static final String CFCA_INSTITUTION_ID = "001155";
+	
+	/**
+	 * 中金账户类型,个人
+	 */
+	public static final int ZJ_ACCOUNT_TYPE_11 = 11;
+	public static final int ZJ_ACCOUNT_TYPE_12 = 12;
+	public static final int ZJ_ACCOUNT_TYPE_20 = 20;
 
 }
