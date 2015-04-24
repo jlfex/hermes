@@ -11,4 +11,10 @@ import com.jlfex.hermes.model.Withdraw;
 @Repository
 public interface WithdrawRepository extends JpaRepository<Withdraw, String>, JpaSpecificationExecutor<Withdraw> {
 
+	/**
+	 * 根据流水号 查询提现记录
+	 * @param serialNo
+	 * @return
+	 */
+	Withdraw  findBySerialNo(String serialNo);
 }

@@ -28,6 +28,12 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, String
 	 * @return
 	 */
 	public List<BankAccount> findByUserId(String userId);
+	/**
+	 * 根据用户和状态 获取绑卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
 	public BankAccount findOneByUserIdAndStatus(String userId,String status);
 
 }

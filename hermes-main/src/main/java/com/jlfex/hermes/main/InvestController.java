@@ -970,11 +970,9 @@ public class InvestController {
 		}
 		try {
 			Map<String, String> bidResult = investService.bid2Pay(loanId, user, new BigDecimal(investAmount.replace(",", "")), otherRepay);
-
 			if (Tx1361Status.WITHHOLDING_SUCC.getStatus().toString().equals(bidResult.get("code"))) {
 				result.setType(Type.SUCCESS);
 				result.addMessage(0, bidResult.get("msg"));
-
 			} else if (Tx1361Status.WITHHOLDING_FAIL.getStatus().toString().equals(bidResult.get("code"))) {
 				result.setType(Type.FAILURE);
 				result.addMessage(0, bidResult.get("msg"));
