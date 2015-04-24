@@ -46,6 +46,9 @@
 						$.link.json(elem, $.extend({}, opts, {
 							data: {id: opts.id},
 							success: function(elem, data) {
+								var p = $(elem.parent());
+								var n = p.nextAll();
+								n.remove();
 								$.each(data, function() {
 									var _span = $('<span />').text(this.name),
 										_i = $('<i />').addClass('pull-right fa fa-caret-right'),

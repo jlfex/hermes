@@ -1,12 +1,12 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-			<th width="40%"><@messages key="model.withdraw.name" /></th>
-			<th width="10%" class="align-right"><@messages key="model.withdraw.amount" /></th>
-			<th width="10%" class="align-right"><@messages key="model.withdraw.fee" /></th>
+			<th width="20%"><@messages key="model.withdraw.name" /></th>
+			<th width="10%" ><@messages key="model.withdraw.amount" /></th>
+			<th width="10%" ><@messages key="model.withdraw.fee" /></th>
 			<th width="20%"><@messages key="model.withdraw.datetime" /></th>
-			<th width="10%"><@messages key="model.withdraw.status" /></th>
-			<th width="10%" class="align-center">&nbsp;</th>
+			<th width="20%"><@messages key="model.withdraw.status" /></th>
+			<th width="20%">提现流水号</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,11 +18,11 @@
 		<#list withdraw.content as wd>
 		<tr>
 			<td>${wd.bankAccount.name!''}</td>
-			<td class="align-right">${wd.formatAmount}</td>
-			<td class="align-right">${wd.formatFee}</td>
+			<td >${wd.formatAmount}</td>
+			<td >${wd.formatFee}</td>
 			<td>${wd.formatDatetime}</td>
 			<td>${wd.statusName}</td>
-			<td class="align-center"><a href="#" data-url="${app}/withdraw/detail/${wd.id}" data-target="data"><@messages key="common.op.deal" /></a></td>
+			<td>${wd.serialNo!""}</td>
 		</tr>
 		</#list>
 		</#if>

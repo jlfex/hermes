@@ -452,7 +452,7 @@ public class LoanController {
 		model.addAttribute("user", userPropertiesRepository.findByUserId(curUser.getId()));
 		model.addAttribute("nowDate", Calendars.date());
 		model.addAttribute("bankAccount", bankAccount);
-		model.addAttribute("city", city);
+		model.addAttribute("city", city);  
 		model.addAttribute("province", province);
 		return "agree/payEntrustProtocol";
 	}

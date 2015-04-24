@@ -1,5 +1,7 @@
 package com.jlfex.hermes.service.userAccount;
 
+import java.math.BigDecimal;
+
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 
@@ -29,4 +31,14 @@ public interface UserAccountService {
 	 * @return
 	 */
 	public UserAccount findByUserAndType(User user, String type);
+	
+	/**
+	 * 判断用户现金账户余额是否 大于amount
+	 * @param user
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean  checkEnoughCash(User user, String type, BigDecimal amount) throws Exception;
+	
 }

@@ -42,12 +42,9 @@ clear:both;
 
 </style>
 </head>
-
 <body>
-
 <#include "/header.ftl" />
-
-<div class="sub_main" style="margin-top:133px;">
+<div class="sub_main" style="margin-top:180px;">
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
@@ -79,7 +76,6 @@ clear:both;
 		<div class="clearfix"></div>
 	</div>
 </div>
-
 <#include "/footer.ftl" />
 
 </body>

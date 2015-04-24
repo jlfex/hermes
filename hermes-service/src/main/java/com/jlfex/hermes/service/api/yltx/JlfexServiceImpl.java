@@ -24,6 +24,7 @@ import com.jlfex.hermes.common.utils.Bean2Map;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.CollectionUtil;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.common.utils.Strings.StringSet;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.CreditRepayPlan;
@@ -134,7 +135,6 @@ public class JlfexServiceImpl implements JlfexService {
 	private  UserAccountRepository userAccountRepository;
 	//接口配置
 	public static ApiConfig  apiConfig = null;
-	
 	
 	@Override
 	public String queryFinanceOrder(String financeProductStatus,String createDate, int pageSize, int pageNum) throws Exception {
@@ -1175,5 +1175,8 @@ public class JlfexServiceImpl implements JlfexService {
 			return null;
 		}
 	}
-
+	@Override
+	public synchronized String generateSerialNo() throws Exception {
+		return Calendars.format("yyMMddHHmmss")+Strings.random(9, StringSet.NUMERIC);
+	}
 }

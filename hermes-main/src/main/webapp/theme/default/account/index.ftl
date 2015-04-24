@@ -8,7 +8,6 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/temp.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="shortcut icon" href="${app.theme}/public/images/smallIcon.png">
 <link rel="apple-touch-icon-precomposed" href="${app.theme}/public/images/bigIcon.png">
@@ -81,6 +80,12 @@ $('#accountMenu a').link().on('click', function() {
 		$(this).parent().singleClass('active', {container: $('#accountMenu')});
 	}).filter('.${type!'user'}').trigger('click');
 });
+$('#accountMenu li').click(function() {
+	var activeli = $(".active");
+	activeli.removeClass("active");
+	$(this).addClass('active');
+});
+
 //-->
 </script>
 

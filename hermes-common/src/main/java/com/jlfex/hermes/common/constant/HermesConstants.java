@@ -12,7 +12,7 @@ public final class HermesConstants {
 	 * 平台管理
 	 */
 	public static final String PLAT_MANAGER = "admin";
-	public static final String PRE_HERMES = "HERMES"; // 下单并支付接口 订单流水号前缀
+	public static final String PRE_HERMES =   "HERMES"; //下单并支付接口 订单流水号前缀
 	public static final String CROP_USER_ID = "crop";
 	/**
 	 * HTTPS 连接常量
@@ -84,11 +84,6 @@ public final class HermesConstants {
 	public static final String TYPE_ASSET_REPAY_PLAN = "2"; // 资产还款计划
 	public static final String TYPE_ORDER_REPAY_PLAN = "3"; // 订单还款计划
 
-	// 中金接口
-	/**
-	 * 单笔代收
-	 */
-	public static final String ZJ_INTERFACE_TX1361 = "Tx1361";
 
 	/**
 	 * 订单状态
@@ -142,6 +137,13 @@ public final class HermesConstants {
 	public static final String YLTX_CREDIT = "外部债权标";
 	public static final String PROVINCE_SUFFIX = "市";
 
+	
+	/**
+	 * 中金接口
+	 */
+	public static final String ZJ_INTERFACE_TX1361 = "1361-市场订单代扣";
+	public static final String ZJ_INTERFACE_TX1341 = "1341-市场订单结算";
+	public static final String ZJ_INTERFACE_TX1350 = "1350-市场订单结算查询";
 	/**
 	 * 中金支付代表成功返回的代码
 	 */
@@ -156,5 +158,18 @@ public final class HermesConstants {
 	 * 中金机构号
 	 */
 	public static final String CFCA_INSTITUTION_ID = "001155";
+	//账户类型
+	public static final int ZJ_ACCOUNT_TYPE_11 = 11; //个人账户
+	public static final int ZJ_ACCOUNT_TYPE_12 = 12; //企业账户
+	public static final int ZJ_ACCOUNT_TYPE_20 = 20; //支付平台内部账户
+	
+	//中金代扣请求流水号前缀
+	public static final String  PRE_IN = "IN";
+	//中金清算请求流水号前缀
+	public static final String  PRE_OUT = "OUT";
+	public static final String  CLEAR_NOTE = "测试市场订单结算";
+	
+	
+
 
 }

@@ -2,9 +2,7 @@ package com.jlfex.hermes.service.cfca;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.Logger;
-
 import cfca.payment.api.system.TxMessenger;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;

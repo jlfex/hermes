@@ -197,5 +197,39 @@ public class CFCAOrder extends Model {
 
 		@Element("投标")
 		public static final String BID = "01";
+		
+		@Element("结算")
+		public static final String CLEAR = "02";
 	}
+	
+	/**
+	 * 订单清算状态
+	 * @author Administrator
+	 *
+	 */
+	public static final class ClearStatus {
+		@Element("订单生成")  
+		public static final int CLEAR_INIT = 0;
+		@Element("已经受理")  
+		public static final int CLEAR_RECEIVE = 10;
+		@Element("正在结算")
+		public static final int CLEAR_DOING = 30;
+		@Element("已经执行")
+		public static final int CLEAR_FINISH = 40;
+	}
+	
+	/**
+	 * 订单代扣状态
+	 * @author Administrator
+	 *
+	 */ 
+	public static final class BuckleStatus {
+		@Element("正在处理")  
+		public static final int BUCKLE_RECEIVE = 20;
+		@Element("代扣成功")
+		public static final int BUCKLE_SUC = 30;
+		@Element("代扣失败")
+		public static final int BUCKLE_FAIL = 40;
+	}
+	
 }

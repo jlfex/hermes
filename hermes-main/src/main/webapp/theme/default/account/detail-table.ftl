@@ -18,8 +18,8 @@
 		<tr>
 			<td>${tx.datetime?string('yyyy-MM-dd HH:mm:ss')}</td>
 			<td>${tx.typeName}</td>
-			<td class="right in" data-type="${tx.type}"><#if tx.amount gt 0>${tx.amount?string('#,##0.00')}<#else>-</#if></td>
-			<td class="right out" data-type="${tx.type}"><#if tx.amount lt 0>${tx.amount?string('#,##0.00')}<#else>-</#if></td>
+			<td class="right in" data-type="${tx.type}"><#if (tx.amount > 0)>${tx.amount?string('#,##0.00')}<#else>-</#if></td>
+			<td class="right out" data-type="${tx.type}"><#if (tx.amount <= 0)>${tx.amount?string('#,##0.00')}<#else>-</#if></td>
 			<td>${tx.remark!'-'}</td>
 		</tr>
 		</#list>
@@ -31,7 +31,7 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
-	// ´¦Àí½ğ¶î
+	// å¤„ç†é‡‘é¢
 	$('table .right').addClass(function() {
 		if ($(this).data().type == '${freeze}') {
 			return 'gray';
@@ -40,9 +40,9 @@ jQuery(function($) {
 		}
 	}).formatNumber();
 	
-	// ´¦Àí·ÖÒ³
+	// å¤„ç†åˆ†é¡µ
 	$('.pagination').each(function() {
-		// ³õÊ¼»¯
+		// åˆå§‹åŒ–
 		var _elem = $(this).empty(),
 			_opts = $.extend({}, _elem.data()),
 			_number = _opts.number,
@@ -51,13 +51,13 @@ jQuery(function($) {
 			_end = ((_number + 3) > _pages) ? _pages : (_number + 3),
 			_tag = $('<li />').append($('<a />').attr('href', '#'));
 			
-		// µ±¿ªÊ¼Ò³Âë´óÓÚÊ×Ò³Ê±²¹³äÊ×Ò³Ò³Âë
+		// å½“å¼€å§‹é¡µç å¤§äºé¦–é¡µæ—¶è¡¥å……é¦–é¡µé¡µç 
 		if (_begin > 0) {
 			_tag.clone().appendTo(_elem).find('a').attr('data-page', 0).text(1);
 			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
 		}
 		
-		// Õı³£Ñ­»·Éú³ÉÒ³Âë
+		// æ­£å¸¸å¾ªç¯ç”Ÿæˆé¡µç 
 		for (var _idx = _begin; _idx <= _end; _idx++) {
 			if (_idx === _number) {
 				_tag.clone().appendTo(_elem).addClass('active').find('a').text(_idx + 1);
@@ -66,13 +66,13 @@ jQuery(function($) {
 			}
 		}
 		
-		// µ±½áÊøÒ³ÂëĞ¡ÓÚ×ÜÒ³ÊıÊ±²¹³äÎ²Ò³Ò³Âë
+		// å½“ç»“æŸé¡µç å°äºæ€»é¡µæ•°æ—¶è¡¥å……å°¾é¡µé¡µç 
 		if (_end < _pages) {
 			_tag.clone().appendTo(_elem).addClass('disabled').find('a').text('...');
 			_tag.clone().appendTo(_elem).find('a').attr('data-page', _pages).text(_pages + 1);
 		}
 		
-		// °ó¶¨Ò³Âëµã»÷ÊÂ¼ş
+		// ç»‘å®šé¡µç ç‚¹å‡»äº‹ä»¶
 		_elem.find('a').on('click', function() {
 			$('#page').val($(this).data().page);
 			$('#searchForm').trigger('submit');
