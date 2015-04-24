@@ -2,17 +2,17 @@ package com.jlfex.hermes.service.job;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import cfca.payment.api.tx.Tx1350Response;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.model.Withdraw;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
+import com.jlfex.hermes.repository.WithdrawRepository;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.cfca.CFCAOrderService;
@@ -29,6 +29,8 @@ public class ScanZJClearOrderJob extends Job {
 	private CFCAOrderService cFCAOrderService;
 	@Autowired
 	private TransactionService transactionService;
+	@Autowired 
+	private WithdrawRepository withdrawRepository;
 	
 	
 	@Override
@@ -41,7 +43,8 @@ public class ScanZJClearOrderJob extends Job {
 			clearStatus.add(CFCAOrder.ClearStatus.CLEAR_DOING);
 			clearStatus.add(CFCAOrder.ClearStatus.CLEAR_RECEIVE);
 			List<CFCAOrder> cfcaOrderList = cFCAOrderRepository.findAllByStatusInAndType(clearStatus, CFCAOrder.Type.CLEAR);
-			List<CFCAOrder> finishedOrderList = new ArrayList<CFCAOrder>();
+			List<CFCAOrder> dealOrderList = new ArrayList<CFCAOrder>();
+			List<Withdraw>  withDrawList = new ArrayList<Withdraw>();
 			if(cfcaOrderList !=null && cfcaOrderList.size() > 0){
 				for(CFCAOrder order: cfcaOrderList){
 					if(order== null || Strings.empty(order.getTxSN())){
@@ -51,22 +54,29 @@ public class ScanZJClearOrderJob extends Job {
 					if(tx1350Response!= null){
 						if(CFCAOrder.ClearStatus.CLEAR_FINISH == tx1350Response.getStatus() &&
 						    order.getTxSN().equals(tx1350Response.getSerialNumber())){
-							//更新订单状态
-							order.setStatus(CFCAOrder.ClearStatus.CLEAR_FINISH);
-							finishedOrderList.add(order);
+							order.setStatus(CFCAOrder.ClearStatus.CLEAR_FINISH);//设置订单状态
+							dealOrderList.add(order);
 							//解冻
 							transactionService.unfreeze(Transaction.Type.UNFREEZE, order.getUser(), order.getFee(), order.getUser().getId(), "解冻提现手续费");
 							transactionService.unfreeze(Transaction.Type.UNFREEZE, order.getUser(), order.getAmount(), order.getUser().getId(), "解冻提现金额");
 							//扣除平台手续费
 							transactionService.toCropAccount(Transaction.Type.OUT, order.getUser(), UserAccount.Type.WITHDRAW_FEE, order.getFee(), order.getUser().getId(), "扣除提现手续费");
 							//可用余额减少
-							transactionService.toCropAccount(Transaction.Type.OUT, order.getUser(), UserAccount.Type.ZHONGJIN_FEE, order.getFee(), order.getUser().getId(), "扣除提现金额");
+							transactionService.toCropAccount(Transaction.Type.OUT, order.getUser(), UserAccount.Type.ZHONGJIN_FEE, order.getAmount(), order.getUser().getId(), "扣除提现金额");
+							//修改提现
+							Withdraw withdraw = withdrawRepository.findBySerialNo(order.getTxSN());
+							if(withdraw!=null){
+								withdraw.setStatus(Withdraw.Status.SUCCESS);
+								withDrawList.add(withdraw);
+							}
 						}
 					}
 				}
 			}
-			//保存订单状态
-			cFCAOrderRepository.save(finishedOrderList);
+			//更新订单状态
+			cFCAOrderRepository.save(dealOrderList);
+			//更新提现记录
+			withdrawRepository.save(withDrawList);
 			Logger.info(var+"处理完成!");
 		}catch(Exception e){
 			throw  new ServiceException(e.getMessage(), e);

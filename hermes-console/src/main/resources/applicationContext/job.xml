@@ -17,6 +17,7 @@
 				<ref bean="autoSynchFinanceJobTrigger" />
 				<ref bean="autoCollectionQueryJobTrigger" />
 				<ref bean="autoChargeQueryJobTrigger" />
+				<ref bean="scanZJClearOrderJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -29,8 +30,7 @@
 	</bean>
 
 	<!-- sample job -->
-	<bean id="sampleJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="sampleJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="sampleJob" />
@@ -41,8 +41,7 @@
 	</bean>
 
 	<!-- autoRepay job -->
-	<bean id="autoRepayJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoRepayJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoRepayJob" />
@@ -53,8 +52,7 @@
 	</bean>
 
 	<!-- autoBidFailureJob job -->
-	<bean id="autoBidFailureJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoBidFailureJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoBidFailureJob" />
@@ -64,8 +62,7 @@
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
 	<!-- autoOverdueCalcJob job -->
-	<bean id="autoOverdueCalcJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoOverdueCalcJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoOverdueCalcJob" />
@@ -85,8 +82,7 @@
 		<property name="cronExpression" value="0 */2 * * * ?" />
 	</bean>
 	<!-- 描述：JLFEX回购订单信息同步 执行时间: 每个一小时运行一次 -->
-	<bean id="scanJlfexRepayOrderJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="scanJlfexRepayOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanJlfexRepayOrderJob" />
@@ -96,8 +92,7 @@
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
 	<!-- 描述：JLFEX理财产品同步 执行时间: 每天凌晨03:00 -->
-	<bean id="autoSynchFinanceJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoSynchFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoSynchFinanceJob" />
@@ -108,8 +103,7 @@
 	</bean>
 
 	<!-- 中金支付查询接口 执行时间：每隔2分钟执行一次 -->
-	<bean id="autoCollectionQueryJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoCollectionQueryJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoCollectionQueryJob" />
@@ -119,8 +113,7 @@
 		<property name="cronExpression" value="0 0/2 * * * ?" />
 	</bean>
 	<!-- 充值接口 执行时间：每隔2分钟执行一次 -->
-	<bean id="autoChargeQueryJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	<bean id="autoChargeQueryJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="autoChargeQueryJob" />
@@ -129,9 +122,8 @@
 		</property>
 		<property name="cronExpression" value="0 0/1 * * * ?" />
 	</bean>
-    <!-- 结算接口 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
-	<bean id="scanZJClearOrderJobTrigger"
-		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <!-- 提现结算接口状态同步 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
+	<bean id="scanZJClearOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 				<property name="targetObject" ref="scanZJClearOrderJob" />

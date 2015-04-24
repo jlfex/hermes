@@ -246,7 +246,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	 * java.lang.Double)
 	 */
 	@Override
-	public Withdraw addWithdraw(String bankAccountId, BigDecimal amount) {
+	public Withdraw addWithdraw(String bankAccountId, BigDecimal amount,String serialNo) {
 		// 验证数据
 		Assert.notEmpty(bankAccountId, "bank account id is empty.", "account.fund.withdraw.failure.bankaccount");
 		Assert.notNull(amount, "amount is null.", "account.fund.withdraw.failure.amount");
@@ -262,6 +262,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		withdraw.setAmount(amount);
 		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(PROP_WITHDRAW_FEE_CONFIG)));
 		withdraw.setStatus(Withdraw.Status.WAIT);
+		withdraw.setSerialNo(serialNo);
 		withdrawRepository.save(withdraw);
 		// 冻结  手续费 + 金额
 		transactionService.freeze(Transaction.Type.FREEZE, user, withdraw.getFee(), withdraw.getId(), "提现手续费冻结");

@@ -409,7 +409,7 @@ public class AccountController {
 			Tx134xResponse tx1341Response =  cFCAOrderService.invokeTx1341(request);
 			if(HermesConstants.CFCA_SUCCESS_CODE.equals(tx1341Response.getCode())){
 				//资金冻结
-				Withdraw withDraw = bankAccountService.addWithdraw(bankAccountId, amount);
+				Withdraw withDraw = bankAccountService.addWithdraw(bankAccountId, amount, request.getSerialNumber());
 				//保存订单
 				cFCAOrderService.genClearOrder(tx1341Response,investUser,amount, withDraw.getFee(), request.getSerialNumber(),CFCAOrder.Type.CLEAR);
 			}else{

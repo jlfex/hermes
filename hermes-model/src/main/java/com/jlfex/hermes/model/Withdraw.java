@@ -50,6 +50,10 @@ public class Withdraw extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
+	/** 提现流水**/
+	@Column(name="serial_no")
+	private String serialNo;
+	
 
 	/**
 	 * 读取用户
@@ -232,6 +236,16 @@ public class Withdraw extends Model {
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
 	}
+
+	public String getSerialNo() {
+		return serialNo;
+	}
+
+	public void setSerialNo(String serialNo) {
+		this.serialNo = serialNo;
+	}
+
+
 
 	/**
 	 * 状态
