@@ -80,6 +80,12 @@ $('#accountMenu a').link().on('click', function() {
 		$(this).parent().singleClass('active', {container: $('#accountMenu')});
 	}).filter('.${type!'user'}').trigger('click');
 });
+$('#accountMenu li').click(function() {
+	var activeli = $(".active");
+	activeli.removeClass("active");
+	$(this).addClass('active');
+});
+
 //-->
 </script>
 
