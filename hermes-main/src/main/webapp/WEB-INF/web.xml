@@ -94,6 +94,10 @@
 		<location>/WEB-INF/views/error/sign.jsp</location>
 	</error-page>
 	<error-page>
+		<error-code>400</error-code>
+		<location>/WEB-INF/views/error/400.jsp</location>
+	</error-page>
+	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/error/404.jsp</location>
 	</error-page>

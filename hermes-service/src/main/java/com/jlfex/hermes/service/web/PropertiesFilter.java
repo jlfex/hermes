@@ -16,7 +16,10 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.Properties;
+import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
+import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
@@ -28,6 +31,11 @@ import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
 @Component
 public class PropertiesFilter implements Filter {
 	private static String companyIntroductionCode = "company_introduction";
+	private static final String SITE_SERVICE_TEL	= "site.service.tel";
+	private static final String SITE_SERVICE_TIME	= "site.service.time";
+	private static final String App_OPERATION_NICKNAME	= "app.operation.nickname";
+	private static final String App_COPYRIGHT	= "app.copyright";
+	private static final String App_LOGO	= "app.logo";
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -41,6 +49,9 @@ public class PropertiesFilter implements Filter {
 
 	@Autowired
 	private ArticleCategoryRepository articleCategoryRepository;
+	
+	@Autowired
+	private PropertiesRepository propertiesRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -75,6 +86,18 @@ public class PropertiesFilter implements Filter {
 		List<ArticleCategory> articleCategoryList = articleCategoryRepository.findByParent(articleCategory);
 		req.setAttribute("friendlinkData", friendLinkService.findTop10());
 		req.setAttribute("companyIntroductions", articleCategoryList);
+		req.setAttribute("siteServiceTel",propertiesRepository.findByCode(SITE_SERVICE_TEL).getValue());
+		req.setAttribute("siteServiceTime",propertiesRepository.findByCode(SITE_SERVICE_TIME).getValue());
+		req.setAttribute("appCopyright",propertiesRepository.findByCode(App_COPYRIGHT).getValue());
+		req.setAttribute("appOperationNickname",propertiesRepository.findByCode(App_OPERATION_NICKNAME).getValue());
+		Properties properties = propertiesRepository.findByCode(App_LOGO);
+		Text text = textService.loadById(properties.getValue());
+		if(text == null){
+			Logger.error("logo图标信息为空");
+			req.setAttribute("appLogo","");
+		}else{
+			req.setAttribute("appLogo",text.getText());
+		}         
 		chain.doFilter(req, resp);
 	}
 
