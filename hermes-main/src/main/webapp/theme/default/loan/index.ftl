@@ -98,7 +98,6 @@
 		</div>
 	</div>
 </div>
-
 <#include "../footer.ftl" />
 
 <script type="text/javascript" charset="utf-8">

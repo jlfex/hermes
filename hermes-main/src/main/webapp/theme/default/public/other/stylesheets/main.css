@@ -116,13 +116,13 @@ img{ border:0;}
 .footer .companyinfo ul, .footer .links ul,.footer .serves ul,.footer .telephone ul{float:left;}
 .footer .companyinfo li, .footer .links li,.footer .serves li,.footer .telephone li{float:left;line-height:20px;color:#909090;margin-left:18px;}
 .footer .companyinfo h4, .footer .links h4,.footer .serves h4,.footer .telephone h4{float:left;font-size:15px;font-weight:600;color:#909090;margin-right: 15px;}
-.footer .companyinfo,.footer .companyinfo h4,.footer .companyinfo li{height:65px;line-height:65px;}
-.footer .links,.footer .links h4,.footer .links li{height: 65px;line-height:65px;}
+.footer .companyinfo,.footer .companyinfo h4,.footer .companyinfo li{height:40px;line-height:40px;}
+.footer .links,.footer .links h4,.footer .links li{height: 40px;line-height:40px;}
 .footer .serves,.footer .serves h4,.footer .serves li{height:35px;line-height:35px;margin-bottom:15px;}
 .footer .serves ul li{width:110px;text-align:center;}
 .footer .serves ul li img{vertical-align: middle;}
 .footer .serves ul li span{margin-left:10px;}
-.footer .telephone,.footer .telephone h4,.footer .telephone li{height:65px;line-height:65px;}
+.footer .telephone,.footer .telephone h4,.footer .telephone li{height:40px;line-height:40px;}
 .footer ul li a,.worktime{color:#909090;}
 .footer .footcenter .telephone p{color:#fe5331;font-weight:500;font-size:15px;}
 .footer .copyright{width:100%;height:52px;line-height:52px;text-align:center;color:#909090;}
@@ -481,7 +481,7 @@ p.clicklink{ width:120px; margin:15px 0; color:#898989;font-size:16px;}
 .bid_part{border:2px solid #e2e2e2; background:#f6f6f6; margin-top:15px;padding:20px 0 20px 20px;font-size:14px; color:#000000; position:relative;-moz-border-radius: 5px; -webkit-border-radius: 5px;border-radius: 5px; width:732px;}
 .bid_part input.inputstyle{ width:100px; color:#444444; font-size:12px; height:10px;}
 .fl_left{ text-align:left;}
-p.new_year{ margin:20px; color:#444444;}
+p.new_year{ margin:50px;padding-bottom:250px; color:#444444;}
 .table_mar{ padding-top:20px; font-size:14px; margin-left:20px;}
 .tdalign{ text-align:right; width:60px; color:#888888;}
 .td_width{ width:170px;}

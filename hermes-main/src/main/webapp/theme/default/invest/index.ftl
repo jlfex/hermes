@@ -25,15 +25,11 @@
   ul.pagination li{
   	float:none;
   }
-  .logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-  
 </style>
 </head>
 <body>
-
 <#include "../header.ftl" />
-
-<div id="content" class="content" style="margin-top:133px; min-height:600px;">
+<div id="content" class="content" style="margin-top:133px; min-height:760px;">
 	<div class="u-container">
 		<div class="flow">
 			<h3>流程简图</h3>

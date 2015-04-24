@@ -25,16 +25,16 @@
                 <li><a href="javascript:value(0);"><img src="images/icon1/foot_tengxun.png">腾讯微博</a></li>
                 <li><a href="javascript:value(0);"><img src="images/icon1/foot_wechat.png">微信</a></li>
             </ul>
-        </div> -->
-		<img src="${app.theme}/public/images/footerline.png" alt="" />
+        </div> 
+		<img src="${app.theme}/public/images/footerline.png" alt="" />-->
         <div class="telephone clearfix">
             <h4>客服电话</h4>
 			<ul>
 				<li><p><@config key="site.service.tel"/></p></li>
 				<li><span class="worktime">工作时间：<@config key="site.service.time"/></span></li>
+				<li><span class="worktime">版权所有<@config key="app.copyright"/></span></li>				
 			</ul>
         </div>
-		<div class="copyright">版权所有<@config key="app.copyright"/></div>
         <div class="clearfix"></div>
     </div>
 </div>
