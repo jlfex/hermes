@@ -10,6 +10,10 @@
 		<form id="searchForm" method="post" action="#">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
+					<label for="parameterType">类型编码</label>
+					<input id="typeCode" name="typeCode" type="text" class="form-control">
+				</div>			
+				<div class="col-xs-2 hm-col form-group">
 					<label for="parameterType">类型名称</label>
 					<input id="parameterType" name="parameterType" type="text" class="form-control">
 				</div>

@@ -43,18 +43,18 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
 
-	public Page<ParameterSetInfo> findByParameterTypeAndParameterValue(String parameterType, String parameterValue, String page, String size) {
+	public Page<ParameterSetInfo> findByParameterTypeAndParameterValue(String parameterType, String parameterValue, String typeCode,String page, String size) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String sqlSearchByParameterSet = commonRepository.readScriptFile(Script.searchByParameterSet);
 
 		String sqlCountSearchByParameterSet = commonRepository.readScriptFile(Script.countSearchByParameterSet);
-		String condition = getCondition(parameterType, parameterValue, params);
+		String condition = getCondition(parameterType, parameterValue,typeCode,params);
 
 		sqlSearchByParameterSet = String.format(sqlSearchByParameterSet, condition);
 		sqlCountSearchByParameterSet = String.format(sqlCountSearchByParameterSet, condition);
 
 		// 初始化
-		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "5")));
+		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
 
 		List<?> listCount = commonRepository.findByNativeSql(sqlCountSearchByParameterSet, params);
 		Long total = Long.parseLong(String.valueOf(listCount.get(0)));
@@ -78,7 +78,7 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		return pageParameterSetInfo;
 	}
 
-	private String getCondition(String parameterType, String parameterValue, Map<String, Object> params) {
+	private String getCondition(String parameterType, String parameterValue, String typeCode,Map<String, Object> params) {
 		StringBuilder condition = new StringBuilder();
 
 		if (!Strings.empty(parameterType)) {
@@ -88,6 +88,10 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 		if (!Strings.empty(parameterValue)) {
 			condition.append(" where h1.name like :parameterValue");
 			params.put("parameterValue", "%"+parameterValue+"%");
+		}
+		if (!Strings.empty(typeCode)) {
+			condition.append(" where h2.code like :typeCode");
+			params.put("typeCode", "%"+typeCode+"%");
 		}
 		return condition.toString();
 	}
@@ -234,5 +238,11 @@ public class ParameterSetServiceImpl implements ParameterSetService {
 	public List<DictionaryType> findAll() {
 		return dictionaryTypeRepository.findAll();
 	}
+	
+	@Override
+	public void delDicType(String id) {
+		dictionaryTypeRepository.delete(id);
+	}
+
 
 }

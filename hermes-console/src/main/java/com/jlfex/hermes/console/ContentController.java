@@ -545,7 +545,7 @@ public class ContentController {
 	 * @author lishunfeng
 	 */
 	@RequestMapping("/imageIndex")
-	public String imageData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size, Model model) {
+	public String imageData(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "5") Integer size, Model model) {
 		model.addAttribute("imageManages", contentService.findAllImageManage(page, size));
 		return "/content/imageManageIndex";
 	}

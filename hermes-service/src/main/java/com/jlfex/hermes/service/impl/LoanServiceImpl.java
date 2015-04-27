@@ -1154,7 +1154,7 @@ public class LoanServiceImpl implements LoanService {
 		sqlSearchByLoanAudit = String.format(sqlSearchByLoanAudit, condition);
 		sqlCountSearchByLoanAudit = String.format(sqlCountSearchByLoanAudit, condition);
 		// 初始化
-		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "5")));
+		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
 		List<?> listCount = commonRepository.findByNativeSql(sqlCountSearchByLoanAudit, params);
 		Long total = 0l;
 		if (listCount.size() != 0) {

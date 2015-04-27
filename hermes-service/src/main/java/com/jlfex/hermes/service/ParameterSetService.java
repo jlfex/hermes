@@ -13,7 +13,7 @@ import com.jlfex.hermes.service.pojo.ParameterSetInfo;
 public interface ParameterSetService {
 
 	// 通过参数类/参数值查询借参数设置信息
-	public Page<ParameterSetInfo> findByParameterTypeAndParameterValue(String parameterType, String parameterValue, String page, String size);
+	public Page<ParameterSetInfo> findByParameterTypeAndParameterValue(String parameterType, String parameterValue, String typeCode,String page, String size);
 
 	// 新增参数设置
 	public Dictionary addParameterSet(ParameterSetInfo parameterSetInfo);
@@ -40,6 +40,7 @@ public interface ParameterSetService {
 	public DictionaryType addDictionaryType(String name,String status,String typeCode);
 	
 	public DictionaryType updateDicType(String parameterType,String id,String typeCode);
-
+	
+	public void delDicType(String id);
 
 }

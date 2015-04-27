@@ -42,4 +42,7 @@ public interface DictionaryService {
 	public List<Dictionary> getByTypeCode(String typeCode);
 
 	public String maxCodeByCode(String code);
+	
+	public List<Dictionary> findByType(String typeId);
+
 }
