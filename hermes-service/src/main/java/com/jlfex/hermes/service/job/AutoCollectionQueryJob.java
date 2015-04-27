@@ -1,9 +1,12 @@
 package com.jlfex.hermes.service.job;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
+
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -15,6 +18,7 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.repository.InvestRepository;
+import com.jlfex.hermes.repository.LoanLogRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.TransactionRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
@@ -47,6 +51,8 @@ public class AutoCollectionQueryJob extends Job {
 	private LoanRepository loanRepository;
 	@Autowired
 	private InvestService investService;
+	@Autowired
+	private LoanLogRepository loanLogRepository;
 
 	@Override
 	public Result run() {
@@ -57,7 +63,7 @@ public class AutoCollectionQueryJob extends Job {
 				request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 				request.setTxSN(cfcaOrder.getTxSN());
 				Tx1362Response response = (Tx1362Response) thirdPPService.invokeTx1362(request);
-				if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+				if (response.getStatus() != Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
 					Transaction transaction = transactionRepository.findOneByReferenceAndType(cfcaOrder.getInvest().getId(), Transaction.Type.CHARGE);
 					transaction.setRemark(Transaction.Status.RECHARGE_SUCC);
 					User user = cfcaOrder.getInvest().getUser();
@@ -74,11 +80,14 @@ public class AutoCollectionQueryJob extends Job {
 					Loan loan = loanRepository.findOne(cfcaOrder.getInvest().getLoan().getId());
 					
 					// 判断假如借款金额与已筹金额相等，更新状态为满标
-					if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
+					LoanLog loanLog = loanLogRepository.findByLoanIdAndType(loan.getId(),LoanLog.Type.FULL);
+					if (loan.getAmount().compareTo(loan.getProceeds()) == 0 && loanLog == null ) {
 						loan.setStatus(Loan.Status.FULL);
 						loanRepository.save(loan);
 						// 插入借款日志表(满标)
 						investService.saveLoanLog(cfcaOrder.getInvest().getUser(), invest.getAmount(), loan, LoanLog.Type.FULL, "投标成功");
+					} else {
+						investService.saveLoanLog(cfcaOrder.getInvest().getUser(), invest.getAmount(), loan, LoanLog.Type.INVEST, "投标成功");
 					}
 					
 				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_FAIL.getStatus()) {
