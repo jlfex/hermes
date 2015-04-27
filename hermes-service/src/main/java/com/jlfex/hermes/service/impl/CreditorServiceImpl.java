@@ -62,7 +62,7 @@ public class CreditorServiceImpl implements CreditorService {
 	}
 
 	public Page<Creditor> findCreditorList(final String creditorName, final String cellphone, String page, String size) {
-		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "5")));
+		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")));
 		Page<Creditor> pageCreditorInfo = creditorRepository.findAll(new Specification<Creditor>() {
 			@Override
 			public Predicate toPredicate(Root<Creditor> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

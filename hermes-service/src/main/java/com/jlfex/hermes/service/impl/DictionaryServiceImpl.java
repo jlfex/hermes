@@ -76,6 +76,11 @@ public class DictionaryServiceImpl implements DictionaryService {
 	@Override
 	public String maxCodeByCode(String code) {
 		return dictionaryRepository.maxCodeByCode(code);
+	}
+
+	@Override
+	public List<Dictionary> findByType(String typeId) {
+		return dictionaryRepository.findByType(typeId);
 	};
 
 }

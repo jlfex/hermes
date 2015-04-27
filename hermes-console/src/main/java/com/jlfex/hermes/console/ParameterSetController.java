@@ -13,6 +13,7 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.DictionaryType;
+import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.ParameterSetService;
 import com.jlfex.hermes.service.pojo.ParameterSetInfo;
 
@@ -26,6 +27,8 @@ import com.jlfex.hermes.service.pojo.ParameterSetInfo;
 public class ParameterSetController {
 	@Autowired
 	private ParameterSetService parameterSetService;
+	@Autowired
+	private DictionaryService dictionaryService;
 
 	/**
 	 * 参数设置首页
@@ -42,8 +45,8 @@ public class ParameterSetController {
 	 * 
 	 */
 	@RequestMapping("/parameterdata")
-	public String loandata(String parameterType, String parameterValue, String page, String size, Model model) {
-		model.addAttribute("parameterSet", parameterSetService.findByParameterTypeAndParameterValue(parameterType, parameterValue, page, size));
+	public String loandata(String parameterType, String parameterValue, String typeCode,String page, String size, Model model) {
+		model.addAttribute("parameterSet", parameterSetService.findByParameterTypeAndParameterValue(parameterType, parameterValue,typeCode,page, size));
 		return "/parameterset/parameterdata";
 	}
 
@@ -236,4 +239,27 @@ public class ParameterSetController {
 		}
 		return "redirect:/parameter/index";
 	}
+	
+	/**
+	 * 删除字典类型
+	 * 
+	 */
+	@RequestMapping("/delTypeParameter")
+	public String delTypeParameter(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+		try {
+			parameterSetService.delDicType(id);
+			List<Dictionary> dicts= dictionaryService.findByType(id);
+			if(dicts.size() > 0){
+				attr.addFlashAttribute("msg", "存在关联的字典项，不能删除");
+			}else{
+			    attr.addFlashAttribute("msg", "删除字典类型成功");
+			}
+			return "redirect:/parameter/index";
+		} catch (Exception e) {
+			attr.addFlashAttribute("msg", "删除字典类型失败");
+			Logger.error("删除字典类型失败：", e);
+			return "redirect:/parameter/index";
+		}
+	}
+
 }
