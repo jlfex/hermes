@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -395,8 +396,14 @@ public class AccountController {
 				throw new Exception("提现金额为空");
 			}
 			amount = amount.setScale(2, RoundingMode.HALF_EVEN);
+			BigDecimal  sumAmount = BigDecimal.ZERO;
+			Result<String> calcResult =  calcWithdrawFee(amount.doubleValue());
+			if(Result.Type.SUCCESS.equals(calcResult.getType())){
+				List<String> amountList = calcResult.getMessages();
+				sumAmount = new BigDecimal(amountList.get(1));
+			}
 			User investUser = userService.loadById( App.user().getId());
-			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, amount);
+			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, sumAmount);
 			if(!enoughFlag){
 			   throw new Exception("当前现金余额不足");
 			}
@@ -414,17 +421,10 @@ public class AccountController {
 			}
 			result.setType(Result.Type.SUCCESS);
 			result.addMessage("您的提现申请正在处理中，预计1-3个工作日到账。</br>如有疑问，请联系客服。");
-		} catch (ServiceException e) {
-			result.setType(Result.Type.FAILURE);
-			result.setData(e.getCode());
-			result.addMessage(App.message(e.getKey()));
-			Logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			ServiceException se = new ServiceException(e.getMessage(), e);
 			result.setType(Result.Type.FAILURE);
-			result.setData(se.getCode());
 			result.addMessage(e.getMessage());
-			Logger.error(se.getMessage(), se);
+			Logger.error("提现异常", e);
 		}
 		// 渲染视图
 		model.addAttribute("result", result);
