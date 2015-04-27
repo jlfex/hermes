@@ -404,7 +404,7 @@ public class AccountController {
 			}
 			User investUser = userService.loadById( App.user().getId());
 			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, sumAmount);
-			if(!enoughFlag){
+			if(!enoughFlag && sumAmount.compareTo(amount) >= 0 ){
 			   throw new Exception("当前现金余额不足");
 			}
 			//接入中金提现结算
