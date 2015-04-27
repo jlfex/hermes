@@ -8,17 +8,14 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import cfca.payment.api.tx.Tx1341Request;
 import cfca.payment.api.tx.Tx134xResponse;
-
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
@@ -416,7 +413,7 @@ public class AccountController {
 				throw new  Exception("中金结算接口异常：接口响应码="+tx1341Response.getCode());
 			}
 			result.setType(Result.Type.SUCCESS);
-			result.addMessage("正在处理中，请稍候...");
+			result.addMessage("您的提现申请正在处理中，预计1-3个工作日到账。</br>如有疑问，请联系客服。");
 		} catch (ServiceException e) {
 			result.setType(Result.Type.FAILURE);
 			result.setData(e.getCode());
