@@ -30,7 +30,7 @@ import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
  */
 @Component
 public class PropertiesFilter implements Filter {
-	private static String companyIntroductionCode = "company_introduction";
+	private static final String companyIntroductionCode = "company_introduction";
 	private static final String SITE_SERVICE_TEL	= "site.service.tel";
 	private static final String SITE_SERVICE_TIME	= "site.service.time";
 	private static final String App_OPERATION_NICKNAME	= "app.operation.nickname";
