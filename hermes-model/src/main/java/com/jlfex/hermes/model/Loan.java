@@ -98,8 +98,8 @@ public class Loan extends Model {
 	private String loanKind;
 	
 	/** 标索引： import债权表：对应的债权id; jlfex债权标：对应理财产品id;  普通标：为空 */
-	@Column(name = "credit_info_id", length=50)
-	private String creditInfoId;
+	@Column(name = "credit_index", length=50)
+	private String creditIndex;
 	
 	
 	/** 还款信息列表 */
@@ -110,14 +110,12 @@ public class Loan extends Model {
 	@Transient
 	private Date businessDate;
 	
-	
-	
-	public String getCreditInfoId() {
-		return creditInfoId;
+	public String getCreditIndex() {
+		return creditIndex;
 	}
 
-	public void setCreditInfoId(String creditInfoId) {
-		this.creditInfoId = creditInfoId;
+	public void setCreditIndex(String creditIndex) {
+		this.creditIndex = creditIndex;
 	}
 
 	public void setRepays(List<LoanRepay> repays) {

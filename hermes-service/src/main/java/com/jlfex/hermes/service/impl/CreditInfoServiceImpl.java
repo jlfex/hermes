@@ -249,7 +249,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		loan.setStatus(Loan.Status.BID);
 		loan.setUser(entity.getCreditor().getUser());
 		loan.setDeadline(entity.getDeadLine().toString()); //招标期限
-		loan.setCreditInfoId(entity.getId()); 
+		loan.setCreditIndex(entity.getId()); 
 		loan.setManageFeeType("00"); //00: 百分比  01：具体金额
 		loan.setProceeds(BigDecimal.ZERO);
 		loan.setManageFee(BigDecimal.ZERO); 
@@ -282,8 +282,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	 * @return
 	 */
 	@Override
-	public List<Loan>  queryLoanByCredit(String creditInfoId){
-		return loanRepository.findByCreditInfoAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+	public List<Loan>  queryLoanByCredit(String creditIndex){
+		return loanRepository.findByCreditIndexAndLoanKind(creditIndex, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 	}
     
     /**
@@ -299,7 +299,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	@Override
 	public List<LoanLog> queryCreditLogList(CrediteInfo creditInfo) throws Exception {
 		String creditInfoId = creditInfo.getId();
-		List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
+		List<Loan> loanList = loanRepository.findByCreditIndexAndLoanKind(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN);
 		if (loanList != null && loanList.size() > 1) {
 			throw new Exception("根据：债权id=" + creditInfoId + ", 查状到态为：待还款, 的债权标个数不唯一");
 		} 
@@ -323,8 +323,8 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 	public boolean afterBidAwayUpdateCredt(Loan loan)  {
 		String var = "债权标自动流标：进行债权信息更新操作,";
 		try{
-			if(loan != null && StringUtils.isNotEmpty(loan.getCreditInfoId())){
-				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId().trim());
+			if(loan != null && StringUtils.isNotEmpty(loan.getCreditIndex())){
+				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditIndex().trim());
 				if(creditInfo.getDeadTime() == null){
 					Logger.info(var+",获取债权到期时间为空， 无法状态更新");
 				}
@@ -355,7 +355,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
      */
 	@Override
 	public CrediteInfo findByLoanInfo(Loan loan) throws Exception {
-		return creditInfoRepository.findOne(loan.getCreditInfoId());
+		return creditInfoRepository.findOne(loan.getCreditIndex());
 	}
 
 	/**

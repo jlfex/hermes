@@ -466,7 +466,7 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanRepay> loanRepayList = new ArrayList<LoanRepay>();
 		List<Invest> investList = new ArrayList<Invest>();
 		List<InvestProfit> investProfitList = new ArrayList<InvestProfit>();
-		CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+		CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditIndex());
 		creditInfo.setStatus(CrediteInfo.Status.REPAYING); // 更新还款中
 		creditInfo = creditInfoRepository.save(creditInfo);
 		List<CreditRepayPlan> creditRepayPlanList = creditorRepayPlanRepository.findByCreditInfoAscPeriod(creditInfo);
@@ -1335,7 +1335,7 @@ public class LoanServiceImpl implements LoanService {
 				throw new Exception("债权还款明细:还款期数:period=" + sequnce + ",不正确");
 			}
 			String creditInfoId = repayPlan.getCrediteInfo().getId();
-			List<Loan> waitRepayCreditlist = loanRepository.findByCreditInfoAndLoanKindAndStatus(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, Loan.Status.REPAYING);
+			List<Loan> waitRepayCreditlist = loanRepository.findByCreditIndexAndLoanKindAndStatus(creditInfoId, Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN, Loan.Status.REPAYING);
 			if (waitRepayCreditlist == null || waitRepayCreditlist.size() == 0) {
 				throw new Exception("根据：债权id=" + creditInfoId + ",查询到状态为:待还款,的债权标为空,债权标当前状态： " + repayPlan.getCrediteInfo().getStatusName());
 			} else if (waitRepayCreditlist.size() > 1) {

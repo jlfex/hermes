@@ -100,7 +100,7 @@ public interface CreditInfoService {
      * @param creditInfoId
      * @return
      */
-	public List<Loan> queryLoanByCredit(String creditInfoId);
+	public List<Loan> queryLoanByCredit(String creditIndex);
    /**
     *  根据id 获取用户信息
     * @param userId

@@ -131,7 +131,6 @@ function upload(files) {
                    }
                    _content = _content +  "<p>"+data.checkErrorMsg+"</p>";
                    _content = _content + "</div></div>";
-                   $("#creditInfoIds").val(data.creditInfoIds);
                    $("#importResult").html(_content);
                    $.page.withdraw({
 	                 search: '${app}/credit/loandata'

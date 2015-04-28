@@ -650,7 +650,7 @@ public class JlfexServiceImpl implements JlfexService {
 		loan.setDescription(order.getFinanceProductName());
 		loan.setLoanKind(Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 		loan.setStatus(Loan.Status.BID);
-		loan.setCreditInfoId(order.getId()); 
+		loan.setCreditIndex(order.getId()); 
 		loan.setManageFeeType("00"); //00: 百分比  01：具体金额
 		loan.setProceeds(BigDecimal.ZERO);
 		loan.setManageFee(BigDecimal.ZERO); 
@@ -1050,7 +1050,7 @@ public class JlfexServiceImpl implements JlfexService {
 	 * @throws Exception
 	 */
 	public void freeAndTransferInvest(FinanceOrder existOrder) throws Exception {
-		List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+		List<Loan> loanList = loanRepository.findByCreditIndexAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 		if(loanList!=null && loanList.size() == 1){
 			Loan loan = loanList.get(0);
 			Set<Asset>  assetSet =  existOrder.getAssetsList(); 
@@ -1158,7 +1158,7 @@ public class JlfexServiceImpl implements JlfexService {
 	 */
 	public FinanceOrder updateJlfexLoanAmount(FinanceOrder synchObj, FinanceOrder existOrder) {
 		try {
-			List<Loan> loanList = loanRepository.findByCreditInfoAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
+			List<Loan> loanList = loanRepository.findByCreditIndexAndLoanKind(existOrder.getId(), Loan.LoanKinds.YLTX_ASSIGN_LOAN);
 			if(loanList==null || loanList.size() != 1){
 				Logger.error("jlfexLoan更新loan金额: 根据理财产品:"+existOrder.getUniqId()+",获取标数据不唯一或空");
 				return null;

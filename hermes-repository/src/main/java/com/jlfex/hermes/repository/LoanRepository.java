@@ -74,21 +74,21 @@ public interface LoanRepository extends PagingAndSortingRepository<Loan, String>
 	public Page<Loan> findByloanKindInAndStatusIn(List<String> loanKinds, List<String> status, Pageable pageable);
 	/**
 	 * 根据标类型 +状态+ 债权信息 
-	 * @param creditInfoId
+	 * @param creditIndex
 	 * @param loanKind
 	 * @param status
 	 * @return
 	 */
-	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2 and t.status = ?3 ")
-	public List<Loan> findByCreditInfoAndLoanKindAndStatus(String creditInfoId, String loanKind, String status );
+	@Query("select  t from Loan  t  where t.creditIndex = ?1 and t.loanKind = ?2 and t.status = ?3 ")
+	public List<Loan> findByCreditIndexAndLoanKindAndStatus(String creditIndex, String loanKind, String status );
 	/**
 	 * 根据标类型+ 债权信息 
-	 * @param creditInfoId
+	 * @param creditIndex
 	 * @param loanKind
 	 * @param status
 	 * @return
 	 */
-	@Query("select  t from Loan  t  where t.creditInfoId = ?1 and t.loanKind = ?2  and t.status !='30' ")
-	public List<Loan> findByCreditInfoAndLoanKind(String creditInfoId, String loanKind );
+	@Query("select  t from Loan  t  where t.creditIndex = ?1 and t.loanKind = ?2  and t.status !='30' ")
+	public List<Loan> findByCreditIndexAndLoanKind(String creditIndex, String loanKind );
 	
 }
