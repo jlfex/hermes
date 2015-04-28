@@ -85,7 +85,7 @@ public class AutoCollectionQueryJob extends Job {
 						loan.setStatus(Loan.Status.FULL);
 						loanRepository.save(loan);
 						// 插入借款日志表(满标)
-						investService.saveLoanLog(cfcaOrder.getInvest().getUser(), invest.getAmount(), loan, LoanLog.Type.FULL, "投标成功");
+						investService.saveLoanLog(cfcaOrder.getInvest().getUser(), invest.getAmount(), loan, LoanLog.Type.FULL, "投标满标");
 					} else {
 						investService.saveLoanLog(cfcaOrder.getInvest().getUser(), invest.getAmount(), loan, LoanLog.Type.INVEST, "投标成功");
 					}
