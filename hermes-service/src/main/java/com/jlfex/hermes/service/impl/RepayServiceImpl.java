@@ -331,9 +331,9 @@ public class RepayServiceImpl implements RepayService {
 	}
 	
 	public void updateCreditInfoFull(Loan loan){
-		if(loan != null && loan.getCreditInfoId() !=null){
+		if(loan != null && loan.getCreditIndex() !=null){
 			try {
-				CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
+				CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditIndex());
 				creditInfo.setStatus(CrediteInfo.Status.REPAY_FIINISH);
 				creditInfoService.save(creditInfo);
 			} catch (Exception e) {

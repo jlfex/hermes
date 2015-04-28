@@ -421,7 +421,7 @@ public class InvestServiceImpl implements InvestService {
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 		}
 		BankAccount bankAccount = null;
-		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditIndex());
 		List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
 		if (bankAccountList == null || bankAccountList.size() != 1) {
 			Logger.info("投标异常：没有找到理财人有效的银行卡信息");
@@ -452,7 +452,7 @@ public class InvestServiceImpl implements InvestService {
 			return "投标失败,订单信息为空";
 		}
 		Logger.info("易联债权标投标:开始 ：loanNo=" + loan.getLoanNo() + ", 下单并支付接口返回:订单状态=" + responseVo.getOrderStatus() + ",支付状态=" + responseVo.getPayStatus());
-		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditIndex());
 		// 1:撤单
 		String assetCode = getAssetCodeOfOrder(responseVo.getOrderCode().trim());
 		if (HermesConstants.ORDER_WAIT_PAY.equals(responseVo.getOrderStatus()) && HermesConstants.PAY_FAIL.equals(responseVo.getPayStatus())) {
@@ -567,7 +567,7 @@ public class InvestServiceImpl implements InvestService {
 	public boolean checkValid(Loan loan) {
 		boolean normal = false;
 		try {
-			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
+			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditIndex());
 			Date nowDate = new Date();
 			Date RaisingBeginDate = financeOrder.getRaiseStartTime();
 			Date RaisingEndDate = financeOrder.getRaiseEndTime();
@@ -855,7 +855,7 @@ public class InvestServiceImpl implements InvestService {
 		try {
 			if (loan != null) {
 				String status = CrediteInfo.Status.WAIT_ASSIGN;
-				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditInfoId());
+				CrediteInfo creditInfo = creditInfoRepository.findOne(loan.getCreditIndex());
 				Date deadTime = creditInfo.getDeadTime();
 				if (deadTime != null) {
 					if (deadTime.before(new Date())) {

@@ -468,7 +468,7 @@ public class InvestController {
 	 */
 	public BigDecimal calcuYltxCreditProfit(BigDecimal investAmount, Loan loan) throws Exception {
 		BigDecimal profitAmount = BigDecimal.ZERO;
-		FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
+		FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditIndex());
 		List<FinanceRepayPlan> creditRepayPlanList = financeRepayPlanService.queryByFinanceOrder(financeOrder);
 		if (creditRepayPlanList == null || creditRepayPlanList.size() == 0) {
 			throw new Exception("理财产品id=" + financeOrder.getUniqId() + ", 对应的理财产品还款计划为空!");
@@ -546,7 +546,7 @@ public class InvestController {
 		String validFlag = "00";
 		Loan loan = loanService.loadById(loanid);
 		if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditInfoId());
+			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditIndex());
 			List<CreditRepayPlan> creditRepayList = creditRepayPlanService.queryByCreditInfo(creditInfo); // 获取回款记录
 			model.addAttribute("creditInfo", creditInfo);
 			model.addAttribute("creditRepayList", creditRepayList);
@@ -557,7 +557,7 @@ public class InvestController {
 				guaranteeType = guaranteeDic.getName();
 			}
 		} else if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
-			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
+			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditIndex());
 			model.addAttribute("financeOrder", financeOrder);
 			model.addAttribute("financePlanList", financeRepayPlanService.queryByFinanceOrder(financeOrder));
 			if (!investService.checkValid(loan)) {
@@ -656,7 +656,7 @@ public class InvestController {
 		} else if (Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			// 导入标
 			loanPurpose = loan.getPurpose();
-			CrediteInfo crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
+			CrediteInfo crediteInfo = creditInfoService.findById(loan.getCreditIndex());
 			try {
 				long endTime = crediteInfo.getBidEndTime().getTime();
 				long startTime = new Date().getTime();
@@ -670,7 +670,7 @@ public class InvestController {
 		} else if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(loan.getLoanKind())) {
 			// 易联标
 			loanPurpose = loan.getPurpose();
-			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditInfoId());
+			FinanceOrder financeOrder = financeOrderService.queryById(loan.getCreditIndex());
 			try {
 				long endTime = financeOrder.getRaiseEndTime().getTime();
 				long startTime = new Date().getTime();
@@ -1118,8 +1118,8 @@ public class InvestController {
 		Invest invest = investService.loadById(id);
 		Loan loan = loanService.loadById(invest.getLoan().getId());
 		try {
-			if(StringUtils.isNotEmpty(loan.getCreditInfoId())){
-				crediteInfo = creditInfoService.findById(loan.getCreditInfoId());
+			if(StringUtils.isNotEmpty(loan.getCreditIndex())){
+				crediteInfo = creditInfoService.findById(loan.getCreditIndex());
 			}
 			if(crediteInfo !=null){
 				creditRepayPlanList = creditRepayPlanService.findByCrediteInfo(crediteInfo);
