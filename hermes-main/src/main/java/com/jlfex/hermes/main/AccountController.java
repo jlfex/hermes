@@ -400,7 +400,7 @@ public class AccountController {
 			Result<String> calcResult =  calcWithdrawFee(amount.doubleValue());
 			if(Result.Type.SUCCESS.equals(calcResult.getType())){
 				List<String> amountList = calcResult.getMessages();
-				sumAmount = new BigDecimal(amountList.get(1));
+				sumAmount = new BigDecimal(amountList.get(1).replace(",", ""));
 			}
 			User investUser = userService.loadById( App.user().getId());
 			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, sumAmount);
@@ -423,7 +423,7 @@ public class AccountController {
 			result.addMessage("您的提现申请正在处理中，预计1-3个工作日到账。</br>如有疑问，请联系客服。");
 		} catch (Exception e) {
 			result.setType(Result.Type.FAILURE);
-			result.addMessage(e.getMessage());
+			result.addMessage(e.getMessage()==null?"提现失败,请重试":e.getMessage());
 			Logger.error("提现异常", e);
 		}
 		// 渲染视图
