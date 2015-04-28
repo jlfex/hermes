@@ -63,7 +63,7 @@ public class AutoCollectionQueryJob extends Job {
 				request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
 				request.setTxSN(cfcaOrder.getTxSN());
 				Tx1362Response response = (Tx1362Response) thirdPPService.invokeTx1362(request);
-				if (response.getStatus() != Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+				if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
 					Transaction transaction = transactionRepository.findOneByReferenceAndType(cfcaOrder.getInvest().getId(), Transaction.Type.CHARGE);
 					transaction.setRemark(Transaction.Status.RECHARGE_SUCC);
 					User user = cfcaOrder.getInvest().getUser();
