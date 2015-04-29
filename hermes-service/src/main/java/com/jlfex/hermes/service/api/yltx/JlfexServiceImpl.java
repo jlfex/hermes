@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
@@ -23,8 +24,8 @@ import com.jlfex.hermes.common.http.HttpClientUtil;
 import com.jlfex.hermes.common.utils.Bean2Map;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.CollectionUtil;
+import com.jlfex.hermes.common.utils.SerialUtil;
 import com.jlfex.hermes.common.utils.Strings;
-import com.jlfex.hermes.common.utils.Strings.StringSet;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.CreditRepayPlan;
@@ -84,7 +85,6 @@ import com.jlfex.hermes.service.sequence.SequenceService;
 public class JlfexServiceImpl implements JlfexService {
 
 	//开放平台流水号缓存标识
-	private  static final String CACHE_YLTX_SERIAL_SEQUENCE = "com.jlfex.cache.request.serial";
 	private  static final String CACHE_YLTX_ORDERSN_SEQUENCE = "com.jlfex.cache.request.orderSn";
 		
 	@Autowired
@@ -143,7 +143,7 @@ public class JlfexServiceImpl implements JlfexService {
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
 		}
-		String serialNo = generateSerialNo(HermesConstants.CODE_FINANCE_FRODUCT_GET) ;
+		String serialNo = generateSerialNo() ;
 	    StringBuffer reqUrlBuffer = new StringBuffer();
 	    reqUrlBuffer.append(apiConfig.getApiUrl().trim());
 	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_FINANCE_FRODUCT_GET, serialNo));
@@ -201,7 +201,7 @@ public class JlfexServiceImpl implements JlfexService {
 			apiConfig = getApiConfig();
 		}
 		vo.setOrderSn(generateOrderSn());
-		String serialNo = generateSerialNo(HermesConstants.CODE_ORDER_DO2PAY);
+		String serialNo = generateSerialNo();
 		Map<String,String>  commonMap = HttpClientUtil.buildPostCommonParam(HermesConstants.JL_ORDER_DO2PAY, serialNo);
 		commonMap.putAll(Bean2Map.getValueMap(vo));
 		//请求日志
@@ -255,7 +255,7 @@ public class JlfexServiceImpl implements JlfexService {
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
 		}
-		String serialNo = generateSerialNo(HermesConstants.CODE_ORDER_CANCEL) ;
+		String serialNo = generateSerialNo() ;
 		Map<String,String>  commonMap = HttpClientUtil.buildPostCommonParam(HermesConstants.JL_ORDER_CANCEL, serialNo);
 		commonMap.put("orderCode", orderCode.trim());
 		//请求日志
@@ -298,7 +298,7 @@ public class JlfexServiceImpl implements JlfexService {
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
 		}
-		String serialNo = generateSerialNo(HermesConstants.CODE_ORDER_GET);
+		String serialNo = generateSerialNo();
 		StringBuffer reqUrlBuffer = new StringBuffer();
 		reqUrlBuffer.append(apiConfig.getApiUrl().trim());
 	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_ORDER_GET, serialNo));
@@ -341,7 +341,7 @@ public class JlfexServiceImpl implements JlfexService {
 		if(apiConfig==null){
 			apiConfig = getApiConfig();
 		}
-		String serialNo = generateSerialNo(HermesConstants.CODE_FILE_GET);
+		String serialNo = generateSerialNo();
 		StringBuffer reqUrlBuffer = new StringBuffer();
 		reqUrlBuffer.append(apiConfig.getApiUrl().trim());
 	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_FILE_GET, serialNo));
@@ -376,18 +376,11 @@ public class JlfexServiceImpl implements JlfexService {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized String generateSerialNo(String interfaceCode) throws Exception {
-		Sequence sequence = sequenceService.findBySeqNameAndStatus(HermesConstants.SEQ_YLTX_REQUEST_SERIAL_NO, HermesConstants.VALID);
-		if (sequence != null) {
-			Caches.set(CACHE_YLTX_SERIAL_SEQUENCE, Long.valueOf(sequence.getCurrentVal().trim()));
-		}else{
-			throw new Exception("序列serialNo没有初始化");
-		}
-		Long seq = Caches.incr(CACHE_YLTX_SERIAL_SEQUENCE, sequence.getIncrementVal());// 递增缓存数据
-		sequence.setCurrentVal(seq.toString());
-		sequenceService.saveSequnce(sequence);
-		Logger.info("创建的serialNo="+String.format(interfaceCode+"%012d", seq));
-		return String.format(interfaceCode+"%012d", seq);
+	@Override
+	public String generateSerialNo() throws Exception {
+		String  val = SerialUtil.getSerialByDate10AndRandomLen(9);
+		Logger.info("生成开发平台：19位请求流水号="+val);
+		return val;
 	}
 	
     /**
@@ -395,7 +388,9 @@ public class JlfexServiceImpl implements JlfexService {
      * @return
      * @throws Exception
      */
-	public synchronized String generateOrderSn() throws Exception {
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	@Override
+	public String generateOrderSn() throws Exception {
 		Sequence sequence = sequenceService.findBySeqNameAndStatus(HermesConstants.SEQ_YLTX_REQUEST_ORDER_SN, HermesConstants.VALID);
 		if (sequence != null) {
 			Caches.set(CACHE_YLTX_ORDERSN_SEQUENCE, Long.valueOf(sequence.getCurrentVal()));
@@ -461,12 +456,13 @@ public class JlfexServiceImpl implements JlfexService {
 	/**
 	 * 还款计划表 获取
 	 */
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Override
 	public String  queryRepayPlan(String code, String type) throws Exception {
 		String result = null ;
 		String var = "查询还款计划表接口:";
 		ApiConfig apiConfig = getApiConfig();
-		String serialNo = generateSerialNo(HermesConstants.CODE_FINPRO_REPSCH) ;
+		String serialNo = generateSerialNo() ;
 	    StringBuffer reqUrlBuffer = new  StringBuffer();
 	    reqUrlBuffer.append(apiConfig.getApiUrl().trim());
 	    reqUrlBuffer.append(HttpClientUtil.buildGetCommonParam(HermesConstants.JL_FINPRO_REPSCH, serialNo));
@@ -1175,8 +1171,5 @@ public class JlfexServiceImpl implements JlfexService {
 			return null;
 		}
 	}
-	@Override
-	public synchronized String generateSerialNo() throws Exception {
-		return Calendars.format("yyMMddHHmmss")+Strings.random(9, StringSet.NUMERIC);
-	}
+	
 }

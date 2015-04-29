@@ -96,6 +96,7 @@ jQuery(function($) {
 			url: '${app}/jlfex/queryfinance',
 			target: 'main'
 		});
+	  $("#synchYLTXCredit").attr('disabled',true);
 	});
 	
 	
