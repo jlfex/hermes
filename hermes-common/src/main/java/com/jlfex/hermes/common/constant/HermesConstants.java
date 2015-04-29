@@ -82,8 +82,6 @@ public final class HermesConstants {
 	/**
 	 * 序列名称
 	 */
-	// 易联天下：请求流水号
-	public static final String SEQ_YLTX_REQUEST_SERIAL_NO = "serialNo";
 	public static final String SEQ_YLTX_REQUEST_ORDER_SN = "orderSn";
 
 	/**
