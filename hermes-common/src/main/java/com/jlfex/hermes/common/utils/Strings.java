@@ -223,6 +223,28 @@ public abstract class Strings {
 		return Cryptos.hashAndHex(str, HashType.MD5);
 	}
 	
+	public static void byte2hex(byte paramByte, StringBuffer paramStringBuffer)
+	{
+	    char[] arrayOfChar = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	    int i = (paramByte & 0xF0) >> 4;
+	    int j = paramByte & 0xF;
+	    paramStringBuffer.append(arrayOfChar[i]);
+	    paramStringBuffer.append(arrayOfChar[j]);
+	}
+	
+	public static String bytes2hex(byte[] paramArrayOfByte) {
+	    String str1 = "";
+	    String str2 = "";
+	    for (int i = 0; i < paramArrayOfByte.length; i++) {
+	      str2 = Integer.toHexString(paramArrayOfByte[i] & 0xFF);
+	      if (str2.length() == 1) {
+	        str2 = "0" + str2;
+	      }
+	      str1 = str1 + str2;
+	    }
+	    return str1.toUpperCase();
+	  }
+	
 	/**
 	 * 字符串集合
 	 */
