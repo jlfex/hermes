@@ -23,6 +23,7 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.CommonRepository;
@@ -40,10 +41,7 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
  */
 @Service
 @Transactional
-public class PropertiesServiceImpl implements PropertiesService {
-
-	public static final String PLAT_TYPE = "3d22c9ab-6575-4934-b70e-c06ccf1b0fb1";
-	
+public class PropertiesServiceImpl implements PropertiesService {	
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
@@ -343,8 +341,10 @@ public class PropertiesServiceImpl implements PropertiesService {
 				if (StringUtils.isNotEmpty(typeId)) {
 					list.add(cb.equal(root.<String>get("type").<String>get("id"), typeId));
 				}
-				list.add(cb.notEqual(root.<String>get("type").<String>get("id"), PLAT_TYPE));
-				
+				Dictionary  dict = dictionaryRepository.findByCodeAndStatus(HermesConstants.PLAT_TYPE,HermesConstants.CODE_00);
+				if(dict != null){
+				     list.add(cb.notEqual(root.<String>get("type").<String>get("id"), dict.getId()));
+				}
 				return cb.and(list.toArray(new Predicate[list.size()]));
 			}
 		},pageable);

@@ -34,5 +34,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String>,
 
 	@Query("from Dictionary d where d.type.id = ?1")
 	public List<Dictionary> findByType(String typeId);
+	
+	public Dictionary findByCodeAndStatus(String code,String status);
 
 }
