@@ -1,11 +1,22 @@
 package com.jlfex.hermes.service.impl;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.App;
@@ -15,6 +26,7 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.CommonRepository;
+import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.repository.TextRepository;
 import com.jlfex.hermes.service.PropertiesService;
@@ -29,6 +41,8 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 @Service
 @Transactional
 public class PropertiesServiceImpl implements PropertiesService {
+
+	public static final String PLAT_TYPE = "3d22c9ab-6575-4934-b70e-c06ccf1b0fb1";
 	
 	/** 系统属性仓库 */
 	@Autowired
@@ -41,7 +55,8 @@ public class PropertiesServiceImpl implements PropertiesService {
 	private TextService textService;
 	@Autowired
 	private TextRepository textRepository;
-
+	@Autowired
+	private DictionaryRepository dictionaryRepository;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -307,5 +322,64 @@ public class PropertiesServiceImpl implements PropertiesService {
 		// 返回结果
 		values.put(HermesConstants.KEY_DATABASE, "true");
 		return values;
+	}
+
+	@Override
+	public Page<Properties> queryByCondition(final Properties properties, final String typeId,String page, String size) throws Exception {
+		 Pageable pageable = new PageRequest(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, "10")), new Sort(Direction.DESC,  "createTime"));
+		 return  propertiesRepository.findAll(new Specification<Properties>() {
+			@Override
+			public Predicate toPredicate(Root<Properties> root, CriteriaQuery<?> query,CriteriaBuilder cb) {
+				List<Predicate> list = new ArrayList<Predicate>();
+				if (StringUtils.isNotEmpty(properties.getCode())) {
+					list.add(cb.like(root.<String>get("code"), "%"+properties.getCode().trim()+"%"));
+				}
+				if (StringUtils.isNotEmpty(properties.getName())) {
+					list.add(cb.like(root.<String>get("name"), "%"+properties.getName().trim()+"%"));
+				}
+				if (StringUtils.isNotEmpty(properties.getStatus())) {
+					list.add(cb.equal(root.<String>get("status"), properties.getStatus().trim()));
+				}
+				if (StringUtils.isNotEmpty(typeId)) {
+					list.add(cb.equal(root.<String>get("type").<String>get("id"), typeId));
+				}
+				list.add(cb.notEqual(root.<String>get("type").<String>get("id"), PLAT_TYPE));
+				
+				return cb.and(list.toArray(new Predicate[list.size()]));
+			}
+		},pageable);
+	}
+
+	@Override
+	public List<Properties> findAllByCode(String code) {
+		return propertiesRepository.findAllByCode(code);
+	}
+
+	@Override
+	public Properties addOrUpdateProperties(Properties properties,String typeId) {
+		Properties prop=null;
+		if(StringUtils.isEmpty(properties.getId())){
+			prop = new Properties();
+			prop.setCode(properties.getCode());
+		}else{
+			prop = propertiesRepository.findOne(properties.getId());
+			prop.setCode(properties.getCode());
+		}		
+		prop.setName(properties.getName());//参数名称
+		prop.setValue(properties.getValue());//参数值
+		prop.setStatus(properties.getStatus());//参数状态
+		prop.setType(dictionaryRepository.findOne(typeId));//参数类型
+		propertiesRepository.save(prop);
+		return properties;
+	}
+
+	@Override
+	public List<Properties> findAllByName(String name) {
+		return propertiesRepository.findAllByName(name);
+	}
+
+	@Override
+	public void delProperties(String id) {
+		propertiesRepository.delete(id);
 	}
 }

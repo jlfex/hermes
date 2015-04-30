@@ -2,13 +2,18 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import com.jlfex.hermes.common.dict.Dicts;
+import com.jlfex.hermes.common.dict.Element;
 
 /**
  * 系统属性信息模型
  */
 @Entity
-@Table(name = "hm_properties")
+@Table(name = "hm_properties",uniqueConstraints={@UniqueConstraint(columnNames = {"code" })})
 public class Properties extends Model {
 	
 	private static final long serialVersionUID = -7689344513377810104L;
@@ -24,7 +29,16 @@ public class Properties extends Model {
 	/** 内容 */
 	@Column(name = "value")
 	private String value;
-	
+
+	/** 状态 */
+	@Column(name = "status")
+	private  String  status;
+
+	/** 类型 */
+	@ManyToOne
+	@JoinColumn(name = "type")
+	private  Dictionary  type;
+
 	/**
 	 * 构造函数
 	 */
@@ -102,4 +116,36 @@ public class Properties extends Model {
 	public void setValue(String value) {
 		this.value = value;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Dictionary getType() {
+		return type;
+	}
+
+	public void setType(Dictionary type) {
+		this.type = type;
+	}
+
+	/**
+	 * 读取状态名称
+	 * 
+	 */
+	public String getStatusName() {
+		return Dicts.name(status, status, Status.class);
+	}
+	
+	public static final class Status {
+		@Element("有效")
+		public static final String INVALID = "0";
+		@Element("无效")
+		public static final String EFFECTIVE = "1";
+	}
+
 }

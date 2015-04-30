@@ -1,4 +1,5 @@
 package com.jlfex.hermes.service;
+
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
@@ -69,4 +70,15 @@ public interface PropertiesService {
 			String emailExpire, String smsExpire, String realnameSwitch, String cellphoneSwitch);
 
 	public Map<String, String> loadFromDatabase();
+	
+	public Page<Properties> queryByCondition(final Properties properties,String typeId, String page, String size) throws Exception;
+
+	public List<Properties> findAllByCode(String code);
+	
+	public List<Properties> findAllByName(String name);
+	
+	public Properties addOrUpdateProperties(Properties properties,String typeId);
+	
+	public void delProperties(String id);
+
 }

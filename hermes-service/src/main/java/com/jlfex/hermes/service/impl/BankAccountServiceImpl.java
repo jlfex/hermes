@@ -24,7 +24,6 @@ import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.BankAccount.Status;
-import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
