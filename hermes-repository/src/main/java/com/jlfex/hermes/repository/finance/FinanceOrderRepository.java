@@ -1,5 +1,8 @@
 package com.jlfex.hermes.repository.finance;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -24,4 +27,10 @@ public interface FinanceOrderRepository extends JpaRepository<FinanceOrder, Stri
 	 * @return
 	 */
 	public FinanceOrder  findById(String id);
+	/**
+	 * 根据起息日+ 状态  获取理财产品
+	 * @param dateOfValue
+	 * @return
+	 */
+	public List<FinanceOrder>  findByDateOfValueAndStatusIn(Date dateOfValue, List<String> status);
 }

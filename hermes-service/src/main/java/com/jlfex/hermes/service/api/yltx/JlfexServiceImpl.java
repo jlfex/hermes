@@ -1013,7 +1013,7 @@ public class JlfexServiceImpl implements JlfexService {
 	@Transactional(rollbackFor=Exception.class)
 	@Override
 	public boolean updateFinishedFinance(FinanceOrder synchObj) throws Exception {
-		String var = "理财产品id="+synchObj.getUniqId();
+		String var = "起息日更新操作：理财产品id="+synchObj.getUniqId();
 		Logger.info(var+" 开始进行实际募资金额更新，理财产品起息日："+Calendars.format(HermesConstants.FORMAT_19, synchObj.getDateOfValue()));
 		if(new Date().before(synchObj.getDateOfValue())){
 			throw new Exception("理财产品没有起息,跳过处理：当前系统时间:"+Calendars.format(HermesConstants.FORMAT_19)+"< 理财产品起息日:"+Calendars.format(HermesConstants.FORMAT_19, synchObj.getDateOfValue()));

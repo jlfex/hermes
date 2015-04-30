@@ -1,5 +1,8 @@
 package com.jlfex.hermes.service.finance;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,15 @@ public class FinanceOrderServiceImpl implements  FinanceOrderService {
 	@Override
 	public FinanceOrder queryById(String id) throws Exception {
 		return financeOrderRepository.findById(id);
+	}
+	/**
+	 * 根据理财产品 起息日 查询
+	 * @param dateOfValue
+	 * @return
+	 */
+	@Override
+	public List<FinanceOrder> queryByDateOfValueAndStatusIn(Date  dateOfValue,List<String> status){
+		return financeOrderRepository.findByDateOfValueAndStatusIn(dateOfValue,status); 
 	}
 		
 	

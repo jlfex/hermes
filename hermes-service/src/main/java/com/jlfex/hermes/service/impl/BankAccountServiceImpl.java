@@ -293,7 +293,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 	@SuppressWarnings("rawtypes")
 	public Result zjCharge(BigDecimal amount, BigDecimal fee) {
 		Result result = new Result();
-
 		User user = userRepository.findOne(App.user().getId());
 		BankAccount bankAccount = this.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);

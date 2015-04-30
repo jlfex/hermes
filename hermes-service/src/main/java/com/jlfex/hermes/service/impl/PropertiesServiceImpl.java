@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
@@ -40,8 +41,9 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 @Service
 @Transactional
 public class PropertiesServiceImpl implements PropertiesService {
-	public static final String KEY_DATABASE = "com.jlfex.properties.database";
+
 	public static final String PLAT_TYPE = "3d22c9ab-6575-4934-b70e-c06ccf1b0fb1";
+	
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
@@ -318,7 +320,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 			values.put(prop.getCode(), prop.getValue());
 		}
 		// 返回结果
-		values.put(KEY_DATABASE, "true");
+		values.put(HermesConstants.KEY_DATABASE, "true");
 		return values;
 	}
 
@@ -342,6 +344,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 					list.add(cb.equal(root.<String>get("type").<String>get("id"), typeId));
 				}
 				list.add(cb.notEqual(root.<String>get("type").<String>get("id"), PLAT_TYPE));
+				
 				return cb.and(list.toArray(new Predicate[list.size()]));
 			}
 		},pageable);

@@ -18,6 +18,7 @@
 				<ref bean="autoCollectionQueryJobTrigger" />
 				<ref bean="autoChargeQueryJobTrigger" />
 				<ref bean="scanZJClearOrderJobTrigger" />
+				<ref bean="autoSynchExpireFinanceJobTrigger" />
 			</list>
 		</property>
 		<property name="taskExecutor">
@@ -51,7 +52,7 @@
 		<property name="cronExpression" value="0 0 2 * * ?" />
 	</bean>
 
-	<!-- autoBidFailureJob job -->
+	<!-- 自动还款 job -->
 	<bean id="autoBidFailureJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -61,7 +62,7 @@
 		</property>
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
-	<!-- autoOverdueCalcJob job -->
+	<!-- 结算逾期 job -->
 	<bean id="autoOverdueCalcJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -101,6 +102,16 @@
 		</property>
 		<property name="cronExpression" value="0 0 3 * * ?" />
 	</bean>
+	<!-- 描述：JLFEX起息日理财产品 执行时间: 每天凌晨03:30 -->
+	<bean id="autoSynchExpireFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoSynchExpireFinanceJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 30 3 * * ?" />
+	</bean>
 
 	<!-- 中金支付查询接口 执行时间：每隔2分钟执行一次 -->
 	<bean id="autoCollectionQueryJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -120,7 +131,7 @@
 				<property name="targetMethod" value="doJob" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 0/1 * * * ?" />
+		<property name="cronExpression" value="0 0/2 * * * ?" />
 	</bean>
     <!-- 提现结算接口状态同步 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
 	<bean id="scanZJClearOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -132,4 +143,5 @@
 		</property>
 		<property name="cronExpression" value="0 0/5 10-18 * * ?" />
 	</bean>
+	
 </beans>
