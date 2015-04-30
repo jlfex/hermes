@@ -341,7 +341,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 				if (StringUtils.isNotEmpty(typeId)) {
 					list.add(cb.equal(root.<String>get("type").<String>get("id"), typeId));
 				}
-				Dictionary  dict = dictionaryRepository.findByCode(HermesConstants.PLAT_TYPE);
+				Dictionary  dict = dictionaryRepository.findByCodeAndStatus(HermesConstants.PLAT_TYPE,HermesConstants.CODE_00);
 				if(dict != null){
 				     list.add(cb.notEqual(root.<String>get("type").<String>get("id"), dict.getId()));
 				}
