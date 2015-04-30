@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.model.Text;
@@ -28,7 +29,7 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 @Service
 @Transactional
 public class PropertiesServiceImpl implements PropertiesService {
-	public static final String KEY_DATABASE = "com.jlfex.properties.database";
+	
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
@@ -304,7 +305,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 			values.put(prop.getCode(), prop.getValue());
 		}
 		// 返回结果
-		values.put(KEY_DATABASE, "true");
+		values.put(HermesConstants.KEY_DATABASE, "true");
 		return values;
 	}
 }

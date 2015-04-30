@@ -202,6 +202,10 @@ public final class HermesConstants {
 	public static final String  CLEAR_NOTE = "测试市场订单结算";
 	
 	
+	/**
+	 * key
+	 */
+	public static final String KEY_DATABASE = "com.jlfex.properties.database";
 
 
 }

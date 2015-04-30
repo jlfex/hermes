@@ -1,5 +1,8 @@
 package com.jlfex.hermes.service.finance;
 
+import java.util.Date;
+import java.util.List;
+
 import com.jlfex.hermes.model.yltx.FinanceOrder;
 
 /**
@@ -31,6 +34,12 @@ public interface FinanceOrderService {
 	 * @throws Exception
 	 */
 	public FinanceOrder  queryById(String id) throws Exception ;
+	/**
+	 * 根据理财产品 起息日+状态  查询
+	 * @param dateOfValue
+	 * @return
+	 */
+	public List<FinanceOrder> queryByDateOfValueAndStatusIn(Date dateOfValue,List<String> status);
 	
 
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.model.ArticleCategory;
@@ -23,7 +24,6 @@ import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
-import com.jlfex.hermes.service.impl.PropertiesServiceImpl;
 
 /**
  * 系统属性过滤器
@@ -77,7 +77,7 @@ public class PropertiesFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-		if (!WebApp.isResource(req) && Strings.empty(App.config(PropertiesServiceImpl.KEY_DATABASE))) {
+		if (!WebApp.isResource(req) && Strings.empty(App.config(HermesConstants.KEY_DATABASE))) {
 			Logger.info("properties from database has changed! rebuild cache now.");
 			App.config(propertiesService.loadFromDatabase());
 			Logger.info("properties rebuild completed.");
@@ -116,7 +116,7 @@ public class PropertiesFilter implements Filter {
 	 */
 	public static void clear() {
 		Map<String, String> values = new HashMap<String, String>();
-		values.put(PropertiesServiceImpl.KEY_DATABASE, "");
+		values.put(HermesConstants.KEY_DATABASE, "");
 		App.config(values);
 		Logger.info("properties clear.");
 	}
