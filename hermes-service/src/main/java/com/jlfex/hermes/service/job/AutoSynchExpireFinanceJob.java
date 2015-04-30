@@ -1,6 +1,7 @@
 package com.jlfex.hermes.service.job;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class AutoSynchExpireFinanceJob extends Job {
 			try{
 				List<FinanceOrder> financeLists = getExpireFinanceList();
 				if(financeLists ==null || financeLists.size() == 0){
-					Logger.info(var+"hermes侧：当天"+Calendars.format(HermesConstants.FORMAT_10)+",没有起息的理财产品,不进行同步操作");
+					Logger.info(var+"hermes侧：当天"+Calendars.format(HermesConstants.FORMAT_10)+",T-1天没有起息的理财产品,不进行同步操作");
 					return new Result(true, false, var+"处理结束");
 				}
 				List<FinanceOrder> waitDealList = new  ArrayList<FinanceOrder>();
@@ -95,17 +96,21 @@ public class AutoSynchExpireFinanceJob extends Job {
 		}
 	}
     /**
-     * 获取系统 起息日 的理财产品 
+     * 获取系统 昨天 起息日 的理财产品 
      * @return
      * @throws ParseException
      */
 	public List<FinanceOrder> getExpireFinanceList() throws ParseException {
-		Date expireDate = Calendars.parseDate(Calendars.format(HermesConstants.FORMAT_10, new Date()));
+		Date now = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(now);
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		Date  queryDate =Calendars.parseDate(Calendars.format(HermesConstants.FORMAT_10 ,calendar.getTime())) ;
 		List<String> statusList = new ArrayList<String>();
 		statusList.add(HermesConstants.FINANCE_FUNDRAISING );
 		statusList.add(HermesConstants.FINANCE_WAIT_PAY );
 		//获取起息的理财产品
-		List<FinanceOrder> financeLists =  financeOrderService.queryByDateOfValueAndStatusIn(expireDate, statusList);
+		List<FinanceOrder> financeLists =  financeOrderService.queryByDateOfValueAndStatusIn(queryDate, statusList);
 		return financeLists;
 	}
 
