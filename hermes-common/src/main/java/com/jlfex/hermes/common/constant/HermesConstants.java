@@ -206,6 +206,10 @@ public final class HermesConstants {
 	 * key
 	 */
 	public static final String KEY_DATABASE = "com.jlfex.properties.database";
+	/**
+	 * 字典项平台类
+	 */
+	public static final String PLAT_TYPE = "plat_type";
 
 
 }
