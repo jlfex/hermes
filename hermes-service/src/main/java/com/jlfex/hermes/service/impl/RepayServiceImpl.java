@@ -492,7 +492,7 @@ public class RepayServiceImpl implements RepayService {
 	}
 
 	@Override
-	public boolean autoRepayment(String id) {
+	public boolean autoRepayment(String id) throws Exception{
 		LoanRepay loanRepay = loanRepayRepository.findOne(id);
 		// 判断假如借款还款状态为正常还款说明已经还过了，无须再还
 		if (Strings.equals(loanRepay.getStatus(), RepayStatus.NORMAL)) {
