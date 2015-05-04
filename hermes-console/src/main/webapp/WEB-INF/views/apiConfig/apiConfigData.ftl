@@ -2,6 +2,7 @@
 	<thead>
 		<tr>
 		                <th class="align-center">平台名称</th>
+		                <th class="align-center">平台编码</th>
 				        <th class="align-center">本地证书</th>
                         <th class="align-center">本地证书保护密码</th>
                         <th class="align-center">服务端证书</th>
@@ -20,6 +21,7 @@
 					<#else>
 						<#list (apiConfigList.content)?sort_by("createTime")?reverse as l>  
 							<tr>
+							    <td class="align-center">${(l.platName)!''}</td> 
 							    <td class="align-center">${(l.platCode)!''}</td> 
 							    <td class="align-center">${(l.clientStoreName)!''}</td> 
 		                        <td class="align-center">${(l.clientStorePwd)!''}</td> 

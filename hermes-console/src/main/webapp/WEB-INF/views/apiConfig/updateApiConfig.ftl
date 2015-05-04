@@ -11,9 +11,18 @@
           <form class="form-horizontal" role="form" id="updateForm" method="post">
           <input type="hidden" value="${(apiConfig.id)!}" name="id" />
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>平台名称</label>
+              <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>平台名称</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" id="platCode"  name="platCode" disabled="disabled" value="${(apiConfig.platCode)!''}">
+                  <input type="text" class="form-control" id="platName"  name="platName" readonly="true" value="${(apiConfig.platName)!''}">
+                </div>
+                <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
+				</div> 
+              </div>
+              <div class="form-group">
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>平台编码</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="platCode"  name="platCode" readonly="true" value="${(apiConfig.platCode)!''}">
                 </div>
 				<div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项</span>
@@ -86,7 +95,7 @@
 
 <script type="text/javascript">
 jQuery(function($) {
-	$("#platCode,#clientStoreName,#clientStorePwd,#truestStoreName,#truststorePwd,#apiUrl").on('blur',function(i,item){
+	$("#platName,#platCode,#clientStoreName,#clientStorePwd,#truestStoreName,#truststorePwd,#apiUrl").on('blur',function(i,item){
 		checkInput(this);
 	});
 	//对输入元素进行校验

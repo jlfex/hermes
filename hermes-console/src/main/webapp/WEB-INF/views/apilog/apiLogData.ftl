@@ -1,7 +1,7 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-		                <th class="align-center">平台编码</th>
+		                <th class="align-center">平台名称</th>
 				        <th class="align-center">请求流水号</th>
                         <th class="align-center">接口名称</th>
                         <th class="align-center">请求时间</th>
@@ -19,7 +19,7 @@
 					<#else>
 						<#list (apiLogList.content)?sort_by("createTime")?reverse as l>  
 							<tr>
-							    <td class="align-center">${(l.apiConfig.platCode)!''}</td> 
+							    <td class="align-center">${(l.apiConfig.platName)!''}</td> 
 							    <td class="align-center">${(l.serialNo)!''}</td> 
 		                        <td class="align-center">${(l.interfaceName)!''}</td> 
 		                        <td class="align-center">${(l.requestTime)!''}</td> 

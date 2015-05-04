@@ -16,18 +16,22 @@ import cfca.payment.api.tx.Tx1350Response;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
 import cfca.util.GUID;
+
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJBank;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.BankAccount;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
+import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.repository.cfca.CFCAOrderRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.DictionaryService;
@@ -50,6 +54,10 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	private DictionaryService dictionaryService;
 	@Autowired
 	private BankAccountService bankAccountService;
+	@Autowired
+	private ApiConfigRepository apiConfigRepository;
+	//接口配置
+	public static ApiConfig  apiConfig = null;
 	
 	/**
 	 * 中金请求流水号：
@@ -106,9 +114,9 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	@Override
 	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String serialNo) {
 		Tx1361Request tx1361Request = new Tx1361Request();
-		tx1361Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
+		tx1361Request.setInstitutionID(App.config(HermesConstants.CFCA_INSTITUTION_ID_CODE));
 		tx1361Request.setTxSN(serialNo);
-		tx1361Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
+		tx1361Request.setOrderNo(App.config(HermesConstants.CFCA_MARKET_ORDER_NO_CODE));
 		tx1361Request.setAmount(investAmount.multiply(new BigDecimal(100)).longValue());
 		tx1361Request.setBankID(Dicts.name(bankAccount.getBank().getName(), "", P2ZJBank.class));
 		tx1361Request.setAccountName(bankAccount.getName());
@@ -172,9 +180,9 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	public Tx1341Request buildTx1341Request(User investUser,BigDecimal withdrawAmount) {
 		BankAccount  userbankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
         Tx1341Request tx1341Request = new Tx1341Request();
-        tx1341Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
+        tx1341Request.setInstitutionID(App.config(HermesConstants.CFCA_INSTITUTION_ID_CODE));
         tx1341Request.setSerialNumber(String.format(HermesConstants.PRE_OUT+"%s", GUID.getTxNo()));
-        tx1341Request.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
+        tx1341Request.setOrderNo(App.config(HermesConstants.CFCA_MARKET_ORDER_NO_CODE));
         tx1341Request.setAmount(withdrawAmount.longValue());
         tx1341Request.setRemark(HermesConstants.CLEAR_NOTE);
         tx1341Request.setAccountType(HermesConstants.ZJ_ACCOUNT_TYPE_11);
@@ -219,6 +227,10 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 			logMap.put("exception", e.getMessage());
 		}
 		if(apiLog!=null){
+			if(apiConfig==null){
+				apiConfig = getApiConfig();
+			}
+			apiLog.setApiConfig(apiConfig);
 			apiLogService.saveApiLog(apiLog);
 		}
 	    return response;
@@ -235,7 +247,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 		cfcaOrder.setInvest(null);
 		cfcaOrder.setCode(response.getCode());
 		cfcaOrder.setMessage(response.getMessage());
-		cfcaOrder.setOrderNo(HermesConstants.CFCA_MARKET_ORDER_NO);
+		cfcaOrder.setOrderNo(App.config(HermesConstants.CFCA_MARKET_ORDER_NO_CODE));
 		cfcaOrder.setTxSN(txSN);
 		cfcaOrder.setStatus(CFCAOrder.ClearStatus.CLEAR_INIT);
 		cfcaOrder.setUser(investUser);
@@ -256,7 +268,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
 		apiLog.setSerialNo(serialNumber);
 		Tx1350Request tx1350Request = new Tx1350Request();
-	    tx1350Request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
+	    tx1350Request.setInstitutionID(App.config(HermesConstants.CFCA_INSTITUTION_ID_CODE));
 	    tx1350Request.setSerialNumber(serialNumber);
 	    Tx1350Response response = null;
 		try {
@@ -279,9 +291,25 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 			apiLog.setException(e.getMessage());
 			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 		}
+		if(apiConfig==null){
+			apiConfig = getApiConfig();
+		}
+		apiLog.setApiConfig(apiConfig);
 		apiLogService.saveApiLog(apiLog);
 		return response;
 	}
 
+	/**
+	 * 获取第三方平台配置信息
+	 * @return
+	 * @throws Exception
+	 */
+	public ApiConfig getApiConfig() throws Exception{
+		ApiConfig  apiConfig = apiConfigRepository.findByPlatCodeAndStatus(HermesConstants.PLAT_ZJ_CODE, HermesConstants.VALID);
+		if(apiConfig == null){
+			throw new  Exception("平台接口配置没有初始化");
+		}
+		return  apiConfig;
+	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.service.apiconfig.ApiConfigService;
 import com.jlfex.hermes.service.pojo.yltx.ApiConfigVo;
@@ -104,16 +105,22 @@ public class ApiConfigController {
 	 * 
 	 */
 	@RequestMapping("/delApiConfig")
-	public String deleteFriendLink(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
+	public String delApiConfig(@RequestParam(value = "id", required = true) String id, RedirectAttributes attr, Model model) {
 		try {
-			apiConfigService.delApiConfig(id);
-			attr.addFlashAttribute("msg", "删除接口成功");
-			return "redirect:/apiConfig/index";
+			ApiConfig apiConfig = apiConfigService.findById(id);
+			if(apiConfig!=null && (
+			  HermesConstants.PLAT_JLFEX_CODE.equals(apiConfig.getPlatCode())||
+			  HermesConstants.PLAT_ZJ_CODE.equals(apiConfig.getPlatCode())) ){
+				attr.addFlashAttribute("msg", "初始化数据不允许删除");
+			}else{
+				apiConfigService.delApiConfig(id);
+				attr.addFlashAttribute("msg", "删除接口成功");
+			}
 		} catch (Exception e) {
 			attr.addFlashAttribute("msg", "删除接口失败");
 			Logger.error("删除接口失败：", e);
-			return "redirect:/apiConfig/index";
 		}
+		return "redirect:/apiConfig/index";
 	}
 
 }

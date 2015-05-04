@@ -413,7 +413,6 @@ public class JlfexServiceImpl implements JlfexService {
 		ApiConfig  apiConfig = apiConfigRepository.findByPlatCodeAndStatus(HermesConstants.PLAT_JLFEX_CODE, HermesConstants.VALID);
 		if(apiConfig == null){
 			Map<String,String>  recodeMap = new HashMap<String,String>();
-			recodeMap.put("interfaceMethod",HermesConstants.JL_FINANCE_FRODUCT_GET);
 			recodeMap.put("exception","平台接口配置没有初始化");
 		    recordApiLog(apiConfig, recodeMap);
 			throw new  Exception("平台接口配置没有初始化");
@@ -1021,6 +1020,7 @@ public class JlfexServiceImpl implements JlfexService {
 		FinanceOrder existOrder = financeOrderService.queryByUniqId(synchObj.getUniqId());
 		if(existOrder == null){
 		   Logger.info("当前理财产品id="+synchObj.getUniqId()+", 状态="+synchObj.getStatus()+", 系统不存在，不需更新处理");
+		   return  false;
 		}else{
 			if(HermesConstants.FINANCE_FINISHED.equals(existOrder.getStatus())){
 				Logger.info(var+",已经同步处理过不需要再次同步, 数据中状态是"+existOrder.getStatus());

@@ -9,8 +9,17 @@
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" role="form" id="addForm" method="post">
-              <div class="form-group">
+               <div class="form-group">
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>平台名称</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="platName"  name="platName">
+                </div>
+				<div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项</span>
+				</div>                
+              </div>
+              <div class="form-group">
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>平台编码</label>
                 <div class="col-sm-5">
                   <input type="text" class="form-control" id="platCode"  name="platCode">
                 </div>
@@ -85,7 +94,7 @@
 
 <script type="text/javascript">
 jQuery(function($) {
-	$("#platCode,#clientStoreName,#clientStorePwd,#truestStoreName,#truststorePwd,#apiUrl").on('blur',function(i,item){
+	$("#platName,#platCode,#clientStoreName,#clientStorePwd,#truestStoreName,#truststorePwd,#apiUrl").on('blur',function(i,item){
 		checkInput(this);
 	});
 	//对输入元素进行校验
@@ -94,7 +103,7 @@ jQuery(function($) {
 		if($this.val() == ''){
 			$this.parent().parent().find(".alert-danger:eq(0)").show();
 			return false;
-		} else if ('apiUrl' == e.id && !/(http|https):\/\/([\w.]+\/?)\S*/.test($("#apiUrl").val())){
+		} else if ('apiUrl' == e.id && !/(http|https):\/\/([\w.]?\/?)\S*/.test($("#apiUrl").val())){
 			$this.parent().parent().find(".alert-danger:eq(0)").show();
 			return false;
 		}
