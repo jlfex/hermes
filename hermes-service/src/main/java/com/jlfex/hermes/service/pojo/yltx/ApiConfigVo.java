@@ -6,7 +6,8 @@ public class ApiConfigVo implements Serializable{
 	private static final long serialVersionUID = 7830641634590682351L;
 
 	private  String  id;
-	private  String  platCode;              //平台名称	
+	private  String  platName;                //平台名称
+	private  String  platCode;                //平台编码	
 	private  String  clientStoreName;         //本地证书名称
 	private  String  truestStoreName;         //服务端证书名称
 	private  String  clientStorePwd;
@@ -19,6 +20,13 @@ public class ApiConfigVo implements Serializable{
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getPlatName() {
+		return platName;
+	}
+	public void setPlatName(String platName) {
+		this.platName = platName;
 	}
 	public String getPlatCode() {
 		return platCode;

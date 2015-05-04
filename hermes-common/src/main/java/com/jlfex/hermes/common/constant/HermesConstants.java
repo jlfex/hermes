@@ -182,14 +182,14 @@ public final class HermesConstants {
 	public static final String CFCA_SUCCESS_CODE = "2000";
 
 	/**
-	 * 中金市场订单号
+	 * 中金市场订单号编码
 	 */
-	public static final String CFCA_MARKET_ORDER_NO = "H-100000-000001";
+	public static final String CFCA_MARKET_ORDER_NO_CODE = "cfca.market.order.no";
 
 	/**
-	 * 中金机构号
+	 * 中金机构号编码
 	 */
-	public static final String CFCA_INSTITUTION_ID = "001155";
+	public static final String CFCA_INSTITUTION_ID_CODE = "cfca.institution.id";
 	//账户类型
 	public static final int ZJ_ACCOUNT_TYPE_11 = 11; //个人账户
 	public static final int ZJ_ACCOUNT_TYPE_12 = 12; //企业账户
@@ -199,17 +199,20 @@ public final class HermesConstants {
 	public static final String  PRE_IN = "IN";
 	//中金清算请求流水号前缀
 	public static final String  PRE_OUT = "OUT";
-	public static final String  CLEAR_NOTE = "测试市场订单结算";
-	
+	public static final String  CLEAR_NOTE = "市场订单结算";
 	
 	/**
 	 * key
 	 */
 	public static final String KEY_DATABASE = "com.jlfex.properties.database";
 	/**
-	 * 字典项平台类
+	 * 字典项: 平台类编码
 	 */
 	public static final String PLAT_TYPE = "plat_type";
+	/**
+	 * 第三方 中金支付 编码
+	 */
+	public static final String PLAT_ZJ_CODE= "zjpay";
 
 
 }

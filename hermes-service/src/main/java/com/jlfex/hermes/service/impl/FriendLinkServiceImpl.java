@@ -25,7 +25,7 @@ public class FriendLinkServiceImpl implements FriendLinkService {
 
 	@Override
 	public List<FriendLink> findTop10() {
-		return friendLinkRepository.findAll(new PageRequest(0, 10, new Sort(Direction.DESC, "order", "updateTime"))).getContent();
+		return friendLinkRepository.findAll(new PageRequest(0, 10, new Sort(Direction.ASC, "order", "order_"))).getContent();
 	}
 
 }

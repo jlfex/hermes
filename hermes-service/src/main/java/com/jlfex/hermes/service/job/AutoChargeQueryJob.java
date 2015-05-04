@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
+
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -52,7 +54,7 @@ public class AutoChargeQueryJob extends Job {
 			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(), CFCAOrder.Type.RECHARGE);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
-				request.setInstitutionID(HermesConstants.CFCA_INSTITUTION_ID);
+				request.setInstitutionID(App.config(HermesConstants.CFCA_INSTITUTION_ID_CODE));
 				request.setTxSN(cfcaOrder.getTxSN());
 				Tx1362Response response = (Tx1362Response) thirdPPService.invokeTx1362(request);
 				User user = cfcaOrder.getUser();

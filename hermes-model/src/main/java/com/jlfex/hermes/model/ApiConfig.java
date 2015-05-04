@@ -18,6 +18,9 @@ public class ApiConfig  extends Model{
 	private static final long serialVersionUID = -2860055762227324208L;
 	
 	//平台名称
+	@Column(name = "plat_name",nullable=false, length = 40)
+	private  String  platName ;
+	//平台编码
 	@Column(name = "plat_code",nullable=false, length = 40)
 	private  String  platCode ;
 	//本地证书名称
@@ -47,6 +50,12 @@ public class ApiConfig  extends Model{
 	private  String  remark;
 	
 	
+	public String getPlatName() {
+		return platName;
+	}
+	public void setPlatName(String platName) {
+		this.platName = platName;
+	}
 	public String getPlatCode() {
 		return platCode;
 	}

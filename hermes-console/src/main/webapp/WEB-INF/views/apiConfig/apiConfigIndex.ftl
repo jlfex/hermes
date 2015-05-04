@@ -11,7 +11,7 @@
             <form id="searchForm" method="post" action="#">
                 <div class="row">
                     <div class="col-xs-2 hm-col form-group">
-                        <label for="platCode">平台名称</label>
+                        <label for="platCode">平台编码</label>
                         <input id="platCode" name="platCode" value="" class="form-control" type="text">
                     </div>
                     <div class="col-xs-2 hm-col form-group">
