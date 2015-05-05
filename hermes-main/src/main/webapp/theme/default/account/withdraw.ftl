@@ -89,7 +89,7 @@ jQuery(function($) {
 					_fee.html(data.messages[0] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
 					_sum.html(data.messages[1] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
 				} else {
-					_fee.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
+					//_fee.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
 					_sum.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
 				}
 			}
@@ -110,13 +110,18 @@ jQuery(function($) {
 			}
 		});
 	});
-	
+	var feeType = "${feeType}", feeTipMsg='';
 	// 费用提示处理
+	if(feeType == "1"){
+	    feeTipMsg = '<span style="white-space:nowrap;">'+"${feeMaxAmount}"+'</span>';
+	}else{
+	    feeTipMsg = '<span style="white-space:nowrap;"><@config key="fee.withdraw.desc" /></span>';
+	}
 	$('#info').popover({
 		html: true,
 		placement: 'right',
 		trigger: 'hover', 
-		content: '<span style="white-space:nowrap;"><@config key="fee.withdraw.desc" /></span>'
+		content: feeTipMsg
 	});
 });
 //-->

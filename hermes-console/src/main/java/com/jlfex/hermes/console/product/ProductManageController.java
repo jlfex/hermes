@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.model.Product;
@@ -90,12 +92,10 @@ public class ProductManageController {
 				msg = "添加产品成功";
 				p = new Product();
 				p.setStatus(Product.Status.VALID);
-				// 产品管理费
-				p.setManageFee(new BigDecimal(HermesConstants.PRODUCT_MANAGE_FEE));
-				p.setManageFeeType(HermesConstants.PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO);
+				//设置产品月缴管理费
+				setProductMonthFee(p);
 			}
 			productService.editProduct(p, product);
-
 			attr.addFlashAttribute("msg", msg);
 			return "redirect:/product/index";
 		} catch (Exception e) {
@@ -107,6 +107,22 @@ public class ProductManageController {
 				attr.addFlashAttribute("msg", "添加产品失败");
 				return "redirect:/product/add";
 			}
+		}
+	}
+    /**
+     * 根据开关配置
+     * 设置产品月缴管理费
+     * @param p
+     */
+	public void setProductMonthFee(Product p) {
+		// 产品管理费
+		String switchFlag = App.config(HermesConstants.CODE_PRODUCT_MANAGE_FEE_SWITCH).trim();
+		if(HermesConstants.SWITCH_FLAG_ONE.equals(switchFlag)){
+			p.setManageFee(new BigDecimal(App.config(HermesConstants.CODE_PRODUCT_MANAGE_FEE_CONSTANT).trim()));
+			p.setManageFeeType(Product.ManagerFeeType.CONSTANT);
+		}else{
+			p.setManageFee(new BigDecimal(App.config(HermesConstants.CODE_PRODUCT_MANAGE_FEE_PERCENT).trim()));
+			p.setManageFeeType(Product.ManagerFeeType.PERCENT);
 		}
 	}
 

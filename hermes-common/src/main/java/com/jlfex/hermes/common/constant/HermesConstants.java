@@ -30,18 +30,24 @@ public final class HermesConstants {
 	public static final String LOGIN = "登录界面";
 	public static final String REGISTER = "注册界面";
 
-	// 产品 月管理费
-	public static final String PRODUCT_MANAGE_FEE = "0.0050";
-	// 管理费类型： 00 按比例收取
-	public static final String PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO = "00";
-	// 管理费类型： 01 固定金额收取
-	public static final String PRODUCT_MANAGE_FEE_TYPE_ZERO_ONE = "01";
-	// 产品逾期还款：罚息费率梯度编码
-	public static final String PRODUCT_OVERDU_INTEREST_FEE_CODE = "overdue_interest_fee";
-	// 产品逾期还款: 违约金费率梯度编码
-	public static final String PRODUCT_OVERDU_PENALTY_FEE_CODE = "overdue_penalty_fee";
+	public static final String CODE_PRODUCT_MANAGE_FEE_PERCENT  = "month.manager.fee.percent";		//产品月管理费百分比编码
+	public static final String CODE_PRODUCT_MANAGE_FEE_CONSTANT = "month.manager.fee.constant";     //产品月管理费定值编码
+	public static final String CODE_PRODUCT_MANAGE_FEE_SWITCH   = "month.manager.fee.switch";		//产品月管理费开关切换编码
+	public static final String PRODUCT_OVERDU_INTEREST_FEE_CODE = "overdue_interest_fee"; 			//产品逾期还款：罚息费率梯度编码
+	public static final String PRODUCT_OVERDU_PENALTY_FEE_CODE  = "overdue_penalty_fee";			//产品逾期还款: 违约金费率梯度编码
 	
+	public static final String PROP_WITHDRAW_FEE_NAME	 = "fee.withdraw.name";
+	public static final String PROP_WITHDRAW_FEE_CONFIG	 = "fee.withdraw.config";					//提现手续费区间配置
+	public static final String PROP_WITHDRAW_FEE_RATE 	 = "fee.charge.rate";                		//提现手续费比例编码
+	public static final String WITHDRAW_FEE_SWITCH 		 = "fee.withdraw.switch";					//提现手续费类型开关编码
+	public static final String WITHDRAW_FEE_MAX_AMOUNT 	 = "fee.charge.max.amount";                 //提现手续费比例方式 单笔最大金额
 	
+	/**
+	 * 公共开关标识 
+	 * 0： 默认值
+	 */
+	public static final String SWITCH_FLAG_ZERO = "0"; 
+	public static final String SWITCH_FLAG_ONE =  "1";
 	
 	
 	/**
