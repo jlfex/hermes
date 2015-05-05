@@ -36,22 +36,18 @@ public final class HermesConstants {
 	public static final String PRODUCT_MANAGE_FEE_TYPE_ZERO_ZERO = "00";
 	// 管理费类型： 01 固定金额收取
 	public static final String PRODUCT_MANAGE_FEE_TYPE_ZERO_ONE = "01";
-	// 产品逾期还款：罚息 费率 梯度
-	public static final String PRODUCT_OVERDU_INTEREST_FEE0 = "0.00150000";
-	public static final String PRODUCT_OVERDU_INTEREST_FEE1 = "0.00050000";
-	public static final String PRODUCT_OVERDU_INTEREST_FEE2 = "0.00100000";
-
-	// 产品逾期还款：违约金 费率 梯度
-	public static final String PRODUCT_OVERDU_PENALTY_FEE0 = "0.00150000";
-	public static final String PRODUCT_OVERDU_PENALTY_FEE1 = "0.00050000";
-	public static final String PRODUCT_OVERDU_PENALTY_FEE2 = "0.00100000";
+	// 产品逾期还款：罚息费率梯度编码
+	public static final String PRODUCT_OVERDU_INTEREST_FEE_CODE = "overdue_interest_fee";
+	// 产品逾期还款: 违约金费率梯度编码
+	public static final String PRODUCT_OVERDU_PENALTY_FEE_CODE = "overdue_penalty_fee";
+	
 	
 	
 	
 	/**
 	 * HTTPS 连接常量
 	 */
-	public static final int HTTPS_PORT = 443;
+	public static final int    HTTPS_PORT = 443;
 	public static final String SCHEME_HTTPS = "https";
 	public static final String CHARSET_UTF8 = "UTF-8";
 	public static final String KEY_STORE_TYPE_JKS = "jks";
@@ -96,29 +92,29 @@ public final class HermesConstants {
 	 * 开发平台接口
 	 */
 
-	public static final int JL_PAGE_SIZE = 30; // 页面结果集 大小
-	public static final int JL_PAGE_NUM = 1; // 当前页
+	public static final int    JL_PAGE_SIZE = 30; 								 // 页面结果集 大小
+	public static final int    JL_PAGE_NUM = 1; 								 // 当前页
 	public static final String JL_FINANCE_FRODUCT_GET = "jl.financefroduct.get"; // 查询理财产品接口
-	public static final String JL_ORDER_GET = "jl.order.get"; // 查询订单接口
-	public static final String JL_FILE_GET = "jl.file.get"; // 查询文件协议
-	public static final String JL_ORDER_DO2PAY = "jl.order.do2pay"; // 下单并支付接口
-	public static final String JL_FINPRO_REPSCH = "jl.finpro.repsch.get"; // 查询还款计划接口
-	public static final String JL_ORDER_CANCEL = "jl.order.cancel"; // 撤销订单接口
+	public static final String JL_ORDER_GET = "jl.order.get";					 // 查询订单接口
+	public static final String JL_FILE_GET = "jl.file.get";						 // 查询文件协议
+	public static final String JL_ORDER_DO2PAY = "jl.order.do2pay"; 			 // 下单并支付接口
+	public static final String JL_FINPRO_REPSCH = "jl.finpro.repsch.get"; 		 // 查询还款计划接口
+	public static final String JL_ORDER_CANCEL = "jl.order.cancel"; 			 // 撤销订单接口
 
-	public static final String CODE_FINANCE_FRODUCT_GET = "9900001"; // 查询理财产品接口
-	public static final String CODE_ORDER_GET = "9900002"; // 查询订单接口
-	public static final String CODE_FILE_GET = "9900003"; // 查询文件协议
-	public static final String CODE_ORDER_DO2PAY = "1000005"; // 下单并支付接口
-	public static final String CODE_FINPRO_REPSCH = "9900004"; // 查询还款计划接口
-	public static final String CODE_ORDER_CANCEL = "1000003"; // 撤销订单接口
+	public static final String CODE_FINANCE_FRODUCT_GET = "9900001"; 			 // 查询理财产品接口
+	public static final String CODE_ORDER_GET = "9900002"; 						 // 查询订单接口
+	public static final String CODE_FILE_GET = "9900003"; 						 // 查询文件协议
+	public static final String CODE_ORDER_DO2PAY = "1000005"; 					 // 下单并支付接口
+	public static final String CODE_FINPRO_REPSCH = "9900004"; 					 // 查询还款计划接口
+	public static final String CODE_ORDER_CANCEL = "1000003"; 					 // 撤销订单接口
 
-	public static final String TYPE_FINANCE_REPAY_PLAN = "1"; // 理财产品还款计划
-	public static final String TYPE_ASSET_REPAY_PLAN = "2"; // 资产还款计划
-	public static final String TYPE_ORDER_REPAY_PLAN = "3"; // 订单还款计划
+	public static final String TYPE_FINANCE_REPAY_PLAN = "1"; 					 // 理财产品还款计划
+	public static final String TYPE_ASSET_REPAY_PLAN = "2"; 					 // 资产还款计划
+	public static final String TYPE_ORDER_REPAY_PLAN = "3";						 // 订单还款计划
 
 
 	/**
-	 * 订单状态
+	 *jlfex 订单状态
 	 */
 	public static final String ORDER_WAIT_PAY = "待付款";
 	public static final String ORDER_TRAD_FAIL = "交易失败";
@@ -132,7 +128,7 @@ public final class HermesConstants {
 	public static final String ORDER_PAYING = "付款中";
 
 	/**
-	 * 支付状态
+	 * jlfex 支付状态
 	 */
 	public static final String PAY_SUC = "支付成功";
 	public static final String PAY_FAIL = "支付失败";
@@ -202,7 +198,7 @@ public final class HermesConstants {
 	public static final String  CLEAR_NOTE = "市场订单结算";
 	
 	/**
-	 * key
+	 * properties 标识
 	 */
 	public static final String KEY_DATABASE = "com.jlfex.properties.database";
 	/**

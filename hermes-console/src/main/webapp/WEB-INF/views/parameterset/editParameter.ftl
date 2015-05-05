@@ -67,26 +67,26 @@ jQuery(function($) {
 	   var parameterValue = $("#parameterValue1").val(); 
 	   if(parameterType == '176c9150-7103-11e3-ae10-6cae8b21aead' && !/^([0-9]{1,2}|100)$/.test(parameterValue)){
 		    $(this).parent().parent().find(".alert-danger:eq(0)").show();  
-		    document.getElementById("addParameter").disabled = true;		     
+		     $("#editParameter").attr("disabled",true);	     
 	   }else if(parameterValue == '' || parameterValue == null){
 		    $(this).parent().parent().find(".alert-danger:eq(0)").show();  
-		    document.getElementById("addParameter").disabled = true;		     
+		    $("#editParameter").attr("disabled",true);		     
 	   }else{
 	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
-	       document.getElementById("addParameter").disabled = false;		     	              
+	        $("#editParameter").attr("disabled",false);	     	              
 	   }
 	});
 	$('#code').blur(function(){
 	    var code = $("#code").val();
 		if(code == '' || code == null){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
-		   document.getElementById("editParameter").disabled = true;		     	              
+		   $("#editParameter").attr("disabled",true);		 		     	              
 		}else if(code != '' && !/^[^\u4e00-\u9fa5]{0,}$/.test(code)){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
-		   document.getElementById("editParameter").disabled = true;		     	              
+		   $("#editParameter").attr("disabled",true);	 		     	              
 		}else{
 	       $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
-	       document.getElementById("editParameter").disabled = false;
+	       $("#editParameter").attr("disabled",false);	 
 	    }
 	});
 });

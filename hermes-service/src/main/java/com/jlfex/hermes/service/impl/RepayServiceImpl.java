@@ -3,6 +3,8 @@ package com.jlfex.hermes.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -447,7 +449,17 @@ public class RepayServiceImpl implements RepayService {
 			LoanOverdue loanOverdue = loanOverdueRepository.findByLoanAndRank(loan, rank);
 			// 根据逾期等级获取费率，如获取为空，则表示坏账，默认rank为0的表示坏账的费率，获取为非空，采用获取费率计算
 			if (loanOverdue == null) {
-				loanOverdue = loanOverdueRepository.findByLoanAndRank(loan, 0);
+				List<LoanOverdue> lists = loanOverdueRepository.findByLoan(loan);
+				if(lists ==null || lists.size() == 0){
+					Logger.error("标loanNo="+loan.getLoanNo()+",没有配置逾期等级,无法计算逾期费用");
+					return false;
+				}
+				Collections.sort(lists, new Comparator<LoanOverdue>(){
+					public int compare(LoanOverdue obj1, LoanOverdue obj2) {
+						return obj1.getRank()>obj2.getRank()? 1:-1;
+					}
+				});
+				loanOverdue = lists.get(lists.size()-1);
 			}
 			Caches.set(CACHE_LOAN_OVERDUE_PREFIX + loanRepay.getId() + "." + rank, loanOverdue, "1d");
 		}
