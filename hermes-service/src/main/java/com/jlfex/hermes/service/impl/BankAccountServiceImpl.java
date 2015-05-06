@@ -52,8 +52,6 @@ import com.jlfex.hermes.service.withdraw.WithdrawFee;
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService {
 
-	private static final String PROP_WITHDRAW_FEE_NAME = "fee.withdraw.name";
-	private static final String PROP_WITHDRAW_FEE_CONFIG = "fee.withdraw.config";
 
 	/** 银行账户仓库 */
 	@Autowired
@@ -209,29 +207,36 @@ public class BankAccountServiceImpl implements BankAccountService {
 	 */
 	@Override
 	public Result<String> calcWithdrawFee(Double amount) {
-		// 初始化
-		// 加载实现类
 		Result<String> result = new Result<String>();
-		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
-
 		// 计算费用
 		try {
 			BigDecimal amt = Numbers.currency(amount);
-			BigDecimal fee = withdrawFee.calcFee(amt, App.config(PROP_WITHDRAW_FEE_CONFIG));
+			BigDecimal fee = BigDecimal.ZERO;
+			//根据开关配置 设置提现手续 收费方式 
+			String switchFlag = App.config(HermesConstants.WITHDRAW_FEE_SWITCH).trim(); 
+			if(HermesConstants.SWITCH_FLAG_ONE.equals(switchFlag)){
+				 BigDecimal maxWithdrawAmount = new BigDecimal(App.config(HermesConstants.WITHDRAW_FEE_MAX_AMOUNT).trim());
+				 if(maxWithdrawAmount.compareTo(amt) < 0){
+					 throw new ServiceException("不能超出单笔提现最大提现金额："+maxWithdrawAmount);
+				 }
+				 fee = new BigDecimal(App.config(HermesConstants.PROP_WITHDRAW_FEE_RATE)).multiply(amt);
+			}else{
+				 WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(HermesConstants.PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
+				 fee = withdrawFee.calcFee(amt, App.config(HermesConstants.PROP_WITHDRAW_FEE_CONFIG));
+			}
 			BigDecimal sum = amt.add(fee);
-
 			result.setType(Result.Type.SUCCESS);
 			result.addMessage(Numbers.toCurrency(fee));
 			result.addMessage(Numbers.toCurrency(sum));
 		} catch (ServiceException e) {
 			result.setType(Result.Type.FAILURE);
-			result.addMessage(App.message(e.getKey()));
-			Logger.error(e.getMessage(), e);
+			result.addMessage(e.getMessage());
+			Logger.error("提现异常:", e);
 		} catch (Exception e) {
 			ServiceException se = new ServiceException(e.getMessage(), e);
 			result.setType(Result.Type.FAILURE);
-			result.addMessage(App.message(se.getKey()));
-			Logger.error(se.getMessage(), se);
+			result.addMessage(e.getMessage());
+			Logger.error("提现异常:", se);
 		}
 
 		// 返回结果
@@ -254,13 +259,13 @@ public class BankAccountServiceImpl implements BankAccountService {
 		Withdraw withdraw = new Withdraw();
 		BankAccount bankAccount = bankAccountRepository.findOne(bankAccountId);
 		User user = userRepository.findOne(App.user().getId());
-		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
+		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(HermesConstants.PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
 		// 设置数据并保存数据
 		withdraw.setUser(user);
 		withdraw.setBankAccount(bankAccount);
 		withdraw.setDatetime(new Date());
 		withdraw.setAmount(amount);
-		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(PROP_WITHDRAW_FEE_CONFIG)));
+		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(HermesConstants.PROP_WITHDRAW_FEE_CONFIG)));
 		withdraw.setStatus(Withdraw.Status.WAIT);
 		withdraw.setSerialNo(serialNo);
 		withdrawRepository.save(withdraw);

@@ -363,6 +363,8 @@ public class AccountController {
 		App.checkUser();
 		model.addAttribute("bankAccounts", bankAccountService.findEnbaled());
 		model.addAttribute("account", userInfoService.loadByUserIdAndType(App.user().getId(), UserAccount.Type.CASH));
+		model.addAttribute("feeType", App.config(HermesConstants.WITHDRAW_FEE_SWITCH).trim());
+		model.addAttribute("feeMaxAmount", "单笔最高金额："+App.config(HermesConstants.WITHDRAW_FEE_MAX_AMOUNT)); 
 		return "account/withdraw";
 	}
 

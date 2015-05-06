@@ -409,4 +409,15 @@ public class Product extends Model {
 		@Element("无效")
 		public static final String INVALID = "99";
 	}
+	/**
+	 * 月管理费类型
+	 * @author Administrator
+	 *
+	 */
+	public static final class ManagerFeeType {
+		@Element("按比例")
+		public static final String PERCENT = "00";
+		@Element("固定值")
+		public static final String CONSTANT= "01";
+	}
 }

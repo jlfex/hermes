@@ -17,8 +17,7 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.model.ArticleCategory;
-import com.jlfex.hermes.model.Properties;
-import com.jlfex.hermes.model.Text;
+import com.jlfex.hermes.model.FriendLink;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.service.FriendLinkService;
@@ -31,11 +30,9 @@ import com.jlfex.hermes.service.TextService;
 @Component
 public class PropertiesFilter implements Filter {
 	private static final String companyIntroductionCode = "company_introduction";
-	private static final String SITE_SERVICE_TEL	= "site.service.tel";
-	private static final String SITE_SERVICE_TIME	= "site.service.time";
-	private static final String App_OPERATION_NICKNAME	= "app.operation.nickname";
-	private static final String App_COPYRIGHT	= "app.copyright";
-	private static final String App_LOGO	= "app.logo";
+	private static ArticleCategory  articleCategory;
+	private static List<ArticleCategory> articleCategoryList ;
+	private static List<FriendLink>  friendLinkList;
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -82,22 +79,17 @@ public class PropertiesFilter implements Filter {
 			App.config(propertiesService.loadFromDatabase());
 			Logger.info("properties rebuild completed.");
 		}
-		ArticleCategory articleCategory = articleCategoryRepository.findByCode(companyIntroductionCode);
-		List<ArticleCategory> articleCategoryList = articleCategoryRepository.findByParent(articleCategory);
-		req.setAttribute("friendlinkData", friendLinkService.findTop10());
+		if(articleCategoryList == null){
+			if(articleCategory == null){
+				articleCategory = articleCategoryRepository.findByCode(companyIntroductionCode);
+			}
+			articleCategoryList = articleCategoryRepository.findByParent(articleCategory);
+		}
+		if(friendLinkList == null){
+			friendLinkList = friendLinkService.findTop10();
+		}
+		req.setAttribute("friendlinkData", friendLinkList);
 		req.setAttribute("companyIntroductions", articleCategoryList);
-		req.setAttribute("siteServiceTel",propertiesRepository.findByCode(SITE_SERVICE_TEL).getValue());
-		req.setAttribute("siteServiceTime",propertiesRepository.findByCode(SITE_SERVICE_TIME).getValue());
-		req.setAttribute("appCopyright",propertiesRepository.findByCode(App_COPYRIGHT).getValue());
-		req.setAttribute("appOperationNickname",propertiesRepository.findByCode(App_OPERATION_NICKNAME).getValue());
-		Properties properties = propertiesRepository.findByCode(App_LOGO);
-		Text text = textService.loadById(properties.getValue());
-		if(text == null){
-			Logger.error("logo图标信息为空");
-			req.setAttribute("appLogo","");
-		}else{
-			req.setAttribute("appLogo",text.getText());
-		}         
 		chain.doFilter(req, resp);
 	}
 
@@ -118,6 +110,6 @@ public class PropertiesFilter implements Filter {
 		Map<String, String> values = new HashMap<String, String>();
 		values.put(HermesConstants.KEY_DATABASE, "");
 		App.config(values);
-		Logger.info("properties clear.");
+		Logger.info("properties 缓存已经重新加载.");
 	}
 }

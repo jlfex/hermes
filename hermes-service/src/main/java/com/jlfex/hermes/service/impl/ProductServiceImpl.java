@@ -284,21 +284,45 @@ public class ProductServiceImpl implements ProductService {
 	public void setProductOverGrad(Product product) throws Exception{
 		List<ProductOverdue> list = new ArrayList<ProductOverdue>();
 		ProductOverdue  obj = null ;
-		for(int i=0; i<3; i++){
+		List<Dictionary>  interestFeeList = dictionaryService.findByTypeCode(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE_CODE);
+		List<Dictionary>  penaltyFeeList = dictionaryService.findByTypeCode(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE_CODE);
+		if(interestFeeList==null || interestFeeList.size() == 0){
+			throw new Exception("新增产品产品 设置:罚息梯度没有初始化 ");
+		}
+		if(penaltyFeeList==null || penaltyFeeList.size() == 0){
+			throw new Exception("新增产品产品 设置:违约金梯度没有初始化 ");
+		}
+		//按罚息费率升序排序
+		Collections.sort(interestFeeList, new Comparator<Dictionary>() {
+            public int compare(Dictionary obj1, Dictionary obj2) {
+            	Double d1 = Double.parseDouble(obj1.getName());
+            	Double d2 = Double.parseDouble(obj2.getName());
+            	return  d1>d2?1:-1 ;
+            }
+        });
+		//按违约金费率升序排序
+		Collections.sort(penaltyFeeList, new Comparator<Dictionary>() {
+            public int compare(Dictionary obj1, Dictionary obj2) {
+            	Double d1 = Double.parseDouble(obj1.getName());
+            	Double d2 = Double.parseDouble(obj2.getName());
+            	return  d1>d2?1:-1 ;
+            }
+        }); 
+		int j = penaltyFeeList.size();
+		for(int i=0; i<interestFeeList.size(); i++){
+			Dictionary interestDic = interestFeeList.get(i);
+			Dictionary penaltyDic = null;
+			if(i< j){
+				 penaltyDic = penaltyFeeList.get(i);
+			}else{
+				 penaltyDic = penaltyFeeList.get(j-1);
+			}
 			obj = new ProductOverdue();
 			obj.setCreator(App.current().getUser().getId());
 			obj.setProduct(product);
 			obj.setRank(i);
-			if(i == 0){
-				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE0));
-				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE0));
-			}else if(i == 1){
-				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE1));
-				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE1));
-			}else{
-				obj.setInterest(new BigDecimal(HermesConstants.PRODUCT_OVERDU_INTEREST_FEE2));
-				obj.setPenalty(new BigDecimal(HermesConstants.PRODUCT_OVERDU_PENALTY_FEE2));
-			}
+			obj.setInterest(new BigDecimal(interestDic.getName().trim()));
+			obj.setPenalty(new BigDecimal(penaltyDic.getName().trim()));
 			list.add(obj);
 		}
 		productOverdueRepository.save(list);
