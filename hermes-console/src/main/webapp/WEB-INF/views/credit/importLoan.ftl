@@ -96,7 +96,7 @@ jQuery(function($) {
 			url: '${app}/jlfex/queryfinance',
 			target: 'main'
 		});
-	  $("#synchYLTXCredit").attr('disabled',true);
+	  $("#synchYLTXCredit").html('<i class="fa fa-spinner fa-spin"></i> <@messages key="common.op.doing" />').attr('disabled',true);
 	});
 	
 	
