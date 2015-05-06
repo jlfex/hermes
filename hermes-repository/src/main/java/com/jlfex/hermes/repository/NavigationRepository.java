@@ -31,4 +31,6 @@ public interface NavigationRepository extends JpaRepository<Navigation, String>,
 	 */
 	@Query("from Navigation n where n.parent = ?1 order by n.order")
 	public List<Navigation> findByParent(Navigation parent);
+	
+	public Navigation findOneByCode(String code);
 }

@@ -29,6 +29,9 @@ public class RoleResource extends Model {
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
+	
+	@Column(name = "status")
+	private String status;
 
 	/**
 	 * 读取角色
@@ -90,6 +93,22 @@ public class RoleResource extends Model {
 		this.type = type;
 	}
 	
+	/**
+	 * 获取状态
+	 * @return
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * 设置状态
+	 * @param status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	/**
 	 * 读取类型名称
 	 * 

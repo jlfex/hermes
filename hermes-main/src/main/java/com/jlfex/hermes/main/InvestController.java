@@ -12,8 +12,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -59,6 +62,7 @@ import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.DictionaryService;
+import com.jlfex.hermes.service.InitService;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
@@ -125,6 +129,8 @@ public class InvestController {
 	private UserPropertiesRepository userPropertiesRepository;
 	@Autowired
 	private CFCAOrderRepository cfcaOrderRepository;
+	@Autowired
+	private InitService initService;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -963,7 +969,7 @@ public class InvestController {
 	@ResponseBody
 	public Result<String> bid2Pay(String investAmount, String loanId, String otherRepay, Model model) {
 		Result<String> result = new Result<>();
-
+		initService.initData();
 		User user = this.checkBidAuthority(loanId, investAmount, otherRepay, result);
 		if (!result.getType().equals(Type.SUCCESS)) {
 			return result;

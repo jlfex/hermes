@@ -3,6 +3,8 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -26,7 +28,7 @@ public class Role extends Model {
 	
 	/** 状态 */
 	@Column(name = "status")
-	private String status;
+	private String status = HermesConstants.VALID;
 
 	/**
 	 * 读取名称

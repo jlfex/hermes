@@ -18,11 +18,21 @@
 		<div class="u-container">
 			<div class="logo"><a href="${app}/index"><img src="<@logo />"><span class="logo2"><@config key="app.operation.nickname"/></span></a></div>
 			<ul id="homeNav" class="nav-list">
+				<#if home??>
 				<li class="home"><a href="${app}/index"><@messages key="common.home" /></a></li>
+				</#if>
+				<#if invest??>
 				<li class="invest"><a href="${app}/invest/index"><@messages key="nav.main.invest" /></a></li>
+				</#if>
+				<#if loan??>
 				<li class="loan"><a href="${app}/loan/display"><@messages key="nav.main.loan" /></a></li>
+				</#if>
+				<#if account??>
 				<li class="account"><a href="${app}/account/index"><@messages key="nav.main.user" /></a></li>
+				</#if>
+				<#if help??>
 				<li class="help"><a href="${app}/help-center"><@messages key="nav.main.help" /></a></li>
+				</#if>
 			</ul>
 		</div>
 	</div>

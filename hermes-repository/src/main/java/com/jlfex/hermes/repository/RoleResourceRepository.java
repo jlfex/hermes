@@ -21,7 +21,7 @@ public interface RoleResourceRepository extends JpaRepository<RoleResource, Stri
 	 * @return
 	 */
 	public List<RoleResource> findByResourceAndType(String resource, String type);
-	
+
 	/**
 	 * 通过角色列表和类型查询数据
 	 * 
@@ -30,7 +30,7 @@ public interface RoleResourceRepository extends JpaRepository<RoleResource, Stri
 	 * @return
 	 */
 	public List<RoleResource> findByRoleInAndType(List<Role> role, String type);
-	
+
 	/**
 	 * 通过类型查询数据
 	 * 
@@ -38,4 +38,14 @@ public interface RoleResourceRepository extends JpaRepository<RoleResource, Stri
 	 * @return
 	 */
 	public List<RoleResource> findByType(String type);
+
+	/**
+	 * 通过角色列表和类型已经状态查询数据
+	 * 
+	 * @param roles
+	 * @param type
+	 * @param status
+	 * @return
+	 */
+	public List<RoleResource> findByRoleInAndTypeAndStatus(List<Role> roles, String type, String status);
 }
