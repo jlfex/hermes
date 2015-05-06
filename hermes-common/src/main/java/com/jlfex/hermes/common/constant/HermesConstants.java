@@ -12,12 +12,11 @@ public final class HermesConstants {
 	 * 平台管理
 	 */
 	public static final String PLAT_MANAGER = "admin";
-	public static final String PRE_HERMES =   "HERMES"; //下单并支付接口 订单流水号前缀
+	public static final String PRE_HERMES = "HERMES"; // 下单并支付接口 订单流水号前缀
 	public static final String CROP_USER_ID = "crop";
-	
-	
-	public static final int    RESULT_VO_CODE_SUCCESS = 0;
-	public static final int    RESULT_VO_CODE_BIZ_ERROR = 1;
+
+	public static final int RESULT_VO_CODE_SUCCESS = 0;
+	public static final int RESULT_VO_CODE_BIZ_ERROR = 1;
 	public static final String INDEX_BANNER = "banner";
 	public static final String INDEX_INVEST = "invest";
 	public static final String INDEX_LOGIN = "login";
@@ -45,9 +44,7 @@ public final class HermesConstants {
 	public static final String PRODUCT_OVERDU_PENALTY_FEE0 = "0.00150000";
 	public static final String PRODUCT_OVERDU_PENALTY_FEE1 = "0.00050000";
 	public static final String PRODUCT_OVERDU_PENALTY_FEE2 = "0.00100000";
-	
-	
-	
+
 	/**
 	 * HTTPS 连接常量
 	 */
@@ -118,7 +115,6 @@ public final class HermesConstants {
 	public static final String TYPE_ASSET_REPAY_PLAN = "2"; // 资产还款计划
 	public static final String TYPE_ORDER_REPAY_PLAN = "3"; // 订单还款计划
 
-
 	/**
 	 * 订单状态
 	 */
@@ -171,7 +167,6 @@ public final class HermesConstants {
 	public static final String YLTX_CREDIT = "外部债权标";
 	public static final String PROVINCE_SUFFIX = "市";
 
-	
 	/**
 	 * 中金接口
 	 */
@@ -192,18 +187,19 @@ public final class HermesConstants {
 	 * 中金机构号
 	 */
 	public static final String CFCA_INSTITUTION_ID = "001155";
-	//账户类型
-	public static final int ZJ_ACCOUNT_TYPE_11 = 11; //个人账户
-	public static final int ZJ_ACCOUNT_TYPE_12 = 12; //企业账户
-	public static final int ZJ_ACCOUNT_TYPE_20 = 20; //支付平台内部账户
-	
-	//中金代扣请求流水号前缀
-	public static final String  PRE_IN = "IN";
-	//中金清算请求流水号前缀
-	public static final String  PRE_OUT = "OUT";
-	public static final String  CLEAR_NOTE = "测试市场订单结算";
-	
-	
+	// 账户类型
+	public static final int ZJ_ACCOUNT_TYPE_11 = 11; // 个人账户
+	public static final int ZJ_ACCOUNT_TYPE_12 = 12; // 企业账户
+	public static final int ZJ_ACCOUNT_TYPE_20 = 20; // 支付平台内部账户
 
+	// 中金代扣请求流水号前缀
+	public static final String PRE_IN = "IN";
+	// 中金清算请求流水号前缀
+	public static final String PRE_OUT = "OUT";
+	public static final String CLEAR_NOTE = "测试市场订单结算";
 
+	/**
+	 * 字典类型的导航类型
+	 */
+	public static final String DIC_NAV = "nav";
 }

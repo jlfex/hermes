@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd 
 		http://www.springframework.org/schema/context 
@@ -10,15 +9,31 @@
 		http://www.springframework.org/schema/mvc 
 		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<context:property-placeholder location="classpath:application.conf" ignore-unresolvable="true" />
+	<context:property-placeholder location="classpath:application.conf"
+		ignore-unresolvable="true" />
 
-	<context:component-scan base-package="com.jlfex.hermes" use-default-filters="false">
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	<context:component-scan base-package="com.jlfex.hermes"
+		use-default-filters="false">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
+
+	<bean id="menuInterceptor" class="com.jlfex.hermes.main.MenuInterceptor">
+		<property name="mappingURL" value="index/"></property>
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="menuInterceptor" />
+			</list>
+		</property>
+	</bean>
 
 	<mvc:annotation-driven>
 		<mvc:message-converters>
-			<bean id="jsonConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+			<bean id="jsonConverter"
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
 				<property name="supportedMediaTypes">
 					<list>
 						<value>application/json</value>
@@ -32,10 +47,13 @@
 	<mvc:resources location="/resources" mapping="/resources/**" />
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+		<bean class="com.jlfex.hermes.main.MenuInterceptor"></bean>
 	</mvc:interceptors>
 
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="/${app.theme.path}/${app.theme}/" />
 		<property name="freemarkerSettings">
 			<props>
@@ -45,18 +63,28 @@
 		</property>
 		<property name="freemarkerVariables">
 			<map>
-				<entry key="messages"><bean class="com.jlfex.hermes.common.support.freemarker.MessagesDirective" /></entry>
-				<entry key="config"><bean class="com.jlfex.hermes.common.support.freemarker.ConfigDirective" /></entry>
-				<entry key="percent"><bean class="com.jlfex.hermes.common.support.freemarker.PercentDirective" /></entry>
-				<entry key="logo"><bean class="com.jlfex.hermes.main.freemark.LogoDirective" /></entry>
+				<entry key="messages">
+					<bean
+						class="com.jlfex.hermes.common.support.freemarker.MessagesDirective" />
+				</entry>
+				<entry key="config">
+					<bean class="com.jlfex.hermes.common.support.freemarker.ConfigDirective" />
+				</entry>
+				<entry key="percent">
+					<bean class="com.jlfex.hermes.common.support.freemarker.PercentDirective" />
+				</entry>
+				<entry key="logo">
+					<bean class="com.jlfex.hermes.main.freemark.LogoDirective" />
+				</entry>
 			</map>
 		</property>
 	</bean>
-	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="suffix" value=".ftl" />
 		<property name="contentType" value="text/html; charset=utf-8" />
 	</bean>
-	<!--验证码  -->
+	<!--验证码 -->
 	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
 		<property name="config">
 			<bean class="com.google.code.kaptcha.util.Config">
