@@ -18,8 +18,6 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.FriendLink;
-import com.jlfex.hermes.model.Properties;
-import com.jlfex.hermes.model.Text;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.service.FriendLinkService;
@@ -32,11 +30,6 @@ import com.jlfex.hermes.service.TextService;
 @Component
 public class PropertiesFilter implements Filter {
 	private static final String companyIntroductionCode = "company_introduction";
-	private static final String SITE_SERVICE_TEL	= "site.service.tel";
-	private static final String SITE_SERVICE_TIME	= "site.service.time";
-	private static final String App_OPERATION_NICKNAME	= "app.operation.nickname";
-	private static final String App_COPYRIGHT	= "app.copyright";
-	private static final String App_LOGO	= "app.logo";
 	private static ArticleCategory  articleCategory;
 	private static List<ArticleCategory> articleCategoryList ;
 	private static List<FriendLink>  friendLinkList;
