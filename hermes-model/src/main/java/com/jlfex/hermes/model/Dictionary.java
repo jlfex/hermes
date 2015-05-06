@@ -156,6 +156,6 @@ public class Dictionary extends Model {
 		public static final String VALID = "00";
 
 		@Element("无效")
-		public static final String INVALID = "99";
+		public static final String INVALID = "09";
 	}
 }

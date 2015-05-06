@@ -5,23 +5,33 @@
 	</div>
 </#if>
  <div class="panel panel-primary">
-        <div class="panel-heading">新增类型</div>
+        <div class="panel-heading">新增字典项</div>
         <div class="panel-body">
             <div id="data" style="display:block">
           <form class="form-horizontal" role="form" id="addForm" method="post">
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>类型编码</label>
+                <label for="" class="col-sm-2 control-label">所属字典类型</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" name="typeCode" id ="typeCode"/>
+                  <input type="text" class="form-control" name="dictId" id ="dictId"  value="${(dictionaryType.name)!}" disabled="true"/>
+                  <input type="hidden" value="${(dictionaryType.id)!}" name="typeId" id="typeId"/>
+                </div>
+                <div class="col-xs-2">
+					<span class="alert-danger" style="display:none;background:none">必填项，且不能输入中文</span>
+				</div>                                                                        
+              </div>                   
+              <div class="form-group">
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>字典项编码</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" name="code" id ="code"/>
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项，且不能输入中文</span>
 				</div>                                                                        
               </div>          
               <div class="form-group">
-                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>类型名称</label>
+                <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>字典项名称</label>
                 <div class="col-sm-5">
-                  <input type="text" class="form-control" name="parameterType" id ="parameterType"/>
+                  <input type="text" class="form-control" name="name" id ="name"/>
                 </div>
                 <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项</span>
@@ -48,26 +58,26 @@
       </div>
 
 <script type="text/javascript">
-
 jQuery(function($) {
      //点击新增分类页面中新增按钮
 	$("#addParameterType").on("click",function(){
 		$.link.html(null, {
-			url: '${app}/parameter/handerAddParameterType',
+			url: '${app}/dictionary/handerAddDictionary',
 			data: $("#addForm").serialize(),
 			target: 'main'
 		});
 	});
 	//点击新增分类页面中取消按钮
 	$("#cancelParameterType").on("click",function(){
+	    var typeId = $("#typeId").val();
 		$.link.html(null, {
-			url: '${app}/parameter/index',
+			url: '${app}/dictionary/index?id='+typeId,
 			target: 'main'
 		});
 	});
-	$('#parameterType').blur(function(){
-	   var parameterType  = $("#parameterType").val();
-	   if(parameterType == '' || parameterType == null){
+	$('#name').blur(function(){
+	   var name  = $("#name").val();
+	   if(name == '' || name == null){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();
 		   document.getElementById("addParameterType").disabled = true;		     		       
 	   }else{
@@ -75,12 +85,12 @@ jQuery(function($) {
 	   	   document.getElementById("addParameterType").disabled = false;		     	   	      
 	   }
 	});
-	$('#typeCode').blur(function(){
-	    var typeCode = $("#typeCode").val();
-		if(typeCode == '' || typeCode == null){
+	$('#code').blur(function(){
+	    var code = $("#code").val();
+		if(code == '' || code == null){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
 		   document.getElementById("addParameterType").disabled = true;		     	              
-		}else if(typeCode != '' && !/^[^\u4e00-\u9fa5]{0,}$/.test(typeCode)){
+		}else if(code != '' && !/^[^\u4e00-\u9fa5]{0,}$/.test(code)){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();	
 		   document.getElementById("addParameterType").disabled = true;		     	              
 		}else{

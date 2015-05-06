@@ -1,5 +1,7 @@
 package com.jlfex.hermes.service;
+
 import java.util.List;
+import org.springframework.data.domain.Page;
 import com.jlfex.hermes.model.Dictionary;
 
 /**
@@ -45,4 +47,13 @@ public interface DictionaryService {
 	
 	public List<Dictionary> findByType(String typeId);
 
+	public Page<Dictionary> queryByCondition(Dictionary dictionary, String id,String page, String size) throws Exception;
+
+	public List<Dictionary> findByCode(String code);
+	
+	public Dictionary addOrUpdateDictionary(Dictionary dictionary,String dictId);
+    
+	public void delDictionary(String id);
+	
+	public void switchDictionary(String id);
 }
