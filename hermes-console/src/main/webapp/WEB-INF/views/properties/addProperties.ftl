@@ -31,11 +31,17 @@
                 <label for="" class="col-sm-2 control-label"><span style="color:red;">* </span>参数值</label>
                 <div class="col-sm-5">
                    <input type="text" class="form-control" id="value" name="value">                
+                </div>                                                       
+              </div> 
+              <div class="form-group">
+                <label for="" class="col-sm-2 control-label">参数描述</label>
+                <div class="col-sm-5">
+                   <input type="text" class="form-control" id="remark" name="remark">                
                 </div>
 		        <div class="col-xs-2">
 					<span class="alert-danger" style="display:none;background:none">必填项</span>
 				</div>                                                        
-              </div>  
+              </div>                   
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label">参数状态</label>
                 <div class="col-sm-5">

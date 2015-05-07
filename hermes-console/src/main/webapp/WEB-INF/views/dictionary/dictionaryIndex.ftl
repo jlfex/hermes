@@ -5,21 +5,18 @@
 	</div>
 </#if>
 <div class="panel panel-primary">
-	<div class="panel-heading">字典设置</div>
+	<div class="panel-heading">字典项配置</div>
 	<div class="panel-body">
 		<form id="searchForm" method="post" action="#">
+		    <input type="hidden" value="${(dictId)!}" name="id" id="dictId"/>
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterType">类型编码</label>
-					<input id="typeCode" name="typeCode" type="text" class="form-control">
+					<label for="parameterType">字典项编码</label>
+					<input id="typeCode" name="code" type="text" class="form-control">
 				</div>			
 				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterType">类型名称</label>
-					<input id="parameterType" name="parameterType" type="text" class="form-control">
-				</div>
-				<div class="col-xs-2 hm-col form-group">
-					<label for="parameterValue">字典项名称</label>
-					<input id="parameterValue" name="parameterValue" type="text" class="form-control">
+					<label for="parameterType">字典项名称</label>
+					<input id="parameterType" name="name" type="text" class="form-control">
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
@@ -27,9 +24,13 @@
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
-					<button id="addTypeBtn" type="button" class="btn btn-primary btn-block">新增类型</button>
+					<button id="addBtn" type="button" class="btn btn-primary btn-block">新增</button>
 					<input id="page" name="page" type="hidden" value="0">					
-				</div>	
+				</div>
+				<div class="col-xs-1 hm-col form-group">
+					<label>&nbsp;</label>
+					<button id="exitBtn" type="button" class="btn btn-primary btn-block">返回上一层</button>
+				</div>						
 			</div>
 		</form>
 	</div>
@@ -40,16 +41,26 @@
 jQuery(function($) {
 	//点击查询按钮
 	$.page.withdraw({
-		search: '${app}/parameter/parameterdata'
+		search: '${app}/dictionary/dictionaryData'
 	});	
 
     //点击添加参数类按钮
-	$("#addTypeBtn").on("click",function(){
+	$("#addBtn").on("click",function(){
+	    var dictId = $("#dictId").val();
 		$.link.html(null, {
-			url: '${app}/parameter/addParameterType',
+			url: '${app}/dictionary/addDictionary?id='+dictId,
 			target: 'main'
 		});
 	});
+	
+	 //点击返回上一层按钮
+	$("#exitBtn").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/dictionaryType/index',
+			target: 'main'
+		});
+	});
+	
 });
 //-->
 </script>

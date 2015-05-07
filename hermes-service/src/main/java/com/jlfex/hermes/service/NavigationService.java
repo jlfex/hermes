@@ -1,10 +1,7 @@
 package com.jlfex.hermes.service;
 
 import java.util.List;
-
-import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Navigation;
-import com.jlfex.hermes.model.Role;
 
 /**
  * 导航业务接口
