@@ -132,7 +132,7 @@ public class HermesEnum {
 		front_home("首页"), front_invest("我要理财"), front_loan("我要借款"),front_help("使用帮助"), front_account_center("账户中心"), front_info_mng("信息管理"), front_invest_info("理财信息"), front_fund_mng("资金管理"), front_personal_info("个人信息"), front_info_base("基本信息"), front_info_work("工作信息"), front_info_house("房产信息"), front_info_car(
 				"车辆信息"), front_info_contacter("联系人信息"), front_info_imag("图片信息"), front_account_authCenter("认证中心"), front_account_bankCardMgr("银行卡管理"), front_myloan("我的借款"), fron_myinvest("我的理财"), fron_myCredit("我的债权"), front_fundDetail("资金明细"), front_charg("账户充值"), front_withdraw(
 				"账户提现"), back_home("首页"), back_search("信息查询"), back_user_info("客户信息"), back_interface_mng("接口管理"), back_home_audit("审核"), back_home_full("满标放款"), back_home_debt("催款"), back_loan_info("借款信息"), back_inveter_mgr("理财人管理"), back_loaner_mgr("借款人管理"), back_product_mgr(
-				"产品管理"), back_credit_mgr("债权管理"), back_fund_mgr("资金管理"), back_content_mgr("内容管理"), back_system_mgr("系统管理"), back_api_log_mgr("日志管理"), back_interface_mgr("接口配置");
+				"产品管理"), back_credit_mgr("债权管理"), back_fund_mgr("资金管理"), back_content_mgr("内容管理"), back_system_mgr("系统管理"), back_api_log_mgr("API日志"), back_interface_mgr("API配置");
 		private NavigationEnum(String name) {
 			this.name = name;
 		}
