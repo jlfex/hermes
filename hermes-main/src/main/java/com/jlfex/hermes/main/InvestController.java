@@ -233,31 +233,27 @@ public class InvestController {
 	@ResponseBody
 	public Result<String> bid(String loanid, String investamount, String otherrepayselect) throws Exception {
 		Result<String> result = new Result<String>();
-		User user = this.checkBidAuthority(loanid, investamount, otherrepayselect, result);
-		if (!result.getType().equals(Type.SUCCESS)) {
-			return result;
-		}
-
-		Map<String, String> bidResult = null;
 		try {
-			bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
-		} catch (Exception e) {
-			Logger.error("投标异常：", e);
-			result.setType(Type.FAILURE);
-			result.addMessage(0, e.getMessage());
+			App.checkUser();
+		} catch (Exception ex) {
+			result.setType(Type.WARNING);
 			return result;
 		}
-		if (HermesConstants.CODE_00.equals(bidResult.get("code"))) {
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
+		// 自己发布的借款 不能自己投标
+		boolean bidAuthentication = investService.bidAuthentication(loanid, user);
+		if (!bidAuthentication) {
+			result.setType(Type.FAILURE);
+			result.setData("自己发布的借款 不能自己投标");
+			return result;
+		}
+		Map<String, String> bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
+		if (bidResult!=null && HermesConstants.CODE_00.equals(bidResult.get("code"))) {
 			result.setType(Type.SUCCESS);
-			if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))) {
-				result.addMessage(0, bidResult.get("orderStatus"));
-				result.addMessage(1, bidResult.get("payStatus"));
-			}
 		} else {
 			result.setType(Type.FAILURE);
-			if (Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals(bidResult.get("loanKind"))) {
-				result.addMessage(0, bidResult.get("msg"));
-			}
 		}
 		return result;
 	}
