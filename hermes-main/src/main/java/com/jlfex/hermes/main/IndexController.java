@@ -77,7 +77,7 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping("/index")
-	public String index(ServletRequest request, Model model) {
+	public String index(Model model) {
 		model.addAttribute("nav", HomeNav.HOME);
 		List<String> loanKindList = new ArrayList<String>();
 		loanKindList.add(Loan.LoanKinds.NORML_LOAN);
