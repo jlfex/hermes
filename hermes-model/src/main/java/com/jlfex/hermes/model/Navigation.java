@@ -2,19 +2,22 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import com.jlfex.hermes.common.web.WebApp;
 
 /**
  * 导航信息模型
  */
 @Entity
-@Table(name = "hm_navigation")
+@Table(name = "hm_navigation", uniqueConstraints = { @UniqueConstraint(columnNames = "code") })
 public class Navigation extends Model {
 
 	private static final long serialVersionUID = 842883061234188375L;

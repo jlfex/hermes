@@ -1,6 +1,10 @@
 package com.jlfex.hermes.service;
+
 import java.util.List;
+
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Navigation;
+import com.jlfex.hermes.model.Role;
 
 /**
  * 导航业务接口
@@ -8,7 +12,7 @@ import com.jlfex.hermes.model.Navigation;
 public interface NavigationService {
 
 	public static final String PATH_PREFIX = "@";
-	
+
 	/**
 	 * 通过编号加载数据
 	 * 
@@ -16,7 +20,7 @@ public interface NavigationService {
 	 * @return
 	 */
 	public Navigation loadById(String id);
-	
+
 	/**
 	 * 通过类型代码查询顶级导航列表
 	 * 
@@ -24,7 +28,7 @@ public interface NavigationService {
 	 * @return
 	 */
 	public List<Navigation> findRootByTypeCode(String typeCode);
-	
+
 	/**
 	 * 通过上级查询导航列表
 	 * 
@@ -32,7 +36,7 @@ public interface NavigationService {
 	 * @return
 	 */
 	public List<Navigation> findByParent(Navigation parent);
-	
+
 	/**
 	 * 通过上级编号查询导航列表
 	 * 
@@ -40,4 +44,10 @@ public interface NavigationService {
 	 * @return
 	 */
 	public List<Navigation> findByParentId(String parentId);
+
+	/**
+	 * 获取后台菜单
+	 * @return
+	 */
+	public List<Navigation> findConsoleNavigations();
 }

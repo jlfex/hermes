@@ -1,16 +1,20 @@
 package com.jlfex.hermes.service.web;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -23,6 +27,7 @@ import com.jlfex.hermes.repository.PropertiesRepository;
 import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
+import com.jlfex.hermes.service.role.RoleResourceService;
 
 /**
  * 系统属性过滤器
@@ -33,6 +38,7 @@ public class PropertiesFilter implements Filter {
 	private static ArticleCategory  articleCategory;
 	private static List<ArticleCategory> articleCategoryList ;
 	private static List<FriendLink>  friendLinkList;
+	public static List<String> roleResourceList;
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -46,9 +52,12 @@ public class PropertiesFilter implements Filter {
 
 	@Autowired
 	private ArticleCategoryRepository articleCategoryRepository;
-	
+
 	@Autowired
 	private PropertiesRepository propertiesRepository;
+
+	@Autowired
+	private RoleResourceService roleResourceService;
 
 	/*
 	 * (non-Javadoc)
@@ -79,17 +88,21 @@ public class PropertiesFilter implements Filter {
 			App.config(propertiesService.loadFromDatabase());
 			Logger.info("properties rebuild completed.");
 		}
-		if(articleCategoryList == null){
-			if(articleCategory == null){
+		if (articleCategoryList == null) {
+			if (articleCategory == null) {
 				articleCategory = articleCategoryRepository.findByCode(companyIntroductionCode);
 			}
 			articleCategoryList = articleCategoryRepository.findByParent(articleCategory);
 		}
-		if(friendLinkList == null){
+		if (friendLinkList == null) {
 			friendLinkList = friendLinkService.findTop10();
+		}
+		if (roleResourceList == null) {
+			roleResourceList = roleResourceService.getFrontIndexRoleResource();
 		}
 		req.setAttribute("friendlinkData", friendLinkList);
 		req.setAttribute("companyIntroductions", articleCategoryList);
+		req.setAttribute("roleResourceList", roleResourceList);
 		chain.doFilter(req, resp);
 	}
 
