@@ -38,6 +38,12 @@
 				</div>                                                        
               </div>  
               <div class="form-group">
+                <label for="" class="col-sm-2 control-label">参数描述</label>
+                <div class="col-sm-5">
+                   <input type="text" class="form-control" id="remark" name="remark" value="${(properties.remark)!}">                
+                </div>
+              </div>                
+              <div class="form-group">
                 <label for="" class="col-sm-2 control-label">参数状态</label>
                 <div class="col-sm-5">
                   <select id="status" name="status" class="form-control">

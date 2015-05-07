@@ -4,6 +4,7 @@
 		                <th class="align-center">参数编码</th>
 				        <th class="align-center">参数名称</th>
                         <th class="align-center">参数值</th>
+                        <th class="align-center">参数描述</th>
                         <th class="align-center">创建时间</th>
                         <th class="align-center">参数状态</th>
                         <th class="align-center">参数类型</th>
@@ -13,14 +14,15 @@
 	 <tbody>
                    <#if propertiesList.numberOfElements == 0>
 					<tr>
-						<td colspan="7" class="align-center"><@messages key="common.table.empty" /></td>
+						<td colspan="8" class="align-center"><@messages key="common.table.empty" /></td>
 					</tr>
 					<#else>
 						<#list (propertiesList.content)?sort_by("createTime")?reverse as l>  
 							<tr>
 							    <td class="align-center">${(l.code)!''}</td> 
 							    <td class="align-center">${(l.name)!''}</td> 
-		                        <td class="align-center">${(l.value)!''}</td> 
+		                        <td class="align-center">${(l.value)!''}</td>
+		                        <td class="align-center">${(l.remark)!''}</td> 
 		                        <td class="align-center">${(l.createTime)!''}</td> 
 		                        <td class="align-center">${(l.statusName)!''}</td> 
 		                        <td class="align-center">${(l.type.name)!''}</td> 		                         		                        		                         

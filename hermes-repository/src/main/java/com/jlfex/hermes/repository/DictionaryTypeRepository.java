@@ -25,5 +25,8 @@ public interface DictionaryTypeRepository extends JpaRepository<DictionaryType, 
 	
 	@Query("from DictionaryType d where d.name = ?1")
 	public List<DictionaryType> findByName(String name);
+	
+	@Query("from DictionaryType d where d.code = ?1")
+	public List<DictionaryType> findAllByCode(String code);
 
 }

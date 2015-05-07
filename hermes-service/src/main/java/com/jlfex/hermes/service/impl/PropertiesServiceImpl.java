@@ -369,6 +369,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 		prop.setValue(properties.getValue());//参数值
 		prop.setStatus(properties.getStatus());//参数状态
 		prop.setType(dictionaryRepository.findOne(typeId));//参数类型
+		prop.setRemark(properties.getRemark());//参数描述
 		propertiesRepository.save(prop);
 		return properties;
 	}

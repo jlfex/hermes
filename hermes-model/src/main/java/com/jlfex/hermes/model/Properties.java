@@ -34,6 +34,10 @@ public class Properties extends Model {
 	@Column(name = "status")
 	private  String  status;
 
+	/** 描述 */
+	@Column(name = "remark")
+	private  String  remark;
+
 	/** 类型 */
 	@ManyToOne
 	@JoinColumn(name = "type")
@@ -131,6 +135,14 @@ public class Properties extends Model {
 
 	public void setType(Dictionary type) {
 		this.type = type;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	/**
