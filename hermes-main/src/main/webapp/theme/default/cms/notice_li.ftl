@@ -29,11 +29,12 @@ border-radius: 5px;}
 *{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
 .notice_title{ margin:0 auto;width: 980px; height:44px; background:#eeeeee; font-size:16px;margin-bottom:30px;position:relative;}
 .notice_title span{ line-height:44px; padding-left:15px;}
-.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
+<div class="_content">
 <div class="sub_main" style="margin-top:133px;">		
 		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 			<div class="content_template">
@@ -48,6 +49,8 @@ border-radius: 5px;}
 				</div>
 			</div>		
 </div>
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

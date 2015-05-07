@@ -15,9 +15,11 @@
   table th{text-align:center;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-<div id="content" class="content"  style="margin-top:133px;">
+<div class="_content">
+<div id="content" class="content" >
 	<div class="u-container">
 		<div class="article">
 			<h2>${notice.title!}</h2>
@@ -29,6 +31,8 @@
 		</div>
 	</div>
 </div>
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

@@ -27,9 +27,11 @@
   }
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "../header.ftl" />
-<div id="content" class="content" style="margin-top:133px; min-height:760px;">
+<div class="_content">
+<div id="content" class="content" style="margin-top:133px;">
 	<div class="u-container">
 		<div class="flow">
 			<h3>流程简图</h3>
@@ -74,9 +76,9 @@
 
 	</div>
 </div>
-
+</div>
 <#include "../footer.ftl" />
-
+</div>
 <script type="text/javascript" charset="utf-8">
 
 $('.loan_detail .i_btn1.i_bg1').click(function() { window.location.href = '${app}/invest/info?loanid=' + $(this).data().id; });

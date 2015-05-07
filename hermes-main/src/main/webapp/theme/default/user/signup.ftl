@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/jquery-1.10.2.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
@@ -16,7 +16,6 @@
 .mr_10{margin-right:10px;}
 .low,.middle,.high{ width:60px; height:10px; display:inline-block; border:1px solid #e4e4e4;}
 .rank_bg{ background:#e68f07;}
-.footer { position:absolute;bottom:0;width:100%;clear:both;}
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -159,10 +158,10 @@ $(function(){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_rg">
 	<div class="m_rg_l">
@@ -219,8 +218,9 @@ $(function(){
 		</form>
 	</div>
 </div>
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

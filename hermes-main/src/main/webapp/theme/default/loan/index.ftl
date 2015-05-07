@@ -15,10 +15,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 
 <#include "../header.ftl" />
-
+<div class="_content">
 <div id="content" class="content">
 	<div class="u-container">
 		<div id="products" class="products">
@@ -98,8 +99,9 @@
 		</div>
 	</div>
 </div>
+</div>
 <#include "../footer.ftl" />
-
+</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

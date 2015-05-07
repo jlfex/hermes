@@ -7,13 +7,14 @@
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
-<body>
-
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <div id="content" class="content">
 	<div class="u-container">
 		<div class="articles">
@@ -29,8 +30,8 @@
 		</div>
 	</div>
 </div>
-
+</div>
 <#include "/footer.ftl" />
-
+</div>
 </body>
 </html>

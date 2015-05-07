@@ -11,9 +11,6 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-  
-});
 function checkAccount(){
 	var account=$("#account").val();
 	if(account==""||account==null){
@@ -51,9 +48,10 @@ function checkPhone(){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_rg" >
 	<div class="m_rg_l">
@@ -84,8 +82,9 @@ function checkPhone(){
 		</form>
 	</div>
 </div>
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

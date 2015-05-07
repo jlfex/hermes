@@ -4,7 +4,6 @@
 <%@page import="com.jlfex.hermes.common.App"%>
 <%@page import="com.jlfex.hermes.common.web.WebApp"%>
 <%@page import="com.jlfex.hermes.common.Result"%>
-<%@page import="com.jlfex.hermes.common.Logger"%>
 <%@page import="com.jlfex.hermes.common.exception.ServiceException"%>
 <%@page import="com.jlfex.hermes.common.utils.Strings"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -36,10 +35,10 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 .ml_10{ margin-left: 10px;}
 .mt_60{ margin-top: 60px;}
 .mt_20{ margin-top: 20px;}
-.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <%
 	}
 %>
@@ -73,6 +72,7 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 		</div>
 	</div>
 </div>
+<div class="_content">
 <!-- middle -->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box jy_bg1 clearfix">	
@@ -83,8 +83,9 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
         </div>
 	</div>
 </div>
+</div>
 <!-- foot start-->
-<div class="footer">
+<div class="footer _footer">
     <div class="footcenter">
         <div class="companyinfo clearfix">
             <h4>公司介绍</h4>
@@ -113,13 +114,11 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
         <div class="clearfix"></div>
     </div>
 </div>
-
+</div>
 <%
 	if (!Strings.equals("html", request.getParameter("hermes_request_type"))) {
 %>
-<script type="text/javascript" charset="utf-8" src="<%=App.current(WebApp.class).getJs()%>/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="<%=App.current(WebApp.class).getJs()%>/bootstrap.js"></script>
-<script type="text/javascript" charset="utf-8" src="<%=App.current(WebApp.class).getJs()%>/hermes.js"></script>
+
 
 </body>
 </html>

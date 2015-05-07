@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -131,10 +133,12 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping("/clear")
-	public void clear() {
+	@ResponseBody
+	public String  clear() {
 		PropertiesFilter.clear();
 		Caches.clear();
-		Logger.info("clear all cache.");
+		Logger.info("缓存已经清理完毕");
+		return "ok, clear all cache.";
 	}
 
 	/**

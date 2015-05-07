@@ -103,8 +103,10 @@ jQuery(function($) {
   table th{text-align:center;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
+<div class="_content">
 <div id="content" class="content">
 <form id="loanDisplay" name="loanDisplay" action="${app}/loan/loanprogram" method="post">
 <input id="productSize" name="productSize" type="hidden" value="${productSize}"></input>
@@ -255,8 +257,9 @@ jQuery(function($) {
 </div>
 </form>
 </div>
-<br/>
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </form>
 </html>

@@ -45,9 +45,10 @@ function checkEqual(){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp commonForm">
 	<h3>重置密码</h3>
@@ -71,8 +72,9 @@ function checkEqual(){
 	</div>
 	<a href="javascript:document.pwdForm.submit();"  class="m_btn1 m_bg1 mv_submit">提交</a>
 </div>
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

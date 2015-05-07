@@ -27,12 +27,12 @@
 .jy_nobg_notb .jy_info .jy_tel+a{font-size: 16px; text-decoration: underline; color: #018dc8; display: inline-block; margin-left: 166px;} 
 .jy_nobg_notb .jy_btnlist{margin-left:83px;}
 .jy_nobg_notb .jy_btnlist .m_btn3{margin: 14px 20px;height:30px;width:90px;}
-.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -74,9 +74,10 @@
 </div>
 
 
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 	<script type="text/javascript" charset="utf-8">
 	<!--
 	var seconds;

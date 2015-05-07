@@ -12,10 +12,10 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
-<!-- middle start-->
+<div class="_content">
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
@@ -33,8 +33,8 @@
 	</div>
 </div>
 
-
-<!-- foot start-->
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>
