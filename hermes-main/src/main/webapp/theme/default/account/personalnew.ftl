@@ -42,14 +42,25 @@
 	<div class="body-sm">
 		<!-- Nav tabs -->
 		<ul id="navTab" class="nav nav-tabs">
-		  <li><a href="#basic" data-toggle="tab"><@messages key="account.person.basic" /></a></li>
-		  <li><a href="#job" data-toggle="tab"><@messages key="account.person.job" /></a></li>
-		  <li><a href="#house" data-toggle="tab"><@messages key="account.person.house" /></a></li>
-		  <li><a href="#car" data-toggle="tab"><@messages key="account.person.car" /></a></li>
-		  <li><a href="#contacter" data-toggle="tab"><@messages key="accoutn.person.contacter" /></a></li>
-		  <li><a href="#picture" data-toggle="tab"><@messages key="account.person.picture" /></a></li>
+		<#if roleResourceList?seq_contains("front_info_base")>
+			<li><a href="#basic" data-toggle="tab"><@messages key="account.person.basic" /></a></li>
+		</#if>
+		<#if roleResourceList?seq_contains("front_info_work")>
+			<li><a href="#job" data-toggle="tab"><@messages key="account.person.job" /></a></li>
+		</#if>
+		<#if roleResourceList?seq_contains("front_info_house")>
+			<li><a href="#house" data-toggle="tab"><@messages key="account.person.house" /></a></li>
+		</#if>
+		<#if roleResourceList?seq_contains("front_info_car")>
+			 <li><a href="#car" data-toggle="tab"><@messages key="account.person.car" /></a></li>
+		</#if>
+		<#if roleResourceList?seq_contains("front_info_contacter")>
+			<li><a href="#contacter" data-toggle="tab"><@messages key="accoutn.person.contacter" /></a></li>
+		</#if>
+		<#if roleResourceList?seq_contains("front_info_imag")>
+			<li><a href="#picture" data-toggle="tab"><@messages key="account.person.picture" /></a></li>	
+		</#if>
 		</ul>
-		
 		<!-- Tab panes -->
 		<div class="tab-content">
 		  <div class="tab-pane active" id="basic"><div id="basicInfo" style="min-width:800px;height:100%;"></div></div>

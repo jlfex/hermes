@@ -28,7 +28,9 @@
 <div id="menu" class="menu">
 	<#list navs as nav>
 	<dl class="${nav.code!''}">
-		<dt><a href="#" data-url="${nav.url}" data-target="${nav.target}" data-id="${nav.id}"><i class="fa fa-${nav.code!''} fa-fw"></i>&nbsp;<span>${nav.name}</span><i class="fa fa-caret-right pull-right"></i></a></dt>
+		<#if roleResourceList?seq_contains("${nav.code}")>
+			<dt><a href="#" data-url="${nav.url}" data-target="${nav.target}" data-id="${nav.id}"><i class="fa fa-${nav.code!''} fa-fw"></i>&nbsp;<span>${nav.name}</span><i class="fa fa-caret-right pull-right"></i></a></dt>
+		</#if>
 	</dl>
 	</#list>
 </div>

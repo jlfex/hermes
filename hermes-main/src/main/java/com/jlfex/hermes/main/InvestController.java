@@ -62,7 +62,6 @@ import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.CreditInfoService;
 import com.jlfex.hermes.service.CreditRepayPlanService;
 import com.jlfex.hermes.service.DictionaryService;
-import com.jlfex.hermes.service.InitService;
 import com.jlfex.hermes.service.InvestProfitService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
@@ -129,8 +128,6 @@ public class InvestController {
 	private UserPropertiesRepository userPropertiesRepository;
 	@Autowired
 	private CFCAOrderRepository cfcaOrderRepository;
-	@Autowired
-	private InitService initService;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -969,7 +966,6 @@ public class InvestController {
 	@ResponseBody
 	public Result<String> bid2Pay(String investAmount, String loanId, String otherRepay, Model model) {
 		Result<String> result = new Result<>();
-		initService.initData();
 		User user = this.checkBidAuthority(loanId, investAmount, otherRepay, result);
 		if (!result.getType().equals(Type.SUCCESS)) {
 			return result;

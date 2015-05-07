@@ -232,4 +232,9 @@ public final class HermesConstants {
 	 * 字典类型的导航类型
 	 */
 	public static final String DIC_NAV = "nav";
+	
+	/**
+	 * 后台菜单code
+	 */
+	public static final String DIC_CONSOLE = "console";
 }

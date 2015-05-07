@@ -17,19 +17,6 @@
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
-
-	<bean id="menuInterceptor" class="com.jlfex.hermes.main.MenuInterceptor">
-		<property name="mappingURL" value="index/"></property>
-	</bean>
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-		<property name="interceptors">
-			<list>
-				<ref bean="menuInterceptor" />
-			</list>
-		</property>
-	</bean>
-
 	<mvc:annotation-driven>
 		<mvc:message-converters>
 			<bean id="jsonConverter"
@@ -47,7 +34,6 @@
 	<mvc:resources location="/resources" mapping="/resources/**" />
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
-		<bean class="com.jlfex.hermes.main.MenuInterceptor"></bean>
 	</mvc:interceptors>
 
 	<bean id="multipartResolver"
