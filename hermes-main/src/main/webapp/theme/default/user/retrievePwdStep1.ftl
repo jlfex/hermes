@@ -10,14 +10,6 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-<style type="text/css">
-.footer {
-position:absolute;
-bottom: 0;
-width: 100%;
-clear:both;
-}
-</style>
 
 <script type="text/javascript">
 var flag=true;
@@ -61,10 +53,10 @@ $(document).ready(function(){
 	}
 </script>
 </head>
-
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 
 <!-- middle start-->
 <div class="m_con m_fp" id="retrieve">
@@ -81,8 +73,9 @@ $(document).ready(function(){
 	</form>
 	<a href="javascript:document.mailForm.submit();"  class="m_btn1 m_bg1 mv_submit" >提交</a>
 </div>
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

@@ -10,14 +10,13 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-<style type="text/css">
-.footer { position:absolute;bottom: 0;width: 100%;clear:both;}
-</style>
+
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -35,8 +34,9 @@
 	</div>
 </div>
 
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

@@ -95,10 +95,10 @@ function clearPwd(){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_lg">
 	<div class="m_lg_l">
@@ -129,8 +129,9 @@ function clearPwd(){
 		</form>
 	</div>
 </div>
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

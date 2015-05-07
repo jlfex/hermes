@@ -12,10 +12,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 
 <#include "/header.ftl" />
-
+<div class="_content">
 
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
@@ -28,7 +29,8 @@
 	<p class="a_pa_lt"><a href="${app}/invest/index" class="q_btn1 q_bg1">继续投标</a><a href="${app}/account/index?type=invest" class="ck">查看我的理财</a><a href="${app}/invest/info?loanid=${loanid}"  class="ck">返回该借款</a></p>
 </div>
 
-
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

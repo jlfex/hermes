@@ -151,27 +151,7 @@ public class UserController {
 		}
 	}
 
-	/**
-	 * 完善注册信息
-	 * 
-	 * @param user
-	 * @return
-	 */
-	// @RequestMapping("supplement")
-	// public String supplement(UserBasic userBasic, Model model,
-	// HttpServletRequest req) {
-	// String message =null;
-	// String mailTemplate = userService.signSupplement(userBasic, req);
-	// try {
-	// emailService.sendEmail(userBasic.getEmail(), "注册用户激活", mailTemplate);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// model.addAttribute("errMsg", message);
-	// model.addAttribute("email", userBasic.getEmail());
-	// return "user/signup-success";
-	// }
+	
 
 	/**
 	 * 查看昵称是否被占用

@@ -12,15 +12,12 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/email.js"></script>
-<style type="text/css">
-table th{text-align:center;}
-.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
-</style>
 </head>
 <body class="index">
+<div class="_container">
 <#include "../header.ftl" />
-<br/>
-<div id="content" class="content" style="min-height:500px;">
+<div class="_content">
+<div id="content" class="content" >
 	<div class="u-container row" style=" margin-top:100px;">
 		<div class="col-xs-8">
 			<img src="${(loginPicture.image)!}">
@@ -51,9 +48,9 @@ table th{text-align:center;}
 		</div>
 	</div>
 </div>
-
+</div>
 <#include "../footer.ftl" />
-
+</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

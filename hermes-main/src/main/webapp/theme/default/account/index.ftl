@@ -19,9 +19,9 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
 </head>
 <body>
-
+<div class="_container">
 <#include "../header.ftl" />
-
+<div class="_content">
 <div id="content" class="content" style="margin-top:133px;min-height:760px;">
 	<div class="u-container row">
 		<div class="row u-row">
@@ -87,9 +87,9 @@
 		</div>
 	</div>
 </div>
-
+</div>
 <#include "../footer.ftl" />
-
+</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

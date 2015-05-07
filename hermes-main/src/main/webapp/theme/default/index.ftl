@@ -24,7 +24,9 @@ $(function(){
 </script>
 </head>
 <body class="index">
+<div class="_container">
 <#include "/header.ftl" />
+<div class="_content">
 <div id="content" class="content">
 	<!-- banner & signin -->
 	<div class="banner">	
@@ -171,9 +173,9 @@ $(function(){
 		<!-- /loan -->
 	</div>
 </div>
-
+</div>
 <#include "/footer.ftl" />
-
+</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

@@ -33,18 +33,13 @@ border-radius: 5px;}
 box-sizing: content-box;
 }
 ._autoScroll{ word-wrap:break-word;}
-.footer {
-position:absolute;
-bottom: 0;
-width: 100%;
-clear:both;
-}
-
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-<div class="sub_main" style="margin-top:180px;">
+<div class="_content">
+<div class="sub_main" >
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
@@ -76,7 +71,8 @@ clear:both;
 		<div class="clearfix"></div>
 	</div>
 </div>
+</div>
 <#include "/footer.ftl" />
-
+</div>
 </body>
 </html>
