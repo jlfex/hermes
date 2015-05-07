@@ -35,14 +35,9 @@ import com.jlfex.hermes.service.role.RoleResourceService;
 @Component
 public class PropertiesFilter implements Filter {
 	private static final String companyIntroductionCode = "company_introduction";
-	public static final String SITE_SERVICE_TEL = "site.service.tel";
-	public static final String SITE_SERVICE_TIME = "site.service.time";
-	public static final String App_OPERATION_NICKNAME = "app.operation.nickname";
-	public static final String App_COPYRIGHT = "app.copyright";
-	public static final String App_LOGO = "app.logo";
-	public static ArticleCategory articleCategory;
-	public static List<ArticleCategory> articleCategoryList;
-	public static List<FriendLink> friendLinkList;
+	private static ArticleCategory  articleCategory;
+	private static List<ArticleCategory> articleCategoryList ;
+	private static List<FriendLink>  friendLinkList;
 	public static List<String> roleResourceList;
 
 	/** 系统属性业务接口 */
