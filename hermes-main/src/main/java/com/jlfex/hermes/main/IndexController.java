@@ -2,18 +2,34 @@ package com.jlfex.hermes.main;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.constant.HermesEnum.NavigationEnum;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Article;
+import com.jlfex.hermes.model.DictionaryType;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.Navigation;
+import com.jlfex.hermes.model.Role;
+import com.jlfex.hermes.model.RoleResource;
+import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserRole;
+import com.jlfex.hermes.repository.DictionaryTypeRepository;
+import com.jlfex.hermes.repository.NavigationRepository;
+import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.repository.TmpNoticeRepository;
+import com.jlfex.hermes.repository.UserRepository;
+import com.jlfex.hermes.repository.UserRoleRepository;
 import com.jlfex.hermes.service.ArticleService;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.LoanService;
@@ -38,6 +54,21 @@ public class IndexController {
 
 	@Autowired
 	private TmpNoticeRepository tmpNoticeRepository;
+
+	@Autowired
+	private RoleResourceRepository roleResourceRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private UserRoleRepository userRoleRepository;
+
+	@Autowired
+	private DictionaryTypeRepository dictionaryTypeRepository;
+
+	@Autowired
+	private NavigationRepository navigationRepository;
 
 	/**
 	 * 索引
@@ -68,8 +99,12 @@ public class IndexController {
 		} else {
 			model.addAttribute("notices", articleList);
 		}
+
+		
 		return "index";
 	}
+
+	
 
 	@RequestMapping("/n/{id}")
 	public String tmpNotices(@PathVariable String id, Model model) {

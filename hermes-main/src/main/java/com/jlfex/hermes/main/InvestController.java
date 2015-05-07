@@ -12,8 +12,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -959,7 +962,6 @@ public class InvestController {
 	@ResponseBody
 	public Result<String> bid2Pay(String investAmount, String loanId, String otherRepay, Model model) {
 		Result<String> result = new Result<>();
-
 		User user = this.checkBidAuthority(loanId, investAmount, otherRepay, result);
 		if (!result.getType().equals(Type.SUCCESS)) {
 			return result;

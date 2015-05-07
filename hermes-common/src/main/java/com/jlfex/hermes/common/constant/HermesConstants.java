@@ -12,12 +12,11 @@ public final class HermesConstants {
 	 * 平台管理
 	 */
 	public static final String PLAT_MANAGER = "admin";
-	public static final String PRE_HERMES =   "HERMES"; //下单并支付接口 订单流水号前缀
+	public static final String PRE_HERMES = "HERMES"; // 下单并支付接口 订单流水号前缀
 	public static final String CROP_USER_ID = "crop";
-	
-	
-	public static final int    RESULT_VO_CODE_SUCCESS = 0;
-	public static final int    RESULT_VO_CODE_BIZ_ERROR = 1;
+
+	public static final int RESULT_VO_CODE_SUCCESS = 0;
+	public static final int RESULT_VO_CODE_BIZ_ERROR = 1;
 	public static final String INDEX_BANNER = "banner";
 	public static final String INDEX_INVEST = "invest";
 	public static final String INDEX_LOGIN = "login";
@@ -118,7 +117,6 @@ public final class HermesConstants {
 	public static final String TYPE_ASSET_REPAY_PLAN = "2"; 					 // 资产还款计划
 	public static final String TYPE_ORDER_REPAY_PLAN = "3";						 // 订单还款计划
 
-
 	/**
 	 *jlfex 订单状态
 	 */
@@ -171,7 +169,6 @@ public final class HermesConstants {
 	public static final String YLTX_CREDIT = "外部债权标";
 	public static final String PROVINCE_SUFFIX = "市";
 
-	
 	/**
 	 * 中金接口
 	 */
@@ -216,5 +213,13 @@ public final class HermesConstants {
 	 */
 	public static final String PLAT_ZJ_CODE= "zjpay";
 
-
+	/**
+	 * 字典类型的导航类型
+	 */
+	public static final String DIC_NAV = "nav";
+	
+	/**
+	 * 后台菜单code
+	 */
+	public static final String DIC_CONSOLE = "console";
 }
