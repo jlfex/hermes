@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -54,13 +57,13 @@
 			<input type="text" id="cellphone" name="cellphone" value="${cellphone}" class="jy_tel" readonly="readonly" style="border:0px;"  onblur="checkPhone()"/>
 			<a href="#" id="changePhoneNumber" style="margin-left:40px;" onclick='changeStyle()'>更换号码</a>
 			<label for="cellphone" generated="true" class="error valid" id="label"></label>
-			<span class="mv_msg col-xs-4" id="mv_cellphone" style="color:red;width:200px;font-weight:bold;"></span>			
+			<span class="mv_msg" id="mv_cellphone" style="color:red;width:200px;font-weight:bold;"></span>			
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">手机动态码</span>
 			<input type="text" id="validateCode" name="validateCode" onblur="checkCode()"/>
 			<button id="getValidateCodeBtn" class="m_btn3 m_bg1"  style="color:white">获取验证码</button>
-			<span class="mv_msg col-xs-4" id="mv_validateCode" style="color:red;width:200px;font-weight:bold;"></span>			
+			<span class="mv_msg" id="mv_validateCode" style="color:red;width:200px;font-weight:bold;"></span>			
 			<label for="validateCode" generated="true" class="error valid" style="margin-left:100px;"></label>
 			<div class="jy_tip2" style="display:none;">动态码已发送至您的手机<span id="changeCellphnoe" style="color:blue;">${cellphone}</span>，请查收</div>
 		</div>

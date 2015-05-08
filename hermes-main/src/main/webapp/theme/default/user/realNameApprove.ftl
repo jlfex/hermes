@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -55,13 +58,13 @@
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignl">真实姓名</span>
-			<input type="text" class="form-control" id="realName" name="realName" onblur="verificationInf()">
+			<input type="text" id="realName" name="realName" onblur="verificationInf()">
 			<label for="realName" generated="true" class="error valid"></label>
-			<span class="mv_msg col-xs-6" id="mv_realName" style="color:red;width:200px"></span>			
+			<span class="mv_msg" id="mv_realName" style="color:red;width:200px"></span>			
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignl">证件类型</span>
-			<select id="idType" name="idType"  class="form-control" >
+			<select id="idType" name="idType">
 			    <#list idTypeMap?keys as key> 
 					<option value="${key}" <#if userBasic?exists><#if userBasic.idType?exists&&userBasic.idType==key> selected</#if></#if>>${idTypeMap[key]}</option> 
 				</#list>
@@ -69,9 +72,9 @@
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignl">证件号码</span>
-			<input type="text" class="form-control" id="idNumber" name="idNumber" onblur="verificationInf()">
+			<input type="text" id="idNumber" name="idNumber" onblur="verificationInf()">
 			<label for="idNumber" generated="true" class="error valid"></label>
-			<span class="mv_msg col-xs-4" id="mv_idNumber" style="color:red;width:200px"></span>
+			<span class="mv_msg" id="mv_idNumber" style="color:red;width:200px"></span>
 		</div>
 		<div class="jy_btnlist">
 			<button id="confirmAuthIdentityBtn" type="button" onClick="mysubmit()" class="m_btn3 m_bg1">确认</button>
