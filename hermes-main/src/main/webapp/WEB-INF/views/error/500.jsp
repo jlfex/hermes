@@ -41,6 +41,7 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+
 <style type="text/css">
 .jy_bg1{background:#ffffff;}
 .fl{ float: left;}
@@ -74,7 +75,7 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 	</div>
 	<div class="nav">
 		<div class="u-container">
-			<div class="logo"><a href="${app}/index"><img src="${appLogo}"><span class="logo2">${appOperationNickname}</span></a></div>
+			<div class="logo" style="margin-top:15px;"><a href="${app}/index"><img src="${appLogo}"></a></div><span class="logo2">${appOperationNickname}</span>
 			<ul id="homeNav" class="nav-list">
 				<li class="home"><a href="${app}/index">首页</a></li>
 				<li class="invest"><a href="${app}/invest/index">我要理财</a></li>
