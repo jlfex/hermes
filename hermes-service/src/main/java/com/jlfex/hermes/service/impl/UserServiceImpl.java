@@ -233,6 +233,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		root.put("platform_site", App.config("app.website"));
 		root.put("customer_email", App.config("app.customer.service.email"));
 		root.put("service_tel", App.config("site.service.tel"));
+		root.put("platName", App.config("app.operation.name"));
 		return root;
 	}
 

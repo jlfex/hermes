@@ -1,6 +1,8 @@
 package com.jlfex.hermes.console.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.model.Product;
+import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.repository.RateRepository;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.ProductService;
@@ -62,7 +65,14 @@ public class ProductManageController {
 		model.addAttribute("title", "新增产品");
 		model.addAttribute("guarantee", dictionaryService.findByTypeCode("product.guarantee"));
 		model.addAttribute("purpose", dictionaryService.findByTypeCode("loan_purpose"));
-		model.addAttribute("repay", repayService.findAll());
+		List<Repay> repayList = repayService.findAll();
+		List<Repay> filterList = new ArrayList<Repay>();
+		for(Repay obj: repayList){
+			if(HermesConstants.REPAY_PRINCIPAL.equals(obj.getCode())){
+				filterList.add(obj);
+			}
+		}
+		model.addAttribute("repay", filterList);
 		model.addAttribute("deadline", dictionaryService.findByTypeCode("product.deadline"));
 		model.addAttribute("productCode", productService.generateProductCode());
 		return "product/add";

@@ -222,4 +222,8 @@ public final class HermesConstants {
 	 * 后台菜单code
 	 */
 	public static final String DIC_CONSOLE = "console";
+	/**
+	 * 等额本息
+	 */
+	public static final String REPAY_PRINCIPAL = "Principal";
 }
