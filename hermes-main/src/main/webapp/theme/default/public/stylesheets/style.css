@@ -1,6 +1,5 @@
 @charset "utf-8";
 
-body { margin:0; padding:135px 0 0 0; min-width:1024px; background-color:#ffffff; font-size:14px; font-family:微软雅黑; }
 body.index { padding-top:95px; }
 h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 ::-webkit-scrollbar-track-piece { background-color:#ffffff; -webkit-border-radius:3px;}
@@ -39,7 +38,7 @@ h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 .header .nav .nav-list li a { padding-left:20px; text-decoration:none; font-size:16px; color:#323232; }
 .header .nav .nav-list li.active a { background-image:url("../images/icons.png"); background-position:0 0; background-repeat:no-repeat; color:#018dc8; }
 
-.footer { margin-top:40px; padding:20px 0; background-color:#444444; color:#909090; }
+.footer { margin-top:0px; padding:0px 0; background-color:#444444; color:#909090; }
 .footer .footer-right { padding-left:0; border-left:1px solid #333333; }
 .footer .footer-right .wrap { padding-left:30px; border-left:1px solid #575757; }
 .footer .footer-left { text-align:center; }

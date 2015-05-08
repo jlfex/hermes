@@ -62,9 +62,10 @@ jQuery(function($) {
 </script>
 </head>
 
-<body>
-
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
+<div class="_content">
 <div id="content" class="content">
 <form id="programconfirm" name="programconfirm">
 <input id="productId" name="productId" type="hidden" value="${productId}"></input>
@@ -178,6 +179,8 @@ jQuery(function($) {
 </div>
 </form>
 </div>
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

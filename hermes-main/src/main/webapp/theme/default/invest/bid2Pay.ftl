@@ -6,6 +6,10 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<script type="text/javascript" src="${app.js}/jquery.js" charset="utf-8"></script>
+<script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
+<script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <style>
 	.related-bank{ border:1px solid #d8d8d8; border-radius:3px; margin-top:20px; height:60px; line-height:60px; vertical-align:middle;}
 	.related-bank span{ display:inline-block;vertical-align:middle; margin-right:10px;}
@@ -21,10 +25,6 @@
 	.sweet-tip{ margin:40px 0px; border-top:1px solid #d8d8d8; padding-top:10px; }
 	.sweet-tip p{ line-height:25px;color:#727272;}
 </style>
-<script type="text/javascript" src="${app.js}/jquery.js" charset="utf-8"></script>
-<script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
-<script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
-<script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function($) {
 	$('#cr').click(function() {
@@ -71,14 +71,11 @@ jQuery(function($) {
 	}
 });
 </script>
-
 </head>
-
-<body>
-
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
-
+<div class="_content">
 <!-- middle start-->
 <div class="middle_content" style="min-height:500px">
 	<#if bankAccount?? && userProperties??>
@@ -133,6 +130,8 @@ jQuery(function($) {
 	<input id="loanId" name="loanId" type="hidden" value="${loanId}" ></input>
 	<input id="otherRepay" name="otherRepay" type="hidden" value="${otherRepay}" ></input>
 </form> 
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>

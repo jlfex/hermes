@@ -1,8 +1,14 @@
 @charset "utf-8";
 /* CSS Document */
-body {font-family:"微软雅黑", "Microsoft YaHei", Helvetica,sansation, Verdana, Arial, sans-serif;font-size: 14px;color:#323232;}
+body {font-family:"微软雅黑", "Microsoft YaHei", Helvetica,sansation, Verdana, Arial, sans-serif;font-size: 14px;color:#323232; height:100%}
 body,ul,li,p,img,div,h1,h2,h3,h4,h5,h6,input,form,table, th, td, hr,select{margin:0; padding:0;}
 h3{color:#000000; font-size:14px; font-weight:600;}
+
+._container{position:relative;width:100%;min-height:100%;}
+._content{padding-bottom:150px;}
+._footer{height:150px;position:fixed;bottom:0px;left:0px;}
+
+
 a{ text-decoration:none;}
 ul,li{ list-style-type:none;}
 img{ border:0;}

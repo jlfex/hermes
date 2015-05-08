@@ -27,11 +27,12 @@ border-radius: 5px;}
 .content_index p{ margin: 20px;}
 .tu_images{ text-align: center; margin: 20px 0;}
 *{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
-.footer {position:absolute;bottom: 0;width: 100%;clear:both;}
 </style>
 </head>
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
+<div class="_content">
 <div class="sub_main" style="margin-top:133px;min-height:500px;">
 	<div class="account_center">
 		<div class="account_nav_left">
@@ -75,8 +76,8 @@ color: #ccc;">${(l.updateTime)!}</span>
 		<div class="clearfix"></div>
 	</div>
 </div>
-
+</div>
 <#include "/footer.ftl" />
-
+</div>
 </body>
 </html>

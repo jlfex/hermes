@@ -54,10 +54,11 @@ jQuery(function($){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 
 <#include "/header.ftl" />
-
+<div class="_content">
 <div class="middle_content" style="min-height:500px">
 	<#if bankAccount?? && userProperties??>
     <div class="detail">
@@ -114,7 +115,8 @@ jQuery(function($){
 <input id="loanid" name="loanid" type="hidden" value="${loanId}" ></input>	
 <input id="investamount" name="investamount" type="hidden" value="${investAmount!''}" >
 </form> 
+</div>
 <#include "/footer.ftl" />
-
+</div>
 </body>
 </html>

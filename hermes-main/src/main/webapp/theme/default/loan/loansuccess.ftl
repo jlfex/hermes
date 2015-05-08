@@ -8,19 +8,13 @@
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <script type="text/javascript" charset="utf-8" src="${app.js}/jquery.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-<style type="text/css">
-.footer { 
-position:absolute;
-bottom: 0;
-width: 100%;
-clear:both;}
-</style>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 
 <#include "/header.ftl" />
-
+<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -35,8 +29,9 @@ clear:both;}
 	<p class="m_im_txt a_pa_lt"><a href="${app}/index" class="q_btn1 q_bg1">返回首页</a><a href="${app}/account/index" class="ck">完善个人信息</a><a href="${app}/account/index?type=loan"  class="ck">查看我的借款</a></p>
 </div>
 
-
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </form>
 </html>

@@ -1,5 +1,5 @@
 <!-- foot start-->
-<div class="footer">
+<div class="footer _footer">
     <div class="footcenter">
         <div class="companyinfo clearfix">
             <h4>公司介绍</h4>

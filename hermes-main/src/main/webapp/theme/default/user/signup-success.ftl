@@ -10,13 +10,8 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-<style type="text/css">
-.footer { position:absolute;bottom:0;width:100%;clear:both;}
-</style>
 <script type="text/javascript">
-$(document).ready(function(){
-  
-});
+
 function mailBoxSkp(email){
 	  var url = email.split('@')[1];
 	  window.open("http://mail."+url);
@@ -24,9 +19,10 @@ function mailBoxSkp(email){
 </script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
@@ -50,6 +46,8 @@ function mailBoxSkp(email){
 </div>
 
 <!-- foot start-->
+</div>
 <#include "/footer.ftl" />
+</div>
 </body>
 </html>
