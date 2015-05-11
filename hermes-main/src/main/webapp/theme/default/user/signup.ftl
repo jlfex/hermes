@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
 <title><@config key="app.title" /></title>
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
@@ -22,7 +23,9 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-  
+	if($.browser.msie) {
+		alert("");
+	}
     //邮箱补全
 	var inputSuggest = new InputSuggest({
 		input: document.getElementById('email'),
