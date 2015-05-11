@@ -12,9 +12,10 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body>
+<body class="index">
+<div class="_container">
 <#include "/header.ftl" />
-
+<div class="_content">
 <div class="sub_main">
 	<div class="account_center">
 		<div class="account_nav_left">
@@ -137,13 +138,10 @@
 </div>
 
 
-
-
-
-
+</div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-
+</div>
 <script type="text/javascript">
 <!--
 jQuery(function($) {

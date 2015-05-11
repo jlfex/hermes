@@ -18,7 +18,7 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
 </head>
-<body>
+<body class="index">
 <div class="_container">
 <#include "../header.ftl" />
 <div class="_content">
