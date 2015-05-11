@@ -511,15 +511,15 @@ public class AccountController {
 	 * 充值结果
 	 * @param message
 	 * @param type
-	 * @param amount
+	 * @param pAmount
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/charge/chargeResult")
-	public String chargeResult(String message, String type,BigDecimal amount, Model model) {
+	public String chargeResult(String message, String type,BigDecimal pAmount, Model model) {
 		App.checkUser();
 		model.addAttribute("message", message);
-		model.addAttribute("amount", amount);
+		model.addAttribute("amount", pAmount);
 		if (type.equals(Type.SUCCESS.name())) {
 			model.addAttribute("type", "ico8.png");
 		} else if (type.equals(Type.FAILURE.name())) {
