@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+<meta name="renderer" content="webkit">
 <title><@config key="app.title" /></title>
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
@@ -180,7 +180,12 @@ $(function(){
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
-
+ 	if (navigator.userAgent.indexOf("MSIE") > 0) { //IE
+	   		if(/msie 7.0/.test(navigator.userAgent.toLowerCase()) || /msie 8.0/.test(navigator.userAgent.toLowerCase())) {
+	        	alert("请使用高版本ie浏览器");
+	        	return;
+	        }
+	}
     //邮箱补全
 	var inputSuggest = new InputSuggest({
 		input: document.getElementById('email'),
