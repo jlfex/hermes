@@ -23,9 +23,6 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-	if($.browser.msie) {
-		alert("");
-	}
     //邮箱补全
 	var inputSuggest = new InputSuggest({
 		input: document.getElementById('email'),
