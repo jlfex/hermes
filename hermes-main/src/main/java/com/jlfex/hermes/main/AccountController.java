@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,6 @@ import com.jlfex.hermes.service.web.PropertiesFilter;
 @RequestMapping("/account")
 public class AccountController {
 
-	private static final String AUTH_TRUE = "1";
 
 	/** 银行账户业务接口 */
 	@Autowired
@@ -127,8 +125,8 @@ public class AccountController {
 		model.addAttribute("email", App.user().getAccount());
 		model.addAttribute("userProp", userProperties);
 		model.addAttribute("idTypes", Dicts.elements(UserProperties.IdType.class));
-		model.addAttribute("phoneSwitch", Strings.equals(AUTH_TRUE, App.config("auth.cellphone.switch")));
-		model.addAttribute("idSwitch", Strings.equals(AUTH_TRUE, App.config("auth.realname.switch")));
+		model.addAttribute("phoneSwitch", Strings.equals(HermesConstants.SWITCH_FLAG_ZERO, App.config("auth.cellphone.switch").trim()));
+		model.addAttribute("idSwitch", Strings.equals(HermesConstants.SWITCH_FLAG_ZERO, App.config("auth.realname.switch").trim()));
 		return "account/approve-new";
 	}
 
