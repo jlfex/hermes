@@ -8,11 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.Properties;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.PropertiesService;
+import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
  * 属性控制器
@@ -133,5 +136,16 @@ public class PropertiesController {
 			return "redirect:/properties/index";
 		}
 	}
+	/**
+	 * 清理缓存
+	 * @return
+	 */
+	@RequestMapping("/clearProperties")
+	public String clearProperties() {
+		PropertiesFilter.clear();
+		App.config(propertiesService.loadFromDatabase());
+		return "redirect:/properties/index";
+	}
+	
 
 }
