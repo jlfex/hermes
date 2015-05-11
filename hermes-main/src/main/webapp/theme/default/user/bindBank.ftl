@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -60,14 +63,14 @@
 			<#if userProperties.realName??>
 			<input type="text" class="jy_ml" id="realName" value="${realName}" name="realName" style="border:0px;" disabled="disabled"/>			
 			<#else>
-			<input type="text" class="form-control" id="realName" name="realName" onblur="verification()">
+			<input type="text" id="realName" name="realName" onblur="verification()">
 			<label for="deposit" generated="true" class="error valid"></label>
-			<span class="mv_msg col-xs-6" id="mv_realName" style="color:red;width:200px"></span>						
+			<span class="mv_msg" id="mv_realName" style="color:red;width:200px"></span>						
 			</#if>
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">银行卡名称</span>
-		    <select id="bankId" name="bankId" class="form-control">
+		    <select id="bankId" name="bankId">
 		        <#list banks as b>
 			    <option value="${b.id}" selected = "selected">${b.name}</option>
 		        </#list>				    
@@ -80,15 +83,15 @@
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">开户行</span>
-			<input type="text" class="form-control" id="deposit" name="deposit" onblur="verificationInf()">
+			<input type="text" id="deposit" name="deposit" onblur="verificationInf()">
 			<label for="deposit" generated="true" class="error valid"></label>
-			<span class="mv_msg col-xs-6" id="mv_deposit" style="color:red;width:200px"></span>			
+			<span class="mv_msg" id="mv_deposit" style="color:red;width:200px"></span>			
 		</div>
 		<div class="jy_info">
 			<span class="jy_alignr">银行账号</span>
-			<input type="text" class="form-control" id="account" name="account" onblur="verificationInf()">
+			<input type="text" id="account" name="account" onblur="verificationInf()">
 			<label for="account" generated="true" class="error valid"></label>
-			<span class="mv_msg col-xs-6" id="mv_account" style="color:red;width:200px"></span>
+			<span class="mv_msg" id="mv_account" style="color:red;width:200px"></span>
 		</div>
 		<div class="jy_btnlist">
 			<button id="confirmAuthIdentityBtn" type="button" onClick="mysubmit()" class="m_btn3 m_bg1">确认</button>
