@@ -22,7 +22,7 @@
 <div class="_container">
 <#include "../header.ftl" />
 <div class="_content">
-<div id="content" class="content" style="margin-top:133px;min-height:760px;">
+<div id="content" class="content" style="margin-top:50px;">
 	<div class="u-container row">
 		<div class="row u-row">
 			<!-- account menu -->

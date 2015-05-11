@@ -116,7 +116,7 @@ function clearPwd(){
 			</div>
 			<div class="m_item">
 				<input id="signPwd" type="text"   value="登录密码" class="register"/>
-				<input id="signPassword" name="signPassword" type="password"  class="mv_pwd" style="display:none;"/>
+				<input id="signPassword" name="signPassword" type="password"  autocomplete = "off"  class="mv_pwd" style="display:none;"/>
 				<span class="mv_msg"></span>
 			</div>
 			<div class="m_item">

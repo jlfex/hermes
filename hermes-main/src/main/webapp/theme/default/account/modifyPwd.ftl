@@ -10,14 +10,14 @@
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">*<@messages key="account.password.original"/>：</label>
 	  	 <div id="originalDiv" class="col-sm-4 control-group " >
-			<input type="password" class="form-control " id="orginalPwd" name="orginalPwd" placeholder="Password" onBlur="check()"  >
+			<input type="password" autocomplete = "off" class="form-control " id="orginalPwd" name="orginalPwd" placeholder="Password" onBlur="check()"  >
 		</div>
 		<span class="col-sm-6 error_tip" style="display:none;padding:7px 0 0 0;color:#ff451f;">请输入原密码</span>
 	  </div>
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">*<@messages key="account.password.new"/>：</label>
 	  	 <div id="newDiv" class="col-sm-4 control-group" >
-			<input type="password" class="form-control" id="password" name="password" placeholder="Password"  onBlur="verify(this.value)" >
+			<input type="password" autocomplete = "off" class="form-control" id="password" name="password" placeholder="Password"  onBlur="verify(this.value)" >
 		</div>
 		<span class="col-sm-6 error_tip" style="display:none;padding:7px 0 0 0;color:#ff451f;">请输入原密码</span>
 	  </div>
@@ -29,7 +29,7 @@
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">*<@messages key="account.password.confirm"/>：</label>
 	  	 <div id="confirmDiv" class="col-sm-4 control-group" >
-			<input type="password" class="form-control" id="confirm" name="confirm" placeholder="Password" onBlur="comparePwd()"  >
+			<input type="password" autocomplete = "off"  class="form-control" id="confirm" name="confirm" placeholder="Password" onBlur="comparePwd()"  >
 		</div>
 		<span class="col-sm-6 error_tip" style="display:none;padding:7px 0 0 0;color:#ff451f;">请输入原密码</span>
 	  </div>
