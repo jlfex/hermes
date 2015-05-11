@@ -182,7 +182,7 @@ $(function(){
 jQuery(function($) {
  	if (navigator.userAgent.indexOf("MSIE") > 0) { //IE
 	   		if(/msie 7.0/.test(navigator.userAgent.toLowerCase()) || /msie 8.0/.test(navigator.userAgent.toLowerCase())) {
-	        	alert("请使用高版本ie浏览器");
+	        	alert("请使用IE8以上版本浏览器或其他浏览器");
 	        	return;
 	        }
 	}
