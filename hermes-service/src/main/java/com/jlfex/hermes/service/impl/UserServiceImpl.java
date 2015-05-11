@@ -16,6 +16,7 @@ import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.Strings.StringSet;
@@ -191,28 +192,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		saveUser(user);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.UserService#signSupplement(UserBasic,
-	 * HttpServletRequest)
-	 */
-	// @Override
-	// public String signSupplement(UserBasic userBasic, HttpServletRequest req)
-	// {
-	// Date curDate=new Date();
-	// User user = userRepository.findOne(userBasic.getId());
-	// Logger.info("完善注册信息~~~~~~~~" + user.getId());
-	// UserProperties userPro =userPropertiesRepository.findByUser(user);
-	// userPro.setRealName(userBasic.getRealName());
-	// userPro.setUpdateTime(curDate);
-	//
-	// user.setAccount(userBasic.getAccount());
-	// user.setCellphone(userBasic.getCellphone());
-	// user.setUpdateTime(curDate);
-	// userPropertiesRepository.save(userPro);
-	// return sendActiveMail(user, req);
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -234,6 +213,7 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		root.put("customer_email", App.config("app.customer.service.email"));
 		root.put("service_tel", App.config("site.service.tel"));
 		root.put("platName", App.config("app.operation.name"));
+		root.put("expireHour", calcuEmailExpireHour());
 		return root;
 	}
 
@@ -378,7 +358,25 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		root.put("platform_site", App.config("app.website"));
 		root.put("customer_email", App.config("app.customer.service.email"));
 		root.put("service_tel", App.config("site.service.tel"));
+		root.put("platName", App.config("app.operation.name"));
+		root.put("expireHour", calcuEmailExpireHour());
 		return root;
+	}
+
+	/**
+	 * 计算邮件失效时间
+	 * @return
+	 */
+	public String calcuEmailExpireHour() {
+		String expireHoure = App.config("auth.mail.expire");
+		if(App.config("auth.mail.expire").contains(HermesConstants.NICK_DAY)){
+			try{
+			expireHoure = ""+(Integer.parseInt(expireHoure.replace(HermesConstants.NICK_DAY, "").trim())*24);
+			}catch(Exception e){
+				Logger.error("计算邮件激活时间异常：请检查配置 是否正常 auth.mail.expire="+App.config("auth.mail.expire"), e);
+			}
+		}
+		return expireHoure;
 	}
 
 	/*

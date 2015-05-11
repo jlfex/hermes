@@ -67,6 +67,7 @@ public final class HermesConstants {
 	 */
 	public static final String FORMAT_19 = "yyyy-MM-dd HH:mm:ss";
 	public static final String FORMAT_10 = "yyyy-MM-dd";
+	public static final String NICK_DAY = "d";  // 单位：天
 
 	/**
 	 * 状态 0: 有效 1：无效
