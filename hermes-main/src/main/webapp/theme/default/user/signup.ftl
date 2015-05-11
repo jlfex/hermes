@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
@@ -184,7 +181,7 @@ $(function(){
 			</div>
 			<div class="m_item">
 				<input id="signPwd" type="text" value="<@messages key="sign.up.signpassword" />" />
-				<input id="signPassword" name="signPassword" type="password" style="display:none;"  class="mv_pwd"/>
+				<input id="signPassword" autocomplete="off" name="signPassword" type="password" style="display:none;"  class="mv_pwd"/>
 			    <span class="mv_msg"></span>
 			</div>
 			 <div class="ml_180" style="margin-top:-0px;margin-left:12px">
@@ -194,7 +191,7 @@ $(function(){
              </div>
 			<div class="m_item">
 				<input id="configPwd" type="text" value="<@messages key="sign.up.configpassword" />" />
-				<input id="configPassword" name="configPassword" type="password" style="display:none;"  class="mv_pwdagain"/>
+				<input id="configPassword" name="configPassword" type="password" autocomplete="off" style="display:none;"  class="mv_pwdagain"/>
 				  <span class="mv_msg"></span>
 			</div>
 			<div class="m_item">

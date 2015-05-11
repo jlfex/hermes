@@ -61,12 +61,12 @@ function checkEqual(){
 			<div class="m_fp_s1">
 				<div class="m_item">
 					&nbsp;&nbsp;&nbsp;新密码：
-					<input id="signPassword" name="signPassword" type="password" class="mv_pwd"/> 
+					<input id="signPassword" name="signPassword" type="password" autocomplete = "off"  class="mv_pwd"/> 
 					<span class="mv_msg"></span>
 				</div>
 				<div class="m_item">
 					确认密码：
-					<input id="configPassword" name="configPassword" type="password"  class="mv_pwdagain" />
+					<input id="configPassword" name="configPassword" type="password" autocomplete = "off"  class="mv_pwdagain" />
 					<span class="mv_msg"></span>
 				</div>
 			</div>
