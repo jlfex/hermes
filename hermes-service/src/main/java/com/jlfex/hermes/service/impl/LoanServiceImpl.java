@@ -313,7 +313,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public List<LoanInfo> findForIndex(List<String> loanKinds) {
 		// 初始化
-		Integer size = Integer.valueOf(App.config("index.loan.size", "10"));
+		Integer size = Integer.valueOf(App.config("index.loan.size", "10").trim());
 		List<LoanInfo> loans = new ArrayList<LoanInfo>(size);
 
 		// 查询招标中记录
