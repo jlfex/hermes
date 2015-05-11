@@ -278,13 +278,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 		if (!source.equals(indexLoanSize)) {
 			properties.setValue(indexLoanSize);
 			propertiesRepository.save(properties);
-		}
-		properties = findByCode("auth.email.expire");
-		source = properties.getValue();
-		if (!source.equals(emailExpire)) {
-			properties.setValue(emailExpire);
-			propertiesRepository.save(properties);
-		}
+		}	
 		properties = findByCode("auth.sms.expire");
 		source = properties.getValue();
 		if (!source.equals(smsExpire)) {
