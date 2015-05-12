@@ -240,7 +240,7 @@ jQuery(function($) {
 								 	<td class="wd2">
 								  	<input type="radio" name="repay_${detail}" value=${rm.id} /><span> ${rm.name}</span><br />
 								 <#else> 
-									<input type="radio" name="repay_${detail}" value=${rm.id} /><span> ${rm.name}</span>
+									<!-- <input type="radio" name="repay_${detail}" value=${rm.id} /><span> ${rm.name}</span> -->
 									</td>
 								 </#if>
 								 <#assign repaymethod = repaymethod + 1 /> 

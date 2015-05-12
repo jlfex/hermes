@@ -33,7 +33,7 @@ border-radius: 5px;}
 <div class="_container">
 <#include "/header.ftl" />
 <div class="_content">
-<div class="sub_main" style="margin-top:133px;min-height:500px;">
+<div class="sub_main" style="margin-top:50px;min-height:500px;">
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>

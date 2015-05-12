@@ -222,8 +222,8 @@ public class Mailer {
 	 * @throws MessagingException 
 	 */
 	public static void main(String... args) throws MessagingException {
-		Mailer.sendText("ufrog.net@gmail.com", "hello world", "123456789 abcdefghijklmnopqrstuvwxyz.");
-		Mailer.sendHtml("ufrog.net@gmail.com", "中文测试", "<h1><a href='#'>中文测试</a></h1>");
+		Mailer.sendText("yanlei@jinlufund.com", "hello world", "123456789 abcdefghijklmnopqrstuvwxyz.");
+		Mailer.sendHtml("yanlei@jinlufund.com", "中文测试", "<h1><a href='#'>中文测试</a></h1>");
 	}
 	
 	/**

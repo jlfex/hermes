@@ -42,6 +42,11 @@
 		</form>
 	</div>
 </div>
+<form id="rform" action="${app}/account/charge/chargeResult" method="post">
+	<input id="message" name="message" type="hidden"></input>	
+	<input id="type" name="type" type="hidden"></input>	
+	<input id="pAmount" name="pAmount" type="hidden"></input>	
+</form>
 
 <script type="text/javascript" charset="utf-8">
 <!--
@@ -103,7 +108,10 @@ jQuery(function($) {
 			dataType: 'json',
 			timeout: 50000,
 			success: function(data) {
-			 window.location.href="${app}/account/charge/chargeResult?message="+data.messages[0]+"&type="+data.type+"&amount="+data.messages[1];
+				$("#message").val(data.messages[0]);
+     			$("#type").val(data.type);
+     			$("#pAmount").val(data.messages[1]);
+     			$("#rform").submit();
 			}
 		});
 	});

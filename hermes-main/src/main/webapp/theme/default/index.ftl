@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="renderer" content="webkit">
 <title><@config key="app.title" /></title>
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
@@ -43,7 +44,7 @@ $(function(){
 					</div>
 					<div class="form-group">
 						<label for="signPassword" class="sr-only">password</label>
-						<input id="signPassword" name="signPassword" type="password" placeholder="<@messages key="index.sign.in.password.hint" />" class="form-control">
+						<input id="signPassword" name="signPassword" type="password" autocomplete = "off" placeholder="<@messages key="index.sign.in.password.hint" />" class="form-control">
 					</div>
 					<div class="form-group"><button class="btn btn-primary btn-block"><@messages key="common.op.sign.in" /></button></div>
 					<p>
@@ -179,7 +180,12 @@ $(function(){
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
-
+ 	if (navigator.userAgent.indexOf("MSIE") > 0) { //IE
+	   		if(/msie 7.0/.test(navigator.userAgent.toLowerCase()) || /msie 8.0/.test(navigator.userAgent.toLowerCase())) {
+	        	alert("请使用IE8以上版本浏览器或其他浏览器");
+	        	return;
+	        }
+	}
     //邮箱补全
 	var inputSuggest = new InputSuggest({
 		input: document.getElementById('email'),
