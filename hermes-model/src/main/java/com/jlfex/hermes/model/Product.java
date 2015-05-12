@@ -62,7 +62,7 @@ public class Product extends Model {
 	private String view;
 
 	/** 借款管理费 */
-	@Column(name = "manage_fee")
+	@Column(name = "manage_fee", precision=16, scale=8,nullable=false)
 	private BigDecimal manageFee;
 
 	/** 借款管理费类型 */

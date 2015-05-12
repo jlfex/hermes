@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.sms.SMSSender;
 import com.jlfex.hermes.common.support.freemarker.StringTemplateLoader;
@@ -102,6 +103,7 @@ public class AuthServiceImpl implements AuthService {
 			} else {
 				User user = userRepository.findOne(userId);
 				user.setCellphone(phone);
+				
 				Date curDate = new Date();
 				userAuth.setUser(user);
 				String validateCode = Strings.random(6, StringSet.NUMERIC);
@@ -114,13 +116,13 @@ public class AuthServiceImpl implements AuthService {
 				userRepository.save(user);
 				userAuthRepository.save(userAuth);
 				// send verification code of sms
-				//sendSms(phone, validateCode);
+				// sendSms(phone, validateCode);
 				result.addMessage(App.message("result.success.phone", ""));
 				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 				return result;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error("异常信息:", e);
 			Result<String> result = new Result<String>();
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage(App.message("失败", ""));
