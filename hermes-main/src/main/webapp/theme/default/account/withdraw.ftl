@@ -43,7 +43,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-xs-2 col-xs-offset-2 u-col">
-					<button id="addWithdrawBtn" type="button" class="btn btn-primary btn-block"><@messages key="common.op.withdraw" /></button>
+					<button id="addWithdrawBtn" type="button" disabled="disabled"  class="btn btn-default btn-block"><@messages key="common.op.withdraw" /></button>
 				</div>
 			</div>
 		</form>
@@ -84,13 +84,15 @@ jQuery(function($) {
 			type: 'post',
 			dataType: 'json',
 			timeout: 5000,
-			success: function(data, textStatus, xhr) {
+			success: function(data, textStatus, xhr) { 
 				if (data.typeName === 'success') {
 					_fee.html(data.messages[0] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
 					_sum.html(data.messages[1] + '&nbsp;<@messages key="common.unit.cny" />').formatNumber();
+					$("#addWithdrawBtn").removeAttr("disabled").removeClass("btn-default").addClass("btn-primary");
 				} else {
 					//_fee.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
 					_sum.html('<span class="failure"><i class="fa fa-info-circle"></i> ' + data.firstMessage + '</span>');
+					$("#addWithdrawBtn").removeClass("btn-primary").addClass("btn-default").attr("disabled","true");
 				}
 			}
 		});
@@ -98,6 +100,7 @@ jQuery(function($) {
 	
 	// 添加提现记录
 	$('#addWithdrawBtn').on('click', function() {
+	    
 		$.ajax('${app}/account/withdraw/add', {
 			data: $('#withdrawForm').serialize(),
 			type: 'post',
@@ -110,7 +113,7 @@ jQuery(function($) {
 			}
 		});
 	});
-	var feeType = "${feeType}", feeTipMsg='';
+	var feeType = "${feeType!''}", feeTipMsg='';
 	// 费用提示处理
 	if(feeType == "1"){
 	    feeTipMsg = '<span style="white-space:nowrap;">'+"${feeMaxAmount}"+'</span>';
