@@ -7,12 +7,6 @@ import java.math.BigDecimal;
  */
 public interface WithdrawFee {
 
-	/**
-	 * 初始化
-	 * 
-	 * @param config
-	 */
-	public void init(String config);
 	
 	/**
 	 * 计算手续费
