@@ -17,16 +17,7 @@ public class IntervalWithdrawFee implements WithdrawFee {
 
 	private static final Pattern PATTERN = Pattern.compile("(\\d+.?\\d*):(\\d+.?\\d*),(\\d+.?\\d*)");
 	
-	private static List<Interval> intervals;
 	
-	/* (non-Javadoc)
-	 * @see com.jlfex.hermes.service.withdraw.WithdrawFee#init(java.lang.String)
-	 */
-	@Override
-	public void init(String config) {
-		intervals = null;
-		getIntervals(config);
-	}
 	
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.withdraw.WithdrawFee#calcFee(java.math.BigDecimal, java.lang.String)
@@ -45,19 +36,17 @@ public class IntervalWithdrawFee implements WithdrawFee {
 	 * 读取区间
 	 */
 	protected List<Interval> getIntervals(String config) {
-		if (intervals == null) {
-			intervals = new LinkedList<Interval>();
-			for (String str: config.split(";")) {
-				Matcher matcher = PATTERN.matcher(str);
-				if (matcher.find()) {
-					BigDecimal min = Numbers.currency(Double.valueOf(matcher.group(1)));
-					BigDecimal max = Numbers.currency(Double.valueOf(matcher.group(2)));
-					BigDecimal fee = Numbers.currency(Double.valueOf(matcher.group(3)));
-					intervals.add(new Interval(min, max, fee));
-					Logger.info("init interval '%s:%s,%s'", min, max, fee);
-				} else {
-					throw new ServiceException("cannot match " + str + ".");
-				}
+		List<Interval> intervals = new LinkedList<Interval>();
+		for (String str: config.split(";")) {
+			Matcher matcher = PATTERN.matcher(str);
+			if (matcher.find()) {
+				BigDecimal min = Numbers.currency(Double.valueOf(matcher.group(1)));
+				BigDecimal max = Numbers.currency(Double.valueOf(matcher.group(2)));
+				BigDecimal fee = Numbers.currency(Double.valueOf(matcher.group(3)));
+				intervals.add(new Interval(min, max, fee));
+				Logger.info("init interval '%s:%s,%s'", min, max, fee);
+			} else {
+				throw new ServiceException("cannot match " + str + ".");
 			}
 		}
 		return intervals;
