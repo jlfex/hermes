@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <script type="text/javascript" src="${app.js}/jquery.js" charset="utf-8"></script>

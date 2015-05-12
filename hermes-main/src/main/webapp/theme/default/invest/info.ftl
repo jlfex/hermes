@@ -3,6 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -245,7 +248,7 @@ jQuery(function() {
                 	</table>
                 	<table>
                 		<tr>
-                			<td  colspan="2" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="inputstyle mv_money_loan">&nbsp;&nbsp;
+                			<td  colspan="2" class="tl_tip"><@messages key="model.invest.amount" />：<input id="investamount" name="investamount" type="text" class="mv_money_loan">&nbsp;&nbsp;
 							<span class="mv_msg"></span></td><td><span id="limitValidResult"></span></td>
                 		<tr>
                 		<tr><td class="td_height"><@messages key="invest.yield.to.maturity" />：<span id="maturegain"></span></td><td colspan="2">&nbsp;</td></tr>
