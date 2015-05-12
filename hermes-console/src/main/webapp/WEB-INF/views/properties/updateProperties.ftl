@@ -43,7 +43,7 @@
                    <input type="text" class="form-control" id="remark" name="remark" value="${(properties.remark)!}">                
                 </div>
               </div>                
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label for="" class="col-sm-2 control-label">参数状态</label>
                 <div class="col-sm-5">
                   <select id="status" name="status" class="form-control">
@@ -51,7 +51,7 @@
 					  <option value="1">无效</option>
                    </select>              
                 </div>                                                        
-              </div>
+              </div>-->
               <div class="form-group">
                 <label for="" class="col-sm-2 control-label">参数类型</label>
                 <div class="col-sm-5">
