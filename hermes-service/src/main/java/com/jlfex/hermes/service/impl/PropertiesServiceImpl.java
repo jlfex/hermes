@@ -361,7 +361,7 @@ public class PropertiesServiceImpl implements PropertiesService {
 		}		
 		prop.setName(properties.getName());//参数名称
 		prop.setValue(properties.getValue());//参数值
-		prop.setStatus(properties.getStatus());//参数状态
+		prop.setStatus(HermesConstants.VALID);//参数状态 默认有效
 		prop.setType(dictionaryRepository.findOne(typeId));//参数类型
 		prop.setRemark(properties.getRemark());//参数描述
 		propertiesRepository.save(prop);

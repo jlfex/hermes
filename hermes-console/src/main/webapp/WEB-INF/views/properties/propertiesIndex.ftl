@@ -18,7 +18,7 @@
                         <label for="name">参数名称</label>
                         <input id="name" name="name" value="" class="form-control" type="text">
                     </div>  
-                    <div class="col-xs-2 hm-col form-group">
+                    <!--<div class="col-xs-2 hm-col form-group">
                         <label for="status">参数状态</label>
 						<select id="status" name="status" class="form-control">
 							<option value="">全部</option>
@@ -26,7 +26,7 @@
 							<option value="${s.key}">${s.value}</option>
 							</#list>
 						</select>
-                    </div>                                         
+                    </div> -->                                        
                     <div class="col-xs-2 hm-col form-group">
                         <label for="type">参数类型</label>
 						<select id="type" name="typeId" class="form-control">
