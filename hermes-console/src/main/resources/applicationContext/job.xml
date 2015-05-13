@@ -29,7 +29,7 @@
 		</property>
 	</bean>
 
-	<!-- autoRepay job -->
+	<!--名称：自动还款JOB  描述：执行时间每天凌晨02:00 执行一次-->
 	<bean id="autoRepayJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -40,7 +40,7 @@
 		<property name="cronExpression" value="0 0 2 * * ?" />
 	</bean>
 
-	<!-- 自动还款 job -->
+	<!--名称：自动流标JOB  描述：执行时间每隔1小时执行一次 -->
 	<bean id="autoBidFailureJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -50,7 +50,7 @@
 		</property>
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
-	<!-- 结算逾期 job -->
+	<!--名称：结算逾期JOB  描述：执行时间每天凌晨01:50执行一次 -->
 	<bean id="autoOverdueCalcJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -60,7 +60,7 @@
 		</property>
 		<property name="cronExpression" value="0 50 1 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个2分钟运行一次  -->
+	<!-- 名称：JLFEX支付状态同步JOB  描述：JLFEX 支付确认中订单 扫描   执行时间:job 每个2分钟运行一次  -->
 	<bean id="scanJlfexWaitOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -70,7 +70,7 @@
 		</property>
 		<property name="cronExpression" value="0 */2 * * * ?" />
 	</bean>
-	<!-- 描述：JLFEX回购订单信息同步 执行时间: 每个一小时运行一次 -->
+	<!-- 名称：JLFEX回购订单信息同步JOB 描述：JLFEX回购订单信息同步 执行时间: 每个一小时运行一次 -->
 	<bean id="scanJlfexRepayOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -80,7 +80,7 @@
 		</property>
 		<property name="cronExpression" value="0 0 */1 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX理财产品同步 执行时间: 每天凌晨03:00 -->
+	<!--名称：JLFEX理财产品同步JOB  描述：JLFEX理财产品同步 执行时间: 每天凌晨03:00 -->
 	<bean id="autoSynchFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -90,7 +90,7 @@
 		</property>
 		<property name="cronExpression" value="0 0 3 * * ?" />
 	</bean>
-	<!-- 描述：JLFEX起息日理财产品 执行时间: 每天凌晨03:30 -->
+	<!-- 名称：JLFEX起息日理财产品同步JOB  描述：JLFEX起息日理财产品 执行时间: 每天凌晨03:30 -->
 	<bean id="autoSynchExpireFinanceJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -101,7 +101,7 @@
 		<property name="cronExpression" value="0 30 3 * * ?" />
 	</bean>
 
-	<!-- 充值接口 执行时间：每隔2分钟执行一次 -->
+	<!--名称：中金充值订单状态同步JOB  描述: 中金充值订单状态：确认中, 状态同步 执行时间：每隔2分钟执行一次 -->
 	<bean id="autoChargeQueryJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -111,7 +111,7 @@
 		</property>
 		<property name="cronExpression" value="0 0/2 * * * ?" />
 	</bean>
-    <!-- 提现结算接口状态同步 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
+    <!-- 名称：中金结算订单状态同步JOB  描述:提现结算成功的订单  状态同步 执行时间：每天上午10:00-18:00 每隔5分钟执行一次 -->
 	<bean id="scanZJClearOrderJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail">
 			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

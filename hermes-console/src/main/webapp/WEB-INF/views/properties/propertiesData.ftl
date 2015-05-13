@@ -1,10 +1,10 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-		                <th class="align-center">参数编码</th>
-				        <th class="align-center">参数名称</th>
-                        <th class="align-center">参数值</th>
-                        <th class="align-center">参数描述</th>
+		                <th class="align-left">参数编码</th>
+				        <th class="align-left">参数名称</th>
+                        <th class="align-left">参数值</th>
+                        <th class="align-left">参数描述</th>
                         <th class="align-center">创建时间</th>
                         <!--<th class="align-center">参数状态</th>-->
                         <th class="align-center">参数类型</th>
@@ -19,10 +19,10 @@
 					<#else>
 						<#list (propertiesList.content)?sort_by("createTime")?reverse as l>  
 							<tr>
-							    <td class="align-center">${(l.code)!''}</td> 
-							    <td class="align-center">${(l.name)!''}</td> 
-		                        <td class="align-center">${(l.value)!''}</td>
-		                        <td class="align-center">${(l.remark)!''}</td> 
+							    <td class="align-left">${(l.code)!''}</td> 
+							    <td class="align-left">${(l.name)!''}</td> 
+		                        <td class="align-left">${(l.value)!''}</td>
+		                        <td class="align-left" width="300px">${(l.remark)!''}</td> 
 		                        <td class="align-center">${(l.createTime)!''}</td> 
 		                        <!--<td class="align-center">${(l.statusName)!''}</td>--> 
 		                        <td class="align-center">${(l.type.name)!''}</td> 		                         		                        		                         

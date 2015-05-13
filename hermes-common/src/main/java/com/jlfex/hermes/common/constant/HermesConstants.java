@@ -37,7 +37,7 @@ public final class HermesConstants {
 	
 	public static final String PROP_WITHDRAW_FEE_NAME	 = "fee.withdraw.name";
 	public static final String PROP_WITHDRAW_FEE_CONFIG	 = "fee.withdraw.config";					//提现手续费区间配置
-	public static final String PROP_WITHDRAW_FEE_RATE 	 = "fee.charge.rate";                		//提现手续费比例编码
+	public static final String PROP_WITHDRAW_FEE_RATE 	 = "fee.withdraw.rate";                		//提现手续费比例编码
 	public static final String WITHDRAW_FEE_SWITCH 		 = "fee.withdraw.switch";					//提现手续费类型开关编码
 	public static final String WITHDRAW_FEE_MAX_AMOUNT 	 = "fee.charge.max.amount";                 //提现手续费比例方式 单笔最大金额
 	
