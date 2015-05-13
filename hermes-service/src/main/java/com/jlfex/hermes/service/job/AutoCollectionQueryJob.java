@@ -8,6 +8,7 @@ import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
 
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -57,7 +58,9 @@ public class AutoCollectionQueryJob extends Job {
 
 	@Override
 	public Result run() {
+		String JobDESC = "中金代收订单状态同步JOB：";
 		try {
+			Logger.info(JobDESC+"开始....");
 			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(),CFCAOrder.Type.BID);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
