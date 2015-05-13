@@ -496,14 +496,12 @@ public class AccountController {
 	 * @param amount
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/charge/zjCharge")
 	@ResponseBody
-	public Result zjCharge(BigDecimal amount) {
+	public Result<String> zjCharge(BigDecimal amount) {
 		BigDecimal fee = paymentService.calcChargeFee(amount.doubleValue());
-		Result result = bankAccountService.zjCharge(amount,fee);
-		
-		return result;
+		return  bankAccountService.zjCharge(amount,fee);
 	}
 	/**
 	 * 充值结果

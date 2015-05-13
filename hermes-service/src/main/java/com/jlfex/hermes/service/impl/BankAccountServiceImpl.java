@@ -295,9 +295,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 	 * @return
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Result zjCharge(BigDecimal amount, BigDecimal fee) {
-		Result result = new Result();
+	public Result<String> zjCharge(BigDecimal amount, BigDecimal fee) {
+		Logger.info("中金充值操作：amount="+amount+", fee="+fee);
+		Result<String> result = new Result<String>();
 		User user = userRepository.findOne(App.user().getId());
 		BankAccount bankAccount = this.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
@@ -307,12 +307,15 @@ public class BankAccountServiceImpl implements BankAccountService {
 		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		CFCAOrder cfcaOrder = null;
 		try {
+			Logger.info("创建请求");
 			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, serialNo);
 			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
+			Logger.info("响应结果 state="+response.getStatus());
 			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
+			Logger.info("保存订单");
 			investService.saveUserLog(user);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
@@ -337,6 +340,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			apiLog.setResponseTime(new Date());
 			apiLogService.saveApiLog(apiLog);
 		} catch (Exception e) {
+			Logger.error("中金充值失败", e);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "充值失败");

@@ -148,7 +148,6 @@ public class PaymentServiceImpl implements PaymentService {
 	 * @see com.jlfex.hermes.service.PaymentService#calcChargeFee(java.lang.Double)
 	 */
 	@Override
-	@Transactional(readOnly = true)
 	public BigDecimal calcChargeFee(Double amount) {
 		// 初始化
 		BigDecimal rate = BigDecimal.valueOf(Double.valueOf(App.config(PROP_CHARGE_RATE)));
