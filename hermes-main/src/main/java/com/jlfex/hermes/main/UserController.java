@@ -287,9 +287,9 @@ public class UserController {
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
 		model.addAttribute("email", email);
-		if(!userPro.getAuthCellphone().equals(Auth.PASS)){
+		if(!userPro.getAuthCellphone().equals(Auth.PASS) && App.config("auth.cellphone.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
 		    return "user/authCellPhone";
-		}else if(!userPro.getAuthName().equals(Auth.PASS)){
+		}else if(!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
 			return "redirect:/userIndex/authName";
 		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
 			return "redirect:/userIndex/authBankCard";
@@ -312,7 +312,7 @@ public class UserController {
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("email", email);
 		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));
-		if(!userPro.getAuthName().equals(Auth.PASS)){
+		if(!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
 			return "user/realNameApprove";
 		}else{
 			return "redirect:/userIndex/authBankCard";
