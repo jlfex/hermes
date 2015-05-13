@@ -73,10 +73,10 @@ jQuery(function($) {
 	   var name  = $("#name").val();
 	   if(name == '' || name == null){
 		   $(this).parent().parent().find(".alert-danger:eq(0)").show();
-		   document.getElementById("addParameterType").disabled = true;		     		       
+		   document.getElementById("editParameterType").disabled = true;		     		       
 	   }else{
 	   	   $(this).parent().parent().find(".alert-danger:eq(0)").hide();	
-	   	   document.getElementById("addParameterType").disabled = false;		     	   	      
+	   	   document.getElementById("editParameterType").disabled = false;		     	   	      
 	   }
 	});
 	$('#code').blur(function(){
