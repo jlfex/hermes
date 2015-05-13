@@ -6,7 +6,7 @@ h3{color:#000000; font-size:14px; font-weight:600;}
 
 ._container{position:relative;width:100%;min-height:100%;}
 ._content{padding-bottom:150px;}
-._footer{height:150px;position:fixed;bottom:0px;left:0px;}
+._footer{height:150px;position:fixed;bottom:0px;left:0px;z-index:100}
 
 
 a{ text-decoration:none;}
