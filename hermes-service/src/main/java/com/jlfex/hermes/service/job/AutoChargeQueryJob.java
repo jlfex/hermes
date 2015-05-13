@@ -6,6 +6,7 @@ import cfca.payment.api.tx.Tx1362Request;
 import cfca.payment.api.tx.Tx1362Response;
 
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
@@ -24,7 +25,7 @@ import com.jlfex.hermes.service.cfca.ThirdPPService;
 import com.jlfex.hermes.service.job.Job;
 
 /**
- * 自动充值查询
+ * 中金充值订单状态同步JOB
  * 
  * @author wujinsong
  *
@@ -50,7 +51,9 @@ public class AutoChargeQueryJob extends Job {
 
 	@Override
 	public Result run() {
+		String JobDESC = "中金充值订单状态同步JOB：";
 		try {
+			Logger.info(JobDESC+"开始....");
 			List<CFCAOrder> cfcaOrders = cFCAOrderRepository.findAllByStatusAndType(Tx1361Status.IN_PROCESSING.getStatus(), CFCAOrder.Type.RECHARGE);
 			for (CFCAOrder cfcaOrder : cfcaOrders) {
 				Tx1362Request request = new Tx1362Request();
@@ -58,16 +61,19 @@ public class AutoChargeQueryJob extends Job {
 				request.setTxSN(cfcaOrder.getTxSN());
 				Tx1362Response response = (Tx1362Response) thirdPPService.invokeTx1362(request);
 				User user = cfcaOrder.getUser();
-				if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, cfcaOrder.getAmount().add(cfcaOrder.getFee()), cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
-					transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, cfcaOrder.getFee(), cfcaOrder.getId(), "充值手续费");
-					cfcaOrder.setStatus(Tx1361Status.WITHHOLDING_SUCC.getStatus());
-					cFCAOrderRepository.save(cfcaOrder);
-				} else if (response.getStatus() == Tx1361Status.WITHHOLDING_FAIL.getStatus()) {
-					transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, cfcaOrder.getAmount(), cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
-					cfcaOrder.setStatus(Tx1361Status.WITHHOLDING_FAIL.getStatus());
-
-					cFCAOrderRepository.save(cfcaOrder);
+				if(response != null){
+					if (response.getStatus() == Tx1361Status.WITHHOLDING_SUCC.getStatus()) {
+						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, cfcaOrder.getAmount().add(cfcaOrder.getFee()), cfcaOrder.getId(), Transaction.Status.RECHARGE_SUCC);
+						transactionService.toCropAccount(Transaction.Type.CHARGE, user, UserAccount.Type.PAYMENT_FEE, cfcaOrder.getFee(), cfcaOrder.getId(), "充值手续费");
+						cfcaOrder.setStatus(Tx1361Status.WITHHOLDING_SUCC.getStatus());
+						cFCAOrderRepository.save(cfcaOrder);
+					} else if (response.getStatus() == Tx1361Status.WITHHOLDING_FAIL.getStatus()) {
+						transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, cfcaOrder.getAmount(), cfcaOrder.getId(), Transaction.Status.RECHARGE_FAIL);
+						cfcaOrder.setStatus(Tx1361Status.WITHHOLDING_FAIL.getStatus());
+						cFCAOrderRepository.save(cfcaOrder);
+					}
+				}else{
+					
 				}
 			}
 			return new Result(true, true, "");
