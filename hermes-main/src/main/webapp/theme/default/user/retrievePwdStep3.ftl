@@ -17,7 +17,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#submit").click(function(){
-		alert("dd");
 		if(checkEqual()){
 			$.ajax({
 				data: $("#pwdForm").serialize(),
