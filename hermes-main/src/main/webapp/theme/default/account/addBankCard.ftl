@@ -78,9 +78,7 @@
                 <li><img src="${app.theme}/public/images/bank/ECITIC.png"></li>
                 <li><img src="${app.theme}/public/images/bank/ABC.png"></li>
                 <li><img src="${app.theme}/public/images/bank/PSBC.png"></li>
-                <li><img src="${app.theme}/public/images/bank/PAB.png"></li>
                 <li><img src="${app.theme}/public/images/bank/BOB.png"></li>
-                <li><img src="${app.theme}/public/images/bank/CGB.png"></li>
                 <li><img src="${app.theme}/public/images/bank/BOS.png"></li>
                 <li><img src="${app.theme}/public/images/bank/CIB.png"></li>                
             </ul>
