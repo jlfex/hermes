@@ -33,6 +33,7 @@ public class ThirdPPServiceImpl implements ThirdPPService {
 
 			return response;
 		} catch (Exception e) {
+			Logger.error("中金市场订单代扣1361接口异常：", e);
 			return null;
 		}
 	}
