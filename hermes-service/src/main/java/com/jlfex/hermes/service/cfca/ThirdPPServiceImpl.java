@@ -41,6 +41,7 @@ public class ThirdPPServiceImpl implements ThirdPPService {
 	@Override
 	public Tx1362Response invokeTx1362(Tx1362Request request) {
 		try {
+			Logger.info("中金市场订单1362接口,发起请求");
 			request.process();
 
 			TxMessenger messenger = new TxMessenger();
@@ -50,6 +51,7 @@ public class ThirdPPServiceImpl implements ThirdPPService {
 
 			return response;
 		} catch (Exception e) {
+			Logger.error("中金市场订单代扣查询1362接口异常：", e);
 			return null;
 		}
 	}

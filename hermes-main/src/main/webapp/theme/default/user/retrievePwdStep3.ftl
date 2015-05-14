@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta name="renderer" content="webkit">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
 <link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
@@ -79,5 +80,15 @@ function checkEqual(){
 <!-- foot start-->
 <#include "/footer.ftl" />
 </div>
+<script type="text/javascript" charset="utf-8">
+  jQuery(function($){
+     if(navigator.userAgent.indexOf("MSIE") > 0) { //IE
+	   		if(/msie 7.0/.test(navigator.userAgent.toLowerCase()) || /msie 8.0/.test(navigator.userAgent.toLowerCase())) {
+	        	alert("请使用IE8以上版本浏览器或其他浏览器");
+	        	return;
+	        }
+	}
+  });
+</script>
 </body>
 </html>

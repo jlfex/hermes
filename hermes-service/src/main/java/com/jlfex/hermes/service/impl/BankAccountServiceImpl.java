@@ -307,15 +307,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		CFCAOrder cfcaOrder = null;
 		try {
-			Logger.info("创建请求");
 			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, serialNo);
 			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
-			Logger.info("响应结果 state="+response.getStatus());
 			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
-			Logger.info("保存订单");
 			investService.saveUserLog(user);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
