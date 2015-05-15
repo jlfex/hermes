@@ -19,8 +19,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
 import com.jlfex.hermes.model.Creditor;
 import com.jlfex.hermes.model.Loan;
@@ -158,6 +160,11 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
      */
 	@Override
 	public boolean sellCredit(CrediteInfo entity) throws Exception {
+		//判断还款计划明细列表中 还款时间 小于系统时间的都设为已还款
+		if(!dealExpireRepayPlan(entity)){
+			return false;
+		}
+		//发售
 		Repay repay = queryRepayObj(INIT_CREDIT_REPAY_WAY);
 		Loan loan = buildLoan(entity, repay);
 		creditInfoRepository.save(entity);
@@ -169,6 +176,38 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		}else{
 			return false;
 		}
+	}
+   /**
+    * 外部债权发售：过期处理
+    * @param entity
+    * @return
+    */
+	public boolean dealExpireRepayPlan(CrediteInfo entity) {
+		List<CreditRepayPlan> waitPayPlanList = creditorRepayPlanRepository.findByCrediteInfoAndStatus(entity, CreditRepayPlan.Status.WAIT_PAY);
+		if(waitPayPlanList ==null || waitPayPlanList.size() == 0){
+			Logger.info("债权发售失败：债权ID="+entity.getId()+", 还款计划明细中没有待还款的明细");
+			return false;
+		}
+		Date nowDate = new Date();
+		List<CreditRepayPlan>  expirePlanList = new ArrayList<CreditRepayPlan>();
+		for(CreditRepayPlan obj: waitPayPlanList){
+			if(nowDate.after(obj.getRepayPlanTime())){
+				//还款时间小于系统时间的 设置为已还款。
+				obj.setStatus(CreditRepayPlan.Status.ALREADY_PAY);
+				Logger.info("外部债权发售：设置为已还款。由于债权 creditID="+obj.getCrediteInfo().getId()+",的第"+obj.getPeriod()+",还款时间:"+obj.getRepayPlanTime()
+						+",小于系统时间,nowDate="+Calendars.format(HermesConstants.FORMAT_19)+", 发售金额中去除当期金额");
+				expirePlanList.add(obj);
+			}
+		}
+		if(expirePlanList.size() > 0){
+			creditorRepayPlanRepository.save(expirePlanList);
+		}
+		List<CreditRepayPlan> waitPayList = creditorRepayPlanRepository.findByCrediteInfoAndStatus(entity, CreditRepayPlan.Status.WAIT_PAY);
+		if(waitPayList ==null || waitPayList.size() == 0){
+			Logger.info("债权发售失败：债权ID="+entity.getId()+", 还款计划明细中没有待还款的明细");
+			return false;
+		}
+		return true;
 	}
 	/**
 	 * 创建 债权标  虚拟产品
