@@ -388,20 +388,11 @@ public class JlfexServiceImpl implements JlfexService {
      * @return
      * @throws Exception
      */
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	@Override
 	public String generateOrderSn() throws Exception {
-		Sequence sequence = sequenceService.findBySeqNameAndStatus(HermesConstants.SEQ_YLTX_REQUEST_ORDER_SN, HermesConstants.VALID);
-		if (sequence != null) {
-			Caches.set(CACHE_YLTX_ORDERSN_SEQUENCE, Long.valueOf(sequence.getCurrentVal()));
-		}else{
-			throw new Exception("订单流水号序列orderSn没有配置");
-		}
-		Long seq = Caches.incr(CACHE_YLTX_ORDERSN_SEQUENCE, sequence.getIncrementVal());// 递增缓存数据
-		sequence.setCurrentVal(seq.toString());
-		sequenceService.saveSequnce(sequence);
-		Logger.info("创建的orderSn="+String.format(HermesConstants.PRE_HERMES+"%012d", seq));
-		return String.format(HermesConstants.PRE_HERMES+"%012d", seq);
+		String  val = SerialUtil.getSerialByDate10AndRandomLen(8);
+		Logger.info("生成jlfex订单编号：18位请求流水号="+val);
+		return val;
 	}
 	
 	/**
