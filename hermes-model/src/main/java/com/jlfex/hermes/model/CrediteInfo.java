@@ -103,9 +103,7 @@ public class CrediteInfo extends Model {
 	// 备注
 	@Column(name = "remark")
 	private String remark;
-	// 债权 借款管理费
-	@Column(name = "manage_fee")
-	private BigDecimal manageFee;
+	
 	//债权类型
 	@Column(name = "credit_kind")
 	private String  creditKind ; 
@@ -304,13 +302,6 @@ public class CrediteInfo extends Model {
 		this.bidEndTimeStr = bidEndTimeStr;
 	}
 
-	public BigDecimal getManageFee() {
-		return manageFee;
-	}
-
-	public void setManageFee(BigDecimal manageFee) {
-		this.manageFee = manageFee;
-	}
 
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
