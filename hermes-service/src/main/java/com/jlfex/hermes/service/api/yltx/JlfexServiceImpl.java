@@ -841,7 +841,6 @@ public class JlfexServiceImpl implements JlfexService {
 		info.setPayType(HermesConstants.PAY_TYPE_HBFX); //asset.getRepaymentMode()
 		info.setDeadTime(asset.getBuyBackDate());
 		info.setBusinessTime(financeOrder.getRaiseStartTime());
-		info.setManageFee(BigDecimal.ZERO);
 		info.setStatus(CrediteInfo.Status.BIDING);
 		info.setCreditKind(CrediteInfo.CreditKind.YLTX_API);
 		info.setAssignTime(new Date());
