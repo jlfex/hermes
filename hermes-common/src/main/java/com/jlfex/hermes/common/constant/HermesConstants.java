@@ -81,10 +81,6 @@ public final class HermesConstants {
 	public static final String CODE_00 = "00";
 	public static final String CODE_99 = "99";
 
-	/**
-	 * 序列名称
-	 */
-	public static final String SEQ_YLTX_REQUEST_ORDER_SN = "orderSn";
 
 	/**
 	 * 接入第三方平台编码
