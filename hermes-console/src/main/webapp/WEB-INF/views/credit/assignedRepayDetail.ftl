@@ -39,11 +39,13 @@
                                 <#if (l.crediteInfo.creditKind)?? && l.crediteInfo.creditKind == '01' >
                                      <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
                                 <#else>
-                                    <#if l.status?? && l.status == '00' >
+                                    <#if l.status?? && l.status == '00' &&  !l.outOfDate>
 	                                  <button type="button" class="btn btn-primary" data-id="${l.id}">还款</button>
 	                                <#elseif l.status?? && l.status == '01'>
 	                                  <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
-	                                <#else></#if>
+	                                <#else>
+	                                   <button type="button" disabled ="true"  class="btn btn-Default" data-id="${l.id}">还款</button>
+	                                </#if>
                                 </#if>
                                 </td>  
                             </tr>

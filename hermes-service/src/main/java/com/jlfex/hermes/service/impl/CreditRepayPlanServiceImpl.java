@@ -256,7 +256,7 @@ public class CreditRepayPlanServiceImpl  implements CreditRepayPlanService {
 	    		}
 	    	}else{
 	    		 code = "99";
-	    		 msg = "还款计划全部已还款,无法转让";
+	    		 msg = "无法转让,不存在有效的还款计划";
 	    	}
 	    }
 	    map.put("code", code);
