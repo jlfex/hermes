@@ -92,15 +92,6 @@ public class LoanController {
 		return "loan/index";
 	}
 
-	@RequestMapping("/test")
-	public String test(Model model) {
-
-		List<Loan> loanList = loanService.findByStatus(Loan.Status.FULL);
-		model.addAttribute("loans", loanList);
-		// 返回视图
-		return "loan/test";
-	}
-
 	/**
 	 * 我的借款
 	 * 
