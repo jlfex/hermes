@@ -238,7 +238,7 @@ public class LoanController {
 	 * @return
 	 */
 	@RequestMapping("/loanprogram")
-	public String loanprogram(String amount, String period, String rate, String productId, String productName, String purposeName, String purposeId, String repayName, String repayId, Model model) {
+	public String loanprogram(String amount, Integer period, String rate, String productId, String productName, String purposeName, String purposeId, String repayName, String repayId, Model model) {
 		try {
 			App.checkUser();
 		} catch (Exception e) {
@@ -260,7 +260,7 @@ public class LoanController {
 		loan.setManageFee(product.getManageFee());
 		loan.setManageFeeType(product.getManageFeeType());
 		loan.setAmount(new BigDecimal(amount));
-		loan.setPeriod(new Integer(period));
+		loan.setPeriod(period);
 		loan.setRate(new BigDecimal(rate).divide(new BigDecimal(100)));
 		Repay repayInfo = repayService.loadById(repayId);
 		loan.setRepay(repayInfo);
