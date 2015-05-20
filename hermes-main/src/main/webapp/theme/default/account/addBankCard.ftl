@@ -114,7 +114,7 @@ jQuery(function($) {
 		                    width: 190,
 		                    multiple: false,
 		                    formatItem: function (row, i, max) {                    //显示格式
-		                    	return "<span>" + row.branchBankName + "</span>";
+		                    	return "<li>" + row.branchBankName + "</li>";
 		                    },
 		                    formatMatch: function (row, i, max) {               //以什么数据作为搜索关键词,可包括中文,
 		                        return row.branchBankName;

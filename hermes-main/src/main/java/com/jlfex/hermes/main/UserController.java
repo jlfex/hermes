@@ -383,7 +383,7 @@ public class UserController {
 		Bank bank = bankService.findOne(bankId);
 		Area area = areaService.loadById(cityId);
 		try {
-			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName());
+			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName()+HermesConstants.PROVINCE_SUFFIX);
 		} catch (Exception e) {
 			Logger.error("获取支行信息失败!", e);
 		}
