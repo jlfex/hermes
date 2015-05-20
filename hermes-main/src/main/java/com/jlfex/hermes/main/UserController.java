@@ -1,6 +1,7 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+import java.rmi.ServerException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.MailUtuils;
 import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.Area;
@@ -71,6 +73,7 @@ public class UserController {
 	@RequestMapping("skipSignIn")
 	public String skipSignIn(Model model) {
 		model.addAttribute("loginPicture", contentService.findOneByCode(HermesConstants.INDEX_LOGIN));
+		model.addAttribute("token",App.current().getToken());
 		return "user/sign-in";
 	}
 
@@ -82,6 +85,7 @@ public class UserController {
 	@RequestMapping("regNow")
 	public String regNow(Model model) {
 		model.addAttribute("registerPicture", contentService.findOneByCode(HermesConstants.INDEX_REGISTER));
+		model.addAttribute("token", App.current().getToken());
 		return "user/signup";
 	}
 
@@ -94,8 +98,13 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/signUp")
-	public String signUp(User user, Model model, HttpServletRequest request) {
+	public String signUp(User user, Model model,String token, HttpServletRequest request) {
 		String commonMessage = "";
+		if(Strings.empty(token)){
+			Logger.info("注册失败,令牌不能为空!");
+			model.addAttribute("errMsg", "注册失败,令牌不能为空!");
+			return "user/signup-success";
+		}
 		if (user != null) {
 			user.propertyTrim();
 		}
@@ -194,7 +203,7 @@ public class UserController {
 		return jsonObj;
 	}
 
-	/**
+	/**signIn
 	 * 登录
 	 * 
 	 * @param user
@@ -202,7 +211,13 @@ public class UserController {
 	 */
 	@RequestMapping("/signIn")
 	@ResponseBody
-	public Result<?> signIn(User user) {
+	public Result<?> signIn(User user, String token) {
+		if(Strings.empty(token)){
+			Result<String> result = new Result<String>();
+			result.addMessage(App.message("登陆令牌不能为空"));
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			return result;
+		}
 		return userService.signIn(user);
 	}
 
@@ -407,7 +422,8 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("retrivePwd")
-	public String retrivePwd() {
+	public String retrivePwd(Model model) {
+		model.addAttribute("token",App.current().getToken());
 		return "user/retrievePwdStep1";
 	}
 
@@ -475,12 +491,14 @@ public class UserController {
 	 * @throws Exception 
 	 */
 	@RequestMapping("sendResetPwdEmail")
-	public String sendResetPwdEmail(String email, Model model, HttpServletRequest request) throws Exception {
-		boolean flag = MailUtuils.isValidMail(email);
-		if (!flag) {
-			throw new Exception();
-		}
+	public String sendResetPwdEmail(String email,String token, Model model, HttpServletRequest request) throws Exception {
 		try {
+			if(Strings.empty(token)){
+				throw new ServerException("发送重置密码的邮件: 令牌不能为空");
+			}
+			if (!MailUtuils.isValidMail(email)) {
+				throw new Exception("无效的邮件地址");
+			}
 			String generateMail = ModelLoader.process("mail_pwdForget.ftl", userService.getResetPwdEmailModel(email, request));
 			emailService.sendEmail(email, "密码重置", generateMail);
 		} catch (Exception e) {

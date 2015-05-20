@@ -12,15 +12,11 @@ public class MailUtuils {
 	 */
 	public static boolean isValidMail(String email) {
 		boolean isExist = false;
-
 		Pattern p = Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");
 		Matcher m = p.matcher(email);
-		boolean b = m.matches();
-		if (b) {
-
+		if(m.matches()) {
 			isExist = true;
 		}
-
 		return isExist;
 	}
 }

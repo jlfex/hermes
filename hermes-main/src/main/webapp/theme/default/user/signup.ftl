@@ -208,6 +208,7 @@ $(function(){
 				<a href="javascript:void(0);" onClick="changeCode()" class="m_a1 m_yzm_c"><@messages key="sign.up.verify.reload" /></a>
 				<span class="mv_msg"></span>
 			</div>
+			<input  name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
 			<div class="m_item">
 				<a href="javascript:document.regForm.submit();"  class="m_btn1 m_bg1 mv_submit"><@messages key="sign.up.agree" /></a> 
 				<@messages key="sign.up.account" /><a href="${app}/userIndex/skipSignIn" class="m_a1"><@messages key="sign.up.signin" /></a>
