@@ -196,7 +196,7 @@ public class InvestController {
 	 * @return
 	 */
 	@RequestMapping("/index")
-	public String index(Model model) {
+	public String index(Model model) {		
 		String page = "0", size = "8";
 		model.addAttribute("purposes", dictionaryService.findByTypeCode("loan_purpose"));
 		model.addAttribute("repays", repayService.findAll());

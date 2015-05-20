@@ -51,6 +51,7 @@ $(function(){
 						&nbsp;&nbsp;|&nbsp;&nbsp;<#t>
 						<a href="${app}/userIndex/regNow"><@messages key="index.sign.in.signup" /></a><#t>
 					</p>
+					<input  name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
 				</div>			
 			</form>
 			</#if>

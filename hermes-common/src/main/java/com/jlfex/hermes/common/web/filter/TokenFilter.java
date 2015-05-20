@@ -37,8 +37,8 @@ public class TokenFilter implements Filter {
 			String token = req.getParameter(PARAM_TOKEN);
 			if (!Strings.empty(token)) {
 				if (!Strings.equals(token, App.current().getToken())) {
-					Logger.warn("can not match between %s and %s.", token, App.current().getToken());
-					throw new ServiceException("the token is not match.", "app.exception.token");
+					Logger.warn("token令牌不匹配： %s and %s.", token, App.current().getToken());
+					throw new ServiceException("token令牌不匹配：", "app.exception.token");
 				}
 				App.current().updateToken();
 			}
