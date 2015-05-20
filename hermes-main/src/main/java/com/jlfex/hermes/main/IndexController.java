@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -17,8 +18,6 @@ import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.Loan;
-import com.jlfex.hermes.model.TmpNotice;
-import com.jlfex.hermes.repository.ArticleCategoryReferenceRepository;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.DictionaryTypeRepository;
 import com.jlfex.hermes.repository.NavigationRepository;
@@ -100,6 +99,7 @@ public class IndexController {
 			model.addAttribute("notices", articleList);
 		}
 
+		model.addAttribute("token", App.current().getToken());
 		return "index";
 	}
 
@@ -139,7 +139,7 @@ public class IndexController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/clear")
+	@RequestMapping("/tool/clear")
 	@ResponseBody
 	public String clear() {
 		PropertiesFilter.clear();

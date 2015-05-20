@@ -13,54 +13,11 @@
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mPlugin.js" charset="utf-8"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/mCommon.js" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
-
-<script type="text/javascript">
-var flag=true;
-$(document).ready(function(){
-	$("#send").click(function(){
-		if(flag){
-			var email = $("#email").val();
-			$.ajax({
-			    url: "${app}/userIndex/sendResetPwdEmail?email="+email,
-			    type: "POST",
-			    dataType: 'json',
-			    timeout: 10000,
-			    error: function(){
-			     	 		
-			    },
-				success: function(data){
-				}
-			});
-		}else{
-			alert("bad");
-		}
-	})
-})	
-	function checkEmail(){
-		var email = $("#email").val();
-		if(email!=""){
-			$.ajax({
-			    url: "${app}/userIndex/isExistentEmail?email="+email,
-			    type: "POST",
-			    dataType: 'json',
-			    timeout: 10000,
-			    error: function(){
-			     	 		
-			    },
-				success: function(data){
-				  flag=data;
-				}
-			});
-		}  
-		
-	}
-</script>
 </head>
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
 <div class="_content">
-
 <!-- middle start-->
 <div class="m_con m_fp" id="retrieve">
 	<h3>找回密码</h3>
@@ -70,6 +27,7 @@ $(document).ready(function(){
 				注册邮箱地址：
 				<input id="email" name="email" type="text"  class="mv_email"/>
 				<span class="mv_msg"></span>
+				<input  name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
 			</div>
 			<img src="${app.theme}/public/other/images/m/icon1/ico6.png" class="m_fp_box_bg1" />
 		</div>

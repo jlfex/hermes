@@ -1,4 +1,3 @@
-<!-- foot start-->
 <div class="footer _footer">
     <div class="footcenter">
         <div class="companyinfo clearfix">
@@ -14,19 +13,10 @@
             <h4>友情链接</h4>
             <ul>
             	<#list friendlinkData as m>
-               	 <li><a href="http://${(m.link)!}" target="_blank">${(m.name)!}</a></li>
+               	 <li><a href="${(m.link)!}" target="_blank">${(m.name)!}</a></li>
                 </#list>
             </ul>
         </div>
-        <!-- <div class="serves clearfix">
-            <h4>客户服务</h4>
-            <ul>
-                <li><a href="javascript:value(0);"><img src="images/icon1/foot_xinlang.png"><span>新浪微博</span></a></li>
-                <li><a href="javascript:value(0);"><img src="images/icon1/foot_tengxun.png">腾讯微博</a></li>
-                <li><a href="javascript:value(0);"><img src="images/icon1/foot_wechat.png">微信</a></li>
-            </ul>
-        </div> 
-		<img src="${app.theme}/public/images/footerline.png" alt="" />-->
         <div class="telephone clearfix">
             <h4>客服电话</h4>
 			<ul>

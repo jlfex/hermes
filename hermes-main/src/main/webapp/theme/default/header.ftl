@@ -1,4 +1,3 @@
-<!-- header -->
 <div class="header">
 	<div class="top">
 		<div class="u-container">
@@ -45,4 +44,3 @@ jQuery(function($) {
 });
 //-->
 </script>
-<!-- /header -->

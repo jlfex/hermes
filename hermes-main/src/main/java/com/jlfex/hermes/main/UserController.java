@@ -1,12 +1,15 @@
 package com.jlfex.hermes.main;
 
 import java.awt.image.BufferedImage;
+import java.rmi.ServerException;
 import java.util.List;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
@@ -25,6 +29,8 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.common.utils.Strings;
+import com.jlfex.hermes.common.utils.MailUtuils;
 import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
@@ -67,6 +73,7 @@ public class UserController {
 	@RequestMapping("skipSignIn")
 	public String skipSignIn(Model model) {
 		model.addAttribute("loginPicture", contentService.findOneByCode(HermesConstants.INDEX_LOGIN));
+		model.addAttribute("token",App.current().getToken());
 		return "user/sign-in";
 	}
 
@@ -78,6 +85,7 @@ public class UserController {
 	@RequestMapping("regNow")
 	public String regNow(Model model) {
 		model.addAttribute("registerPicture", contentService.findOneByCode(HermesConstants.INDEX_REGISTER));
+		model.addAttribute("token", App.current().getToken());
 		return "user/signup";
 	}
 
@@ -90,8 +98,13 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/signUp")
-	public String signUp(User user, Model model, HttpServletRequest request) {
+	public String signUp(User user, Model model,String token, HttpServletRequest request) {
 		String commonMessage = "";
+		if(Strings.empty(token)){
+			Logger.info("注册失败,令牌不能为空!");
+			model.addAttribute("errMsg", "注册失败,令牌不能为空!");
+			return "user/signup-success";
+		}
 		if (user != null) {
 			user.propertyTrim();
 		}
@@ -151,8 +164,6 @@ public class UserController {
 		}
 	}
 
-	
-
 	/**
 	 * 查看昵称是否被占用
 	 * 
@@ -192,7 +203,7 @@ public class UserController {
 		return jsonObj;
 	}
 
-	/**
+	/**signIn
 	 * 登录
 	 * 
 	 * @param user
@@ -200,7 +211,13 @@ public class UserController {
 	 */
 	@RequestMapping("/signIn")
 	@ResponseBody
-	public Result<?> signIn(User user) {
+	public Result<?> signIn(User user, String token) {
+		if(Strings.empty(token)){
+			Result<String> result = new Result<String>();
+			result.addMessage(App.message("登陆令牌不能为空"));
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			return result;
+		}
 		return userService.signIn(user);
 	}
 
@@ -216,7 +233,11 @@ public class UserController {
 	}
 
 	@RequestMapping("resendMail")
-	public String resendMail(String email, Model model) {
+	public String resendMail(String email, Model model) throws Exception {
+		boolean flag = MailUtuils.isValidMail(email);
+		if (!flag) {
+			throw new Exception();
+		}
 		model.addAttribute("email", email);
 		return "user/resendMail";
 	}
@@ -228,11 +249,16 @@ public class UserController {
 	 * @param model
 	 * @param request
 	 * @return
+	 * @throws Exception 
 	 * @since 2014年12月30日20:24:59
 	 */
 	@RequestMapping("sendActiveMailAgain")
-	public String sendActiveMailAgain(String email, Model model, HttpServletRequest request) {
+	public String sendActiveMailAgain(String email, Model model, HttpServletRequest request) throws Exception {
 		String commonMessage = "";
+		boolean flag = MailUtuils.isValidMail(email);
+		if (!flag) {
+			throw new Exception();
+		}
 		User user = userService.loadByEmail(email);
 		try {
 			String generateMail = ModelLoader.process("mail_active.ftl", userService.getActiveMailModel(user, request));
@@ -281,22 +307,23 @@ public class UserController {
 	@RequestMapping("/authCellPhone")
 	public String authCellPhone(@RequestParam("email") String email, Model model) {
 		User user = userService.loadByEmail(email);
-		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		UserProperties userPro = userService.loadPropertiesByUserId(user.getId());
 		Result<?> result = userService.signIn(user);
 		model.addAttribute("message", result.getFirstMessage());
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("cellphone", userService.loadById(user.getId()).getCellphone());
 		model.addAttribute("email", email);
-		if(!userPro.getAuthCellphone().equals(Auth.PASS) && App.config("auth.cellphone.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
-		    return "user/authCellPhone";
-		}else if(!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
+		if (!userPro.getAuthCellphone().equals(Auth.PASS) && App.config("auth.cellphone.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)) {
+			return "user/authCellPhone";
+		} else if (!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)) {
 			return "redirect:/userIndex/authName";
-		}else if(!userPro.getAuthBankcard().equals(Auth.PASS)){
+		} else if (!userPro.getAuthBankcard().equals(Auth.PASS)) {
 			return "redirect:/userIndex/authBankCard";
-		}else{
+		} else {
 			return "redirect:/invest/index";
 		}
 	}
+
 	/**
 	 * 实名认证页面
 	 * 
@@ -304,21 +331,22 @@ public class UserController {
 	 */
 	@RequestMapping("/authName")
 	public String authName(@RequestParam("email") String email, Model model) {
-		User user = userService.loadByEmail(email);		
+		User user = userService.loadByEmail(email);
 		// 证件类型
 		Map<Object, String> idTypeMap = Dicts.elements(IdType.class);
-		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		UserProperties userPro = userService.loadPropertiesByUserId(user.getId());
 		model.addAttribute("idTypeMap", idTypeMap);
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("email", email);
 		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));
-		if(!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)){
+		if (!userPro.getAuthName().equals(Auth.PASS) && App.config("auth.realname.switch").trim().equals(HermesConstants.SWITCH_FLAG_ZERO)) {
 			return "user/realNameApprove";
-		}else{
+		} else {
 			return "redirect:/userIndex/authBankCard";
 		}
 
 	}
+
 	/**
 	 * 银行卡认证页面
 	 * 
@@ -326,22 +354,23 @@ public class UserController {
 	 */
 	@RequestMapping("/authBankCard")
 	public String authBankcard(@RequestParam("email") String email, Model model) {
-		User user = userService.loadByEmail(email);		
-		UserProperties userPro=userService.loadPropertiesByUserId(user.getId());
+		User user = userService.loadByEmail(email);
+		UserProperties userPro = userService.loadPropertiesByUserId(user.getId());
 		model.addAttribute("userId", user.getId());
 		model.addAttribute("banks", bankService.findAll());// 查询所有银行信息
 		model.addAttribute("area", JSON.toJSONString(areaService.getAllChildren(null)));
 		model.addAttribute("realName", userService.loadPropertiesByUserId(user.getId()).getRealName());// 获取持卡人的真实姓名
 		model.addAttribute("userProperties", userService.loadPropertiesByUserId(user.getId()));// 获取持卡人的真实姓名
-		if(StringUtils.isNotEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)){
+		if (StringUtils.isNotEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)) {
 			return "user/bindBank";
-		}else if(StringUtils.isEmpty(userPro.getAuthBankcard())){
+		} else if (StringUtils.isEmpty(userPro.getAuthBankcard())) {
 			return "user/bindBank";
-		}else{
+		} else {
 			return "forward:/invest/index";
 		}
 
 	}
+
 	/**
 	 * 查询支行数据
 	 * 
@@ -349,19 +378,18 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/findBranchBankByBankAndCity")
 	@ResponseBody
-	public List<BranchBank> findBranchBankByBankAndCity(@RequestParam("bankId") String bankId,@RequestParam("cityId") String cityId) {
+	public List<BranchBank> findBranchBankByBankAndCity(@RequestParam("bankId") String bankId, @RequestParam("cityId") String cityId) {
 		List<BranchBank> list = null;
 		Bank bank = bankService.findOne(bankId);
 		Area area = areaService.loadById(cityId);
 		try {
-			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName());			
+			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName());
 		} catch (Exception e) {
 			Logger.error("获取支行信息失败!", e);
 		}
 		return list;
 	}
 
-	
 	/**
 	 * 检测手机号是否已被绑定
 	 * 
@@ -370,7 +398,7 @@ public class UserController {
 	 */
 	@RequestMapping("checkPhone")
 	@ResponseBody
-	public Result<String> checkPhone(@RequestParam("phone") String phone,Model model) {	
+	public Result<String> checkPhone(@RequestParam("phone") String phone, Model model) {
 		Result<String> result = new Result<String>();
 		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
 		try {
@@ -385,17 +413,17 @@ public class UserController {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 			result.addMessage(App.message("校验失败"));
 		}
-		return  result;
+		return result;
 	}
 
-	
 	/**
 	 * 找回密码
 	 * 
 	 * @return
 	 */
 	@RequestMapping("retrivePwd")
-	public String retrivePwd() {
+	public String retrivePwd(Model model) {
+		model.addAttribute("token",App.current().getToken());
 		return "user/retrievePwdStep1";
 	}
 
@@ -460,10 +488,17 @@ public class UserController {
 	 * 
 	 * @param email
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping("sendResetPwdEmail")
-	public String sendResetPwdEmail(String email, Model model, HttpServletRequest request) {
+	public String sendResetPwdEmail(String email,String token, Model model, HttpServletRequest request) throws Exception {
 		try {
+			if(Strings.empty(token)){
+				throw new ServerException("发送重置密码的邮件: 令牌不能为空");
+			}
+			if (!MailUtuils.isValidMail(email)) {
+				throw new Exception("无效的邮件地址");
+			}
 			String generateMail = ModelLoader.process("mail_pwdForget.ftl", userService.getResetPwdEmailModel(email, request));
 			emailService.sendEmail(email, "密码重置", generateMail);
 		} catch (Exception e) {
@@ -563,5 +598,4 @@ public class UserController {
 
 		return "agree/register";
 	}
-
 }

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.Logger;
-import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.http.HttpClientUtil;
 import com.jlfex.hermes.common.utils.Bean2Map;
@@ -37,7 +36,6 @@ import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Product;
 import com.jlfex.hermes.model.Rate;
 import com.jlfex.hermes.model.Repay;
-import com.jlfex.hermes.model.Sequence;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -84,8 +82,6 @@ import com.jlfex.hermes.service.sequence.SequenceService;
 @Transactional
 public class JlfexServiceImpl implements JlfexService {
 
-	//开放平台流水号缓存标识
-	private  static final String CACHE_YLTX_ORDERSN_SEQUENCE = "com.jlfex.cache.request.orderSn";
 		
 	@Autowired
 	private  SequenceService  sequenceService;

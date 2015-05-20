@@ -29,7 +29,6 @@ $(function(){
 <#include "/header.ftl" />
 <div class="_content">
 <div id="content" class="content">
-	<!-- banner & signin -->
 	<div class="banner">	
 		<div class="u-container">
 			<#if cuser??>
@@ -52,13 +51,12 @@ $(function(){
 						&nbsp;&nbsp;|&nbsp;&nbsp;<#t>
 						<a href="${app}/userIndex/regNow"><@messages key="index.sign.in.signup" /></a><#t>
 					</p>
-				</div>
+					<input  name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
+				</div>			
 			</form>
 			</#if>
 		</div>
 	</div>
-	<!-- /banner & signin -->
-	<!-- notice -->
 	<div class="notice clearfix">
 		<div class="u-container">
 			<div class="bullhorn pull-left"><i class="fa fa-bullhorn"></i></div>
@@ -74,12 +72,8 @@ $(function(){
 			<div class="pull-right"><a href="${app}/notice/${articleCategoryId}"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>			
 		</div>
 	</div>
-	<!-- /notice -->
-	
 	<div class="u-container">
 		<#include "/index-shortcut.ftl" />
-			
-		<!-- loan -->
 		<div class="slide">
 			<div style="clear:both">
             <h2 class="tabtitle">普通标</h2>
@@ -171,7 +165,6 @@ $(function(){
                 </table>
             </div>
         </div>
-		<!-- /loan -->
 	</div>
 </div>
 </div>
