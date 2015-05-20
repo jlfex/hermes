@@ -7,6 +7,7 @@ public class ContentCategory {
 	private String inputName;
 	private String categoryLevelOne;
 	private String categoryLevelTwo;
+	private String code;
 
 	public String getInputName() {
 		return inputName;
@@ -38,6 +39,14 @@ public class ContentCategory {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Override

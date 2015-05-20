@@ -65,13 +65,13 @@ $(function(){
 			<ul id="notice" class="notices pull-left" data-speed="5000">
 			<#if notices??>
 			  <#list notices as l> 
-				<li data-id="${(l.id)!}"><span>${(l.updateTime)!}</span>&nbsp;<a href="${app}/notice/1f37572b-b006-11e4-b1e0-3adca39d28f0/${(l.id)!}">${(l.articleTitle)!}</a></li>
+				<li data-id="${(l.id)!}"><span>${(l.updateTime)!}</span>&nbsp;<a href="${app}/notice/${articleCategoryId}/${(l.id)!}">${(l.articleTitle)!}</a></li>
 			  </#list> 
 			  <#else>
 			    <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;暂无公告</li>			    
 			</#if>			  
 			</ul>
-			<div class="pull-right"><a href="${app}/notice/1f37572b-b006-11e4-b1e0-3adca39d28f0"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>			
+			<div class="pull-right"><a href="${app}/notice/${articleCategoryId}"><@messages key="index.notice.more" />&nbsp;<i class="fa fa-angle-double-right"></i></a></div>			
 		</div>
 	</div>
 	<!-- /notice -->

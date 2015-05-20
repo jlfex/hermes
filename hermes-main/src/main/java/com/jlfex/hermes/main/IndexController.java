@@ -1,6 +1,8 @@
 package com.jlfex.hermes.main;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,11 @@ import com.jlfex.hermes.common.cache.Caches;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.model.Article;
+import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.Loan;
+import com.jlfex.hermes.model.TmpNotice;
+import com.jlfex.hermes.repository.ArticleCategoryReferenceRepository;
+import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.repository.DictionaryTypeRepository;
 import com.jlfex.hermes.repository.NavigationRepository;
 import com.jlfex.hermes.repository.RoleResourceRepository;
@@ -60,6 +66,8 @@ public class IndexController {
 	@Autowired
 	private NavigationRepository navigationRepository;
 
+	@Autowired
+	private ArticleCategoryRepository articleCategoryRepository;
 	/**
 	 * 索引
 	 * 
@@ -79,6 +87,8 @@ public class IndexController {
 		model.addAttribute("bannerPicture", contentService.findOneByCode(HermesConstants.INDEX_BANNER));
 		model.addAttribute("investPicture", contentService.findOneByCode(HermesConstants.INDEX_INVEST));
 		model.addAttribute("loanPicture", contentService.findOneByCode(HermesConstants.INDEX_LOAN));
+		ArticleCategory articleCategory = articleCategoryRepository.findByCode(HermesConstants.PUBLIC_NOTICE);
+		model.addAttribute("articleCategoryId", articleCategory == null ? "" : articleCategory.getId());
 		List<Article> articleList = contentService.findArticleByCode(HermesConstants.NOTICE_CODE);
 		List<Article> newlist = new ArrayList<>();
 		if (articleList.size() > 5) {
@@ -90,11 +100,8 @@ public class IndexController {
 			model.addAttribute("notices", articleList);
 		}
 
-		
 		return "index";
 	}
-
-	
 
 	@RequestMapping("/n/{id}")
 	public String tmpNotices(@PathVariable String id, Model model) {
@@ -134,7 +141,7 @@ public class IndexController {
 	 */
 	@RequestMapping("/clear")
 	@ResponseBody
-	public String  clear() {
+	public String clear() {
 		PropertiesFilter.clear();
 		Caches.clear();
 		Logger.info("缓存已经清理完毕");

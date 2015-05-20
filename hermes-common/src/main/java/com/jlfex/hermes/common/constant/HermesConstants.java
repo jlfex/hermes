@@ -223,4 +223,9 @@ public final class HermesConstants {
 	 * 等额本息
 	 */
 	public static final String REPAY_PRINCIPAL = "Principal";
+	
+	/**
+	 * 文章类型：公告
+	 */
+	public static final String PUBLIC_NOTICE = "public_notice";
 }

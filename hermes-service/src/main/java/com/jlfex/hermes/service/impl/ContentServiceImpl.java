@@ -103,6 +103,7 @@ public class ContentServiceImpl implements ContentService {
 	public ResultVo insertCategory(ContentCategory category) {
 		ArticleCategory articleCategory = new ArticleCategory();
 		articleCategory.setName(category.getInputName());
+		articleCategory.setCode(category.getCode());
 		articleCategory.setStatus("00");
 		String level1 = category.getCategoryLevelOne();
 		String level2 = category.getCategoryLevelTwo();
@@ -138,18 +139,20 @@ public class ContentServiceImpl implements ContentService {
 	public ResultVo updateCategory(ContentCategory category) {
 		ArticleCategory articleCategory = articleCategoryRepository.findOne(category.getId());
 		articleCategory.setName(category.getInputName());
+		articleCategory.setCode(category.getCode());
 		String level1 = category.getCategoryLevelOne();
 		String level2 = category.getCategoryLevelTwo();
 		if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2) && StringUtils.isEmpty(category.getInputName())) {
 			return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "您还未添加任何分类");
 		} else if (!StringUtils.isEmpty(level1) && StringUtils.isEmpty(level2)) { // 当一级分类为不空，二级分类为空
-			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level1);
-			if (count > 0) {
+			ArticleCategory articleCategory2 = articleCategoryRepository.findOneByNameAndParentId(category.getInputName(), level1);
+			if (articleCategory2 != null && !category.getId().equals(articleCategory2.getId())) {
 				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "二级分类已存在，请重新添加");
 			}
 		} else if (!StringUtils.isEmpty(level1) && !StringUtils.isEmpty(level2)) {
-			int count = articleCategoryRepository.countByNameAndParentId(category.getInputName(), level2);
-			if (count > 0) {
+			
+			ArticleCategory articleCategory2 = articleCategoryRepository.findOneByNameAndParentId(category.getInputName(), level2);
+			if (articleCategory2 != null && !category.getId().equals(articleCategory2.getId())) {
 				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "三级分类已存在，请重新添加");
 			}
 		}
