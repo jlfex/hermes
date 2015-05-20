@@ -2,6 +2,7 @@ package com.jlfex.hermes.model;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -17,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * 文章分类信息模型
  */
 @Entity
-@Table(name = "hm_article_category")
+@Table(name = "hm_article_category",uniqueConstraints = { @UniqueConstraint(columnNames = "code") })
 @JsonIgnoreProperties({ "parent", "children" })
 public class ArticleCategory extends Model {
 
