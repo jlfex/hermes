@@ -35,14 +35,29 @@
 <!-- foot start-->
 <#include "/footer.ftl" />
 </div>
+<div class="theme-popover">
+     <div class="theme-poptit">
+          <a href="javascript:;" title="关闭" class="close">×</a>
+          <h3>提示：</h3>
+     </div>
+     <div class="theme-popbod dform">
+               建议您使用IE8以上版本IE浏览器或其它类型的浏览器
+     </div>
+</div>
+<div class="theme-popover-mask"></div>
 <script type="text/javascript" charset="utf-8">
   jQuery(function($){
-     if(navigator.userAgent.indexOf("MSIE") > 0) { //IE
+    if (navigator.userAgent.indexOf("MSIE") > 0) { //IE
 	   		if(/msie 7.0/.test(navigator.userAgent.toLowerCase()) || /msie 8.0/.test(navigator.userAgent.toLowerCase())) {
-	        	alert("请使用IE8以上版本浏览器或其他浏览器");
-	        	return;
+	        	$('.theme-popover-mask').fadeIn(100);
+   			    $('.theme-popover').slideDown(200);
 	        }
 	}
+    //关闭提示层
+	$('.theme-poptit .close').click(function(){
+		$('.theme-popover-mask').fadeOut(100);
+		$('.theme-popover').slideUp(200);
+	})
   });
 </script>
 </body>
