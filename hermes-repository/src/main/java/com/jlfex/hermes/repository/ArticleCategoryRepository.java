@@ -28,5 +28,7 @@ public interface ArticleCategoryRepository extends PagingAndSortingRepository<Ar
 	List<ArticleCategory> findByParentId(String parentId);
 
 	int countByNameAndParentId(String inputName, String parentId);
+	
+	ArticleCategory findOneByNameAndParentId(String inputName, String parentId);
 
 }

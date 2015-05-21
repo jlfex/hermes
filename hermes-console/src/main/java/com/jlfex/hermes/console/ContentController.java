@@ -5,7 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.imageio.ImageIO;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Files;
@@ -26,6 +29,7 @@ import com.jlfex.hermes.common.utils.Images;
 import com.jlfex.hermes.model.Article;
 import com.jlfex.hermes.model.ArticleCategory;
 import com.jlfex.hermes.model.TmpNotice;
+import com.jlfex.hermes.repository.ArticleCategoryRepository;
 import com.jlfex.hermes.service.ContentService;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
@@ -43,6 +47,8 @@ public class ContentController {
 	private static final int DEFAULT_MAX_IMG_WIDTH = 700;
 	@Autowired
 	private ContentService contentService;
+	@Autowired
+	private ArticleCategoryRepository articleCategoryRepository;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -169,6 +175,24 @@ public class ContentController {
 	@ResponseBody
 	public List<ArticleCategory> findCategoryByLevel(@RequestParam("level") String level) {
 		return contentService.findCategoryByLevel(level);
+	}
+	
+	@RequestMapping("vilidArticleCategoryCode")
+	@ResponseBody
+	public ResultVo vilidArticleCategoryCode(@RequestParam("articleCategoryId") String articleCategoryId,@RequestParam("articleCategoryCode") String articleCategoryCode) {
+		if(StringUtils.isEmpty(articleCategoryId)) {
+			ArticleCategory articleCategory = articleCategoryRepository.findByCode(articleCategoryCode);
+			if(articleCategory != null) {
+				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "已经存在该编号的文章类别，请换一个！");
+			}
+		} else {
+			ArticleCategory articleCategory = articleCategoryRepository.findByCode(articleCategoryCode);
+			if(articleCategory != null && !articleCategory.getId().equals(articleCategoryId)) {
+				return new ResultVo(HermesConstants.RESULT_VO_CODE_BIZ_ERROR, "已经存在该编号的文章类别，请换一个！");
+			}
+		}
+		
+		return new ResultVo(HermesConstants.RESULT_VO_CODE_SUCCESS);
 	}
 
 	/**

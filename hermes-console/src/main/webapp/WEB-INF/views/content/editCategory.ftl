@@ -7,12 +7,24 @@
 
   <div class="modal-body">
    		<form class="form-horizontal" role="form" id="editForm">
-   		  <input type="hidden" value="${(category.id)!}" name="id" />   		
+   		  <input type="hidden" value="${(category.id)!}" name="id" id="id" />   		
           <div class="form-group">
             <label for="inputName" class="col-sm-2 control-label">分类名称</label>
-            <div class="col-sm-10">
+            <div class="col-xs-5 hm-col">
               <input type="text" class="form-control" id="inputName" name = "inputName" placeholder="分类名称" value="${category.name}">
             </div>
+            <div class="col-xs-2">
+				<span class="alert-danger" style="display:none;background:none">必填项</span>
+			</div>
+          </div>
+          <div class="form-group">
+            <label for="inputName" class="col-sm-2 control-label">分类编码</label>
+            <div class="col-xs-5 hm-col">
+              <input type="text" class="form-control" id="code" name = "code" placeholder="分类编码" value="${(category.code)!}">
+            </div>
+            <div class="col-xs-2">
+				<span class="alert-danger" style="display:none;background:none">必填项</span>
+			</div>
           </div>
           <div class="form-group">
             <label for="inputBefore" class="col-sm-2 control-label">上级分类</label>
@@ -52,6 +64,60 @@
 </div>
 <script type="text/javascript">
 jQuery(function($) {
+	$("#inputName,#code").on("blur",function() {
+		checkInput(this);
+	});
+	
+	function checkInput(e) {
+		var $this = $(e);
+		var val = $this.val();
+		if(val.length == 0 || (e.id == 'code' && vilidArticleCategoryCode(e))) {
+			$this.parent().parent().find(".alert-danger:eq(0)").attr("e_id",e.id);
+			$this.parent().parent().find(".alert-danger:eq(0)").show();
+			$this.focus();
+			
+			$("#editCategoryButton").attr("disabled",true);
+			return false;			
+		} else {
+			var e_id = $this.parent().parent().find(".alert-danger:eq(0)").attr("e_id");
+			if(e_id=='' || e_id==e.id){
+				$this.parent().parent().find(".alert-danger:eq(0)").hide();
+			}
+			
+			$("#editCategoryButton").removeAttr("disabled");
+			return true;
+		}
+	}
+	
+	// 验证分类code有效性
+	function vilidArticleCategoryCode(e) {
+		var bol = false;
+		$.ajax({
+			type : 'POST',
+			async: false,
+			url : '${app}/content/vilidArticleCategoryCode',
+			data : 'articleCategoryId='+$("#id").val()+'&articleCategoryCode='+$("#code").val(),
+			success : function(msg)
+				{
+					if(msg.code == "1") {
+						var $this = $(e);
+						$this.parent().parent().find(".alert-danger:eq(0)").text(msg.attachment);
+						bol = true;
+					} else {
+						bol = false;
+					}
+				},
+				error : function(msg, textStatus, e)
+				{
+					alert("编辑分类失败，请重新添加！");
+					bol = false;
+				}
+			});
+			
+			return bol;
+	}
+	
+	
 	var level3 = '${category.level}';
 	var parentIdForLevel3 = '${category.parent.id}';
 	//点击编辑页面中保存按钮
