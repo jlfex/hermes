@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5, h6 { font-family:微软雅黑; }
 .header .nav .nav-list li a { padding-left:20px; text-decoration:none; font-size:16px; color:#323232; }
 .header .nav .nav-list li.active a { background-image:url("../images/icons.png"); background-position:0 0; background-repeat:no-repeat; color:#018dc8; }
 
-.footer { margin-top:0px; padding:0px 0; background-color:#444444; color:#909090; }
+.footer { margin-top:0px; padding:0px 0; background-color:#444444; color:#909090; display: none;}
 .footer .footer-right { padding-left:0; border-left:1px solid #333333; }
 .footer .footer-right .wrap { padding-left:30px; border-left:1px solid #575757; }
 .footer .footer-left { text-align:center; }
