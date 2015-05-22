@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.RequestUtils;
@@ -832,12 +836,44 @@ public class CreditController {
 
 	/**
 	 * 债权转让协议
-	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	@RequestMapping("/assignProtocol")
-	public String assignProtocol() {
-		
+	@RequestMapping("/assignProtocol/{id}")
+	public String assignProtocol(@PathVariable("id") String id,Model model) throws Exception {
+		if(!Strings.empty(id)){
+			CrediteInfo creditInfo = creditInfoService.findById(id.trim());
+			model.addAttribute("creditorIDCard", creditInfo.getCreditor().getCertificateNo());		//债权人证件号
+			model.addAttribute("creditorName", creditInfo.getCreditor().getCreditorName());		    //债权人姓名
+			model.addAttribute("principalAmount", creditInfo.getAmount().toString());  				//转让本金
+			model.addAttribute("platformName", App.config("app.operation.name"));  					//平台名称
+			model.addAttribute("companyAddr", App.config("app.company.address")); 				    //公司地址
+			model.addAttribute("platformNetAddr", App.config("app.website"));						//平台网址
+			model.addAttribute("rate", creditInfo.getRate());										//利率
+			String unit = HermesConstants.UNIT_MONTH;
+			if(CrediteInfo.CreditKind.YLTX_API.equals(creditInfo.getCreditKind())){
+				unit = HermesConstants.UNIT_DAY;
+			}
+			model.addAttribute("period", creditInfo.getPeriod()+unit);								    //期限
+			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			Date raiseDate = null;
+			for(CreditRepayPlan obj: planList){
+				totalAmount = totalAmount.add(obj.getRepayAllmount());
+				if(obj.getPeriod() == 1){
+					raiseDate = obj.getRepayPlanTime();
+				}
+			}
+			model.addAttribute("repayPlanDetailList", planList );
+			Calendar  calendar = Calendar.getInstance();
+			calendar.setTime(raiseDate);
+			String raiseDateStr = calendar.get(Calendar.YEAR)+"年"+(calendar.get(Calendar.MONDAY)+1)+"月"+calendar.get(Calendar.DATE);
+			model.addAttribute("raiseDate", raiseDateStr);  									    //起息日  第一期 还款时间 
+			calendar.setTime(creditInfo.getDeadTime());
+			String deadTimeDateStr = calendar.get(Calendar.YEAR)+"年"+(calendar.get(Calendar.MONDAY)+1)+"月"+calendar.get(Calendar.DATE);
+			model.addAttribute("deadTime", deadTimeDateStr);                               //债权到期日
+			model.addAttribute("totalAmount", totalAmount);											//总金额合计
+		}
 		return "credit/assignProtocol";
 	}
 

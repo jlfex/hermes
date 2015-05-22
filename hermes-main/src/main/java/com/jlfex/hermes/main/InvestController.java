@@ -12,11 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -1106,43 +1102,68 @@ public class InvestController {
 		}
 	    }
 	}
-
+    /**
+     * 债权转让
+     * @param id
+     * @param model
+     * @return
+     * @throws Exception
+     */
 	@RequestMapping("/assignProtocol")
 	public String assignProtocol(@RequestParam(value = "id", required = true) String id,Model model) throws Exception{
-		CrediteInfo crediteInfo=null;
-		BigDecimal totalAmount = new BigDecimal(0);
-		BigDecimal totalAllAmount = new BigDecimal(0);
-		List<CreditRepayPlan> creditRepayPlanList=new ArrayList<CreditRepayPlan>();
 		Invest invest = investService.loadById(id);
 		Loan loan = loanService.loadById(invest.getLoan().getId());
-		try {
-			if(StringUtils.isNotEmpty(loan.getCreditIndex())){
-				crediteInfo = creditInfoService.findById(loan.getCreditIndex());
+		if(!Strings.empty(id)){
+			CrediteInfo creditInfo = creditInfoService.findById(loan.getCreditIndex().trim());
+			model.addAttribute("creditorIDCard", creditInfo.getCreditor().getCertificateNo());		//债权人证件号
+			model.addAttribute("creditorName", creditInfo.getCreditor().getCreditorName());		    //债权人姓名
+			model.addAttribute("principalAmount", creditInfo.getAmount().toString());  				//转让本金
+			model.addAttribute("platformName", App.config("app.operation.name"));  					//平台名称
+			model.addAttribute("companyAddr", App.config("app.company.address")); 				    //公司地址
+			model.addAttribute("platformNetAddr", App.config("app.website"));						//平台网址
+			model.addAttribute("rate", creditInfo.getRate());										//利率
+			
+			UserProperties userProperty = userPropertiesService.queryByUser(invest.getUser().getId());
+			model.addAttribute("investorName",  userProperty.getRealName());
+			model.addAttribute("investorCertiType", userProperty.getIdTypeName());
+			model.addAttribute("investorIDCard", userProperty.getIdNumber());
+			model.addAttribute("assignAmount", loan.getAmount());
+			//理财人银行卡信息
+			BankAccount bankAccount = null;
+			List<BankAccount> bankAccountList = bankAccountService.findByUserIdAndStatus(invest.getUser().getId(), BankAccount.Status.ENABLED);
+			if (bankAccountList == null || bankAccountList.size() != 1) {
+				Logger.info("投标异常：没有找到理财人有效的银行卡信息");
+			} else {
+				bankAccount = bankAccountList.get(0);
 			}
-			if(crediteInfo !=null){
-				creditRepayPlanList = creditRepayPlanService.findByCrediteInfo(crediteInfo);
-				for (CreditRepayPlan creditRepayPlan : creditRepayPlanList) {
-					totalAmount = totalAmount.add(creditRepayPlan.getRepayPrincipal());
-					totalAllAmount= totalAllAmount.add(creditRepayPlan.getRepayAllmount());
+			model.addAttribute("accountName", bankAccount.getName());
+			model.addAttribute("bankCardNo", bankAccount.getAccount());
+			model.addAttribute("bankName", bankAccount.getBank().getName());
+			
+			String unit = HermesConstants.UNIT_MONTH;
+			if(CrediteInfo.CreditKind.YLTX_API.equals(creditInfo.getCreditKind())){
+				unit = HermesConstants.UNIT_DAY;
+			}
+			model.addAttribute("period", creditInfo.getPeriod()+unit);								    //期限
+			List<CreditRepayPlan> planList = creditRepayPlanService.queryByCreditInfo(creditInfo);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			Date raiseDate = null;
+			for(CreditRepayPlan obj: planList){
+				totalAmount = totalAmount.add(obj.getRepayAllmount());
+				if(obj.getPeriod() == 1){
+					raiseDate = obj.getRepayPlanTime();
 				}
 			}
-		} catch (Exception e) {
-			Logger.error("获取外部债权信息异常",e);
+			model.addAttribute("repayPlanDetailList", planList );
+			Calendar  calendar = Calendar.getInstance();
+			calendar.setTime(raiseDate);
+			String raiseDateStr = calendar.get(Calendar.YEAR)+"年"+(calendar.get(Calendar.MONDAY)+1)+"月"+calendar.get(Calendar.DATE);
+			model.addAttribute("raiseDate", raiseDateStr);   //起息日  第一期 还款时间 
+			calendar.setTime(creditInfo.getDeadTime());
+			String deadTimeDateStr = calendar.get(Calendar.YEAR)+"年"+(calendar.get(Calendar.MONDAY)+1)+"月"+calendar.get(Calendar.DATE);
+			model.addAttribute("deadTime", deadTimeDateStr); //债权到期日
+			model.addAttribute("totalAmount", totalAmount);	 //总金额合计
 		}
-		Calendar cal_assign = Calendar.getInstance();
-		cal_assign.setTime(crediteInfo.getAssignTime());
-		int year=cal_assign.get(Calendar.YEAR); 
-		int month=cal_assign.get(Calendar.MONTH)+1;
-		int day=cal_assign.get(Calendar.DAY_OF_MONTH);
-		model.addAttribute("invest", invest);
-		model.addAttribute("loan", loan);
-		model.addAttribute("creditInfo", crediteInfo);
-		model.addAttribute("creditRepayPlanList", creditRepayPlanList);
-		model.addAttribute("year", year);
-		model.addAttribute("month", month);
-		model.addAttribute("day", day);
-		model.addAttribute("totalAmount", totalAmount);
-		model.addAttribute("totalAllAmount", totalAllAmount);
 		return "invest/assignProtocol";
 	}
 	
