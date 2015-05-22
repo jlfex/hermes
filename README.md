@@ -36,8 +36,8 @@
 - linux下执行chmod +x quick-start.sh&&./quick-start.sh
 
 ##演示地址
-* [前台演示](http://hermes.jlfex.com:8105/hermes-main)
-* [后台演示,用户名密码均为admin](http://hermes.jlfex.com:8106/hermes-console)
+* [前台演示](http://58.247.5.228:8105/hermes-main)
+* [后台演示](http://58.247.5.228:8106/hermes-console)
 
 ##如何贡献
 * [编码规范](https://github.com/jlfex/hermes/wiki/编码规范)
