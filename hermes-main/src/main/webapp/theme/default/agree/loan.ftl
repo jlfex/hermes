@@ -52,19 +52,29 @@
 						<tr>
 							<th>用户名</th>
 							<th>投资金额</th>
-							<th>每月应收本息</th>
+							<th>应收本息</th>
 						</tr>
 					</thead>
 					<tbody>
+					<#if investList?exists>
+					    <#list investList as l>  
 						<tr>
+							<td>${l.realName!''}</td>
+							<td>${l.amount!''}</td>
+							<td>${l.expectProfit!''}</td>
+						</tr>
+						</#list>
+					<#else>
+					    <tr>
 							<td></td>
 							<td></td>
 							<td></td>
 						</tr>
+					</#if>
 						<tr>
 							<td class="txt_right">总计</td>
-							<td></td>
-							<td></td>
+							<td>${totalAmount!''}</td>
+							<td>${totalExpectProfit!''}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -109,11 +119,11 @@
 						</tr>
 						<tr>
 							<td>还款分期月数</td>
-							<td>&nbsp;${period!''}</td>
+							<td>&nbsp;${period!''} 个月</td>
 						</tr>
 						<tr>
 							<td>月缴管理费</td>
-							<td>&nbsp;${monthFee!''}</td>
+							<td>&nbsp;${monthFee!''} 元</td>
 						</tr>
 						<tr>
 							<td>还款日</td>

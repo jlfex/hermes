@@ -1403,4 +1403,11 @@ public class LoanServiceImpl implements LoanService {
 	public List<LoanLog> loadLogByLoanIdAndTypeIn(Loan loan, List<String> typeList) {
 		return loanLogRepository.findByLoanAndTypeIn(loan, typeList);
 	}
+    /**
+     * 根据ID获取loan信息
+     */
+	@Override
+	public Loan findById(String id) throws Exception {
+		return loanRepository.findOne(id);
+	}
 }
