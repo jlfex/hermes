@@ -1122,6 +1122,7 @@ public class InvestController {
 			model.addAttribute("companyAddr", App.config("app.company.address")); 				    //公司地址
 			model.addAttribute("platformNetAddr", App.config("app.website"));						//平台网址
 			model.addAttribute("rate", creditInfo.getRate());										//利率
+			model.addAttribute("operator", App.config("app.company.name"));                         //平台运营方
 			
 			UserProperties userProperty = userPropertiesService.queryByUser(invest.getUser().getId());
 			model.addAttribute("investorName",  userProperty.getRealName());

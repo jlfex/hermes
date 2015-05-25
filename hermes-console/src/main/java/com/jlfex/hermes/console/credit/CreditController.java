@@ -850,6 +850,7 @@ public class CreditController {
 			model.addAttribute("companyAddr", App.config("app.company.address")); 				    //公司地址
 			model.addAttribute("platformNetAddr", App.config("app.website"));						//平台网址
 			model.addAttribute("rate", creditInfo.getRate());										//利率
+			model.addAttribute("operator", App.config("app.company.name"));                         //平台运营方
 			String unit = HermesConstants.UNIT_MONTH;
 			if(CrediteInfo.CreditKind.YLTX_API.equals(creditInfo.getCreditKind())){
 				unit = HermesConstants.UNIT_DAY;
