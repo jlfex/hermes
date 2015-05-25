@@ -66,8 +66,9 @@ jQuery(function() {
 	       return ;
 	    }
 	    if(loanKind == '03'){
-		   var loanid =$("#loanid").val();
-	       window.location.href="${app}/invest/goJlfexBid?investamount="+investamount+"&loanid="+loanid;
+		   var url = '${app}/invest/goJlfexBid';
+		   $("#loanDetail").attr("action",url);
+		   $("#loanDetail").submit();
 	    }else{
 	    	$.ajax({
 				data: $("#loanDetail").serialize(),
@@ -76,9 +77,10 @@ jQuery(function() {
 			    dataType: 'json',
 				success: function(data){
 					if(data.type=="SUCCESS"){
-						var investamount =$("#investamount").val();
-						var loanid =$("#loanid").val();
-						window.location.href="${app}/invest/bidsuccess?investamount="+investamount+"&loanid="+loanid;
+						var url = '${app}/invest/bidsuccess';
+					   	$("#loanDetail").attr("action",url);
+					   	
+					   	$("#loanDetail").submit();
 					}else if(data.type=="WARNING"){
 						window.location.href="${app}/userIndex/skipSignIn";
 					}else if(data.type=="FAILURE"){
@@ -217,7 +219,7 @@ jQuery(function() {
 		</div>
 		<div class="account_content_right">
 			<div class="account_right">
-				<form id="loanDetail" name="loanDetail">
+				<form id="loanDetail" name="loanDetail" method="post">
 				<input id="investBidMultiple" name="investBidMultiple" type="hidden"  value="${investBidMultiple}" ></input>
 				<input id="otherrepayselect" name="otherrepayselect" type="hidden" ></input>
 				<input id="loanid" name="loanid" type="hidden" value="${loan.id}" ></input>	

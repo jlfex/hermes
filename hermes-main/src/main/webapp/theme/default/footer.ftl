@@ -44,6 +44,19 @@ jQuery(function($) {
 		// 设置最小高度
 		//_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
 	}).trigger('resize');
+	
+	if(document.documentElement.clientHeight >= document.documentElement.offsetHeight - $(".footer").height()) {
+		$(".footer").show();
+	}
+	
+	$(window).scroll(function() {
+		if($(document).scrollTop()>=$(document).height()-$(window).height()- $(".footer").height()) {
+			$(".footer").show();
+		} else {
+			$(".footer").hide();
+		}
+	});
+
 });
 //-->
 </script>

@@ -33,7 +33,7 @@ jQuery(function($){
           _span.addClass("mv_error").html(_span.attr("data-msg"));
           return ;
        }
-       window.location.href="${app}/invest/jlfexBid?investAmount="+'${investAmount!''}'+"&loanId="+'${loanId!''}';
+       $("#loanDetail").submit();
      });
      
     
@@ -111,9 +111,9 @@ jQuery(function($){
 	</#if>
 </div>
 
-<form id="loanDetail" name="loanDetail">
-<input id="loanid" name="loanid" type="hidden" value="${loanId}" ></input>	
-<input id="investamount" name="investamount" type="hidden" value="${investAmount!''}" >
+<form id="loanDetail" name="loanDetail" action="${app}/invest/jlfexBid" method="post">
+	<input id="loanId" name="loanId" type="hidden" value="${loanId!''}" ></input>	
+	<input id="investAmount" name="investAmount" type="hidden" value="${investAmount!''}" >
 </form> 
 </div>
 <#include "/footer.ftl" />
