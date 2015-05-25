@@ -15,97 +15,152 @@
 	.cont_main p.lt2em{ text-indent: 2em;}
 </style>
 
-<div class="account_center">
+<div class="sub_main">
+	<div class="account_center">
 		<div class="xy_block">
-			<h2 class="title">债权转让及服务协议</h2>
-			<p class="time">协议编号：<span class="red">${(loan.loanNo)!}</span></p>
+			<h2 class="title">债权/收益权转让及回购协议</h2>
 			<div class="clearfix"></div>
 		</div>
 
 		<div class="xy_block cont_main">
-			<h2 class="ct_title"><strong>甲方（受让人/新债权人）：</strong></h2>
+			<h2 class="ct_title"><strong>甲方（出让人）：（债权/收益权）</strong></h2>
+			<p>用户名：   ${creditorName!''}</p>
+			<p>身份证号/证件号：${creditorIDCard!''}</p>
+			<h2 class="ct_title"><strong>受让人（“乙方”）及其基本信息及合同要素:</strong></h2>
+			<br>
 			<div class="xy_tab">
-				<table width="100%" >
+				<table width="100%" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr>
-							<th>用户名</th>
-							<th>应还本金</th>
-							<th>每月应还总额</th>
+							<th width="10%">真实姓名</th>
+							<th width="10%">证件类型</th>
+							<th width="15%">证件号码</th>
+							<th width="25%">受让债权/收益权金额（本金）</th>
+							<th width="20%">债权/收益权转让价款</th>
 						</tr>
 					</thead>
 					<tbody>
-					<#list creditRepayPlanList as l>
 						<tr>
-							<td>${(l.creditor.creditorName)!}</td>
-							<td>￥${(l.repayPrincipal)!}</td>
-							<td>￥${(l.repayAllmount)!}</td>
+							<td>${investorName!''}</td>
+							<td>${investorCertiType!''}</td>
+							<td>${investorIDCard!''}</td>
+							<td>${principalAmount!''}</td>
+							<td>${assignAmount!''}</td>
 						</tr>
-                   </#list>
-                        <td>总计</td>
-                        <td>￥${totalAmount}</td>
-                        <td>￥${totalAllAmount}</td>
 					</tbody>
 				</table>
+				<br>
+				<h2 class="ct_title"><strong>见证人（“丙方”）: ${platformName!''} </strong></h2>
+				<p>公司地址：${companyAddr!''}</p>
+
 			</div>
-			<p>注：因计算中存在四舍五入，最后一期应收本息与之前略有不同。</p>
-			<h2 class="ct_title"><strong>乙方（转让人/原债权人）：${(creditInfo.borrower)!}</strong></h2>
-			<p>债权人名称：上海伯原资产管理有限公司</p>
-			<p>证件号码：02938392-8</p>
-			<h2 class="ct_title"><strong>丙方（见证人）：</strong></h2>
-			<p>公司：【平台运营方】</p>
-			<p>联系方式：【平台运营方联系地址】</p>
-			<p>就乙方通过由上海金鹿金融信息服务有限公司【平台运营方】运营管理的hermes【平台名称】网站（网址：www.hermes.com【网址】，以下简称hermes【平台简称】）向甲方转让债权事宜，双方根据平等、自愿的原则，达成协议如下：</p>
-			<p>一、	债权转让</p>
-			<p class="lt2em"></p>
-			<p>乙方同意将其通过hermes【平台名称】平台发放借款形成的以下债权（“标的债权”）转让给甲方，甲方同意受让该等债权：</p>
+			<p>鉴于，</p>
+			<p>1.	甲方拟转让相应债权/收益权（以下简称“债/收益权”）并同意在特定情况下回购债权/收益权；乙方愿意以自有合法资金受让债权/收益权。</p>
+			<p>2.	${operator!''} (上海公司)是一家在中国上海市合法成立并有效存续的有限责任公司，拥有P2P网站（网址为：${platformNetAddr!''}）</p>
+			<p>3.	现甲、乙双方经过友好协商，在平等、自愿的基础上就债权/收益权转让事宜达成如下协议，以兹共守：</p>
+			<p>一、	债权/收益权</p>
+			<p>1.1	甲方同意以本协议文首“受让人（“乙方”）及其基本信息及合同要素”载明的债权/收益权转让价款金额为转让对价向乙方转让相应债权/收益权；；乙方同意以本协议文首“受让人（“乙方”）及其基本信息及合同要素”载明的债权/收益权转让价款金额为转让对价该等债权/收益权。</p>
+			<p>1.2	甲方应当承诺本协议项下债权/收益权上不存在质押、其他转让意向等任何可能使得债权/收益权存在瑕疵、负担或可能被任何第三方追索的情形。</p>
+			<p>1.3	债权/收益权整体情况如下：</p>
 			<div class="xy_tab">
 				<table width="100%" >
-					<thead>
-						<tr>
-							<th colspan="6" class="txt_center">债权基本信息</th>
-							<th colspan="3" class="txt_center">转让信息</th>
-						</tr>
-					</thead>
+					
 					<tbody>
 						<tr>
-							<td>借款人姓名</td>
-							<td>借款人证件号码</td>
-							<td>初始借款金额</td>
-							<td>借款期限</td>
-							<td>年利率</td>
-							<td>借款用途</td>
-							<td>转让价格</td>
-							<td>剩余期限</td>	
+							<td>债权/收益权</td>
+							<td>￥ 人民币${principalAmount!''}元整</td>
 						</tr>
 						<tr>
-							<td>${(creditInfo.creditor.creditorName)!}</td>
-							<td>${(creditInfo.certificateNo)!}</td>
-							<td>${(creditInfo.amount)!}</td>
-							<td>${(creditInfo.period)!}</td>							
-							<td>${(creditInfo.rate)!}</td>
-							<td>${(creditInfo.purpose)!}</td>
-							<td>${(creditInfo.sellAmount)!}</td>
-							<td>${(creditInfo.termNum)!}</td>
+							<td>债权/收益权期限</td>
+							<td> ${period!''}</td>
+						</tr>
+						<tr>
+							<td>债权/收益权年化利率</td>
+							<td>${(rate!0)?string.percent}</td>
+						</tr>
+						<tr>
+							<td>起息日</td>
+							<td>${raiseDate!''}</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>1.4	乙方各自受让的债权/收益权数额以本协议文首“受让人（“乙方”）及其基本信息及合同要素”载明的内容为准。</p>
+			</div>
+			<p>二、	债权/收益权转让</p>
+			<p>2.1	乙方应当于本协议签订后的个工作日内将本协议第一条约定之受让债权/收益权的债权/收益权转让价款全额支付至甲方委托丙方或丙方指定的第三方在第三方支付机构或者监管银行开立的监管账户:</p>
+			<p>户名：${accountName!''}</p>	
+			<p>账号：${bankCardNo!''}</p>	
+			<p>开户行：${bankName!''}</p>
+			<p>2.2	除非甲方另行通知，甲方全额收到乙方支付的债权/收益权转让价款的次日（“初始转让日”）起，乙方受让取得债权/收益权； </p>
+			<p>2.3	协议生效后，协议双方以本协议为依据形成真实、合法、有效的债权/收益权转让行为。 </p>	
+
+			<p>三、	债权/收益权回购</p>
+			<p>3.1	受限于本协议第3.2条所述条件：</p>
+			<p class="lt4em">（1）	乙方按本协议约定有效受让取得债权/收益权后，甲方应在${deadTime!''}（“持有到期日”）回购乙方届时所持有的债权/收益权；</p>
+			<p class="lt4em">（2）	甲方按本条约定回购债权/收益权，回购价款应按如下方式计算：</p>
+
+				<div class="xy_tab">
+				<table width="100%" >
+					<tbody>
+						<tr>
+							<td>应收日期</td>
+							<td>收益权金额</td>
+							<td>应收利息</td>
+							<td>应收总额</td>
+						</tr>
+						<#if repayPlanDetailList??>
+						<#list repayPlanDetailList as l>
+						<tr>
+							<td>${l.repayPlanTime?string('yyyy-MM-dd')}</td>
+							<td>${l.repayPrincipal!''}</td>
+							<td>${l.repayInterest!''}</td>
+							<td>${l.repayAllmount!''}</td>
+						</tr>
+						</#list>
+						</#if>
+						<tr>
+							<td colspan="3" style="text-align:right" >总计</td>
+							<td>${totalAmount!''}</td>
 						</tr>
 						
 					</tbody>
 				</table>
+
 			</div>
-			<p>二、	债权转让流程</p>
-			<p class="lt2em">2.1甲方按照hermes【平台名称】的规则，通过对乙方的债权（“标的债权”）转让需求点击“投标”按钮并点击确认订立本协议后，本协议即成立并立即生效。</p>
-			<p class="lt2em">2.2 同时，甲方对标的债权转让需求点击“投标”按钮，即不可撤销地授权hermes【平台名称】公司，委托其合作的第三方支付机构及银行等，从在银行以hermes【平台名称】公司名义开立的资金监管账户（“监管账户”）中甲方名下虚拟账户（“甲方hermes【平台名称】账户”）中，将金额等同于本协议第一条所列的合计“需支付对价”的金额划转至乙方名下虚拟账户（“已方hermes【平台名称】账户”）中。上述划转完成视为标的债权已转让成功。</p>
-			<p>三、	效力</p>
-			<p class="lt2em">自标的债权转让成功之日起，甲方成为标的债权的债权人，承继乙方与标的债权借款人签订的相应《借款协议》项下出借人的权利并承担出借人的义务。如相应《借款协议》中约定了由第三方承担担保责任的，第三方应根据相应《借款协议》的约定继续对甲方承担连带保证责任。</p>
-			<p>四、	声明与保证</p>
-			<p class="lt2em">甲方保证其所用于受让标的债权的资金来源合法，甲方是该资金的合法所有人，如果第三方对资金归属、合法性问题发生争议，由甲方自行负责解决</p>
-			<p>五、	其他</p>
-			<p class="lt2em">5.1 本协议的任何修改、补充均须以hermes【平台名称】平台电子文本形式作出。</p>
-			<p class="lt2em">5.2 甲乙双方均确认，本协议的签订、生效和履行以不违反中国的法律法规为前提。如果本协议中的任何一条或多条违反适用的法律法规，则该条将被视为无效，但该无效条款并不影响本协议其他条款的效力。</p>
-			<p class="lt2em">
-			5.3 如果甲乙双方在本协议履行过程中发生任何争议，应友好协商解决；如协商不成，则须提交甲方或乙方所在地人民法院进行诉讼。</p>
-			<p class="lt2em">5.4 本协议双方委托hermes【平台名称】公司保管所有与本协议有关的书面文件或电子信息。</p>
-			<p class="time">${year}年${month}月${day}日【债权转让成功日期】</p>
-			<div class="clearfix"></div>
+			<p>3.2	甲方按3.1条约定回购乙方届时所持有的债权/收益权的前提包括：</p>
+			<p class="lt4em">（1）届时债权/收益权上不存在质押、乙方没有其他任何转让该债权/收益权行为等任何可能使得债权/收益权存在瑕疵、负担或可能被任何第三方追索的情形；
+			</p>
+			<p class="lt4em">（2）乙方根据甲方的要求配合签署债权/收益权回购（转让）事宜的相关必要文件，并根据甲方的要求通过甲方确认的途径向借款人发出债权/收益权转让给甲方的相关通知。
+			</p>
+
+			<p>四、	协议的生效及效力</p>
+			<p>本协议自各方通过书面或电子协议签署本协议之日起生效。</p>
+			
+			<p>五、	协议的接触及终止</p>
+			<p>本协议一经生效即不可解除或终止。但如乙方未在本协议约定的时间内向甲方全额支付债权/收益权转让价款的，本协议自动终止。</p>
+
+			<p>六、	保密</p>
+			<p>协议方应对在本协议签订过程中所获悉的其他方信息，包括但不限于身份、财务及商业信息等，承担保密义务。非经书面同意，任何一方均不得将上述信息向其他第三方进行披露。</p>
+
+			<p>七、	违约责任</p>
+			<p>本协议任意一方未按协议约定履行义务或违反约定的，除本协议另有约定外，还应当承担由此给守约方造成的一切损失，包括但不限于守约方为实现权利支付的律师费、诉讼费等。</p>
+
+			<p>八、	争议解决</p>
+			<p>协议方在履行本协议中发生任何争议应当友好协商解决，争议发生15个工作日后仍无法协商解决的，任何一方有权将纠纷提交一方住所地有管辖权的人民法院诉讼解决。</p>
+
+			<p>九、	其他</p>
+			<p>9.1	任何在协议履行过程中产生的争议均不影响本协议其他条款的履行及效力。 </p>
+			<p>9.2	本协议各条款的标题仅为参照方便而设，并不限制或从其他角度影响本协议条款的含义和诠释。 </p>	
+			<p>9.3	协议各方同意本协议可通过电子版本生成，并受其约束。</p>	
+
+
+			<p>甲方：${creditorName!''}</p>
+			<br>
+			<p>乙方：${investorName!''}</p>
+			<br>
+			<p>见证人：${platformName!''} </p>
+			<br>
 		</div>
 		 
 	</div>
+</div>

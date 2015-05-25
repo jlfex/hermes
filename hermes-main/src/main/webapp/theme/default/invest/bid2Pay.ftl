@@ -98,7 +98,7 @@ jQuery(function($) {
                     </div>
                     <div class="block">
                         <label>&nbsp;</label>
-                        <input type="checkbox" id="cr"/>我已阅读并同意 <a href="#" id="payEntrustProtocol" class="blue">《代扣委托书》</a><span id="err_msg"></span>
+                        <input type="checkbox" id="cr"/>我已阅读并同意 <a href="#" id="payEntrustProtocol" class="blue">《支付委托授权书》</a><span id="err_msg"></span>
                     </div>
                     <div class="block">
                         <label>&nbsp;</label>
@@ -109,7 +109,7 @@ jQuery(function($) {
                     </div>
                    <div class="sweet-tip">
                    	<div><strong>温馨提示</strong></div>
-                    <p>1、请仔细阅读《代扣委托书》；</p>
+                    <p>1、请仔细阅读《支付委托授权书》；</p>
                     <p>2、委托代扣的金额直接用于投标项目；</p>
                     <p>3、所有账户金额将由第三方平台托管，平台本身布存放用户的投标资金。</p>
                    </div>

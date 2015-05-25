@@ -28,7 +28,6 @@ import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.mail.EmailService;
-import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.utils.MailUtuils;
 import com.jlfex.hermes.main.freemark.ModelLoader;
@@ -578,24 +577,17 @@ public class UserController {
 	}
 
 	/**
-	 * hermes隐私条款 和 使用条款
+	 * 注册协议
 	 * 
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/privacyAndUseProtocol")
-	public String privacyAndUseProtocol(Model model) {
-		String companyName = App.config(COMPANY_NAME);
-		String website = App.config(WEBSITE);
-		String pname = App.config(COMPANY_PNAME);
-		String nikename = App.config(COMPANY_NICK_NAME);
-		model.addAttribute("date", Calendars.date());
-		model.addAttribute("emial", "hermes");
-		model.addAttribute("companyName", companyName);
-		model.addAttribute("website", website);
-		model.addAttribute("nikename", nikename);
-		model.addAttribute("pname", pname);
-
-		return "agree/register";
+	@RequestMapping("/registerProtocol")
+	public String registerProtocol(Model model) {
+		model.addAttribute("operator", App.config(COMPANY_NAME)); //平台运营方
+		model.addAttribute("platformName", App.config(COMPANY_PNAME));
+		model.addAttribute("platformNetAddr", App.config(WEBSITE));
+		model.addAttribute("platformNickName", App.config(COMPANY_NICK_NAME));
+		return "agree/registerProtocol";
 	}
 }

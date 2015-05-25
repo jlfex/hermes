@@ -20,7 +20,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import com.jlfex.hermes.common.Logger;
@@ -30,11 +30,10 @@ import com.jlfex.hermes.common.utils.Files;
 import com.jlfex.hermes.common.utils.Strings;
 
 /**
- * 
+ * httpClient4.2.6
  * @author Administrator
  *
  */
-@SuppressWarnings("deprecation")
 public class HttpClientUtil {
 
 	private static  HttpClient httpClient;
@@ -50,9 +49,13 @@ public class HttpClientUtil {
 	private static  final  int  RSP_400 = 400;
 	
 	static {
-		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager());
-		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_TIMEOUT); //设置连接超时
-		httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,SO_TIMEOUT);//设置读取超时
+		PoolingClientConnectionManager pcm = new PoolingClientConnectionManager();  
+		pcm.setMaxTotal(200);  
+	    pcm.setDefaultMaxPerRoute(pcm.getMaxTotal());  
+		httpClient = new DefaultHttpClient(pcm);
+		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  CONNECTION_TIMEOUT); //设置连接超时
+		httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,   SO_TIMEOUT);//设置读取超时
+		httpClient.getParams().setParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8192 * 6);
 	}
 	
 	/**

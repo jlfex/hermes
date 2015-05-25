@@ -13,6 +13,7 @@
 					<th>已还本息(<@messages key="common.unit.cny" />)</th>
 					<th>未还本息(<@messages key="common.unit.cny" />)</th>
 					<th><@messages key="common.status" /></th>
+					<th>协议</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,6 +28,7 @@
 					<td class="right">${l.repayedPI}</td>
 					<td class="right">${l.unRepayPI}</td>
 					<td>${l.loanStatusName}</td>
+					<td>协议</td>
 				</tr>
 				</#list>
 			</tbody>
