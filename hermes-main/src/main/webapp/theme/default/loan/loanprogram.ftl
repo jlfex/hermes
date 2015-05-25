@@ -54,7 +54,6 @@ jQuery(function($) {
 			    var enCodeParams='';
 				if (data.typeName === 'success') {
 					enCodeParams = data.firstMessage;
-					openwindow("${app}/loan/loanagree?params="+enCodeParams,"",1000,800);
 				}
 				openwindow("${app}/loan/loanagree?params="+enCodeParams,"",1000,800);
 			}

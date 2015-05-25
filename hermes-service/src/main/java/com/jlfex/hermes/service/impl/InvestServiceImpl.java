@@ -1188,5 +1188,22 @@ public class InvestServiceImpl implements InvestService {
 	public List<Invest> findByLoanAndStatus(Loan loan, String status) throws Exception {
 		return investRepository.findByLoanAndStatus(loan, status);
 	}
+	
+	@Override
+	public List<InvestInfo> findInvestInfoByLoan(Loan loan) {
+		List<Invest> investList = investRepository.findByLoan(loan);
+		List<InvestInfo> investInfoList = new ArrayList<InvestInfo>();
+		InvestInfo investInfo = null;
+		for (Invest invest : investList) {
+			investInfo = new InvestInfo();
+			investInfo.setRealName(App.user().getName());
+			investInfo.setAmount(invest.getAmount());
+			BigDecimal rate = invest.getLoan().getRate().divide(new BigDecimal(12), 10, RoundingMode.HALF_UP).multiply(new BigDecimal(invest.getLoan().getPeriod()));
+			BigDecimal interest = invest.getAmount().multiply(rate);
+			investInfo.setExpectProfit(Numbers.toCurrency(invest.getAmount().add(interest)));
+			investInfoList.add(investInfo);
+		}
+		return investInfoList;
+	}
 
 }

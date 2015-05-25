@@ -3,6 +3,7 @@ package com.jlfex.hermes.main;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -424,7 +425,7 @@ public class LoanController {
 	}
 
 	/**
-	 * 借款协议
+	 * 借款协议 模板
 	 * @param model
 	 * @param request
 	 * @return
@@ -537,5 +538,60 @@ public class LoanController {
 			result.addMessage("");
 		}
 		return result;
+	}
+	
+	@RequestMapping("/loanDetailAgree")
+	public String loanDetailAgree(Model model, HttpServletRequest request) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		String loanId = request.getParameter("loanId");
+		UserProperties userPps = userPropertiesRepository.findByUserId(curUser.getId());
+		model.addAttribute("loaner", userPps.getRealName());
+		model.addAttribute("loanerCertiID", userPps.getIdNumber());
+		model.addAttribute("operator", App.config(COMPANY_NAME));
+		model.addAttribute("companyAddr", App.config(COMPANY_ADDRESS));
+		model.addAttribute("platformNetAddr", App.config("app.website"));
+		Loan loan = null;
+		try {
+			loan = loanService.findById(loanId);
+			model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() );
+			model.addAttribute("repayName", loan.getRepay().getName());
+			model.addAttribute("period", loan.getPeriod());
+			model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");
+			model.addAttribute("amount", loan.getAmount());
+			model.addAttribute("monthFee", calManagemefee(loan));
+			List<LoanRepay> repayPlan = loanService.getRepayPlan(loan);
+			List<InvestInfo> investInfoList = investService.findInvestInfoByLoan(loan);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			BigDecimal totalExpectProfit = BigDecimal.ZERO;
+			for(InvestInfo info : investInfoList){
+				if(info!=null){
+					totalAmount = totalAmount.add(info.getAmount());
+					totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim()));
+				}
+			}
+			model.addAttribute("totalAmount", totalAmount);
+			model.addAttribute("totalExpectProfit", totalExpectProfit);
+			model.addAttribute("investList",investInfoList);
+			LoanRepay firstRepay = null;
+			for(LoanRepay obj: repayPlan){
+				if(obj.getSequence()!=null && obj.getSequence() == 1){
+					firstRepay = obj;
+					break;
+				}
+			}
+			model.addAttribute("monthRepayAmount",  firstRepay.getAmount());
+			if(firstRepay.getRepayDatetime()!=null){
+				Calendar  firstRepayDate = Calendar.getInstance();
+				firstRepayDate.setTime(firstRepay.getRepayDatetime());
+				model.addAttribute("repay_year", firstRepayDate.get(Calendar.YEAR));
+				model.addAttribute("repay_month", firstRepayDate.get(Calendar.MONTH)+1);
+				model.addAttribute("repay_day", firstRepayDate.get(Calendar.DATE));
+			}
+		} catch (Exception e) {
+			Logger.error("查看我的借款协议异常,loanid="+loanId, e);
+		}
+		return "agree/loan";
+		
 	}
 }
