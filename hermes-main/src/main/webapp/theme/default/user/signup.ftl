@@ -42,8 +42,14 @@ $(document).ready(function(){
 			var iLeft = (window.screen.availWidth-10-iWidth)/2; 
 			window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
-	$("#protocol").click(function(){
+	//注册协议
+	$("#registProtocol").click(function(){
 		openwindow("${app}/userIndex/registerProtocol","",1000,800);
+				
+	});
+	//咨询服务协议
+	$("#counselProtocol").click(function(){
+		openwindow("${app}/userIndex/counselProtocol","",1000,800);
 				
 	});
 
@@ -214,7 +220,8 @@ $(function(){
 				<@messages key="sign.up.account" /><a href="${app}/userIndex/skipSignIn" class="m_a1"><@messages key="sign.up.signin" /></a>
 			</div>
 			<div class="m_item m_font12">
-			<a href="#" id="protocol" class="m_a1"><@messages key="sign.up.terms" /></a>
+			<a href="#" id="registProtocol" class="m_a1"><@messages key="sign.up.terms" /></a>&nbsp;&nbsp;
+			<a href="#" id="counselProtocol" class="m_a1">《咨询服务协议》</a>
 			</div>
 		</form>
 	</div>
