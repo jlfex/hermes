@@ -169,4 +169,14 @@ public class IndexController {
 		@Element("使用帮助")
 		public static final String HELP = "help";
 	}
+	/**
+	 * 获取当前token
+	 * @return
+	 */
+	@RequestMapping("/token")
+	@ResponseBody
+	public String token() {
+		return App.current().getToken();
+	}
+	
 }

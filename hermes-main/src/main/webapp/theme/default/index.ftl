@@ -51,7 +51,7 @@ $(function(){
 						&nbsp;&nbsp;|&nbsp;&nbsp;<#t>
 						<a href="${app}/userIndex/regNow"><@messages key="index.sign.in.signup" /></a><#t>
 					</p>
-					<input  name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
+					<input id="token" name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
 				</div>			
 			</form>
 			</#if>
@@ -211,31 +211,47 @@ jQuery(function($) {
 	$('#signInForm').submit(function() {
 		// 初始化
 		var _elem = $(this);
-		
-		// 提交异步请求
-		$.ajax('${app}/userIndex/signIn', {
-			data: _elem.serialize(),
+		vartoken = '';
+		$.ajax('${app}/token', {
 			type: 'post',
 			dataType: 'json',
 			timeout: 5000,
-			success: function(data, textStatus, xhr) {
-				if (data.typeName === 'success') {
-					window.location.href = '${app}';
-				}else if(data.typeName == 'cellphone_notauth'){   //手机未认证
-				    window.location.href = '${app}/userIndex/authCellPhone?email=' + $('#email').val();
-				}else if(data.typeName == 'name_notauth'){   //实名未认证											
-					window.location.href = '${app}/userIndex/authName?email=' + $('#email').val();								
-				}else if(data.typeName == 'bankcard_notauth'){   //银行卡未认证
-					window.location.href = '${app}/userIndex/authBankCard?email=' + $('#email').val();			
-				}else if (data.typeName === 'warning') {
-					window.location.href = '${app}/userIndex/resendMail?email=' + $('#email').val();
-				} else if (data.typeName === 'failure') {
-					$('#signPassword').val('').attr('placeholder', data.firstMessage).parent().addClass('has-error');
-					$('#email').parent().addClass('has-error');
-				}
-			}
-		});
-		
+			success: function(data) {
+				$("#token").val(data);
+				// 提交异步请求
+				$.ajax('${app}/userIndex/signIn', {
+					data: _elem.serialize(),
+					type: 'post',
+					dataType: 'json',
+					timeout: 5000,
+					success: function(data, textStatus, xhr) {
+						if (data.typeName === 'success') {
+							window.location.href = '${app}';
+						}else if(data.typeName == 'cellphone_notauth'){   //手机未认证
+						    window.location.href = '${app}/userIndex/authCellPhone?email=' + $('#email').val();
+						}else if(data.typeName == 'name_notauth'){   //实名未认证											
+							window.location.href = '${app}/userIndex/authName?email=' + $('#email').val();								
+						}else if(data.typeName == 'bankcard_notauth'){   //银行卡未认证
+							window.location.href = '${app}/userIndex/authBankCard?email=' + $('#email').val();			
+						}else if (data.typeName === 'warning') {
+							window.location.href = '${app}/userIndex/resendMail?email=' + $('#email').val();
+						} else if (data.typeName === 'failure') {
+							$('#signPassword').val('').attr('placeholder', data.firstMessage).parent().addClass('has-error');
+							$('#email').parent().addClass('has-error');
+						}
+					},
+					error:function(data){
+					    $('#signPassword').val('').attr('placeholder', "令牌不能为空").parent().addClass('has-error');
+						$('#email').parent().addClass('has-error');
+					} 
+				});
+				return false;
+			},
+			error:function(data){
+			    $('#signPassword').val('').attr('placeholder', "令牌不能为空").parent().addClass('has-error');
+				$('#email').parent().addClass('has-error');
+			} 
+		});  
 		// 中断事件
 		return false;
 	});
