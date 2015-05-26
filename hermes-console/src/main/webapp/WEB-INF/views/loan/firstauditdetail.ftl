@@ -70,6 +70,7 @@ jQuery(function($) {
 	action: function() {
 		doSubmit();
 		this.close(); 
+		this.destroy();
 		}
 	});
 	var confirmReject = $.scojs_confirm({  
@@ -77,6 +78,7 @@ jQuery(function($) {
 	action: function() {
 		doSubmit();
 		this.close(); 
+		this.destroy();
 		}
 	});
 		

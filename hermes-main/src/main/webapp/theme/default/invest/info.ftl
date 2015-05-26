@@ -14,146 +14,154 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript">
 jQuery(function() {
-    var  validFlag = '${validFlag!''}';
-    if(validFlag == '03'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-       $("#authName_msg").show();
-    }else if(validFlag == '04'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-       $("#authCellphone_msg").show();   
-    }else if(validFlag == '05'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-       $("#authBankcard_msg").show();        
-    }    
-    if(validFlag == '01'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-    }
-    if(validFlag == '02'){
-       $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
-       $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
-    }
-    
-    $('#funanceProtocol').click(function(){
-		openwindow("${app}/loan/funanceProtocol","",1000,800);
-	});
-	$('.deal').click(function(){
-		openwindow("${app}/loan/deal/${loan.id}","",1000,800);
-	});
-
-	function openwindow(url,name,iWidth,iHeight)
-	{
-		var url; //转向网页的地址;
-		var name; //网页名称，可为空;
-		var iWidth; //弹出窗口的宽度;
-		var iHeight; //弹出窗口的高度;
-		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
-		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
-		window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+	var validFlag = '${validFlag!''}';
+	if (validFlag == '03') {
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+	    $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+	    $("#authName_msg").show();
+	} else if (validFlag == '04') {
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+	    $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+	    $("#authCellphone_msg").show();
+	} else if (validFlag == '05') {
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+	    $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+	    $("#authBankcard_msg").show();
+	}
+	if (validFlag == '01') {
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+	    $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
+	}
+	if (validFlag == '02') {
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
+	    $("#err_msg").addClass("mv_error").html('${tipMsg!''}');
 	}
 	
-	 $('.confirm').click(function(){
-	  	var investamount =$("#investamount").val();
-	 	var cr = $("#cr").is(':checked');
-	 	if(!cr || investamount.length == 0) {
-	 		return;
-	 	}
-	    var loanKind = '${loanKind!''}' ;
-	    if(validFlag == 'false'){
-	       return ;
+	$('#funanceProtocol').click(function() {
+	    openwindow("${app}/loan/funanceProtocol", "", 1000, 800);
+	});
+	$('.deal').click(function() {
+	    openwindow("${app}/loan/deal/${loan.id}", "", 1000, 800);
+	});
+	
+	function openwindow(url, name, iWidth, iHeight) {
+	    var url; //转向网页的地址;
+	    var name; //网页名称，可为空;
+	    var iWidth; //弹出窗口的宽度;
+	    var iHeight; //弹出窗口的高度;
+	    var iTop = (window.screen.availHeight - 30 - iHeight) / 2; //获得窗口的垂直位置;
+	    var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //获得窗口的水平位置;
+	    window.open(url, name, 'height=' + iHeight + ',,innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+	}
+	
+	$('.confirm').bind('click', bid);
+	
+	function bid() {
+	    $('.confirm').unbind('click', bid);
+	    var investamount = $("#investamount").val();
+	    var loanKind = '${loanKind!''}';
+	    if (validFlag == 'false') {
+	    	$('.confirm').bind('click', bid);
+	        return;
 	    }
-	    if(loanKind == '03'){
-		   var url = '${app}/invest/goJlfexBid';
-		   $("#loanDetail").attr("action",url);
-		   $("#loanDetail").submit();
-	    }else{
-	    	$.ajax({
-				data: $("#loanDetail").serialize(),
-			     url: "${app}/invest/bid",
-			    type: "POST",
-			    dataType: 'json',
-				success: function(data){
-					if(data.type=="SUCCESS"){
-						var url = '${app}/invest/bidsuccess';
-					   	$("#loanDetail").attr("action",url);
-					   	
-					   	$("#loanDetail").submit();
-					}else if(data.type=="WARNING"){
-						window.location.href="${app}/userIndex/skipSignIn";
-					}else if(data.type=="FAILURE"){
-					    window.location.href="${app}/invest/bidInvalid";
-					}else{
-						window.location.href="${app}/invest/bidfull";
-					}
-				}
-			});
-	 	}
-	  });
-	  
- 		 
-		var remaintime =$("#remaintime").val();
-		setTime();
-		function setTime() 
-		{
-			var day=24*60*60*1000;
-			var hour=60*60*1000;
-			var minute=60*1000;
-			var second=1000;
-	    	var str=0;
-	    	if(remaintime>0)
-	    	{
-		    	var  _day=parseInt(remaintime/day);
-		    	var _hour=parseInt(remaintime%day/hour);
-		    	var _minute=parseInt(remaintime%day%hour/minute);
-		    	var _seconds=parseInt(remaintime%day%hour%minute/second);
-		    	str= _day+'天'+_hour+'时'+_minute+'分'+_seconds+'秒';
-			}
-	   		$("#timeleft").html(str);
-	   		remaintime=remaintime-1000;
-	    	setTimeout(function(){setTime()},1000);
-		}
-		
-		$('#investamount').blur(function()
-		{
-			var investamount =$("#investamount").val();
-			var loanid =$("#loanid").val();
-			var msg =$('#investamount').siblings("span").text();
-			if(msg.length==1)
-			{
-			  	htmlobj=$.ajax({
-			  			url:'${app}/invest/calmaturegain',
-			  			data: {"investamount":investamount,"loanid":loanid},
-			  			dataType: "json",
-			  			async:false});
-				$("#maturegain").html(htmlobj.responseText+"&nbsp;&nbsp;元");
-			}else{
-				$("#maturegain").html('');
-			}
-	  });
-});
+	    if (loanKind == '03') {
+	        var url = '${app}/invest/goJlfexBid';
+	        $("#loanDetail").attr("action", url);
+	        $("#loanDetail").submit();
+	    } else {
+	        $.ajax({
+	            data: $("#loanDetail").serialize(),
+	            url: "${app}/invest/bid",
+	            type: "POST",
+	            dataType: 'json',
+	            success: function(data) {
+	                if (data.type == "SUCCESS") {
+	                    var url = '${app}/invest/bidsuccess';
+	                    $("#loanDetail").attr("action", url);
+	
+	                    $("#loanDetail").submit();
+	                } else if (data.type == "WARNING") {
+	                    window.location.href = "${app}/userIndex/skipSignIn";
+	                } else if (data.type == "FAILURE") {
+	                    window.location.href = "${app}/invest/bidInvalid";
+	                } else {
+	                    window.location.href = "${app}/invest/bidfull";
+	                }
+	            }
+	        });
+	    }
+	}
+	
+	var remaintime = $("#remaintime").val();
+	setTime();
+	function setTime() {
+	    var day = 24 * 60 * 60 * 1000;
+	    var hour = 60 * 60 * 1000;
+	    var minute = 60 * 1000;
+	    var second = 1000;
+	    var str = 0;
+	    if (remaintime > 0) {
+	        var _day = parseInt(remaintime / day);
+	        var _hour = parseInt(remaintime % day / hour);
+	        var _minute = parseInt(remaintime % day % hour / minute);
+	        var _seconds = parseInt(remaintime % day % hour % minute / second);
+	        str = _day + '天' + _hour + '时' + _minute + '分' + _seconds + '秒';
+	    }
+	    $("#timeleft").html(str);
+	    remaintime = remaintime - 1000;
+	    setTimeout(function() {
+	        setTime()
+	    },
+	    1000);
+	}
+	
+	$('#investamount').blur(function() {
+	    var investamount = $("#investamount").val();
+	    var loanid = $("#loanid").val();
+	    var msg = $('#investamount').siblings("span").text();
+	    if (msg.length == 1) {
+	        htmlobj = $.ajax({
+	            url: '${app}/invest/calmaturegain',
+	            data: {
+	                "investamount": investamount,
+	                "loanid": loanid
+	            },
+	            dataType: "json",
+	            async: false
+	        });
+	        $("#maturegain").html(htmlobj.responseText + "&nbsp;&nbsp;元");
+	    } else {
+	        $("#maturegain").html('');
+	    }
+	});
+	});
 
-   Date.prototype.format = function(format){ 
-		var o = { 
-		"M+" : this.getMonth()+1, //month 
-		"d+" : this.getDate(), //day 
-		"h+" : this.getHours(), //hour 
-		"m+" : this.getMinutes(), //minute 
-		"s+" : this.getSeconds(), //second 
-		"q+" : Math.floor((this.getMonth()+3)/3), //quarter 
-		"S" : this.getMilliseconds() //millisecond 
-   } 
-	if(/(y+)/.test(format)) { 
-	   format = format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
-	} 
-	for(var k in o) { 
-	if(new RegExp("("+ k +")").test(format)) { 
-	format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)); 
-	} } 
-    return format; 
-    } 
+	Date.prototype.format = function(format) {
+	    var o = {
+	        "M+": this.getMonth() + 1,
+	        //month 
+	        "d+": this.getDate(),
+	        //day 
+	        "h+": this.getHours(),
+	        //hour 
+	        "m+": this.getMinutes(),
+	        //minute 
+	        "s+": this.getSeconds(),
+	        //second 
+	        "q+": Math.floor((this.getMonth() + 3) / 3),
+	        //quarter 
+	        "S": this.getMilliseconds() //millisecond 
+	    }
+	    if (/(y+)/.test(format)) {
+	        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    }
+	    for (var k in o) {
+	        if (new RegExp("(" + k + ")").test(format)) {
+	            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+	        }
+	    }
+	    return format;
+	}
 </script>
 </head>
 

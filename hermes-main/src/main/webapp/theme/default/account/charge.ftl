@@ -102,6 +102,7 @@ jQuery(function($) {
 	
 	// 绑定添加充值方法
 	$('#addChargeBtn').on('click', function() {
+		$('#addChargeBtn').attr("disabled",true);
 		$.ajax('${app}/account/charge/zjCharge', {
 			data: $('#chargeForm').serialize(),
 			type: 'post',
