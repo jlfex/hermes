@@ -227,10 +227,17 @@ public interface InvestService {
 	 */
 	public List<Invest>  findByLoanAndStatus(Loan loan, String status) throws Exception;
     /**
-     * 根据 债权信息获取 理财信息
+     * 根据 借款信息获取 理财信息
      * @param loan
      * @return
      * @throws Exception
      */
 	public List<InvestInfo> findInvestInfoByLoan(Loan loan) throws Exception;
+
+	/**
+	 * 获取 理财信息
+	 * @param invest
+	 * @return
+	 */
+	public List<InvestInfo> findInvestInfoByInvest(Invest invest);
 }

@@ -43,6 +43,7 @@ import com.jlfex.hermes.model.InvestProfit;
 import com.jlfex.hermes.model.Loan;
 import com.jlfex.hermes.model.LoanAuth;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.LoanRepay;
 import com.jlfex.hermes.model.Repay;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -70,6 +71,7 @@ import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.finance.FinanceOrderService;
 import com.jlfex.hermes.service.financePlan.FinanceRepayPlanService;
+import com.jlfex.hermes.service.loanRepay.LoanRepayService;
 import com.jlfex.hermes.service.order.jlfex.JlfexOrderService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanUserInfo;
@@ -124,6 +126,8 @@ public class InvestController {
 	private UserPropertiesRepository userPropertiesRepository;
 	@Autowired
 	private CFCAOrderRepository cfcaOrderRepository;
+	@Autowired
+	private LoanRepayService loanRepayService;
 
 	// 正在招标中的Cache的info
 	private static final String CACHE_LOAN_DEADLINE_PREFIX = "com.jlfex.hermes.cache.loan.deadline.";
@@ -1166,6 +1170,73 @@ public class InvestController {
 			model.addAttribute("totalAmount", totalAmount);	 //总金额合计
 		}
 		return "invest/assignProtocol";
+	}
+	
+	/**
+	 * 我的理财  协议查看
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/investAgree")
+	public String investAgree(Model model, HttpServletRequest request) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		String investId = request.getParameter("investId");
+		UserProperties userPps = userPropertiesRepository.findByUserId(curUser.getId());
+		model.addAttribute("loaner", userPps.getRealName());
+		model.addAttribute("loanerCertiID", userPps.getIdNumber());
+		model.addAttribute("operator", App.config("app.company.name"));
+		model.addAttribute("companyAddr", App.config("app.company.address"));
+		model.addAttribute("platformNetAddr", App.config("app.website"));
+		Loan loan = null;
+		try {
+			Invest  invest = investService.loadById(investId);
+			loan = loanService.findById(invest.getLoan().getId());
+			LoanLog fullLoanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.LOAN);
+			// 如果没有满标放款  都是空模板展示
+			if(fullLoanLog != null){
+				model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() );
+				model.addAttribute("repayName", loan.getRepay().getName());
+				model.addAttribute("period", loan.getPeriod());
+				model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");
+				model.addAttribute("amount", loan.getAmount());
+				model.addAttribute("monthFee", loanService.calManagemefee(loan));
+				List<InvestInfo> investInfoList = investService.findInvestInfoByInvest(invest);
+				BigDecimal totalAmount = BigDecimal.ZERO;
+				BigDecimal totalExpectProfit = BigDecimal.ZERO;
+				for(InvestInfo info : investInfoList){
+					if(info!=null){
+						totalAmount = totalAmount.add(info.getAmount());
+						totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim()));
+					}
+				}
+				model.addAttribute("totalAmount", totalAmount);
+				model.addAttribute("totalExpectProfit", totalExpectProfit);
+				model.addAttribute("investList",investInfoList);
+				//每月还款
+				LoanRepay firstRepay = loanRepayService.findByLoanAndSequence(loan, 1);
+				model.addAttribute("monthRepayAmount",  firstRepay.getAmount());
+				if(firstRepay.getPlanDatetime()!=null){
+					Calendar  firstRepayDate = Calendar.getInstance();
+					firstRepayDate.setTime(firstRepay.getPlanDatetime());
+					model.addAttribute("repay_year", String.valueOf(firstRepayDate.get(Calendar.YEAR)).replace(",", ""));  //还款年
+					model.addAttribute("repay_month", firstRepayDate.get(Calendar.MONTH)+1);//还款月
+					model.addAttribute("repay_day", firstRepayDate.get(Calendar.DATE));//还款日
+				}
+				//放款时间
+				if(fullLoanLog!=null){
+					Calendar  fullDate = Calendar.getInstance();
+					fullDate.setTime(fullLoanLog.getDatetime()); 
+					model.addAttribute("fk_year", String.valueOf(fullDate.get(Calendar.YEAR)).replace(",", ""));  //放款年
+					model.addAttribute("fk_month", fullDate.get(Calendar.MONTH)+1);//放款月
+					model.addAttribute("fk_day", fullDate.get(Calendar.DATE));//放款日
+				}
+			}
+		} catch (Exception e) {
+			Logger.error("查看我的理财协议异常,investId="+investId, e);
+		}
+		return "agree/loan";
 	}
 	
 }

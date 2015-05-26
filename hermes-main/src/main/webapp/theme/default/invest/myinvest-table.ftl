@@ -13,6 +13,7 @@
 					<th><@messages key="invest.received.pi" />(<@messages key="common.unit.cny" />)</th>
 					<th><@messages key="invest.wait.receive.pi" />(<@messages key="common.unit.cny" />)</th>
 					<th><@messages key="common.status" /></th>
+					<th>协议</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,6 +28,7 @@
 					<td class="right">${i.receivedPI}</td>
 					<td class="right">${i.waitReceivePI}</td>
 					<td class="right">${i.investStatusName}</td>
+					<td><span class="view" data-val="${i.id}"><a href="#" class="m_a1">协议</a></span></td> 
 				</tr>
 				</#list>
 			</tbody>
@@ -79,6 +81,24 @@ jQuery(function($) {
 			$('#page').val($(this).data().page);
 			$('#searchForm').trigger('submit');
 		});
+		
+		//协议查看
+		$('.view').click(function(){
+		    var id = $(this).attr("data-val");
+			openwindow("${app}/invest/investAgree?investId="+id,"",1000,800);
+		});
+		
+		function openwindow(url,name,iWidth,iHeight)
+		{
+			var url; //转向网页的地址;
+			var name; //网页名称，可为空;
+			var iWidth; //弹出窗口的宽度;
+			var iHeight; //弹出窗口的高度;
+			var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+			var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+			return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+		}
+		
 	});
 });
 //-->
