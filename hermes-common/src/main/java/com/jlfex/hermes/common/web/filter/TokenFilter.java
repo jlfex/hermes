@@ -40,7 +40,8 @@ public class TokenFilter implements Filter {
 					Logger.warn("token令牌不匹配： %s and %s.", token, App.current().getToken());
 					throw new ServiceException("token令牌不匹配：", "app.exception.token");
 				}
-				App.current().updateToken();
+				String newToken = App.current().updateToken();
+				Logger.info("重新生成token="+newToken);
 			}
 		}
 		chain.doFilter(req, resp);
