@@ -590,4 +590,15 @@ public class UserController {
 		model.addAttribute("platformNickName", App.config(COMPANY_NICK_NAME));
 		return "agree/registerProtocol";
 	}
+	/**
+	 * 咨询服务协议
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/counselProtocol")
+	public String counselProtocol(Model model) {
+		model.addAttribute("platformName", App.config(COMPANY_PNAME));
+		return "agree/counselServeProtocol";
+	}
+	
 }
