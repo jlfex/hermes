@@ -69,6 +69,7 @@ import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.InvestProfitRepository;
 import com.jlfex.hermes.repository.InvestRepository;
 import com.jlfex.hermes.repository.LoanLogRepository;
+import com.jlfex.hermes.repository.LoanRepayRepository;
 import com.jlfex.hermes.repository.LoanRepository;
 import com.jlfex.hermes.repository.PPLimitRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
@@ -176,6 +177,8 @@ public class InvestServiceImpl implements InvestService {
 	private LoanService loanService;
 	@Autowired
 	private LoanRepayService loanRepayService;
+	@Autowired
+	private LoanRepayRepository loanRepayRepository;
 
 	@Override
 	public Invest save(Invest invest) {
@@ -1192,15 +1195,22 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public List<InvestInfo> findInvestInfoByLoan(Loan loan) {
 		List<Invest> investList = investRepository.findByLoan(loan);
+		List<LoanRepay> loanRepayList = loanRepayRepository.findByLoan(loan);
+		LoanRepay firstRepay = null;
+		if(loanRepayList!=null && loanRepayList.size() > 0){
+			firstRepay = loanRepayList.get(loanRepayList.size()-1);
+		}
 		List<InvestInfo> investInfoList = new ArrayList<InvestInfo>();
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
 			investInfo.setRealName(App.user().getName());
 			investInfo.setAmount(invest.getAmount());
-			BigDecimal rate = invest.getLoan().getRate().divide(new BigDecimal(12), 10, RoundingMode.HALF_UP).multiply(new BigDecimal(invest.getLoan().getPeriod()));
-			BigDecimal interest = invest.getAmount().multiply(rate);
-			investInfo.setExpectProfit(Numbers.toCurrency(invest.getAmount().add(interest)));
+			if(firstRepay!=null){
+				investInfo.setExpectProfit(Numbers.toCurrency(firstRepay.getAmount().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN)));
+			}else{
+				investInfo.setExpectProfit("0");
+			}
 			investInfoList.add(investInfo);
 		}
 		return investInfoList;

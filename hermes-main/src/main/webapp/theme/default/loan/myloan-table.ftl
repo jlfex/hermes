@@ -28,7 +28,9 @@
 					<td class="right">${l.repayedPI}</td>
 					<td class="right">${l.unRepayPI}</td>
 					<td>${l.loanStatusName}</td>
-					<td><span class="view" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span></td>
+					<td>
+					 <span class="viewFull" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					</td> 
 				</tr>
 				</#list>
 			</tbody>
@@ -82,10 +84,15 @@ jQuery(function($) {
 		});
 	});
 	
-	
-	$('.view').click(function(){
-		openwindow("${app}/loan/loanDetailAgree?loanId="+$('.view').attr("data-val"),"",1000,800);
+	// 模板
+	$('.viewModel').click(function(){
+		openwindow("${app}/loan/loanModelAgree","",1000,800);
 	});
+	// 满标
+	$('.viewFull').click(function(){
+		openwindow("${app}/loan/loanFullAgree?loanId="+$('.viewFull').attr("data-val"),"",1000,800);
+	});
+	
 	function openwindow(url,name,iWidth,iHeight)
 	{
 		var url; //转向网页的地址;
