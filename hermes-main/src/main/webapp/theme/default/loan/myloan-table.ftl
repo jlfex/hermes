@@ -29,7 +29,11 @@
 					<td class="right">${l.unRepayPI}</td>
 					<td>${l.loanStatusName}</td>
 					<td>
-					 <span class="viewFull" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					<#if (l.status)?? && l.status == '11'>
+					   <span class="viewFull" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					<#else>
+					   <span class="viewModel" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					</#if>
 					</td> 
 				</tr>
 				</#list>
