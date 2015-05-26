@@ -474,6 +474,9 @@ public class Loan extends Model {
 	 * @return
 	 */
 	public Integer getProgress() {
+		if(getAmount().compareTo(BigDecimal.ZERO) == 0){
+			 return 0;
+		}
 		return getProceeds().multiply(BigDecimal.valueOf(100)).divide(getAmount(), 0, RoundingMode.DOWN).intValue();
 	}
 	
