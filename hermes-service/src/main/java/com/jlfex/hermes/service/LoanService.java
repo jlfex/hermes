@@ -341,5 +341,12 @@ public interface LoanService {
 	 * @throws Exception
 	 */
 	public Loan  findById(String id) throws Exception;
+
+	/**
+	 *  计算月缴管理费
+	 * @param loan
+	 * @return
+	 */
+	public BigDecimal calManagemefee(Loan loan) ;
 	
 }

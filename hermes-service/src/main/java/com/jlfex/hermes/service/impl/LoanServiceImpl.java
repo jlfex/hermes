@@ -442,10 +442,10 @@ public class LoanServiceImpl implements LoanService {
 				investProfit.setInvest(invest);
 				investProfit.setLoanRepay(loanRepay);
 				investProfit.setDate(loanRepay.getPlanDatetime());
-				investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
-				investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio().setScale(2, RoundingMode.HALF_UP)));
+				investProfit.setAmount(loanRepay.getAmount().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN));
+				investProfit.setPrincipal(loanRepay.getPrincipal().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN));
+				investProfit.setInterest(loanRepay.getInterest().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN));
+				investProfit.setOverdueInterest(loanRepay.getOverdueInterest().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN));
 				investProfit.setStatus(InvestProfit.Status.WAIT);
 				investProfitList.add(investProfit);
 			}
@@ -1409,5 +1409,20 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	public Loan findById(String id) throws Exception {
 		return loanRepository.findOne(id);
+	}
+	
+	/**
+	 * 计算月缴管理费
+	 */
+	@Override
+	public BigDecimal calManagemefee(Loan loan) {
+		BigDecimal managefee = BigDecimal.ZERO;
+		// 借款类型00为百分比，借款金额X百分比值 01为固定值
+		if ("00".equals(loan.getManageFeeType())) {
+			managefee = (loan.getAmount().multiply(loan.getManageFee())).setScale(2, RoundingMode.HALF_UP);
+		} else if ("01".equals(loan.getManageFeeType())) {
+			managefee = loan.getManageFee();
+		}
+		return managefee;
 	}
 }

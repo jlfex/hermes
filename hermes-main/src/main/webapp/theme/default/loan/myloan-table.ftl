@@ -94,7 +94,8 @@ jQuery(function($) {
 	});
 	// 满标
 	$('.viewFull').click(function(){
-		openwindow("${app}/loan/loanFullAgree?loanId="+$('.viewFull').attr("data-val"),"",1000,800);
+	    var id = $(this).attr("data-val");
+		openwindow("${app}/loan/loanFullAgree?loanId="+id,"",1000,800);
 	});
 	
 	function openwindow(url,name,iWidth,iHeight)

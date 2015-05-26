@@ -1192,6 +1192,9 @@ public class InvestServiceImpl implements InvestService {
 		return investRepository.findByLoanAndStatus(loan, status);
 	}
 	
+	/**
+	 * 根据借款获取理财信息
+	 */
 	@Override
 	public List<InvestInfo> findInvestInfoByLoan(Loan loan) {
 		List<Invest> investList = investRepository.findByLoan(loan);
@@ -1215,5 +1218,27 @@ public class InvestServiceImpl implements InvestService {
 		}
 		return investInfoList;
 	}
-
+	
+	/**
+	 * 获取理财信息
+	 */
+	@Override
+	public List<InvestInfo> findInvestInfoByInvest(Invest invest) {
+		List<LoanRepay> loanRepayList = loanRepayRepository.findByLoan(invest.getLoan());
+		LoanRepay firstRepay = null;
+		if(loanRepayList!=null && loanRepayList.size() > 0){
+			firstRepay = loanRepayList.get(loanRepayList.size()-1);
+		}
+		List<InvestInfo> investInfoList = new ArrayList<InvestInfo>();
+		InvestInfo investInfo = new InvestInfo();
+		investInfo.setRealName(App.user().getName());
+		investInfo.setAmount(invest.getAmount());
+		if(firstRepay!=null){
+			investInfo.setExpectProfit(Numbers.toCurrency(firstRepay.getAmount().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN)));
+		}else{
+			investInfo.setExpectProfit("0");
+		}
+		investInfoList.add(investInfo);
+		return investInfoList;
+	}
 }
