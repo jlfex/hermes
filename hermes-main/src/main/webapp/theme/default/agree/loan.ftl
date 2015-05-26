@@ -52,7 +52,7 @@
 						<tr>
 							<th>用户名</th>
 							<th>投资金额</th>
-							<th>应收本息</th>
+							<th>每月应收本息</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -115,7 +115,7 @@
 						</tr>
 						<tr>
 							<td>月偿还本息数额</td>
-							<td>&nbsp;${monthRepayAmount!''}</td>
+							<td>&nbsp;${monthRepayAmount!''} 元</td>
 						</tr>
 						<tr>
 							<td>还款分期月数</td>
@@ -210,19 +210,9 @@
 			<p class="lt2em">2、本协议自文本最终生成之日生效。</p>
 			<p class="lt2em">3、本协议签订之日起至借款全部清偿之日止，乙方或甲方有义务在下列信息变更三日内提供更新后的信息给丙方：本人、本人的家庭联系人及紧急联系人、工作单位、居住地址、住所电话、手机号码、电子邮箱、银行账户的变更。若因任何一方不及时提供上述变更信息而带来的损失或额外费用应由该方承担。</p>
 			<p class="lt2em">4、如果本协议中的任何一条或多条违反适用的法律法规，则该条将被视为无效，但该无效条款并不影响本协议其他条款的效力。</p>
-			<p class="time"><span class="red">${fk_year!''}年${fk_month!''}月${fk_day!''}日【放款日期】</span></p>
+			<p class="time"><span class="red">${fk_year!''}年${fk_month!''}月${fk_day!''}日(放款日期)</span></p>
 			<br>
-			<p>(以下无正文)</p>
-			<div class="clearfix"></div>
-            <br><br>
-            <P>甲方 :  ${investorName!''}</P>
-            <br>
-            <br>
-            <P>乙方 : ${loaner!''}</P>
-            <br>
-            <br>
-            <br>
-            <br>
+			
 		</div> 
 	</div>
 </div>

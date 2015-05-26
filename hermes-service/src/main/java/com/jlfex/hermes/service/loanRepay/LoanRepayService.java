@@ -19,5 +19,13 @@ public interface LoanRepayService {
 	 * @return
 	 */
 	public List<LoanRepay> findByLoanAndStatus(Loan loan, String status);
+	
+	/**
+	 * 根据loan + 期数 获取还款计划
+	 * @param loan
+	 * @param sequence
+	 * @return
+	 */
+	public LoanRepay findByLoanAndSequence(Loan loan, Integer sequence);
 
 }

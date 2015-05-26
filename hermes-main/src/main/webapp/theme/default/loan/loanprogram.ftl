@@ -44,20 +44,7 @@ jQuery(function($) {
 		    });
 	});
 	$('.deal').click(function(){
-	    var params ="purpose=${purposeName!''}&repayName=${repayName!''}&monthFee=${monthFee!''}&amount=${amount!''}&rate=${rate!''}&period=${period!''}&monthRepayAmount=${monthRepayAmount!''}&year=${repay_year!''}&month=${repay_month!''}&day=${repay_month!''}";
-		$.ajax('${app}/loan/base64enCode', {
-			data: {params: params},
-			type: 'post',
-			dataType: 'json',
-			timeout: 5000,
-			success: function(data) {
-			    var enCodeParams='';
-				if (data.typeName === 'success') {
-					enCodeParams = data.firstMessage;
-				}
-				openwindow("${app}/loan/loanagree?params="+enCodeParams,"",1000,800);
-			}
-		});
+	   openwindow("${app}/loan/loanModelAgree","",1000,800);
 	});
 	function openwindow(url,name,iWidth,iHeight)
 	{
