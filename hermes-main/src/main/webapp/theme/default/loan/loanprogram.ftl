@@ -56,11 +56,6 @@ jQuery(function($) {
 		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
 		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
-	
-	function sleep(n) {
-	    var start = new Date().getTime();
-	    while(true)  if(new Date().getTime()-start > n) break;
-    }
     
 	jQuery(function($) {
 	    $('.confirm').bind('click', programconfirm);
