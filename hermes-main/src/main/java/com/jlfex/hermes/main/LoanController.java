@@ -1,8 +1,14 @@
 package com.jlfex.hermes.main;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,6 +22,7 @@ import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Numbers;
 import com.jlfex.hermes.common.utils.Strings;
@@ -39,6 +46,7 @@ import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.ProductService;
 import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.loanRepay.LoanRepayService;
 import com.jlfex.hermes.service.pojo.InvestInfo;
 import com.jlfex.hermes.service.pojo.LoanInfo;
 import com.jlfex.hermes.service.pojo.ProductInfo;
@@ -73,7 +81,9 @@ public class LoanController {
 	private BankAccountService bankAccountService;
 	@Autowired 
 	private AreaRepository areaRepository;
-
+	@Autowired
+	private LoanRepayService loanRepayService;
+	
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String COMPANY_ADDRESS = "app.company.address";
 	private static final String COMPANY_PNAME = "app.operation.name";
@@ -267,6 +277,14 @@ public class LoanController {
 		List<LoanRepay> repayPlanList = loanService.getRepayPlan(loan);
 		model.addAttribute("repayPlans", repayPlanList);
 		model.addAttribute("nav", "loan");
+		model.addAttribute("monthFee",  calManagemefee(loan));
+		LoanRepay tempObj = null;
+		for(LoanRepay obj:  repayPlanList){
+			if(obj.getSequence()!= null && obj.getSequence() == 1){
+				tempObj = obj;
+			}
+		}
+		model.addAttribute("monthRepayAmount", tempObj.getAmount());
 		return "loan/loanprogram";
 	}
 
@@ -409,17 +427,42 @@ public class LoanController {
 		return "agree/finance";
 	}
 
-	@RequestMapping("/loanagree")
-	public String loanAgree(Model model) {
-		App.checkUser();
-		AppUser curUser = App.current().getUser();
-		model.addAttribute("curUser", userPropertiesRepository.findByUserId(curUser.getId()));
-		model.addAttribute("now", Calendars.date());
-		String companyName = App.config(COMPANY_NAME);
-		String companyAddress = App.config(COMPANY_ADDRESS);
-		model.addAttribute("companyName", companyName);
-		model.addAttribute("companyAddress", companyAddress);
+	/**
+	 * 借款协议 模板
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/loanModelAgree")
+	public String loanAgree(Model model, HttpServletRequest request) {
 		return "agree/loan";
+	}
+    /**
+     * decodeLoanParam 
+     * @param base64Params
+     * @return
+     */
+	public Map<String, String> decodeLoanParam(String base64Params) {
+		String  params= "";
+		try {
+			params = new String(Base64.decodeBase64(base64Params), HermesConstants.CHARSET_UTF8);
+		} catch (Exception e) {
+			Logger.error("借款参数base64解码异常：", e);
+		}
+		String[] paramArray = params.split("&");
+		Map<String,String> paramMap = new HashMap<String,String>();
+		if(paramArray!=null && paramArray.length > 0){
+			for(int i=0; i<paramArray.length; i++){
+				String param = paramArray[i];
+				if(param!=null && param.contains("=")){
+					String[] paramChar = param.split("=");
+					if(paramChar!=null && paramChar.length == 2){
+						paramMap.put(paramChar[0].trim(), paramChar[1].trim());
+					}
+				}
+			}
+		}
+		return paramMap;
 	}
 	/**
 	 * 支付委托协议
@@ -446,5 +489,94 @@ public class LoanController {
 		model.addAttribute("city", city);  
 		model.addAttribute("province", province);
 		return "agree/payEntrustProtocol";
+	}
+	
+	/**
+	 * 计算月缴管理费
+	 */
+	public BigDecimal calManagemefee(Loan loan) {
+		BigDecimal managefee = BigDecimal.ZERO;
+		// 借款类型00为百分比，借款金额X百分比值 01为固定值
+		if ("00".equals(loan.getManageFeeType())) {
+			managefee = (loan.getAmount().multiply(loan.getManageFee())).setScale(2, RoundingMode.HALF_UP);
+		} else if ("01".equals(loan.getManageFeeType())) {
+			managefee = loan.getManageFee();
+		}
+		return managefee;
+	}
+	/**
+	 * 借款信息base64转码
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping("/base64enCode")
+	@ResponseBody
+	public Result<String> base64enCode(String  params) {
+		Result<String> result = new Result<String>(Result.Type.SUCCESS);
+		try {
+			result.addMessage(Base64.encodeBase64String(params.getBytes(HermesConstants.CHARSET_UTF8)));
+		} catch (Exception e) {
+			Logger.error("借款信息转base64异常",e);
+			result.addMessage("");
+		}
+		return result;
+	}
+	
+	@RequestMapping("/loanFullAgree")
+	public String loanFullAgree(Model model, HttpServletRequest request) {
+		App.checkUser();
+		AppUser curUser = App.current().getUser();
+		String loanId = request.getParameter("loanId");
+		UserProperties userPps = userPropertiesRepository.findByUserId(curUser.getId());
+		model.addAttribute("loaner", userPps.getRealName());
+		model.addAttribute("loanerCertiID", userPps.getIdNumber());
+		model.addAttribute("operator", App.config(COMPANY_NAME));
+		model.addAttribute("companyAddr", App.config(COMPANY_ADDRESS));
+		model.addAttribute("platformNetAddr", App.config("app.website"));
+		Loan loan = null;
+		try {
+			loan = loanService.findById(loanId);
+			model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() );
+			model.addAttribute("repayName", loan.getRepay().getName());
+			model.addAttribute("period", loan.getPeriod());
+			model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");
+			model.addAttribute("amount", loan.getAmount());
+			model.addAttribute("monthFee", calManagemefee(loan));
+			List<InvestInfo> investInfoList = investService.findInvestInfoByLoan(loan);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			BigDecimal totalExpectProfit = BigDecimal.ZERO;
+			for(InvestInfo info : investInfoList){
+				if(info!=null){
+					totalAmount = totalAmount.add(info.getAmount());
+					totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim()));
+				}
+			}
+			model.addAttribute("totalAmount", totalAmount);
+			model.addAttribute("totalExpectProfit", totalExpectProfit);
+			model.addAttribute("investList",investInfoList);
+			//每月还款
+			LoanRepay firstRepay = loanRepayService.findByLoanAndSequence(loan, 1);
+			model.addAttribute("monthRepayAmount",  firstRepay.getAmount());
+			if(firstRepay.getPlanDatetime()!=null){
+				Calendar  firstRepayDate = Calendar.getInstance();
+				firstRepayDate.setTime(firstRepay.getPlanDatetime());
+				model.addAttribute("repay_year", String.valueOf(firstRepayDate.get(Calendar.YEAR)).replace(",", ""));  //还款年
+				model.addAttribute("repay_month", firstRepayDate.get(Calendar.MONTH)+1);//还款月
+				model.addAttribute("repay_day", firstRepayDate.get(Calendar.DATE));//还款日
+			}
+			//放款时间
+			LoanLog fullLoanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.LOAN);
+			if(fullLoanLog!=null){
+				Calendar  fullDate = Calendar.getInstance();
+				fullDate.setTime(fullLoanLog.getDatetime()); 
+				model.addAttribute("fk_year", String.valueOf(fullDate.get(Calendar.YEAR)).replace(",", ""));  //放款年
+				model.addAttribute("fk_month", fullDate.get(Calendar.MONTH)+1);//放款月
+				model.addAttribute("fk_day", fullDate.get(Calendar.DATE));//放款日
+			}
+		} catch (Exception e) {
+			Logger.error("查看我的借款协议异常,loanid="+loanId, e);
+		}
+		return "agree/loan";
+		
 	}
 }

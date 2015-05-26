@@ -334,5 +334,12 @@ public interface LoanService {
      * @return
      */
 	public List<LoanLog>  loadLogByLoanIdAndTypeIn(Loan loan , List<String> typeList);
+	/**
+	 * 根据ID获取loan信息
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public Loan  findById(String id) throws Exception;
 	
 }

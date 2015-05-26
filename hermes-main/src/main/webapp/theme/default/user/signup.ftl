@@ -43,7 +43,7 @@ $(document).ready(function(){
 			window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
 	}
 	$("#protocol").click(function(){
-		openwindow("${app}/userIndex/privacyAndUseProtocol","",1000,800);
+		openwindow("${app}/userIndex/registerProtocol","",1000,800);
 				
 	});
 

@@ -41,9 +41,8 @@ jQuery(function($) {
 	});		
 	$('#searchForm').submit();
 	
-	// 绑定链接点击事件
-	$('a').link().on('click', function() {
-	});
+	
+	
 });
 //-->
 </script>

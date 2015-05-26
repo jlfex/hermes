@@ -213,7 +213,7 @@
 
    jQuery(function($) {
     $('.protocol').click(function(){
-		var win = openwindow("${app}/credit/assignProtocol","",1000,800);
+		var win = openwindow("${app}/credit/assignProtocol/${creditInfo.id!''}","",1000,800);
 	});
     function openwindow(url,name,iWidth,iHeight)
 	{

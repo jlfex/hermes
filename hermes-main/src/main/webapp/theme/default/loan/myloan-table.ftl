@@ -13,6 +13,7 @@
 					<th>已还本息(<@messages key="common.unit.cny" />)</th>
 					<th>未还本息(<@messages key="common.unit.cny" />)</th>
 					<th><@messages key="common.status" /></th>
+					<th>协议</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -27,6 +28,13 @@
 					<td class="right">${l.repayedPI}</td>
 					<td class="right">${l.unRepayPI}</td>
 					<td>${l.loanStatusName}</td>
+					<td>
+					<#if (l.status)?? && l.status == '11'>
+					   <span class="viewFull" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					<#else>
+					   <span class="viewModel" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
+					</#if>
+					</td> 
 				</tr>
 				</#list>
 			</tbody>
@@ -79,6 +87,28 @@ jQuery(function($) {
 			$('#searchForm').trigger('submit');
 		});
 	});
+	
+	// 模板
+	$('.viewModel').click(function(){
+		openwindow("${app}/loan/loanModelAgree","",1000,800);
+	});
+	// 满标
+	$('.viewFull').click(function(){
+		openwindow("${app}/loan/loanFullAgree?loanId="+$('.viewFull').attr("data-val"),"",1000,800);
+	});
+	
+	function openwindow(url,name,iWidth,iHeight)
+	{
+		var url; //转向网页的地址;
+		var name; //网页名称，可为空;
+		var iWidth; //弹出窗口的宽度;
+		var iHeight; //弹出窗口的高度;
+		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
+	}
+	
+	
 });
 //-->
 </script>
