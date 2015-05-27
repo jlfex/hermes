@@ -462,7 +462,7 @@ public class CreditController {
 		String creditorNo = vo.getCreditorNo(); // 债权人编号
 		String creditCode = vo.getCreditCode(); // 债权编号
 		String uniqkey = creditorNo + "_" + creditCode;
-	/*	if (uniqMap.containsKey(uniqkey)) {
+		if (uniqMap.containsKey(uniqkey)) {
 			resultMap.put("flag", FLAG_KIND_ONE);
 			resultMap.put("errMsg", lineInfo + "债权人编号:" + vo.getCreditorNo() + ",债权编号:" + vo.getCreditCode() + "已重复");
 			return resultMap;
@@ -490,7 +490,7 @@ public class CreditController {
 			resultMap.put("code", FLAG_KIND_NINE);
 			resultMap.put("errMsg", lineInfo + "债权人编号:" + creditorNo + ",债权编号:" + creditCode + ", 系统已经存在;");
 			return resultMap;
-		}*/
+		}
 		// 债权类型
 		if (!CreditExcelUtil.CREDIT_KIND.contains(vo.getCreditKind())) {
 			flag = false;
