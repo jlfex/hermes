@@ -58,6 +58,7 @@ jQuery(function() {
 	
 	function bid() {
 	    $('.confirm').unbind('click', bid);
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
 	    var investamount = $("#investamount").val();
 	    var loanKind = '${loanKind!''}';
 	    if (validFlag == 'false') {

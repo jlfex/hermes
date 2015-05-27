@@ -100,7 +100,7 @@ jQuery(function($) {
 	
 	// 添加提现记录
 	$('#addWithdrawBtn').on('click', function() {
-	    
+	    $('#addWithdrawBtn').attr("disabled",true);
 		$.ajax('${app}/account/withdraw/add', {
 			data: $('#withdrawForm').serialize(),
 			type: 'post',
