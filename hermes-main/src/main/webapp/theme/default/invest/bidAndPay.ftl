@@ -27,21 +27,20 @@
 </style>
 <script type="text/javascript">
 jQuery(function($){
-	 $('#confirm').bind('click', bidAndPay);
-     
-     function bidAndPay() {
-     	$('#confirm').unbind('click', bidAndPay);	
-     	$('#confirm').addClass("bt_gray").removeClass("m_bg1");
-     	
-     	var _span = $(".commonChecked").find("span");
-	    if(_span.attr("class").indexOf("mv_right") == -1){
-	    	_span.addClass("mv_error").html(_span.attr("data-msg"));
-	    	 $('#confirm').addClass("m_bg1").removeClass("bt_gray");
-	    	 $('#confirm').bind('click', bidAndPay);
-	        return ;
+     var count = 1;
+     $('#confirm').click(function(){
+        if(count > 1){
+	        $('#confirm').addClass("bt_gray").removeClass("m_bg1");
+	        return false;
 	    }
-	    $("#loanDetail").submit();   
-     }	
+	   count++;
+       var _span = $(".commonChecked").find("span");
+       if(_span.attr("class").indexOf("mv_right") == -1){
+          _span.addClass("mv_error").html(_span.attr("data-msg"));
+          return ;
+       }
+       $("#loanDetail").submit();
+     });
      
     
     $('#payEntrustProtocol').click(function(){
