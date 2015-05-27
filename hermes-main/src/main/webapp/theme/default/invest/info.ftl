@@ -76,7 +76,6 @@ jQuery(function() {
 	            type: "POST",
 	            dataType: 'json',
 	            success: function(data) {
-	            	alert("aa");
 	                if (data.type == "SUCCESS") {
 	                    var url = '${app}/invest/bidsuccess';
 	                    $("#loanDetail").attr("action", url);
@@ -89,9 +88,6 @@ jQuery(function() {
 	                } else {
 	                    window.location.href = "${app}/invest/bidfull";
 	                }
-	            },
-	            error: function(data) {
-	            	alert("bb");
 	            }
 	        });
 	    }
