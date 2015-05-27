@@ -210,13 +210,7 @@ public class UserController {
 	 */
 	@RequestMapping("/signIn")
 	@ResponseBody
-	public Result<?> signIn(User user, String token) {
-		if(Strings.empty(token)){
-			Result<String> result = new Result<String>();
-			result.addMessage(App.message("登陆令牌不能为空"));
-			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			return result;
-		}
+	public Result<?> signIn(User user) {
 		return userService.signIn(user);
 	}
 
