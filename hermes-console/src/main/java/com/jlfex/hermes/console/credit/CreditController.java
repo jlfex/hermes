@@ -397,17 +397,6 @@ public class CreditController {
 			return resultMap;
 		}
 
-		for (CreditInfoVo creditInfoVo : creditList) {
-			
-			Pattern pattern = Pattern.compile("^(([1-9]\\d{0,9})|0)+(\\.\\d)?\\d{0,1}%$");
-			Matcher matcher = pattern.matcher(creditInfoVo.getRate());
-			boolean flag = matcher.matches();
-			if (!flag) {
-				resultMap.put("code", FLAG_KIND_NINE);
-				resultMap.put("msg", fileName + "，债券编号为"+creditInfoVo.getCreditCode()+"：年利率不符合规范");
-				return resultMap;
-			}
-		}
 		// 业务逻辑校验
 		int lineNum = 0;
 		for (CreditInfoVo vo : creditList) {
@@ -473,7 +462,7 @@ public class CreditController {
 		String creditorNo = vo.getCreditorNo(); // 债权人编号
 		String creditCode = vo.getCreditCode(); // 债权编号
 		String uniqkey = creditorNo + "_" + creditCode;
-		if (uniqMap.containsKey(uniqkey)) {
+	/*	if (uniqMap.containsKey(uniqkey)) {
 			resultMap.put("flag", FLAG_KIND_ONE);
 			resultMap.put("errMsg", lineInfo + "债权人编号:" + vo.getCreditorNo() + ",债权编号:" + vo.getCreditCode() + "已重复");
 			return resultMap;
@@ -501,7 +490,7 @@ public class CreditController {
 			resultMap.put("code", FLAG_KIND_NINE);
 			resultMap.put("errMsg", lineInfo + "债权人编号:" + creditorNo + ",债权编号:" + creditCode + ", 系统已经存在;");
 			return resultMap;
-		}
+		}*/
 		// 债权类型
 		if (!CreditExcelUtil.CREDIT_KIND.contains(vo.getCreditKind())) {
 			flag = false;
@@ -545,13 +534,16 @@ public class CreditController {
 			errMsg.append("借款金额 必须是正整数：当前值: " + vo.getAmount() + ";");
 			flag = false;
 		}
-		// 年利率 格式：10% 0--100
-		String rateStr = vo.getRate();
-		if (rateStr.contains(CreditExcelUtil.VAR_PERCENT) && CreditExcelUtil.checkNumber(rateStr.replace(CreditExcelUtil.VAR_PERCENT, ""), "0-100")) {
-		} else {
-			errMsg.append("年利率 必须是百分比格式,且数值是0-100,当前值: " + rateStr + ";");
+
+		// 校验年利率 必须是百分比格式,且数值是0-100,且最大小数位为2位
+		Pattern pattern = Pattern.compile("^(?:0|[1-9][0-9]?|100)+(\\.\\d)?\\d{0,1}%$");
+		Matcher matcher = pattern.matcher(vo.getRate());
+		flag = matcher.matches();
+		if (!flag) {
+			errMsg.append("年利率 必须是百分比格式,且数值是0-100,且最大小数位为2位，当前值: " + vo.getRate() + ";");
 			flag = false;
 		}
+
 		// 借款期限
 		String peroid = vo.getPeriod();
 		if (!CreditExcelUtil.checkNumber(peroid, "0-100")) {
