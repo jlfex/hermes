@@ -51,7 +51,6 @@ $(function(){
 						&nbsp;&nbsp;|&nbsp;&nbsp;<#t>
 						<a href="${app}/userIndex/regNow"><@messages key="index.sign.in.signup" /></a><#t>
 					</p>
-					<input id="token" name="token" type="hidden" value="${token!''}"  readonly="readonly"/>
 				</div>			
 			</form>
 			</#if>
@@ -211,14 +210,7 @@ jQuery(function($) {
 	$('#signInForm').submit(function() {
 		// 初始化
 		var _elem = $(this);
-		vartoken = '';
-		$.ajax('${app}/token', {
-			type: 'post',
-			dataType: 'json',
-			timeout: 5000,
-			success: function(data) {
-				$("#token").val(data);
-				// 提交异步请求
+		// 提交异步请求
 				$.ajax('${app}/userIndex/signIn', {
 					data: _elem.serialize(),
 					type: 'post',
@@ -241,17 +233,11 @@ jQuery(function($) {
 						}
 					},
 					error:function(data){
-					    $('#signPassword').val('').attr('placeholder', "令牌不能为空").parent().addClass('has-error');
+					    $('#signPassword').val('').attr('placeholder', "登录失败").parent().addClass('has-error');
 						$('#email').parent().addClass('has-error');
 					} 
 				});
-				return false;
-			},
-			error:function(data){
-			    $('#signPassword').val('').attr('placeholder', "令牌不能为空").parent().addClass('has-error');
-				$('#email').parent().addClass('has-error');
-			} 
-		});  
+				return false; 
 		// 中断事件
 		return false;
 	});
