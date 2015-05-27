@@ -28,13 +28,7 @@
 					<td class="right">${l.repayedPI}</td>
 					<td class="right">${l.unRepayPI}</td>
 					<td>${l.loanStatusName}</td>
-					<td>
-					<#if (l.status)?? && l.status == '11'>
-					   <span class="viewFull" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
-					<#else>
-					   <span class="viewModel" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span>
-					</#if>
-					</td> 
+					<td><span class="view" data-val="${l.id}"><a href="#" class="m_a1">协议</a></span></td> 
 				</tr>
 				</#list>
 			</tbody>
@@ -88,12 +82,8 @@ jQuery(function($) {
 		});
 	});
 	
-	// 模板
-	$('.viewModel').click(function(){
-		openwindow("${app}/loan/loanModelAgree","",1000,800);
-	});
-	// 满标
-	$('.viewFull').click(function(){
+	// 协议展示
+	$('.view').click(function(){
 	    var id = $(this).attr("data-val");
 		openwindow("${app}/loan/loanFullAgree?loanId="+id,"",1000,800);
 	});

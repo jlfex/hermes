@@ -543,7 +543,7 @@ public class LoanController {
 				for(InvestInfo info : investInfoList){
 					if(info!=null){
 						totalAmount = totalAmount.add(info.getAmount());
-						totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim()));
+						totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim().replace(",", "")));
 					}
 				}
 				model.addAttribute("totalAmount", totalAmount);
