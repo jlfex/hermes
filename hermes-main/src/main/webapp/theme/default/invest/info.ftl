@@ -58,6 +58,7 @@ jQuery(function() {
 	
 	function bid() {
 	    $('.confirm').unbind('click', bid);
+	    $(".confirm").children("a").addClass("bt_gray").removeClass("bt_red");
 	    var investamount = $("#investamount").val();
 	    var loanKind = '${loanKind!''}';
 	    if (validFlag == 'false') {
@@ -75,6 +76,7 @@ jQuery(function() {
 	            type: "POST",
 	            dataType: 'json',
 	            success: function(data) {
+	            	alert("aa");
 	                if (data.type == "SUCCESS") {
 	                    var url = '${app}/invest/bidsuccess';
 	                    $("#loanDetail").attr("action", url);
@@ -87,6 +89,9 @@ jQuery(function() {
 	                } else {
 	                    window.location.href = "${app}/invest/bidfull";
 	                }
+	            },
+	            error: function(data) {
+	            	alert("bb");
 	            }
 	        });
 	    }

@@ -24,10 +24,10 @@
 	}    
 	jQuery(function($) {
 	    $('.confirm').bind('click', programconfirm);
-		
+	   
 	    function programconfirm() {
 	    	$('.confirm').unbind('click', programconfirm);
-	    	
+	    	$('.confirm').children("a").addClass("bt_gray").removeClass("m_bg1");
 	        $.ajax({
 	            data: $("#programconfirm").serialize(),
 	            url: "${app}/loan/programconfirm",
