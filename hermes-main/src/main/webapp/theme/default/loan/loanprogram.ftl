@@ -21,42 +21,7 @@
 	        period: "${period}<@messages key="common.unit.month "  />"
 	    };
 	    return info;
-}
-jQuery(function($) {
-	$(".confirm").click(function(){
-		$.ajax({
-				data: $("#programconfirm").serialize(),
-		        url: "${app}/loan/programconfirm",
-		        type: "POST",
-		        dataType: 'json',
-		        cache: false,
-		        timeout: 10000,
-		        success: function(data) {
-		      	   if(data.type=="SUCCESS"){
-	            		window.location.href="${app}/loan/loansuccess";
-					}else if(data.type=="FAILURE"){
-					 	$("#back-info").html("借款发布失败");
-					}
-		        },
-		        error: function(data){
-		                $("#back-info").html("借款发布异常");
-		        }
-		    });
-	});
-	$('.deal').click(function(){
-	   openwindow("${app}/loan/loanModelAgree","",1000,800);
-	});
-	function openwindow(url,name,iWidth,iHeight)
-	{
-		var url; //转向网页的地址;
-		var name; //网页名称，可为空;
-		var iWidth; //弹出窗口的宽度;
-		var iHeight; //弹出窗口的高度;
-		var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
-		var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
-		return window.open(url,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+',toolbar=no,menubar=no,scrollbars=yes,resizeable=no,location=no,status=no');
-	}
-    
+	}    
 	jQuery(function($) {
 	    $('.confirm').bind('click', programconfirm);
 		
