@@ -3,6 +3,8 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -10,7 +12,7 @@ import com.jlfex.hermes.common.dict.Element;
  * 还款方式信息模型
  */
 @Entity
-@Table(name = "hm_repay")
+@Table(name = "hm_repay",uniqueConstraints={@UniqueConstraint(columnNames = {"code" })})
 public class Repay extends Model {
 	
 	private static final long serialVersionUID = 7181867659726922827L;

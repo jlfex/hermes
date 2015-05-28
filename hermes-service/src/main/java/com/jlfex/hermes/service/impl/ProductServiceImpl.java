@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
             }
         }); 
 		ProductInfo productInfo = null;
-		List<Repay> repayList = repayRepository.findAll();
+		List<Repay> repayList = repayRepository.findByCodeAndStatus(HermesConstants.REPAY_PRINCIPAL, Repay.Status.VALID);
 		List<Dictionary> loanUseList = dictionaryRepository.findByTypeCodeAndStatus("loan_purpose", "00");
 		int displaySequence = 1; //20150211需求：固定显示五个产品
 		for(Product product : sortProductList){
