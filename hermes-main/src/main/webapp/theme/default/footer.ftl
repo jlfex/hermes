@@ -45,18 +45,17 @@ jQuery(function($) {
 		//_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
 	}).trigger('resize');
 	
-	if(document.documentElement.clientHeight >= document.documentElement.offsetHeight - $(".footer").height()) {
-		$(".footer").show();
-	}
-	
 	$(window).scroll(function() {
-		if($(document).scrollTop()>=$(document).height()-$(window).height()- $(".footer").height()) {
+		if($(document).scrollTop()>=$(document).height()-$(window).height()) {
 			$(".footer").show();
 		} else {
 			$(".footer").hide();
 		}
 	});
-
+	
+	if($(document).height() <= $(window).height()) {
+		$(".footer").show();
+	}
 });
 //-->
 </script>

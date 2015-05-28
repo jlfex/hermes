@@ -123,6 +123,7 @@ $('#searchForm .form-control-static .label').on('click', function() {
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
+	$(".footer").hide();
 	$('#normalLoanForm').on('submit', function() {
 		$.ajax('${app}/invest/indexnormalloanfgt', {
 			data: $(this).serialize(),
@@ -132,6 +133,9 @@ jQuery(function($) {
 			success: function(data, textStatus, xhr) {
 				$('#normalData').fadeOut('fast', function() {
 					$(this).html(data).fadeIn('fast');
+					if($(document).height() >= $(window).height()) {
+						$(".footer").hide();
+					}
 				});
 			}
 		});
@@ -147,6 +151,9 @@ jQuery(function($) {
 			success: function(data, textStatus, xhr) {
 				$('#assignData').fadeOut('fast', function() {
 					$(this).html(data).fadeIn('fast');
+					if($(document).height() >= $(window).height()) {
+						$(".footer").hide();
+					}
 				});
 			}
 		});
