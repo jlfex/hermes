@@ -245,8 +245,6 @@ public class WebApp extends App {
 	 */
 	public static boolean isResource(ServletRequest req) {
 		HttpServletRequest request = HttpServletRequest.class.cast(req);
-		Logger.info("请求信息：RemoteAddr=%s,RemotePort=%s,RequestURL=%s",
-		request.getRemoteAddr(),request.getRemotePort(), request.getRequestURL());
 		return (request.getRequestURI().startsWith(resourcePath) || request.getRequestURI().startsWith(themePath) || request.getRequestURI().contains("."));
 	}
 	
