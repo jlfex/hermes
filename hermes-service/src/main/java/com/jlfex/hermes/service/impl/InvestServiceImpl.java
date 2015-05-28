@@ -1207,7 +1207,8 @@ public class InvestServiceImpl implements InvestService {
 		InvestInfo investInfo = null;
 		for (Invest invest : investList) {
 			investInfo = new InvestInfo();
-			investInfo.setRealName(App.user().getName());
+			UserProperties userPps = userPropertiesRepository.findByUserId(invest.getUser().getId());
+			investInfo.setRealName(userPps.getRealName());
 			investInfo.setAmount(invest.getAmount());
 			if(firstRepay!=null){
 				investInfo.setExpectProfit(Numbers.toCurrency(firstRepay.getAmount().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN)));
@@ -1231,7 +1232,8 @@ public class InvestServiceImpl implements InvestService {
 		}
 		List<InvestInfo> investInfoList = new ArrayList<InvestInfo>();
 		InvestInfo investInfo = new InvestInfo();
-		investInfo.setRealName(App.user().getName());
+		UserProperties userPps = userPropertiesRepository.findByUserId(invest.getUser().getId());
+		investInfo.setRealName(userPps.getRealName());
 		investInfo.setAmount(invest.getAmount());
 		if(firstRepay!=null){
 			investInfo.setExpectProfit(Numbers.toCurrency(firstRepay.getAmount().multiply(invest.getRatio()).setScale(2, RoundingMode.HALF_EVEN)));
