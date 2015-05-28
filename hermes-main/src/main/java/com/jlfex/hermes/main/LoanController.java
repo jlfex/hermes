@@ -517,56 +517,59 @@ public class LoanController {
 	@RequestMapping("/loanFullAgree")
 	public String loanFullAgree(Model model, HttpServletRequest request) {
 		App.checkUser();
-		AppUser curUser = App.current().getUser();
 		String loanId = request.getParameter("loanId");
-		UserProperties userPps = userPropertiesRepository.findByUserId(curUser.getId());
-		model.addAttribute("loaner", userPps.getRealName());
-		model.addAttribute("loanerCertiID", userPps.getIdNumber());
-		model.addAttribute("operator", App.config(COMPANY_NAME));
-		model.addAttribute("companyAddr", App.config(COMPANY_ADDRESS));
-		model.addAttribute("platformNetAddr", App.config("app.website"));
 		Loan loan = null;
 		try {
-			loan = loanService.findById(loanId);
-			LoanLog fullLoanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.LOAN);
-			// 如果没有满标放款  都是空模板展示 
-			if(fullLoanLog!=null){
-				model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() );
-				model.addAttribute("repayName", loan.getRepay().getName());
-				model.addAttribute("period", loan.getPeriod());
-				model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");
-				model.addAttribute("amount", loan.getAmount());
-				model.addAttribute("monthFee", loanService.calManagemefee(loan));
-				List<InvestInfo> investInfoList = investService.findInvestInfoByLoan(loan);
-				BigDecimal totalAmount = BigDecimal.ZERO;
-				BigDecimal totalExpectProfit = BigDecimal.ZERO;
-				for(InvestInfo info : investInfoList){
-					if(info!=null){
-						totalAmount = totalAmount.add(info.getAmount());
-						totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim().replace(",", "")));
+			if(Strings.notEmpty(loanId)){
+				loan = loanService.findById(loanId);
+				LoanLog fullLoanLog = loanService.loadLogByLoanIdAndType(loan.getId(), LoanLog.Type.LOAN);
+				// 如果没有满标放款  都是空模板展示 
+				if(fullLoanLog!=null){
+					UserProperties userPps = userPropertiesRepository.findByUserId(loan.getUser().getId());
+					model.addAttribute("operator", App.config("app.company.name")); // 平台运营方
+					model.addAttribute("companyAddr", App.config("app.company.address"));//公司地址
+					model.addAttribute("platformNetAddr", App.config("app.website")); //公司网址
+					model.addAttribute("loaner", userPps.getRealName());       //融资方
+					model.addAttribute("loanerCertiID", userPps.getIdNumber());//融资方证件号
+					model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() );//借款用途
+					model.addAttribute("repayName", loan.getRepay().getName());//偿还方式
+					model.addAttribute("period", loan.getPeriod());//借款期限
+					model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");//利率
+					model.addAttribute("amount", loan.getAmount());//借款金额
+					model.addAttribute("monthFee", loanService.calManagemefee(loan));//月缴管理费
+					List<InvestInfo> investInfoList = investService.findInvestInfoByLoan(loan);
+					BigDecimal totalAmount = BigDecimal.ZERO;
+					BigDecimal totalExpectProfit = BigDecimal.ZERO;
+					for(InvestInfo info : investInfoList){
+						if(info!=null){
+							totalAmount = totalAmount.add(info.getAmount());
+							totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim().replace(",", "")));
+						}
+					}
+					model.addAttribute("totalAmount", totalAmount);//投资金额总计
+					model.addAttribute("totalExpectProfit", totalExpectProfit);//每月应收本息总计
+					model.addAttribute("investList",investInfoList);//投资人列表
+					//每月还款
+					LoanRepay firstRepay = loanRepayService.findByLoanAndSequence(loan, 1);
+					model.addAttribute("monthRepayAmount",  firstRepay.getAmount());
+					if(firstRepay.getPlanDatetime()!=null){
+						Calendar  firstRepayDate = Calendar.getInstance();
+						firstRepayDate.setTime(firstRepay.getPlanDatetime());
+						model.addAttribute("repay_year", String.valueOf(firstRepayDate.get(Calendar.YEAR)).replace(",", ""));  //还款年
+						model.addAttribute("repay_month", firstRepayDate.get(Calendar.MONTH)+1);//还款月
+						model.addAttribute("repay_day", firstRepayDate.get(Calendar.DATE));//还款日
+					}
+					//放款时间
+					if(fullLoanLog!=null){
+						Calendar  fullDate = Calendar.getInstance();
+						fullDate.setTime(fullLoanLog.getDatetime()); 
+						model.addAttribute("fk_year", String.valueOf(fullDate.get(Calendar.YEAR)).replace(",", ""));  //放款年
+						model.addAttribute("fk_month", fullDate.get(Calendar.MONTH)+1);//放款月
+						model.addAttribute("fk_day", fullDate.get(Calendar.DATE));//放款日
 					}
 				}
-				model.addAttribute("totalAmount", totalAmount);
-				model.addAttribute("totalExpectProfit", totalExpectProfit);
-				model.addAttribute("investList",investInfoList);
-				//每月还款
-				LoanRepay firstRepay = loanRepayService.findByLoanAndSequence(loan, 1);
-				model.addAttribute("monthRepayAmount",  firstRepay.getAmount());
-				if(firstRepay.getPlanDatetime()!=null){
-					Calendar  firstRepayDate = Calendar.getInstance();
-					firstRepayDate.setTime(firstRepay.getPlanDatetime());
-					model.addAttribute("repay_year", String.valueOf(firstRepayDate.get(Calendar.YEAR)).replace(",", ""));  //还款年
-					model.addAttribute("repay_month", firstRepayDate.get(Calendar.MONTH)+1);//还款月
-					model.addAttribute("repay_day", firstRepayDate.get(Calendar.DATE));//还款日
-				}
-				//放款时间
-				if(fullLoanLog!=null){
-					Calendar  fullDate = Calendar.getInstance();
-					fullDate.setTime(fullLoanLog.getDatetime()); 
-					model.addAttribute("fk_year", String.valueOf(fullDate.get(Calendar.YEAR)).replace(",", ""));  //放款年
-					model.addAttribute("fk_month", fullDate.get(Calendar.MONTH)+1);//放款月
-					model.addAttribute("fk_day", fullDate.get(Calendar.DATE));//放款日
-				}
+			}else{
+				Logger.info("我的借款：loanId为空，展示空模板");
 			}
 		} catch (Exception e) {
 			Logger.error("查看我的借款协议异常,loanid="+loanId, e);
