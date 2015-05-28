@@ -1208,7 +1208,7 @@ public class InvestController {
 					for(InvestInfo info : investInfoList){
 						if(info!=null){
 							totalAmount = totalAmount.add(info.getAmount());
-							totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().trim()));
+							totalExpectProfit = totalExpectProfit.add(new BigDecimal(info.getExpectProfit().replace(",", "").trim()));
 						}
 					}
 					model.addAttribute("totalAmount", totalAmount);  //投资金额总计
