@@ -84,9 +84,6 @@ public class LoanController {
 	@Autowired
 	private LoanRepayService loanRepayService;
 	
-	private static final String COMPANY_NAME = "app.company.name";
-	private static final String COMPANY_ADDRESS = "app.company.address";
-	private static final String COMPANY_PNAME = "app.operation.name";
 
 	/**
 	 * 索引
@@ -305,7 +302,7 @@ public class LoanController {
 			Loan loan = new Loan();
 			loan.setAmount(new BigDecimal(amount.replaceAll(",", "")));
 			loan.setPeriod(new Integer(period));
-			loan.setRate(new BigDecimal(rate.replace("%", "")).divide(new BigDecimal(100)));
+			loan.setRate(new BigDecimal(rate.replace(HermesConstants.SUFFIX_PERCENT, "")).divide(new BigDecimal(100)).setScale(4, RoundingMode.HALF_DOWN));
 			Repay repayInfo = repayService.loadById(repayId);
 			loan.setRepay(repayInfo);
 			Product productInfo = productService.loadById(productId);
@@ -396,10 +393,8 @@ public class LoanController {
 			}
 			model.addAttribute("now", Calendars.date());
 
-			String companyName = App.config(COMPANY_NAME);
-			String companyAddress = App.config(COMPANY_ADDRESS);
-			model.addAttribute("companyName", companyName);
-			model.addAttribute("companyAddress", companyAddress);
+			model.addAttribute("companyName", App.config(HermesConstants.COMPANY_NAME));
+			model.addAttribute("companyAddress", App.config(HermesConstants.COMPANY_ADDRESS));
 
 		}
 		// 返回视图
@@ -418,12 +413,9 @@ public class LoanController {
 		AppUser curUser = App.current().getUser();
 		model.addAttribute("curUser", userPropertiesRepository.findByUserId(curUser.getId()));
 		model.addAttribute("now", Calendars.date());
-		String companyName = App.config(COMPANY_NAME);
-		String companyAddress = App.config(COMPANY_ADDRESS);
-		String pname = App.config(COMPANY_PNAME);
-		model.addAttribute("companyName", companyName);
-		model.addAttribute("companyAddress", companyAddress);
-		model.addAttribute("pname", pname);
+		model.addAttribute("companyName", App.config(HermesConstants.COMPANY_NAME));
+		model.addAttribute("companyAddress", App.config(HermesConstants.COMPANY_ADDRESS));
+		model.addAttribute("pname", App.config(HermesConstants.COMPANY_PNAME));
 		return "agree/finance";
 	}
 

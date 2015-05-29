@@ -29,7 +29,7 @@
 		                        <td class="align-center">${(l.crediteCode)!''}</td> 
 		                        <td class="align-center">${(l.borrower)!''}</td> 
 		                        <td class="align-center">${(l.amount)!''}</td> 
-		                        <td class="align-center">${(l.rate!0)?string.percent}</td> 
+		                        <td class="align-center">${(l.rateFormat!''}</td> 
 		                        <td class="align-center">${(l.period)!''} 
 		                          <#if (l.creditKind)?? && l.creditKind == '01'  >
 								              天 
