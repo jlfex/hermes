@@ -88,7 +88,7 @@
                             <tr> 	
                                 <td class="align-center">${(creditInfo.crediteType)!''}</td> 
                                 <td class="align-center">${(creditInfo.amount)!''}</td> 
-                                <td class="align-center"><#if (creditInfo.rate)?? >${(creditInfo.rate)?string.percent}<#else>0%</#if></td> 
+                                <td class="align-center">${creditInfo.rateFormat!'0'}</td> 
                                 <td class="align-center">${(creditInfo.period)!''}
                                   <#if (creditInfo.creditKind)?? && creditInfo.creditKind == '01'  >
 								              天 

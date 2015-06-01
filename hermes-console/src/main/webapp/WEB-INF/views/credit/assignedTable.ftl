@@ -27,11 +27,11 @@
 			   <td class="align-center">${(l.creditor.creditorName)!''}</td> 
 			   <td class="align-center">${l.crediteCode!''}</td> 
                <td class="align-center">${(l.amount)!''}</td>  
-               <td class="align-center">${(l.rateFormat!''}</td>
+               <td class="align-center"> ${l.rateFormat!''}</td>
                <td class="align-center">${l.period!''}</td>
                <td class="align-center">${l.purpose!''}</td> 
                <td class="align-center">${l.sellAmount!''}</td> 
-               <td class="align-center">${(l.rateFormat!''}</td> 
+               <td class="align-center">${l.rateFormat!''}</td> 
                <td class="align-center">${(l.deadLine)!''}</td>
                <td class="align-center">${l.assignTime!''}</td>
                <td class="align-center">${l.payType}</td> 

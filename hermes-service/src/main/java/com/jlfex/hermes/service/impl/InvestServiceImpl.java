@@ -813,7 +813,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatusName());
-			BigDecimal rate = invest.getLoan().getRate().divide(new BigDecimal(12), 10, RoundingMode.HALF_UP).multiply(new BigDecimal(invest.getLoan().getPeriod()));
+			BigDecimal rate = invest.getLoan().getRate().divide(new BigDecimal(12), 10, RoundingMode.DOWN).multiply(new BigDecimal(invest.getLoan().getPeriod()));
 			BigDecimal interest = invest.getAmount().multiply(rate);
 			investInfo.setExpectProfit(Numbers.toCurrency(invest.getAmount().add(interest)));
 			investInfo.setDatetime(invest.getDatetime());
