@@ -53,7 +53,7 @@ public class WithdrawServiceImpl implements WithdrawService {
 	public Page<Withdraw> findByNameAndDateBetweenAndStatus(String name, String beginDate, String endDate, String status, Integer page, Integer size) {
 		// 初始化
 		Pageable pageable = Pageables.pageable(page, size);
-		Query query = new Query("from Withdraw where 1 = 1");
+		Query query = new Query("from Withdraw where 1 = 1 and bankAccount.status='00' ");
 		
 		// 查询数据
 		query.and("bankAccount.name like :name", "name", "%" + name + "%", !Strings.empty(name));
