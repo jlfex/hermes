@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
@@ -35,11 +32,10 @@ box-sizing: content-box;
 ._autoScroll{ word-wrap:break-word;}
 </style>
 </head>
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
-<div class="sub_main" >
+<div class="sub_main mg_tp" >
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
@@ -71,8 +67,8 @@ box-sizing: content-box;
 		<div class="clearfix"></div>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

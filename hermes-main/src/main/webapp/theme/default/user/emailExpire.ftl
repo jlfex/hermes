@@ -19,7 +19,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
@@ -37,9 +36,9 @@
 	</div>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 <div class="theme-popover">
      <div class="theme-poptit">
           <a href="javascript:;" title="关闭" class="close">×</a>

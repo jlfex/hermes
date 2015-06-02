@@ -16,12 +16,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
-<div class="m_con m_fp m_fp2">
+<div class="m_con m_fp m_fp3">
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/ico8.png" />
@@ -31,10 +30,10 @@
 	<a href="${app}/index" class="m_btn1 m_bg1">进入首页</a>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 <div class="theme-popover">
      <div class="theme-poptit">
           <a href="javascript:;" title="关闭" class="close">×</a>

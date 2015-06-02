@@ -38,7 +38,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -100,10 +99,10 @@
 	</div>
 	<div class="m_tip_text"></div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 <script type="text/javascript" charset="utf-8">
 	jQuery(function($) {
 		$('#cancelAuthIdentityBtn').on('click', function() {

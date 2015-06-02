@@ -864,10 +864,7 @@ public class InvestController {
 		return "agree/finance";
 	}
 
-	@RequestMapping("/assdebtagree")
-	public String assdebtAgree() {
-		return "agree/assdebt";
-	}
+	
 
 	/**
 	 * 客户投资普通标或债券标时现金账户余额是否充足
@@ -1194,6 +1191,7 @@ public class InvestController {
 					model.addAttribute("operator", App.config("app.company.name")); // 平台运营方
 					model.addAttribute("companyAddr", App.config("app.company.address"));//公司地址
 					model.addAttribute("platformNetAddr", App.config("app.website")); //公司网址
+					model.addAttribute("companyCity", App.config("app.company.city")); //公司所在地
 					model.addAttribute("loaner", userPps.getRealName());       //融资方
 					model.addAttribute("loanerCertiID", userPps.getIdNumber());//融资方证件号
 					model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() ); //借款用途

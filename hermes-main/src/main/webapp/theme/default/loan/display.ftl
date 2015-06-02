@@ -84,8 +84,6 @@ jQuery(function($) {
 		var repayNameKey= 'repay_'+productIndex;
 		var repayName =$("input[type='radio'][name='"+repayNameKey+"']:checked").next("span").text();
 		var repayId =$("input[type='radio'][name='"+repayNameKey+"']:checked").val();
-	//	alert("productIndex"+productIndex+",productId"+productId+",productName"+productName+",amount"+amount+",period"+period+",rate"+rate+",purposeId"+purposeId+",purposeName"+purposeName+",repayId"+repayId+",repayName"+repayName);
-	//	return false;
 		$('#productId').val(productId);
 		$('#productName').val(productName);
 		$('#amount').val(amount);
@@ -106,7 +104,6 @@ jQuery(function($) {
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <div id="content" class="content">
 <form id="loanDisplay" name="loanDisplay" action="${app}/loan/loanprogram" method="post">
 <input id="productSize" name="productSize" type="hidden" value="${productSize}"></input>
@@ -257,9 +254,9 @@ jQuery(function($) {
 </div>
 </form>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </form>
 </html>

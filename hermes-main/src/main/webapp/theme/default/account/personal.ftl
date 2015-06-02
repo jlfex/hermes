@@ -17,7 +17,6 @@
 <div class="_container">
 <!-- function nav start-->
 <#include "/header.ftl" />
-<div class="_content">
 <div class="sub_main">
 	<div class="account_center">
 		<div class="account_nav_left">
@@ -344,7 +343,9 @@
 
 
 <!-- foot start-->
-
+<div class="push"><!-- not put anything here --></div>
+</div>
+<#include "/footer.ftl" />
 <script type="text/javascript">
 <!--
 jQuery(function($) {

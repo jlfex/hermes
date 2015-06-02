@@ -51,7 +51,7 @@
 	    }
 	
 	    $('.deal').click(function() {
-	        var win = openwindow("${app}/loan/loanagree", "", 1000, 800);
+	        var win = openwindow("${app}/loan/loanModelAgree", "", 1000, 800);
 	    });
 	    function openwindow(url, name, iWidth, iHeight) {
 	        var url; //转向网页的地址;
@@ -70,7 +70,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <div id="content" class="content">
 <form id="programconfirm" name="programconfirm">
 <input id="productId" name="productId" type="hidden" value="${productId}"></input>
@@ -184,8 +183,8 @@
 </div>
 </form>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

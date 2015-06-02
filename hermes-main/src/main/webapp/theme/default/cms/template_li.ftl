@@ -29,11 +29,10 @@ border-radius: 5px;}
 *{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
 </style>
 </head>
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
-<div class="sub_main" style="margin-top:50px;min-height:500px;">
+<div class="sub_main mg_tp">
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="titleuser"></div>
@@ -76,8 +75,8 @@ color: #ccc;">${(l.updateTime)!}</span>
 		<div class="clearfix"></div>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

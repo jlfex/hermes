@@ -166,7 +166,6 @@ jQuery(function() {
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 
 <div id="content" class="content">	
@@ -467,10 +466,10 @@ jQuery(function() {
 </div>
 </form>
 </div>
+<div class="push"><!-- not put anything here --></div>
+</div>
 <!-- foot start-->
-</div>
 <#include "/footer.ftl" />
-</div>
 <script type="text/javascript">
 jQuery(function(){
 	$('#bidRecordForm').on('submit', function() {
