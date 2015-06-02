@@ -13,7 +13,12 @@ public final class HermesConstants {
 	 */
 	public static final String PLAT_MANAGER = "admin";
 	public static final String PRE_HERMES = "HERMES"; // 下单并支付接口 订单流水号前缀
-	public static final String CROP_USER_ID = "crop";
+	public static final String CROP_USER_ID = "crop"; 
+	
+	public static final String COMPANY_NAME = "app.company.name";       //公司名称
+	public static final String COMPANY_ADDRESS = "app.company.address"; //公司地址
+	public static final String COMPANY_PNAME = "app.operation.name";    //平台名称 
+	
 
 	public static final int RESULT_VO_CODE_SUCCESS = 0;
 	public static final int RESULT_VO_CODE_BIZ_ERROR = 1;
@@ -230,6 +235,11 @@ public final class HermesConstants {
 	 * 文章类型：公告
 	 */
 	public static final String PUBLIC_NOTICE = "public_notice";
+	
+	/**
+	 * 百分号 %
+	 */
+	public static final String SUFFIX_PERCENT = "%";
 	
 	/**
 	 * 默认每页页大小

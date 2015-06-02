@@ -29,35 +29,4 @@
     </div>
 </div>
 
-<script type="text/javascript">
-<!--
-jQuery(function($) {
-	$(window).on('resize', function() {
-		// 初始化
-		var _win = $(this), 
-			_content = $('#content'), 
-			_footer = $('#footer'), 
-			_win_height = _win.height(), 
-			_content_offset = _content.offset(),
-			_footer_height = _footer.outerHeight();
-		
-		// 设置最小高度
-		//_content.css('min-height', _win_height - _footer_height - _content_offset.top - 40);
-	}).trigger('resize');
-	
-	if(document.documentElement.clientHeight >= document.documentElement.offsetHeight - $(".footer").height()) {
-		$(".footer").show();
-	}
-	
-	$(window).scroll(function() {
-		if($(document).scrollTop()>=$(document).height()-$(window).height()- $(".footer").height()) {
-			$(".footer").show();
-		} else {
-			$(".footer").hide();
-		}
-	});
-
-});
-//-->
-</script>
 <!-- /footer -->

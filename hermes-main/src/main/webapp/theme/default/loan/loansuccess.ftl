@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -13,13 +10,12 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
-<div class="m_con m_fp m_fp2">
+<div class="m_con m_fp m_fp3">
 	<div class="m_fp_box">
 		<div class="m_fp_sq2 clearfix">
             <ul class="ul_02">    
@@ -32,9 +28,9 @@
 	<p class="m_im_txt a_pa_lt"><a href="${app}/index" class="q_btn1 q_bg1">返回首页</a><a href="${app}/account/index" class="ck">完善个人信息</a><a href="${app}/account/index?type=loan"  class="ck">查看我的借款</a></p>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </form>
 </html>

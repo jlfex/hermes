@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
+
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
@@ -164,12 +165,11 @@ $(function(){
 </script>
 </head>
 
-<body class="index">
-<div class="_container">
+<body>
+<div class="_container" >
 <#include "/header.ftl" />
-<div class="_content">
-<!-- middle start-->
-<div class="m_con m_rg">
+ <!-- middle start-->
+<div class="m_con m_rg" style="padding-top:115px; min-height:500px; ">
 	<div class="m_rg_l">
 		<img src="${(registerPicture.image)!}" />		
 	</div>
@@ -226,9 +226,9 @@ $(function(){
 		</form>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

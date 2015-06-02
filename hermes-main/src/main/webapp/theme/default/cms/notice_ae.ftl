@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
@@ -31,11 +28,10 @@ border-radius: 5px;}
 .notice_title span{ line-height:44px; padding-left:15px;}
 </style>
 </head>
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
-<div class="sub_main" >
+<div class="sub_main mg_tp"  >
 	<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 		<div class="content_template">
 			<h2 class="title">${(ae.articleTitle)!}</h2>	
@@ -45,8 +41,8 @@ border-radius: 5px;}
 			</div>
 		</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

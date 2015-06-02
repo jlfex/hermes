@@ -27,7 +27,6 @@ $(function(){
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <div id="content" class="content">
 	<div class="banner">	
 		<div class="u-container">
@@ -166,8 +165,7 @@ $(function(){
         </div>
 	</div>
 </div>
-</div>
-<#include "/footer.ftl" />
+<div class="push"><!-- not put anything here --></div>
 </div>
 <div class="theme-popover">
      <div class="theme-poptit">
@@ -179,6 +177,7 @@ $(function(){
      </div>
 </div>
 <div class="theme-popover-mask"></div>
+<#include "/footer.ftl" />
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

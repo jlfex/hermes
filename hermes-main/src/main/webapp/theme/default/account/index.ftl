@@ -21,8 +21,7 @@
 <body class="index">
 <div class="_container">
 <#include "../header.ftl" />
-<div class="_content">
-<div id="content" class="content" style="margin-top:50px;">
+<div id="content" class="content" style="padding-top:50px;">
 	<div class="u-container row">
 		<div class="row u-row">
 			<!-- account menu -->
@@ -87,9 +86,9 @@
 		</div>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "../footer.ftl" />
-</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

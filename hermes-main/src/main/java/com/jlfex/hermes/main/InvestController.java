@@ -864,10 +864,7 @@ public class InvestController {
 		return "agree/finance";
 	}
 
-	@RequestMapping("/assdebtagree")
-	public String assdebtAgree() {
-		return "agree/assdebt";
-	}
+	
 
 	/**
 	 * 客户投资普通标或债券标时现金账户余额是否充足
@@ -1125,7 +1122,7 @@ public class InvestController {
 			model.addAttribute("platformName", App.config("app.operation.name"));  					//平台名称
 			model.addAttribute("companyAddr", App.config("app.company.address")); 				    //公司地址
 			model.addAttribute("platformNetAddr", App.config("app.website"));						//平台网址
-			model.addAttribute("rate", creditInfo.getRate());										//利率
+			model.addAttribute("rate", (creditInfo.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_DOWN))+HermesConstants.SUFFIX_PERCENT);//利率
 			model.addAttribute("operator", App.config("app.company.name"));                         //平台运营方
 			
 			UserProperties userProperty = userPropertiesService.queryByUser(invest.getUser().getId());
@@ -1194,12 +1191,13 @@ public class InvestController {
 					model.addAttribute("operator", App.config("app.company.name")); // 平台运营方
 					model.addAttribute("companyAddr", App.config("app.company.address"));//公司地址
 					model.addAttribute("platformNetAddr", App.config("app.website")); //公司网址
+					model.addAttribute("companyCity", App.config("app.company.city")); //公司所在地
 					model.addAttribute("loaner", userPps.getRealName());       //融资方
 					model.addAttribute("loanerCertiID", userPps.getIdNumber());//融资方证件号
 					model.addAttribute("purpose", dictionaryService.loadById(loan.getPurpose()).getName() ); //借款用途
 					model.addAttribute("repayName", loan.getRepay().getName());//偿还方式
 					model.addAttribute("period", loan.getPeriod()); //借款期限
-					model.addAttribute("rate", loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN).toString()+"%");//利率
+					model.addAttribute("rate",   loan.getRate().multiply(new BigDecimal("100")).setScale(2, RoundingMode.DOWN).toString()+HermesConstants.SUFFIX_PERCENT);//利率
 					model.addAttribute("amount", loan.getAmount());//借款金额
 					model.addAttribute("monthFee", loanService.calManagemefee(loan));//月缴管理费
 					List<InvestInfo> investInfoList = investService.findInvestInfoByInvest(invest);

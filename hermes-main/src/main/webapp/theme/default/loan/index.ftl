@@ -19,7 +19,6 @@
 <div class="_container">
 
 <#include "../header.ftl" />
-<div class="_content">
 <div id="content" class="content">
 	<div class="u-container">
 		<div id="products" class="products">
@@ -99,9 +98,9 @@
 		</div>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "../footer.ftl" />
-</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

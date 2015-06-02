@@ -4,9 +4,6 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -48,12 +45,11 @@ function checkEqual(){
 </script>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
-<div class="m_con m_fp commonForm">
+<div class="m_con m_fp m_fp3">
 	<h3>重置密码</h3>
 	<div class="m_fp_box">
 		<form id="pwdForm" name="pwdForm" action="${app}/userIndex/resetPwd" method="post">
@@ -75,10 +71,10 @@ function checkEqual(){
 	</div>
 	<a href="javascript:document.pwdForm.submit();"  class="m_btn1 m_bg1 mv_submit">提交</a>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 <div class="theme-popover">
      <div class="theme-poptit">
           <a href="javascript:;" title="关闭" class="close">×</a>

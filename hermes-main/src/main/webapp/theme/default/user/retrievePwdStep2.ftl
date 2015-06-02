@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
@@ -20,12 +17,11 @@ function mailBoxSkp(email){
 }
 </script>
 </head>
-<body class="index">
-<div class="_container">
+<body>
+<div class="_container" >
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
-<div class="m_con m_fp">
+<div class="m_con m_fp m_fp3">
 	<h3>找回密码</h3>
 	<div class="m_fp_box">
 		<div class="m_fp_s2">
@@ -45,9 +41,9 @@ function mailBoxSkp(email){
 		<p>3.邮件地址写错了？请重新填写</p>
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

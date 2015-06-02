@@ -15,7 +15,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -27,8 +26,8 @@
 	<a href="${app}/invest/index" class="m_btn1 m_bg1">重新投标</a>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

@@ -166,7 +166,6 @@ jQuery(function() {
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 
 <div id="content" class="content">	
@@ -249,7 +248,7 @@ jQuery(function() {
                             <td class="td_height th_06">
                              <#if loan.loanKind=='00'><@messages key="model.loan.amount" /> <#else> 剩余金额 </#if>：
                             <span>${loan.amount}元</span></td>
-                            <td class="th_06"><@messages key="model.loan.rate" />：<span>${(loan.rate!0)?string.percent}</span></td>
+                            <td class="th_06"><@messages key="model.loan.rate" />：<span>${loan.rateFormat!''}</span></td>
                             <td class="th_06">
                              <#if loan.loanKind=='00'>
                                <@messages key="model.loan.period" />：<span>${loan.period}<@messages key="common.unit.month" /></span>
@@ -467,10 +466,10 @@ jQuery(function() {
 </div>
 </form>
 </div>
+<div class="push"><!-- not put anything here --></div>
+</div>
 <!-- foot start-->
-</div>
 <#include "/footer.ftl" />
-</div>
 <script type="text/javascript">
 jQuery(function(){
 	$('#bidRecordForm').on('submit', function() {

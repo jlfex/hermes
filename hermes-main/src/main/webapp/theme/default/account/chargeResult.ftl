@@ -3,9 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><@config key="app.title" /></title>
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
-<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css" />
 <link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/others.css" />
 <script type="text/javascript" src="${app.js}/jquery.js" charset="utf-8"></script>
@@ -15,14 +12,13 @@
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 
 <#include "/header.ftl" />
-<div class="_content">
 
 <!-- middle start-->
-<div class="m_con m_fp m_fp2">
+<div class="m_con m_fp m_fp3">
 		<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/${type}" />
@@ -32,8 +28,8 @@
 	<p class="a_pa_lt"><a href="javascript:history.go(-1)" class="q_btn1 q_bg1">返回</a></p>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

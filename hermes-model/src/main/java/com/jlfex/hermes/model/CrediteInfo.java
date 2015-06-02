@@ -1,6 +1,7 @@
 package com.jlfex.hermes.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -61,7 +63,7 @@ public class CrediteInfo extends Model {
 	@Column(name = "sell_amount")
 	private BigDecimal sellAmount;
 	// 年利率
-	@Column(name = "rate")
+	@Column(name = "rate", precision= 8, scale=4, nullable = false)
 	private BigDecimal rate;
 	// 原始 ： 借款期限
 	@Column(name = "period")
@@ -207,6 +209,16 @@ public class CrediteInfo extends Model {
 		this.rate = rate;
 	}
 
+	/**
+	 * 年利率格式化
+	 * @return
+	 */
+	public String getRateFormat(){
+		if(rate != null){
+			return  (rate.multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_DOWN))+HermesConstants.SUFFIX_PERCENT;
+		}
+		return "";
+	}
 	public Integer getPeriod() {
 		return period;
 	}

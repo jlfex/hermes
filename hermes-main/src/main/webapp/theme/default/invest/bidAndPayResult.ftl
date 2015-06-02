@@ -33,12 +33,11 @@
 </style>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 
 <#include "/header.ftl" />
-<div class="_content">
-<div class="m_con m_fp" >
+<div class="m_con m_fp mg_tp" >
 	<div class="content">
     	<p><img src="${app.theme}/public/other/images/icon2/${icon!''}" width="24" height="24" alt="" /> ${backInfo!''}  <#if err_msg??> ${err_msg!''}</#if></p>
      	<p>您可通过&nbsp;&nbsp;<a href="${app}/account/index?type=myfund" class="a_dec" >资金明细</a>&nbsp;&nbsp;查询充值结果</p>
@@ -46,8 +45,8 @@
 	</div>
 </div>
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

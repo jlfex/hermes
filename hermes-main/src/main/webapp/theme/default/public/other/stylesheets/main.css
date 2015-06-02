@@ -1,12 +1,25 @@
 @charset "utf-8";
 /* CSS Document */
-body {font-family:"微软雅黑", "Microsoft YaHei", Helvetica,sansation, Verdana, Arial, sans-serif;font-size: 14px;color:#323232; height:100%}
-body,ul,li,p,img,div,h1,h2,h3,h4,h5,h6,input,form,table, th, td, hr,select{margin:0; padding:0;}
+html,body {font-family:"微软雅黑", "Microsoft YaHei", Helvetica,sansation, Verdana, Arial, sans-serif;font-size: 14px;color:#323232; height:100%}
+html,body,ul,li,p,img,div,h1,h2,h3,h4,h5,h6,input,form,table, th, td, hr,select{margin:0; padding:0;}
 h3{color:#000000; font-size:14px; font-weight:600;}
 
-._container{position:relative;width:100%;min-height:100%;}
-._content{padding-bottom:150px;}
-._footer{height:150px;position:fixed;bottom:0px;left:0px;z-index:100}
+._container{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -160px;/*margin-bottom的负值等于footer高度*/
+	}
+
+.push, ._footer {
+	height: 160px;
+	clear:both;
+}
+
+.mg_tp {
+	padding-top: 140px;
+	min-height:500px;
+}
 
 
 a{ text-decoration:none;}
@@ -39,7 +52,7 @@ img{ border:0;}
 .head .midcenter{width:980px;height:68px;margin:0 auto;}
 .head .midcenter .logo{float:left;}
 .head .midcenter .logo span.logo2{font-family:"STXingkai";font-size: 22px!important;color: #595959!important;line-height: 70px; height: 70px; display: inline-block;}
-.head .midcenter .logo img{ vertical-align:middle;width: 168px; height: 40px; margin-top: -10px;}
+.head .midcenter .logo img{ width: 168px; height: 40px; margin-top: -10px;}
 .head .midcenter .logo span{color:#323232;font-size:16px;font-weight:500; padding-left:10px; vertical-align:middle; color:#4a4a4a;}
 .head .midcenter .nav{float:right;color:#323232;padding:23px 0 0 0;}
 .head .midcenter .nav ul li{width:120px;height:20px;float:left;text-align:right;line-height:25px; text-align:right;}

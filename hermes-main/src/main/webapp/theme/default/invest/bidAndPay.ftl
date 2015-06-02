@@ -60,12 +60,11 @@ jQuery(function($){
 </script>
 </head>
 
-<body class="index">
+<body>
 <div class="_container">
 
 <#include "/header.ftl" />
-<div class="_content">
-<div class="middle_content" style="min-height:500px">
+<div class="middle_content m_fp2">
 	<#if bankAccount?? && userProperties??>
     <div class="detail">
 		<div class="flow">
@@ -121,8 +120,8 @@ jQuery(function($){
 	<input id="loanId" name="loanId" type="hidden" value="${loanId!''}" ></input>	
 	<input id="investAmount" name="investAmount" type="hidden" value="${investAmount!''}" >
 </form> 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

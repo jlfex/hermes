@@ -395,7 +395,7 @@ a.m_a2:hover {
 /* register */
 
 .m_rg {
-	margin: 50px auto;
+	margin: auto;
 }
 .m_rg_l {
 	float: right;
@@ -462,12 +462,15 @@ input.m_checkbox {
 /* forgotPwd */
 
 .m_fp {
-	margin: 30px auto 0;
+	margin: 0 auto 0;
 	font-family: "微软雅黑", "Microsoft YaHei";
 	font-size: 16px;
 }
 .m_fp2 {
-	margin-top: 65px;
+	padding-top: 95px;
+}
+.m_fp3 {
+	padding-top: 140px;
 }
 .m_fp h3 {
 	margin-bottom: 20px;

@@ -35,7 +35,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp" style="min-height:500px">
 	<div class="content">
@@ -48,8 +47,8 @@
         </p>   
 	</div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

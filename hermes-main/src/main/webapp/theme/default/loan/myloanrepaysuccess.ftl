@@ -16,7 +16,6 @@
 <div class="_container">
 
 <#include "/header.ftl" />
-<div class="_content">
 <!-- middle start-->
 <div class="m_con m_fp m_fp2">
 	<div class="m_fp_box">
@@ -28,8 +27,8 @@
 	<a href="javascript:history.back()" class="m_btn1 m_bg1">返回</a>
 	<div class="m_tip_text"></div>
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

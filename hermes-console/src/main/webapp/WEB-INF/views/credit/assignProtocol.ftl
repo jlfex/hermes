@@ -76,7 +76,7 @@
 						</tr>
 						<tr>
 							<td>债权/收益权年化利率</td>
-							<td>${(rate!0)?string.percent}</td>
+							<td>${rate!0}</td>
 						</tr>
 						<tr>
 							<td>起息日</td>

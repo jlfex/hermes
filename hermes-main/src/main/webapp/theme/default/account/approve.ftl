@@ -15,7 +15,6 @@
 <body class="index">
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
 <div class="sub_main">
 	<div class="account_center">
 		<div class="account_nav_left">
@@ -138,10 +137,10 @@
 </div>
 
 
+<div class="push"><!-- not put anything here --></div>
 </div>
 <!-- foot start-->
 <#include "/footer.ftl" />
-</div>
 <script type="text/javascript">
 <!--
 jQuery(function($) {

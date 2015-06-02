@@ -31,11 +31,10 @@ border-radius: 5px;}
 .notice_title span{ line-height:44px; padding-left:15px;}
 </style>
 </head>
-<body class="index">
+<body>
 <div class="_container">
 <#include "/header.ftl" />
-<div class="_content">
-<div class="sub_main" style="margin-top:133px;">		
+<div class="sub_main mg_tp">		
 		<div class="notice_title"><span>&nbsp;&nbsp;网站公告</span> </div>
 			<div class="content_template">
 				<div class="content_index">
@@ -49,8 +48,8 @@ border-radius: 5px;}
 				</div>
 			</div>		
 </div>
+<div class="push"><!-- not put anything here --></div>
 </div>
 <#include "/footer.ftl" />
-</div>
 </body>
 </html>

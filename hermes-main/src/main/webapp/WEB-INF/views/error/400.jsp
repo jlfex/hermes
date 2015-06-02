@@ -37,7 +37,7 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 .mt_20{ margin-top: 20px;}
 </style>
 </head>
-<body class="index">
+<body >
 <div class="_container">
 <%
 	}
@@ -61,7 +61,7 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 	</div>
 	<div class="nav">
 		<div class="u-container">
-			<div class="logo" style="margin-top:15px;"><a href="${app}/index"><img src="${appLogo}"><span class="logo2">${appOperationNickname}</span></a></div>
+			<div class="logo" ><a href="${app}/index"><img  style="vertical-align: middle;"  src="${appLogo}"><span class="logo2">${appOperationNickname}</span></a></div>
 			<ul id="homeNav" class="nav-list">
 				<li class="home"><a href="${app}/index">首页</a></li>
 				<li class="invest"><a href="${app}/invest/index">我要理财</a></li>
@@ -72,9 +72,8 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
 		</div>
 	</div>
 </div>
-<div class="_content">
 <!-- middle -->
-<div class="m_con m_fp m_fp2">
+<div class="m_con m_fp m_fp3">
 	<div class="m_fp_box jy_bg1 clearfix">	
 		<div class="fl"><img src="${app.theme}/public/images/error/400.png"></div>
         <div class="fl ml_10 mt_60">
@@ -83,8 +82,14 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
         </div>
 	</div>
 </div>
+
+
+<%
+	if (!Strings.equals("html", request.getParameter("hermes_request_type"))) {
+%>
+<div class="push"><!-- not put anything here --></div>
  </div>
-<!-- foot start-->
+ <!-- foot start-->
 <div class="footer _footer">
     <div class="footcenter">
         <div class="companyinfo clearfix">
@@ -114,12 +119,6 @@ if (Strings.equals("json", request.getParameter("hermes_request_type"))) {
         <div class="clearfix"></div>
     </div>
 </div>
-
-<%
-	if (!Strings.equals("html", request.getParameter("hermes_request_type"))) {
-%>
-
- </div>
 </body>
 </html>
 <%

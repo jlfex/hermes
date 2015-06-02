@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -62,7 +64,7 @@ public class Loan extends Model {
 	private Integer period;
 	
 	/** 利率 */
-	@Column(name = "rate")
+	@Column(name = "rate", precision=8, scale=4 , nullable=false)
 	private BigDecimal rate;
 	
 	/** 招标期限 */
@@ -290,6 +292,16 @@ public class Loan extends Model {
 	 */
 	public BigDecimal getRate() {
 		return rate;
+	}
+	/**
+	 * 年利率格式化
+	 * @return
+	 */
+	public String getRateFormat(){
+		if(rate != null){
+			return  (rate.multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_DOWN))+HermesConstants.SUFFIX_PERCENT;
+		}
+		return "";
 	}
 	
 	/**

@@ -259,13 +259,18 @@ public class BankAccountServiceImpl implements BankAccountService {
 		Withdraw withdraw = new Withdraw();
 		BankAccount bankAccount = bankAccountRepository.findOne(bankAccountId);
 		User user = userRepository.findOne(App.user().getId());
-		WithdrawFee withdrawFee = SpringWebApp.getBean(App.config(HermesConstants.PROP_WITHDRAW_FEE_NAME), WithdrawFee.class);
 		// 设置数据并保存数据
 		withdraw.setUser(user);
 		withdraw.setBankAccount(bankAccount);
 		withdraw.setDatetime(new Date());
 		withdraw.setAmount(amount);
-		withdraw.setFee(withdrawFee.calcFee(withdraw.getAmount(), App.config(HermesConstants.PROP_WITHDRAW_FEE_CONFIG)));
+		BigDecimal fee = BigDecimal.ZERO; //手续费
+		Result<String> calcResult =  calcWithdrawFee(amount.doubleValue());
+		if(Result.Type.SUCCESS.equals(calcResult.getType())){
+			List<String> amountList = calcResult.getMessages();
+			fee = new BigDecimal(amountList.get(0).replace(",", ""));
+		}
+		withdraw.setFee(fee);
 		withdraw.setStatus(Withdraw.Status.WAIT);
 		withdraw.setSerialNo(serialNo);
 		withdrawRepository.save(withdraw);
