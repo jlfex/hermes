@@ -53,7 +53,7 @@ public class UserLogController {
 			Page<UserLog> userLogList = userLogService.queryByCondition(userLogVo, page, HermesConstants.DEFAULT_PAGE_SIZE);
 			model.addAttribute("userLogList", userLogList);
 		} catch (Exception e) {
-			Logger.error("外围日志列表查询异常:", e);
+			Logger.error("用户日志列表查询异常:", e);
 			model.addAttribute("userLogList", null);
 		}
 		return "systemlog/userLogData";
