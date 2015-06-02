@@ -23,7 +23,7 @@
 			</div>
 			<label class="col-xs-1 control-label"><@messages key="model.loan.rate" /></label>
 			<div class="col-xs-2">
-				<p class="form-control-static">${loan.rate *100}%</p>
+				<p class="form-control-static">${loan.rateFormat!''}</p>
 			</div>
 			<label class="col-xs-1 control-label"><@messages key="model.loan.period" /></label>
 			<div class="col-xs-2">

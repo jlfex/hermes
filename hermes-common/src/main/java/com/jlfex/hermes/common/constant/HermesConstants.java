@@ -48,7 +48,8 @@ public final class HermesConstants {
 	
 	/**
 	 * 公共开关标识 
-	 * 0： 默认值
+	 * 0:开 ;
+	 * 1:关
 	 */
 	public static final String SWITCH_FLAG_ZERO = "0";   // 开
 	public static final String SWITCH_FLAG_ONE =  "1";   // 关

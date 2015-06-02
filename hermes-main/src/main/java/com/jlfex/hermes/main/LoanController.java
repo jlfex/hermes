@@ -130,14 +130,15 @@ public class LoanController {
 		User user = userInfoService.findByUserId(curUser.getId());
 		Page<LoanInfo> loanInfoList = loanService.findByUser(user,page,size);
 		int loanSuccessCount = 0;
+		int loanCount =   0 ;
 		BigDecimal loanAmount = BigDecimal.ZERO;
-		for (LoanInfo loanInfo : loanInfoList) {
+		for (LoanInfo loanInfo : loanInfoList.getContent()) {
+			loanCount ++;
 			if (Loan.Status.REPAYING.equals(loanInfo.getStatus()) || Loan.Status.COMPLETED.equals(loanInfo.getStatus())) {
 				loanSuccessCount = loanSuccessCount + 1;
 				loanAmount = loanAmount.add(Numbers.parseCurrency(loanInfo.getAmount()));
 			}
 		}
-		int loanCount = loanInfoList.getSize();
 		model.addAttribute("loanSuccessCount", loanSuccessCount);
 		model.addAttribute("loanCount", loanCount);
 		model.addAttribute("loanAmount", loanAmount);
