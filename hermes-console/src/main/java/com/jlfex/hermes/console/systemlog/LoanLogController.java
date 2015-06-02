@@ -40,7 +40,7 @@ public class LoanLogController {
 	}
 
 	/**
-	 * 用户日志数据
+	 * 投标日志数据
 	 * 
 	 * @param loanLogVo
 	 * @param page
@@ -53,7 +53,7 @@ public class LoanLogController {
 			Page<LoanLog> loanLogList = loanLogService.queryByCondition(loanLogVo, page, HermesConstants.DEFAULT_PAGE_SIZE);
 			model.addAttribute("loanLogList", loanLogList);
 		} catch (Exception e) {
-			Logger.error("外围日志列表查询异常:", e);
+			Logger.error("投标日志列表查询异常:", e);
 			model.addAttribute("loanLogList", null);
 		}
 		return "systemlog/loanLogData";
@@ -70,7 +70,7 @@ public class LoanLogController {
 		try {
 			model.addAttribute("loanLog", loanLogService.findOne(id));
 		} catch (Exception e) {
-			Logger.error("用户日志明细异常：", e);
+			Logger.error("投标日志明细异常：", e);
 		}
 		return "systemlog/loanLogDetail";
 	}

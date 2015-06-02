@@ -29,30 +29,30 @@ public final class HermesConstants {
 	public static final String LOGIN = "登录界面";
 	public static final String REGISTER = "注册界面";
 
-	public static final String CODE_PRODUCT_MANAGE_FEE_PERCENT = "month.manager.fee.percent"; // 产品月管理费百分比编码
-	public static final String CODE_PRODUCT_MANAGE_FEE_CONSTANT = "month.manager.fee.constant"; // 产品月管理费定值编码
-	public static final String CODE_PRODUCT_MANAGE_FEE_SWITCH = "month.manager.fee.switch"; // 产品月管理费开关切换编码
-	public static final String PRODUCT_OVERDU_INTEREST_FEE_CODE = "overdue_interest_fee"; // 产品逾期还款：罚息费率梯度编码
-	public static final String PRODUCT_OVERDU_PENALTY_FEE_CODE = "overdue_penalty_fee"; // 产品逾期还款:
-																						// 违约金费率梯度编码
-
-	public static final String PROP_WITHDRAW_FEE_NAME = "fee.withdraw.name";
-	public static final String PROP_WITHDRAW_FEE_CONFIG = "fee.withdraw.config"; // 提现手续费区间配置
-	public static final String PROP_WITHDRAW_FEE_RATE = "fee.withdraw.rate"; // 提现手续费比例编码
-	public static final String WITHDRAW_FEE_SWITCH = "fee.withdraw.switch"; // 提现手续费类型开关编码
-	public static final String WITHDRAW_FEE_MAX_AMOUNT = "fee.charge.max.amount"; // 提现手续费比例方式
-																					// 单笔最大金额
-
+	public static final String CODE_PRODUCT_MANAGE_FEE_PERCENT  = "month.manager.fee.percent";		//产品月管理费百分比编码
+	public static final String CODE_PRODUCT_MANAGE_FEE_CONSTANT = "month.manager.fee.constant";     //产品月管理费定值编码
+	public static final String CODE_PRODUCT_MANAGE_FEE_SWITCH   = "month.manager.fee.switch";		//产品月管理费开关切换编码
+	public static final String PRODUCT_OVERDU_INTEREST_FEE_CODE = "overdue_interest_fee"; 			//产品逾期还款：罚息费率梯度编码
+	public static final String PRODUCT_OVERDU_PENALTY_FEE_CODE  = "overdue_penalty_fee";			//产品逾期还款: 违约金费率梯度编码
+	
+	public static final String PROP_WITHDRAW_FEE_NAME	 = "fee.withdraw.name";
+	public static final String PROP_WITHDRAW_FEE_CONFIG	 = "fee.withdraw.config";					//提现手续费区间配置
+	public static final String PROP_WITHDRAW_FEE_RATE 	 = "fee.withdraw.rate";                		//提现手续费比例编码
+	public static final String WITHDRAW_FEE_SWITCH 		 = "fee.withdraw.switch";					//提现手续费类型开关编码
+	public static final String WITHDRAW_FEE_MAX_AMOUNT 	 = "fee.charge.max.amount";                 //提现手续费比例方式 单笔最大金额
+	
 	/**
-	 * 公共开关标识 0： 默认值
+	 * 公共开关标识 
+	 * 0： 默认值
 	 */
-	public static final String SWITCH_FLAG_ZERO = "0"; // 开
-	public static final String SWITCH_FLAG_ONE = "1"; // 关
-
+	public static final String SWITCH_FLAG_ZERO = "0";   // 开
+	public static final String SWITCH_FLAG_ONE =  "1";   // 关
+	
+	
 	/**
 	 * HTTPS 连接常量
 	 */
-	public static final int HTTPS_PORT = 443;
+	public static final int    HTTPS_PORT = 443;
 	public static final String SCHEME_HTTPS = "https";
 	public static final String CHARSET_UTF8 = "UTF-8";
 	public static final String KEY_STORE_TYPE_JKS = "jks";
@@ -67,9 +67,9 @@ public final class HermesConstants {
 	 */
 	public static final String FORMAT_19 = "yyyy-MM-dd HH:mm:ss";
 	public static final String FORMAT_10 = "yyyy-MM-dd";
-	public static final String NICK_DAY = "d"; // 单位：天
+	public static final String NICK_DAY = "d";  // 单位：天
 	public static final String UNIT_MONTH = "月";
-	public static final String UNIT_DAY = "天";
+	public static final String UNIT_DAY   = "天";
 
 	/**
 	 * 状态 0: 有效 1：无效
@@ -83,6 +83,7 @@ public final class HermesConstants {
 	public static final String CODE_00 = "00";
 	public static final String CODE_99 = "99";
 
+
 	/**
 	 * 接入第三方平台编码
 	 */
@@ -95,28 +96,28 @@ public final class HermesConstants {
 	 * 开发平台接口
 	 */
 
-	public static final int JL_PAGE_SIZE = 30; // 页面结果集 大小
-	public static final int JL_PAGE_NUM = 1; // 当前页
+	public static final int    JL_PAGE_SIZE = 30; 								 // 页面结果集 大小
+	public static final int    JL_PAGE_NUM = 1; 								 // 当前页
 	public static final String JL_FINANCE_FRODUCT_GET = "jl.financefroduct.get"; // 查询理财产品接口
-	public static final String JL_ORDER_GET = "jl.order.get"; // 查询订单接口
-	public static final String JL_FILE_GET = "jl.file.get"; // 查询文件协议
-	public static final String JL_ORDER_DO2PAY = "jl.order.do2pay"; // 下单并支付接口
-	public static final String JL_FINPRO_REPSCH = "jl.finpro.repsch.get"; // 查询还款计划接口
-	public static final String JL_ORDER_CANCEL = "jl.order.cancel"; // 撤销订单接口
+	public static final String JL_ORDER_GET = "jl.order.get";					 // 查询订单接口
+	public static final String JL_FILE_GET = "jl.file.get";						 // 查询文件协议
+	public static final String JL_ORDER_DO2PAY = "jl.order.do2pay"; 			 // 下单并支付接口
+	public static final String JL_FINPRO_REPSCH = "jl.finpro.repsch.get"; 		 // 查询还款计划接口
+	public static final String JL_ORDER_CANCEL = "jl.order.cancel"; 			 // 撤销订单接口
 
-	public static final String CODE_FINANCE_FRODUCT_GET = "9900001"; // 查询理财产品接口
-	public static final String CODE_ORDER_GET = "9900002"; // 查询订单接口
-	public static final String CODE_FILE_GET = "9900003"; // 查询文件协议
-	public static final String CODE_ORDER_DO2PAY = "1000005"; // 下单并支付接口
-	public static final String CODE_FINPRO_REPSCH = "9900004"; // 查询还款计划接口
-	public static final String CODE_ORDER_CANCEL = "1000003"; // 撤销订单接口
+	public static final String CODE_FINANCE_FRODUCT_GET = "9900001"; 			 // 查询理财产品接口
+	public static final String CODE_ORDER_GET = "9900002"; 						 // 查询订单接口
+	public static final String CODE_FILE_GET = "9900003"; 						 // 查询文件协议
+	public static final String CODE_ORDER_DO2PAY = "1000005"; 					 // 下单并支付接口
+	public static final String CODE_FINPRO_REPSCH = "9900004"; 					 // 查询还款计划接口
+	public static final String CODE_ORDER_CANCEL = "1000003"; 					 // 撤销订单接口
 
-	public static final String TYPE_FINANCE_REPAY_PLAN = "1"; // 理财产品还款计划
-	public static final String TYPE_ASSET_REPAY_PLAN = "2"; // 资产还款计划
-	public static final String TYPE_ORDER_REPAY_PLAN = "3"; // 订单还款计划
+	public static final String TYPE_FINANCE_REPAY_PLAN = "1"; 					 // 理财产品还款计划
+	public static final String TYPE_ASSET_REPAY_PLAN = "2"; 					 // 资产还款计划
+	public static final String TYPE_ORDER_REPAY_PLAN = "3";						 // 订单还款计划
 
 	/**
-	 * jlfex 订单状态
+	 *jlfex 订单状态
 	 */
 	public static final String ORDER_WAIT_PAY = "待付款";
 	public static final String ORDER_TRAD_FAIL = "交易失败";
@@ -187,17 +188,17 @@ public final class HermesConstants {
 	 * 中金机构号编码
 	 */
 	public static final String CFCA_INSTITUTION_ID_CODE = "cfca.institution.id";
-	// 账户类型
-	public static final int ZJ_ACCOUNT_TYPE_11 = 11; // 个人账户
-	public static final int ZJ_ACCOUNT_TYPE_12 = 12; // 企业账户
-	public static final int ZJ_ACCOUNT_TYPE_20 = 20; // 支付平台内部账户
-
-	// 中金代扣请求流水号前缀
-	public static final String PRE_IN = "IN";
-	// 中金清算请求流水号前缀
-	public static final String PRE_OUT = "OUT";
-	public static final String CLEAR_NOTE = "市场订单结算";
-
+	//账户类型
+	public static final int ZJ_ACCOUNT_TYPE_11 = 11; //个人账户
+	public static final int ZJ_ACCOUNT_TYPE_12 = 12; //企业账户
+	public static final int ZJ_ACCOUNT_TYPE_20 = 20; //支付平台内部账户
+	
+	//中金代扣请求流水号前缀
+	public static final String  PRE_IN = "IN";
+	//中金清算请求流水号前缀
+	public static final String  PRE_OUT = "OUT";
+	public static final String  CLEAR_NOTE = "市场订单结算";
+	
 	/**
 	 * properties 标识
 	 */
@@ -209,13 +210,13 @@ public final class HermesConstants {
 	/**
 	 * 第三方 中金支付 编码
 	 */
-	public static final String PLAT_ZJ_CODE = "zjpay";
+	public static final String PLAT_ZJ_CODE= "zjpay";
 
 	/**
 	 * 字典类型的导航类型
 	 */
 	public static final String DIC_NAV = "nav";
-
+	
 	/**
 	 * 后台菜单code
 	 */
@@ -224,12 +225,12 @@ public final class HermesConstants {
 	 * 等额本息
 	 */
 	public static final String REPAY_PRINCIPAL = "Principal";
-
+	
 	/**
 	 * 文章类型：公告
 	 */
 	public static final String PUBLIC_NOTICE = "public_notice";
-
+	
 	/**
 	 * 默认每页页大小
 	 */
