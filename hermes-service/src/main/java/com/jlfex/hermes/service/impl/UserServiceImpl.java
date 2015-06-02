@@ -146,31 +146,23 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jlfex.hermes.service.UserService#checkPhone(java.lang.String)
+	/**
+	 * 校验手机号码是否可用
+	 * true 可用
+	 * false 不可用 
 	 */
 	@Override
 	public boolean checkPhone(String phone) {
-		Assert.notEmpty(phone, "cellphone is empty");
-		String smsPro = App.config("auth.cellphone.switch");
-		// value：1.需要认证 0.不需要认证
-		if (smsPro.equals("1")) {
-			List<User> users = userRepository.findByCellphone(phone);
-			if (users.size() > 0) {
-				List<UserProperties> userPros = userPropertiesRepository.findByAuthCellphoneAndUserIn(Auth.PASS, users);
-				if (userPros.size() > 0) {
-					return false;
-				} else {
-					return true;
-				}
+		List<User> users = userRepository.findByCellphone(phone);
+		if (users!=null && users.size() > 0) {
+			//校验手机 是否已经通过认证
+			List<UserProperties> userPros = userPropertiesRepository.findByAuthCellphoneAndUserIn(Auth.PASS, users);
+			if (userPros.size() > 0) {
+				return false;
 			} else {
 				return true;
 			}
-
 		} else {
-			// 手机不需要认证，则不检查手机是否被占用
 			return true;
 		}
 	}
