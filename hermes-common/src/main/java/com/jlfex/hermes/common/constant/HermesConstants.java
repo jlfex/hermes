@@ -235,8 +235,14 @@ public final class HermesConstants {
 	 * 文章类型：公告
 	 */
 	public static final String PUBLIC_NOTICE = "public_notice";
+	
 	/**
 	 * 百分号 %
 	 */
 	public static final String SUFFIX_PERCENT = "%";
+	
+	/**
+	 * 默认每页页大小
+	 */
+	public static final String DEFAULT_PAGE_SIZE = "10";
 }

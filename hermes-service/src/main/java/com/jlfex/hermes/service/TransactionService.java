@@ -1,7 +1,9 @@
 package com.jlfex.hermes.service;
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.springframework.data.domain.Page;
+
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -271,4 +273,16 @@ public interface TransactionService {
 	 * @param remark
 	 */
 	public void addCashAccountRecord(String type, UserAccount sourceUserAccount, BigDecimal amount, String reference, String remark);
+	
+	/**
+	 * 分页查询充值记录
+	 * @param email
+	 * @param beginDate
+	 * @param endDate
+	 * @param remark
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(String email, String beginDate, String endDate, String remark, Integer page, Integer size) ;
 }
