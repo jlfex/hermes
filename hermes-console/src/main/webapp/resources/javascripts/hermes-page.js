@@ -104,6 +104,127 @@
 						_date_begin.datepicker('option', 'maxDate', date);
 					}
 				}).datepicker('option', 'maxDate', opts.today);
+			},
+			
+			// 用户日志管理
+			userLogMng: function(opts) {
+				// 初始化
+				var _form_search = $('#searchForm'),
+					_btn_search = $('#searchBtn'),
+					_date_begin = $('#beginDate'),
+					_date_end = $('#endDate'),
+					_hide_page = $('#page');
+				
+				// 绑定表单提交事件
+				_form_search.on('submit', function() {
+					$.link.html(null, {
+						url: opts.search,
+						data: _form_search.serialize(),
+						target: 'data'
+					});
+					return false;
+				});
+				
+				// 绑定查询事件
+				_btn_search.on('click', function() {
+					_hide_page.val(0);
+					_form_search.trigger('submit');
+				}).trigger('click');
+				
+				// 日历控件处理
+				_date_begin.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_end.datepicker('option', 'minDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
+				
+				_date_end.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_begin.datepicker('option', 'maxDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
+			},
+			// 借款日志管理
+			loanLogMng: function(opts) {
+				// 初始化
+				var _form_search = $('#searchForm'),
+					_btn_search = $('#searchBtn'),
+					_date_begin = $('#beginDate'),
+					_date_end = $('#endDate'),
+					_hide_page = $('#page');
+				
+				// 绑定表单提交事件
+				_form_search.on('submit', function() {
+					$.link.html(null, {
+						url: opts.search,
+						data: _form_search.serialize(),
+						target: 'data'
+					});
+					return false;
+				});
+				
+				// 绑定查询事件
+				_btn_search.on('click', function() {
+					_hide_page.val(0);
+					_form_search.trigger('submit');
+				}).trigger('click');
+				
+				// 日历控件处理
+				_date_begin.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_end.datepicker('option', 'minDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
+				
+				_date_end.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_begin.datepicker('option', 'maxDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
+			},
+			// 充值明细管理
+			rechargeDetailMng: function(opts) {
+				// 初始化
+				var _form_search = $('#searchForm'),
+					_btn_search = $('#searchBtn'),
+					_date_begin = $('#beginDate'),
+					_date_end = $('#endDate'),
+					_hide_page = $('#page');
+				
+				// 绑定表单提交事件
+				_form_search.on('submit', function() {
+					$.link.html(null, {
+						url: opts.search,
+						data: _form_search.serialize(),
+						target: 'data'
+					});
+					return false;
+				});
+				
+				// 绑定查询事件
+				_btn_search.on('click', function() {
+					_hide_page.val(0);
+					_form_search.trigger('submit');
+				}).trigger('click');
+				
+				// 日历控件处理
+				_date_begin.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_end.datepicker('option', 'minDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
+				
+				_date_end.prop('readonly', true).datepicker({
+					numberOfMonths: 2,
+					onClose: function(date) {
+						_date_begin.datepicker('option', 'maxDate', date);
+					}
+				}).datepicker('option', 'maxDate', opts.today);
 			}
 		}
 	});
