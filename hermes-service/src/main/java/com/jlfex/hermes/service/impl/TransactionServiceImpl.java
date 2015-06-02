@@ -1,28 +1,36 @@
 package com.jlfex.hermes.service.impl;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.asm.Type;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.repository.CommonRepository;
 import com.jlfex.hermes.repository.TransactionRepository;
 import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.common.Pageables;
+import com.jlfex.hermes.service.common.Query;
 
 /**
  * 交易业务
@@ -43,6 +51,9 @@ public class TransactionServiceImpl implements TransactionService {
 	/** 交易流水信息仓库 */
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+	@Autowired
+	private CommonRepository commonRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -462,5 +473,25 @@ public class TransactionServiceImpl implements TransactionService {
 
 		transaction.setRemark(remark);
 		transactionRepository.save(transaction);
+	}
+
+	@Override
+	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(String email, String beginDate, String endDate, String remark, Integer page, Integer size) {
+		// 初始化
+		Pageable pageable = Pageables.pageable(page, size);
+		Query query = new Query("from Transaction where 1 = 1");
+
+		// 查询数据
+		query.and("sourceUserAccount.user.email like :email", "email", "%" + email + "%", !Strings.empty(email));
+		query.and("datetime between :beginDate and :endDate", Query.dateBetween(beginDate, endDate), (!Strings.empty(beginDate) && !Strings.empty(endDate)));
+		query.and("remark like :remark", "remark", "%" + remark + "%", !Strings.empty(remark));
+		query.and("type = :type", "type", Transaction.Type.REVERSE_CHARGE,!Strings.empty(Transaction.Type.REVERSE_CHARGE));
+		query.order("datetime desc");
+
+		Long total = commonRepository.count(query.getCount(), query.getParams());
+		List<Transaction> transactions = commonRepository.pageByJpql(query.getJpql(), query.getParams(), pageable.getOffset(), pageable.getPageSize(), Transaction.class);
+
+		// 返回结果
+		return new PageImpl<Transaction>(transactions, pageable, total);
 	}
 }
