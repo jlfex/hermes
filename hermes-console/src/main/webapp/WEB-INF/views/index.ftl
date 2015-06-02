@@ -7,9 +7,6 @@
 <link rel="stylesheet" href="${app.css}/style.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui-timepicker-addon.css">
-<script type="text/javascript" charset="utf-8">
-	window.ctxforcontent = '${app.js}';
-</script>
 </head>
 <body>
 
