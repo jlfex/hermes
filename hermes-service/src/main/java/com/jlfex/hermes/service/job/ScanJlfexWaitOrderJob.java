@@ -79,7 +79,6 @@ public class ScanJlfexWaitOrderJob extends Job {
 							Logger.info("资金流水记录成功  理财ID investId="+order.getInvest().getId());
 							//保存操作日志
 							investService.saveLoanLog(investUser, order.getOrderAmount(), loan, LoanLog.Type.INVEST, "投标成功");
-							investService.saveUserLog(investUser);	
 							investStatus = Invest.Status.FREEZE;
 							payStatus = HermesConstants.PAY_SUC;
 							//更新投标进度

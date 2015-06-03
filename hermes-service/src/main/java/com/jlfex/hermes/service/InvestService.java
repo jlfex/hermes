@@ -2,7 +2,9 @@ package com.jlfex.hermes.service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.data.domain.Page;
+
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.Invest;
 import com.jlfex.hermes.model.Loan;
@@ -165,7 +167,7 @@ public interface InvestService {
 	 * 
 	 * @param investUser
 	 */
-	public void saveUserLog(User investUser) throws Exception;
+	public void saveUserLog(User investUser,String logType) throws Exception;
 
 	/**
 	 * 获取订单 对应的 资产编号

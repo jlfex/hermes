@@ -4,11 +4,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
@@ -27,6 +30,7 @@ import com.jlfex.hermes.model.BankAccount.Status;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
+import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.Withdraw;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
@@ -318,7 +322,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
 			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
-			investService.saveUserLog(user);
+			investService.saveUserLog(user,UserLog.LogType.RECHARGE);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
 					result.setType(Type.WITHHOLDING_PROCESSING);

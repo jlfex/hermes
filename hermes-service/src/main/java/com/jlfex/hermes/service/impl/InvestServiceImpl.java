@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,8 +24,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
@@ -391,7 +395,6 @@ public class InvestServiceImpl implements InvestService {
 			// 保存理财信息
 			saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
-			saveUserLog(investUser);
 		} else {
 			String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
 			Logger.info(var);
@@ -451,7 +454,6 @@ public class InvestServiceImpl implements InvestService {
 		if (responseVo == null) {
 			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
-			saveUserLog(investUser);
 			return "投标失败,订单信息为空";
 		}
 		Logger.info("易联债权标投标:开始 ：loanNo=" + loan.getLoanNo() + ", 下单并支付接口返回:订单状态=" + responseVo.getOrderStatus() + ",支付状态=" + responseVo.getPayStatus());
@@ -468,7 +470,6 @@ public class InvestServiceImpl implements InvestService {
 			UserAccount investAccount = userAccountService.findByUserAndType(investUser, UserAccount.Type.CASH);
 			transactionService.addCashAccountRecord(Transaction.Type.CHARGE, cropAccount, investAccount, investAmount, investUser.getId(), "JLfex代扣充值失败");
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标失败");
-			saveUserLog(investUser);
 			Logger.info("撤单成功!");
 			return "订单支付失败";
 		}
@@ -481,7 +482,6 @@ public class InvestServiceImpl implements InvestService {
 			transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
 			// 保存操作日志
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
-			saveUserLog(investUser);
 			resultFlag = "00";
 			Logger.info("资金流水记录成功  理财ID investId=" + invest.getId());
 			int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
@@ -494,7 +494,6 @@ public class InvestServiceImpl implements InvestService {
 			resultFlag = "01";
 			invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.WAIT);
 			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标支付结果待确认中");
-			saveUserLog(investUser);
 			Logger.info("支付状态 待确认中   理财ID investId=" + invest.getId());
 		}
 		// 保存理财收益信息
@@ -683,11 +682,11 @@ public class InvestServiceImpl implements InvestService {
 	 * @param investUser
 	 */
 	@Override
-	public void saveUserLog(User investUser) throws Exception {
+	public void saveUserLog(User investUser,String logType) throws Exception {
 		UserLog userLog = new UserLog();
 		userLog.setUser(investUser);
 		userLog.setDatetime(new Date());
-		userLog.setType(UserLog.LogType.INVEST);
+		userLog.setType(logType);
 		userLogRepository.save(userLog);
 	}
 
@@ -1019,8 +1018,6 @@ public class InvestServiceImpl implements InvestService {
 						loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 						this.saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, LoanLog.Status.FAIL);
 					}
-
-					this.saveUserLog(investUser);
 				} else {
 					backMap.put("code", Tx1361Status.WITHHOLDING_FAIL.getStatus().toString());
 					backMap.put("msg", response.getMessage());
