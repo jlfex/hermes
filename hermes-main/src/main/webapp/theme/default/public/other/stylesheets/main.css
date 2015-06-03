@@ -482,8 +482,8 @@ a.my_cr{ text-decoration:underline; display:inline; padding-left:10px; color:#01
 .left_nav .record_info .record_list p.linkbt a.li_left{background:url(../images/icon1/loan_li_icon.png) no-repeat left center;padding-left:15px; font-size:14px; color:#888888;}
 .left_nav .record_info .record_list p.linkbt img{ vertical-align:middle; padding-left:5px;}
 .account_center_list{ background:#018dc8; width:214px; height:240px;-moz-border-left-top-radius: 5px; -webkit-border-left-top-radius: 5px;border-left-top-radius: 5px;-moz-border-right-top-radius: 5px; -webkit-border-right-top-radius: 5px;border-right-top-radius: 5px}
-.account_center_list .head_part{ border-bottom:1px solid #51b2dc; padding-bottom:5px;}
-.account_center_list .head_part img.head_img{ text-align:center;padding-top:15px; margin:0 auto;display:block;}
+.account_center_list .head_part{ border:1px solid #51b2dc; padding:5px;}
+.account_center_list .head_part img.head_img{ text-align:center;padding-top:0px; margin:0 auto;display:block;}
 .account_center_list .head_part a.head_link{ text-align:center; display:block; padding-top:5px; color:#fff; font-weight:600; font-size:14px;}
 p.clicklink{ width:120px; margin:15px 0; color:#898989;font-size:16px;}
 .account_center_list p.clicklink{ margin-left:50px;}

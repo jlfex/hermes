@@ -254,7 +254,7 @@ public class LoanController {
 		}
 		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName + ",purposeId :" + purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
 		model.addAttribute("amount", Numbers.toCurrency(new Double(amount)));
-		model.addAttribute("rate", Numbers.toPercent(new Double(rate) / 100));
+		model.addAttribute("rate", new BigDecimal(rate.trim()).setScale(2, RoundingMode.HALF_DOWN)+HermesConstants.SUFFIX_PERCENT);
 		model.addAttribute("period", period);
 
 		model.addAttribute("productId", productId);

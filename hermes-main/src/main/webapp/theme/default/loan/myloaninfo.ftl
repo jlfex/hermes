@@ -20,6 +20,7 @@ jQuery(function($) {
 //-->
 </script>
 <!-- loan info -->
+<div id="com_invest">
 <div class="block">
 	<div class="body-xs">
 		<div class="row u-row">
@@ -47,7 +48,7 @@ jQuery(function($) {
 								<@messages key="model.loan.amount" />：&nbsp;<span class="currency">${loan.amount}</span>元&nbsp;<#t>
 							</div>
 							<div class="col-xs-4 hm-col form-group">
-								<@messages key="model.loan.rate" />：&nbsp;${loan.rate*100}%&nbsp;<#t>
+								<@messages key="model.loan.rate" />：&nbsp;${loan.rateFormat!''}&nbsp;<#t>
 							</div>
 							<div class="col-xs-4 hm-col form-group">
 								<@messages key="model.loan.period" />：&nbsp;${loan.period}个月&nbsp;<#t>
@@ -101,4 +102,4 @@ jQuery(function($) {
 		</table>
 	</div>
 </div>
-
+</div>

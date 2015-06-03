@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>出借与借款协议</title>
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="${app.css}/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="${app.theme}/public/other/stylesheets/main.css">
+
 <style type="text/css">
 	.account_center{ font-size: 16px;}
 	.account_center h2.title{ text-align: center; font-size: 24px; font-weight: 600; color: #323131;}
@@ -14,7 +25,8 @@
 	.cont_main p{ margin: 10px 0; line-height: 30px;}
 	.cont_main p.lt2em{ text-indent: 2em;}
 </style>
-
+</head>
+<body>
 <div class="sub_main">
 	<div class="account_center">
 		<div class="xy_block">
@@ -164,3 +176,5 @@
 		 
 	</div>
 </div>
+</body>
+</html>

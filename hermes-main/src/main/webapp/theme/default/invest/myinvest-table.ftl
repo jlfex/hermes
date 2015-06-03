@@ -5,13 +5,14 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
+				    <th>借款编号</th>
 					<th><@messages key="model.loan.purpose" /></th>
-					<th><@messages key="model.invest.amount" />(<@messages key="common.unit.cny" />)</th>
+					<th><@messages key="model.invest.amount" />/<@messages key="common.unit.cny" /></th>
 					<th><@messages key="model.loan.rate" /></th>
 					<th><@messages key="model.loan.period" /></th>
-					<th><@messages key="invest.should.receive.pi" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="invest.received.pi" />(<@messages key="common.unit.cny" />)</th>
-					<th><@messages key="invest.wait.receive.pi" />(<@messages key="common.unit.cny" />)</th>
+					<th><@messages key="invest.should.receive.pi" />/<@messages key="common.unit.cny" /></th>
+					<th><@messages key="invest.received.pi" />/<@messages key="common.unit.cny" /></th>
+					<th><@messages key="invest.wait.receive.pi" />/<@messages key="common.unit.cny" /></th>
 					<th><@messages key="common.status" /></th>
 					<th>协议</th>
 				</tr>
@@ -19,9 +20,9 @@
 			<tbody>
 			  <#list invests.content as i>  
 				<tr>
-					<td><a href="#" class="icon loan info" data-id="${i.id}">${i.purpose!''}</a>
-					</td>
-					<td class="right">${i.amount}<@messages key="common.unit.cny" /></td>
+				    <td><a href="#" class="icon loan info" data-id="${i.id}">${i.loanNo!''}</a></td>
+					<td>${i.purpose!''}</td>
+					<td class="right">${i.amount}</td>
 					<td class="right">${i.rate}</td>
 					<td class="right">${i.period}<@messages key="common.unit.month" /></td>
 					<td class="right">${i.shouldReceivePI}</td>
