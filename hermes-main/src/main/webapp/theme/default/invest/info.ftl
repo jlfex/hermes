@@ -173,8 +173,8 @@ jQuery(function() {
 	<div class="account_center">
 		<div class="account_nav_left">
 			<div class="account_center_list">
-				<div class="head_part" style="height:242px;">
-					<#if loanUserInfo?exists><#if loanUserInfo.lgAvatar?exists><img alt="" src="${loanUserInfo.lgAvatar!''}" class="head_img"> <#else> 	<img class="head_img" src="${app.theme}/public/other/images/icon1/acdount_head_img.png"></#if></#if>
+				<div class="head_part" style="height:240px;">
+					<#if loanUserInfo?exists><#if loanUserInfo.lgAvatar?exists><img alt="" width="100%" height="100%" src="${loanUserInfo.lgAvatar!''}" class="head_img"> <#else> 	<img class="head_img" src="${app.theme}/public/other/images/icon1/acdount_head_img.png"></#if></#if>
 				</div>
 				<p class="clicklink" style="height:25px;" >
 				 	 <#if loanUserInfo?exists && loanUserInfo.authEmail?exists && loanUserInfo.authEmail=='10'>

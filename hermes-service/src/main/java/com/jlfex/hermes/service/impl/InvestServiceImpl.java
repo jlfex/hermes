@@ -764,6 +764,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatus());
 			investInfo.setLoanKind(loanStatus);
+			investInfo.setLoanNo(invest.getLoan().getLoanNo());
 			List<InvestProfit> investProfitList = investProfitRepository.findByInvest(invest);
 			BigDecimal shouldReceivePI = BigDecimal.ZERO;
 			BigDecimal receivedPI = BigDecimal.ZERO;

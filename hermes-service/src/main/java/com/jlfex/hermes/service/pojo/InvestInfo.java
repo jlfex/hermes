@@ -70,7 +70,9 @@ public class InvestInfo implements Serializable {
 	private  String   loanPdfId;
 	
 	/** 担保承诺函编号*/
-	private  String   guaranteePdfId;				
+	private  String   guaranteePdfId;
+	/** 借款编号**/
+	private  String   loanNo;
 	
 	
 
@@ -270,5 +272,15 @@ public class InvestInfo implements Serializable {
 	public void setGuaranteePdfId(String guaranteePdfId) {
 		this.guaranteePdfId = guaranteePdfId;
 	}
+
+	public String getLoanNo() {
+		return loanNo;
+	}
+
+	public void setLoanNo(String loanNo) {
+		this.loanNo = loanNo;
+	}
+	
+	
 	
 }

@@ -2,44 +2,46 @@
 	<div class="body-sm">
 		<h4>投标记录</h4>
 	
-		<table class="table table-hover" style="font-size:12px;">
+		<table class="table table-hover">
 			<thead>
-				<tr>
-					<th class="center" style="width:65px;">债权名称</th>
-					<th class="center" style="width:85px;">投标金额(<@messages key="common.unit.cny" />)</th>
-					<th class="center" style="width:60px;">年利率</th>
-					<th class="center" style="width:60px;">期限(天)</th>
-					<th class="center" style="width:85px;">应收本息(<@messages key="common.unit.cny" />)</th>
-					<th class="center" style="width:70px;">已收本息(<@messages key="common.unit.cny" />)</th>
-					<th class="center" style="width:70px;">待收本息(<@messages key="common.unit.cny" />)</th>
-					<th class="center" style="width:70px;">状态</th>
-					<th class="center" style="width:70px;">协议</th>
+				<tr style="padding:0px;border:0px;margin:0px;">
+					<th class="center" style="width:10%;">债权名称</th>
+					<th class="center" style="width:10%;">债权编号</th>
+					<th class="center" style="width:12%;">投标金额/<@messages key="common.unit.cny" /></th>
+					<th class="center" style="width:10%;">年利率</th>
+					<th class="center" style="width:10%;">期限/天</th>
+					<th class="center" style="width:10%;">应收本息/<@messages key="common.unit.cny" /></th>
+					<th class="center" style="width:10%;">已收本息/<@messages key="common.unit.cny" /></th>
+					<th class="center" style="width:10%;">待收本息/<@messages key="common.unit.cny" /></th>
+					<th class="center" style="width:10%;">状态</th>
+					<th class="center" style="width:10%;">协议</th>
 				</tr>
 			</thead>
 			<tbody>
 			  <#list invests.content as i>  
 				<tr>
-					<td class="center" style="width:65px;">
+					<td class="center">
 					    <a href="#" class="icon loan investinfo" data-id="${i.id}">${i.purpose}</a>
 					</td>
-					<td class="center">${i.amount}<@messages key="common.unit.cny" /></td>
-					<td class="center" style="width:60px;">${(i.rate)!}</td>
-					<td class="center" style="width:60px;">${(i.period)!}</td>
+					<td class="center">${i.loanNo!''}</td>
+					<td class="center">${i.amount}</td>
+					<td class="center">${(i.rate)!}</td>
+					<td class="center">${(i.period)!}</td>
 					<td class="center">${(i.shouldReceivePI)!}</td>
 					<td class="center">${(i.receivedPI)!}</td>
 					<td class="center">${(i.waitReceivePI)!}</td>
-					<td class="center" style="width:65px;">${(i.investStatusName)!}</td>
+					<td class="center">${(i.investStatusName)!}</td>
 					<#if i.loanKind == '03' && i.loanPdfId?? && i.guaranteePdfId??>									
-				        <td class="center" style="width:120px;">
+				        <td class="center">
 				            <a href="${app}/invest/queryFile/${i.loanPdfId!''}" class="icon loan" target="_Blank">《债权转让协议》</br></a>
                             <a href="${app}/invest/queryFile/${i.guaranteePdfId!''}" class="icon loan" target="_Blank">《担保函》</a>
 				        </td>
 				    <#elseif i.loanKind == '01'>		
-				    	<td class="center" style="width:120px;">
-				    	<a href="#" class="icon loan protocol" target="_Blank" pid=${i.id}>《债权转让协议》</a>
+				    	<td class="center" >
+				    	<a href="#" class="icon loan protocol" target="_Blank" pid=${i.id}>协议</a>
 				    	</td>
 				    <#else>
-				    	<td class="center" style="width:120px;"></td>				    
+				    	<td class="center"></td>				    
 				    </#if>	
 				</tr>
 				</#list>

@@ -5,13 +5,14 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
+					<th>借款编号</th>
 					<th><@messages key="model.loan.purpose" /></th>
-					<th><@messages key="model.loan.amount" />(<@messages key="common.unit.cny" />)</th>
+					<th><@messages key="model.loan.amount" />/<@messages key="common.unit.cny" /></th>
 					<th><@messages key="model.loan.rate" /></th>
 					<th><@messages key="model.loan.period" /></th>
-					<th>偿还本息(<@messages key="common.unit.cny" />)</th>
-					<th>已还本息(<@messages key="common.unit.cny" />)</th>
-					<th>未还本息(<@messages key="common.unit.cny" />)</th>
+					<th>偿还本息/<@messages key="common.unit.cny" /></th>
+					<th>已还本息/<@messages key="common.unit.cny" /></th>
+					<th>未还本息/<@messages key="common.unit.cny" /></th>
 					<th><@messages key="common.status" /></th>
 					<th>协议</th>
 				</tr>
@@ -19,11 +20,11 @@
 			<tbody>
 			  	<#list loans.content as l>  
 				<tr>
-					<td><a href="#" class="icon loan loaninfo" data-id="${l.id}">${l.purpose}</a>
-					</td>
-					<td class="right">${l.amount}</td>
-					<td class="right">${l.rate}</td>
-					<td class="right">${l.period}<@messages key="common.unit.month" /></td>
+					<td><a href="#" class="icon loan loaninfo" data-id="${l.id}">${l.applicationNo!''}</a></td>
+					<td>${l.purpose!''}</td>
+					<td class="right">${l.amount!''}</td>
+					<td class="right">${l.rate!''}</td>
+					<td class="right">${l.period!''}<@messages key="common.unit.month" /></td>
 					<td class="right">${l.repayPI}</td>
 					<td class="right">${l.repayedPI}</td>
 					<td class="right">${l.unRepayPI}</td>

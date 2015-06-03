@@ -17,6 +17,11 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/bootstrap.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.theme}/public/javascripts/hermes.js"></script>
 <script type="text/javascript" src="${app.theme}/public/other/javascripts/approve.js"></script>
+<style  type="text/css">
+  #com_invest{
+   width:850px; border:0;margin:0;padding:0;
+  }
+</style>
 </head>
 <body class="index">
 <div class="_container">

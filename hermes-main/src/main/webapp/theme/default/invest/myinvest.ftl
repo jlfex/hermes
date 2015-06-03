@@ -1,6 +1,7 @@
 <form id="searchForm" method="post" action="#" class="form-horizontal">
 <input id="page" name="page" type="hidden" value="0">
 <!-- loan info -->
+<div id="com_invest">
 <div class="block">
 	<div class="body-xs">
 		<div class="row u-row">
@@ -23,6 +24,7 @@
 </div>
 </form>
 <div id="data"></div>
+</div>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

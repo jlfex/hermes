@@ -1,4 +1,5 @@
 <!-- invest info -->
+<div id="com_invest">
 <div class="block">
 	<div class="body-xs">
 		<div class="row u-row">
@@ -23,7 +24,7 @@
 					<p class="account">
 						<div class="row hm-row">
 							<div class="col-xs-3 hm-col form-group">
-								<@messages key="model.loan.rate" />：&nbsp;${loan.rate*100}%&nbsp;<#t>
+								<@messages key="model.loan.rate" />：&nbsp;${loan.rateFormat!''}&nbsp;<#t>
 							</div>
 							<div class="col-xs-3 hm-col form-group">
 								<@messages key="model.loan.repay" />：&nbsp;${repay.name}&nbsp;<#t>
@@ -80,4 +81,5 @@
 			</tbody>
 		</table>
 	</div>
+</div>
 </div>

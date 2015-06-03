@@ -757,6 +757,7 @@ public class LoanServiceImpl implements LoanService {
 			loanInfo.setRepayPI(Numbers.toCurrency(repayPI.doubleValue()));
 			loanInfo.setRepayedPI(Numbers.toCurrency(repayedPI.doubleValue()));
 			loanInfo.setUnRepayPI(Numbers.toCurrency(unRepayPI.doubleValue()));
+			loanInfo.setApplicationNo(loan.getLoanNo());
 			loaninfoList.add(loanInfo);
 		}
 		Page<LoanInfo> pageLoan = new PageImpl<LoanInfo>(loaninfoList, pageable, loanList.getTotalElements());
