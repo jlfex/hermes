@@ -27,6 +27,7 @@ public class Asset extends Model{
 	private  String  code ;						//资产编号
 	@Column(name =   "project_name")
 	private  String  projectName;				//资产名称
+	@Column(name = "rate", precision=16, scale=8 , nullable=false)
 	private  BigDecimal  rate;					//融资利率
 	private  String  term;						//融资期限
 	@Column(name =   "repayment_mode")

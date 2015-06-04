@@ -2,6 +2,7 @@ package com.jlfex.hermes.service.api.yltx;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -864,7 +865,7 @@ public class JlfexServiceImpl implements JlfexService {
 			if(vo!=null){
 				vo.toString();
 				order.setFinanceProductName(vo.getFinanceProductName());
-				order.setInterestRate(vo.getInterestRate().divide(new BigDecimal("100")));
+				order.setInterestRate(vo.getInterestRate().divide(new BigDecimal("100")).setScale(8, RoundingMode.HALF_DOWN));
 				order.setTimeLimit(vo.getTimeLimit());
 				order.setLimit(vo.getLimit());
 				order.setLabelVolmoney(vo.getLabelVolmoney());

@@ -64,7 +64,7 @@ public class Loan extends Model {
 	private Integer period;
 	
 	/** 利率 */
-	@Column(name = "rate", precision=8, scale=4 , nullable=false)
+	@Column(name = "rate", precision=16, scale=8 , nullable=false)
 	private BigDecimal rate;
 	
 	/** 招标期限 */
@@ -299,7 +299,7 @@ public class Loan extends Model {
 	 */
 	public String getRateFormat(){
 		if(rate != null){
-			return  (rate.multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_DOWN))+HermesConstants.SUFFIX_PERCENT;
+			return  Numbers.percentRateOfDecimal(String.valueOf(rate));
 		}
 		return "";
 	}

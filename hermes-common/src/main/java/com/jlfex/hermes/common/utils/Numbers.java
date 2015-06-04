@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.cache.Caches;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 
 /**
@@ -169,4 +170,34 @@ public abstract class Numbers {
 			throw new ServiceException("cannot parse percent " + percent + ".", e);
 		}
 	}
+	/**
+	 * 格式化 年利率 为百分数
+	 * rate : 0.#### 格式
+	 * @param rate
+	 * @return
+	 */
+	public static String  percentRateOfDecimal(String rate) {
+		if(Strings.notEmpty(rate)){
+			rate = rate.trim();
+			String  rateStr = new BigDecimal(rate).multiply(new BigDecimal("100")).setScale(8, RoundingMode.HALF_DOWN).toString();
+			int  i= rateStr.length();
+			while(i>0){
+				i--;
+				if(rateStr.endsWith("0")){
+					rateStr = rateStr.substring(0, rateStr.length()-1);
+				}else{
+					break;
+				}
+			}
+			if(rateStr.endsWith(".")){
+				rateStr = rateStr.replace(".", "");
+			}
+			return rateStr+HermesConstants.SUFFIX_PERCENT;
+		}
+		return "";
+	}
+	
+	
+	
+
 }
