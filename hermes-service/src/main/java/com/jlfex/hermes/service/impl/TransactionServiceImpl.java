@@ -7,19 +7,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.jlfex.hermes.common.Assert;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
-import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
@@ -29,7 +37,6 @@ import com.jlfex.hermes.repository.UserAccountRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.common.Pageables;
-import com.jlfex.hermes.service.common.Query;
 
 /**
  * 交易业务
@@ -50,7 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
 	/** 交易流水信息仓库 */
 	@Autowired
 	private TransactionRepository transactionRepository;
-	
+
 	@Autowired
 	private CommonRepository commonRepository;
 
@@ -475,22 +482,43 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(String email, String beginDate, String endDate, String remark, Integer page, Integer size) {
-		// 初始化
-		Pageable pageable = Pageables.pageable(page, size);
-		Query query = new Query("from Transaction where 1 = 1");
+	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(final String email, final Date beginDate, final Date endDate, final String remark, Integer page, Integer size) {
+		Sort sort = new Sort(Direction.DESC, "datetime");
+		sort = sort.and(new Sort(Direction.DESC, "type"));
+		sort = sort.and(new Sort(Direction.DESC, "sourceUserAccount.user.email"));
+		Pageable pageable = new PageRequest(page, size == null ? Integer.valueOf(HermesConstants.DEFAULT_PAGE_SIZE) : size, sort);
+		return transactionRepository.findAll(new Specification<Transaction>() {
+			@Override
+			public Predicate toPredicate(Root<Transaction> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> list = new ArrayList<Predicate>();
 
-		// 查询数据
-		query.and("sourceUserAccount.user.email like :email", "email", "%" + email + "%", !Strings.empty(email));
-		query.and("datetime between :beginDate and :endDate", Query.dateBetween(beginDate, endDate), (!Strings.empty(beginDate) && !Strings.empty(endDate)));
-		query.and("remark like :remark", "remark", "%" + remark + "%", !Strings.empty(remark));
-		query.and("type = :type", "type", Transaction.Type.REVERSE_CHARGE,!Strings.empty(Transaction.Type.REVERSE_CHARGE));
-		query.order("datetime desc");
+				if (StringUtils.isNotEmpty(email)) {
+					list.add(cb.like(root.<UserAccount> get("sourceUserAccount").<User> get("user").<String> get("email"), "%" + email.trim() + "%"));
+				}
 
-		Long total = commonRepository.count(query.getCount(), query.getParams());
-		List<Transaction> transactions = commonRepository.pageByJpql(query.getJpql(), query.getParams(), pageable.getOffset(), pageable.getPageSize(), Transaction.class);
+				if (StringUtils.isNotEmpty(remark)) {
+					list.add(cb.like(root.<String> get("remark"), "%" + remark.trim() + "%"));
+				}
 
-		// 返回结果
-		return new PageImpl<Transaction>(transactions, pageable, total);
+				if (beginDate != null && endDate != null) {
+					try {
+						list.add(cb.greaterThanOrEqualTo(root.<Date> get("datetime"), beginDate));
+						list.add(cb.lessThanOrEqualTo(root.<Date> get("datetime"), endDate));
+					} catch (Exception e) {
+						Logger.error("充值明细列表查询：格式化开始时间[" + beginDate + "]，结束时间[" + endDate + "],异常，忽略时间查询条件");
+					}
+				}
+				list.add(cb.notEqual(root.<UserAccount> get("sourceUserAccount").<User> get("user").<String> get("email"), HermesConstants.CROP_EMAIL));
+
+				List<String> inList = new ArrayList<String>();
+				inList.add(Transaction.Type.CHARGE);
+				inList.add(Transaction.Type.REVERSE_CHARGE);
+				Predicate in = ((root.<String> get("type")).in(inList));
+
+				list.add(in);
+
+				return cb.and(list.toArray(new Predicate[list.size()]));
+			}
+		}, pageable);
 	}
 }

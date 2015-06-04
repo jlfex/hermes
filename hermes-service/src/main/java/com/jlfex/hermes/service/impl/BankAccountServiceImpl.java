@@ -44,6 +44,7 @@ import com.jlfex.hermes.repository.WithdrawRepository;
 import com.jlfex.hermes.service.BankAccountService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.TransactionService;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.apiLog.ApiLogService;
 import com.jlfex.hermes.service.cfca.CFCAOrderService;
 import com.jlfex.hermes.service.cfca.ThirdPPService;
@@ -99,6 +100,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	@Autowired
 	private InvestService investService;
+	
+	@Autowired
+	private UserLogService userLogService;
 
 	/*
 	 * (non-Javadoc)
@@ -322,7 +326,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
 			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
-			investService.saveUserLog(user,UserLog.LogType.RECHARGE);
+			userLogService.saveUserLog(user,UserLog.LogType.RECHARGE);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 				if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
 					result.setType(Type.WITHHOLDING_PROCESSING);

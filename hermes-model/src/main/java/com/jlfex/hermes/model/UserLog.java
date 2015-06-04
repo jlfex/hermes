@@ -142,5 +142,8 @@ public class UserLog extends Model {
 
 		@Element("提现")
 		public static final String WITHDRAW = "51";
+		
+		@Element("登出")
+		public static final String SIGNOUT = "03";
 	}
 }

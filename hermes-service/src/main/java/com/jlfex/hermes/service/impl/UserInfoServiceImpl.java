@@ -1,10 +1,13 @@
 package com.jlfex.hermes.service.impl;
+
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Result;
@@ -20,6 +23,7 @@ import com.jlfex.hermes.model.UserEducation;
 import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserJob;
+import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.repository.LabelRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
@@ -35,6 +39,7 @@ import com.jlfex.hermes.repository.UserLogRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.pojo.UserBasic;
 import com.jlfex.hermes.service.security.PasswordEncoder;
 
@@ -97,6 +102,10 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	@Autowired
 	private LabelRepository labelRepository;
 
+	/** 用户日志 */
+	@Autowired
+	private UserLogService userLogService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -147,7 +156,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		UserBasic userBasic = new UserBasic();
 		BeanUtils.copyProperties(userProperties, userBasic);
 		if (user.getAccount() != null) {
-			userBasic.setAccount(user.getAccount());// TODO
+			userBasic.setAccount(user.getAccount());
 		}
 		userBasic.setCellphone(user.getCellphone());
 		UserAddress userAdd = userAddressRepository.findByUserIdAndType(userId, Type.COMMON);
@@ -157,8 +166,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 			userBasic.setCounty(userAdd.getCounty());
 			userBasic.setAddress(userAdd.getAddress());
 		}
-		UserEducation userEdu = userEducationRepository.findByUserIdAndType(userId,
-				com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
+		UserEducation userEdu = userEducationRepository.findByUserIdAndType(userId, com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
 		if (userEdu != null) {
 			userBasic.setSchool(userEdu.getSchool());
 			userBasic.setYear(userEdu.getYear());
@@ -211,8 +219,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		userAdd.setStatus(Status.VALID);
 		userAdd.setZip("");
 
-		UserEducation userEdu = userEducationRepository.findByUserIdAndType(user.getId(),
-				com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
+		UserEducation userEdu = userEducationRepository.findByUserIdAndType(user.getId(), com.jlfex.hermes.model.UserEducation.Type.HIGHEST);
 		if (userEdu == null) {
 			userEdu = new UserEducation();
 			userEdu.setUser(user);
@@ -292,17 +299,25 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		Assert.notEmpty(userId, "user id is empty.");
 		User user = userRepository.findOne(userId);
 		boolean match = matches(orginalPwd, user.getSignPassword());
-		if (match) {
-			String pwd = encode(newPwd);
-			user.setSignPassword(pwd);
-			userRepository.save(user);
-			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-			result.setData("修改成功");
-		} else {
+		try {
+			if (match) {
+				String pwd = encode(newPwd);
+				user.setSignPassword(pwd);
+				userRepository.save(user);
+				result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+				result.setData("修改成功");
+			} else {
+				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+				result.addMessage(App.message("result.failure.password"));
+				result.setData("原始密码不正确,修改失败");
+			}
+			userLogService.saveUserLog(user, UserLog.LogType.MODIFY);
+		} catch (Exception e) {
 			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage(App.message("result.failure.password"));
-			result.setData("原始密码不正确,修改失败");
+			result.addMessage("修改密码失败");
+			result.setData("修改失败，请重新修改");
 		}
+
 		return result;
 	}
 
@@ -316,8 +331,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void saveImage(User user, String imgStr, String type, String labelStr) {
 		UserImage userImage = new UserImage();
 		if (type.equals(UserImage.Type.AVATAR) || type.equals(UserImage.Type.AVATAR_LG)) {
-			List<UserImage> userImages = userImageRepository.findByUserAndTypeAndStatus(user, type,
-					UserImage.Status.ENABLED);
+			List<UserImage> userImages = userImageRepository.findByUserAndTypeAndStatus(user, type, UserImage.Status.ENABLED);
 			// 用户的大小头像信息只能各存在一条
 			if (userImages.size() > 0) {
 				userImage = userImages.get(0);
@@ -392,8 +406,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	 */
 	@Override
 	public List<UserImage> loadImagesByUserAndType(User user, String type) {
-		return userImageRepository.findByUserAndTypeAndStatus(user, type,
-				com.jlfex.hermes.model.UserImage.Status.ENABLED);
+		return userImageRepository.findByUserAndTypeAndStatus(user, type, com.jlfex.hermes.model.UserImage.Status.ENABLED);
 	}
 
 	/*
@@ -456,14 +469,15 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 		account.setBalance(account.getBalance().add(new BigDecimal(amount)));
 		return userAccountRepository.save(account);
 	}
+
 	/**
 	 * 删除工作 信息
 	 */
 	@Override
 	public void delUserJobByJobId(String jobId) {
-		 userJobRepository.delete(jobId);
+		userJobRepository.delete(jobId);
 	}
-	
+
 	/**
 	 * 删除房屋 信息
 	 */
@@ -471,7 +485,7 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void delUserHouseById(String houseId) {
 		userHouseRepository.delete(houseId);
 	}
-	
+
 	/**
 	 * 删除联系人 信息
 	 */
@@ -479,9 +493,10 @@ public class UserInfoServiceImpl extends PasswordEncoder implements UserInfoServ
 	public void delUserContacterById(String contactorId) {
 		userContacterRepository.delete(contactorId);
 	}
-   /**
-    * 删除车辆信息
-    */
+
+	/**
+	 * 删除车辆信息
+	 */
 	@Override
 	public void delUserCarById(String carId) {
 		userCarRepository.delete(carId);

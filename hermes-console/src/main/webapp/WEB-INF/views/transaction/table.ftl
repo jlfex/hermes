@@ -1,10 +1,10 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-			<th width="20%">邮箱</th>
+			<th width="20%">账户</th>
 			<th width="10%" >金额</th>
-			<th width="10%" >充值前额度</th>
-			<th width="20%">充值后额度</th>
+			<th width="10%" >充值前金额</th>
+			<th width="20%">充值后金额</th>
 			<th width="20%">充值时间</th>
 			<th width="20%">备注</th>
 		</tr>

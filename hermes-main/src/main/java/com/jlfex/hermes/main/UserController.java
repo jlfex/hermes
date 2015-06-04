@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Producer;
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
@@ -34,6 +35,7 @@ import com.jlfex.hermes.main.freemark.ModelLoader;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
 import com.jlfex.hermes.model.UserProperties.IdType;
@@ -41,6 +43,8 @@ import com.jlfex.hermes.model.hermes.BranchBank;
 import com.jlfex.hermes.service.AreaService;
 import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.ContentService;
+import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.UserService;
 
 @Controller
@@ -58,6 +62,10 @@ public class UserController {
 	private BankService bankService;
 	@Autowired
 	private AreaService areaService;
+	@Autowired
+	private UserLogService userLogService;
+	@Autowired
+	private UserInfoService userInfoService;
 
 	private static final String COMPANY_NAME = "app.company.name";
 	private static final String WEBSITE = "app.website";
@@ -72,7 +80,7 @@ public class UserController {
 	@RequestMapping("skipSignIn")
 	public String skipSignIn(Model model) {
 		model.addAttribute("loginPicture", contentService.findOneByCode(HermesConstants.INDEX_LOGIN));
-		model.addAttribute("token",App.current().getToken());
+		model.addAttribute("token", App.current().getToken());
 		return "user/sign-in";
 	}
 
@@ -97,9 +105,9 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/signUp")
-	public String signUp(User user, Model model,String token, HttpServletRequest request) {
+	public String signUp(User user, Model model, String token, HttpServletRequest request) {
 		String commonMessage = "";
-		if(Strings.empty(token)){
+		if (Strings.empty(token)) {
 			Logger.info("注册失败,令牌不能为空!");
 			model.addAttribute("errMsg", "注册失败,令牌不能为空!");
 			return "user/signup-success";
@@ -202,8 +210,8 @@ public class UserController {
 		return jsonObj;
 	}
 
-	/**signIn
-	 * 登录
+	/**
+	 * signIn 登录
 	 * 
 	 * @param user
 	 * @return
@@ -221,7 +229,16 @@ public class UserController {
 	 */
 	@RequestMapping("/signOut")
 	public String signOut() {
-		App.current().setUser(null);
+		AppUser curUser = App.current().getUser();
+		User user = userInfoService.findByUserId(curUser.getId());
+		try {
+			userLogService.saveUserLog(user, UserLog.LogType.SIGNOUT);
+			App.current().setUser(null);
+
+		} catch (Exception e) {
+			Logger.error("用户：" + curUser.getAccount() + "登出失败");
+		}
+
 		return "redirect:/index";
 	}
 
@@ -242,7 +259,7 @@ public class UserController {
 	 * @param model
 	 * @param request
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 * @since 2014年12月30日20:24:59
 	 */
 	@RequestMapping("sendActiveMailAgain")
@@ -376,7 +393,7 @@ public class UserController {
 		Bank bank = bankService.findOne(bankId);
 		Area area = areaService.loadById(cityId);
 		try {
-			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName()+HermesConstants.PROVINCE_SUFFIX);
+			list = bankService.findByBranchBankAndCity(bank.getName(), area.getName() + HermesConstants.PROVINCE_SUFFIX);
 		} catch (Exception e) {
 			Logger.error("获取支行信息失败!", e);
 		}
@@ -416,7 +433,7 @@ public class UserController {
 	 */
 	@RequestMapping("retrivePwd")
 	public String retrivePwd(Model model) {
-		model.addAttribute("token",App.current().getToken());
+		model.addAttribute("token", App.current().getToken());
 		return "user/retrievePwdStep1";
 	}
 
@@ -481,12 +498,12 @@ public class UserController {
 	 * 
 	 * @param email
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("sendResetPwdEmail")
-	public String sendResetPwdEmail(String email,String token, Model model, HttpServletRequest request) throws Exception {
+	public String sendResetPwdEmail(String email, String token, Model model, HttpServletRequest request) throws Exception {
 		try {
-			if(Strings.empty(token)){
+			if (Strings.empty(token)) {
 				throw new ServerException("发送重置密码的邮件: 令牌不能为空");
 			}
 			if (!MailUtuils.isValidMail(email)) {
@@ -578,14 +595,16 @@ public class UserController {
 	 */
 	@RequestMapping("/registerProtocol")
 	public String registerProtocol(Model model) {
-		model.addAttribute("operator", App.config(COMPANY_NAME)); //平台运营方
+		model.addAttribute("operator", App.config(COMPANY_NAME)); // 平台运营方
 		model.addAttribute("platformName", App.config(COMPANY_PNAME));
 		model.addAttribute("platformNetAddr", App.config(WEBSITE));
 		model.addAttribute("platformNickName", App.config(COMPANY_NICK_NAME));
 		return "agree/registerProtocol";
 	}
+
 	/**
 	 * 咨询服务协议
+	 * 
 	 * @param model
 	 * @return
 	 */
@@ -594,5 +613,5 @@ public class UserController {
 		model.addAttribute("platformName", App.config(COMPANY_PNAME));
 		return "agree/counselServeProtocol";
 	}
-	
+
 }
