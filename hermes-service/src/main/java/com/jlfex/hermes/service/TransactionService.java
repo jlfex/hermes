@@ -1,5 +1,6 @@
 package com.jlfex.hermes.service;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -284,5 +285,5 @@ public interface TransactionService {
 	 * @param size
 	 * @return
 	 */
-	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(String email, String beginDate, String endDate, String remark, Integer page, Integer size) ;
+	public Page<Transaction> findRechargeByEmailAndDateBetweenAndRemark(String email, Date beginDate, Date endDate, String remark, Integer page, Integer size) ;
 }

@@ -11,7 +11,9 @@ import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.model.LoanLog;
+import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.LoanLogService;
+import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.LoanLogVo;
 
 /**
@@ -25,6 +27,8 @@ import com.jlfex.hermes.service.pojo.LoanLogVo;
 public class LoanLogController {
 	@Autowired
 	private LoanLogService loanLogService;
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 日志结果列表
@@ -51,6 +55,10 @@ public class LoanLogController {
 	public String userLogData(LoanLogVo loanLogVo, String page, Model model) {
 		try {
 			Page<LoanLog> loanLogList = loanLogService.queryByCondition(loanLogVo, page, HermesConstants.DEFAULT_PAGE_SIZE);
+			for (LoanLog loanLog : loanLogList.getContent()) {
+				User user = userService.loadById(loanLog.getUser());
+				loanLog.setUserName(user.getAccount());
+			}
 			model.addAttribute("loanLogList", loanLogList);
 		} catch (Exception e) {
 			Logger.error("投标日志列表查询异常:", e);

@@ -20,7 +20,7 @@
 						<#list (loanLogList.content)?sort_by("datetime")?reverse as l>  
 							<tr>
 							    <td class="align-center">${(l.loan.loanNo)!''}</td> 
-							    <td class="align-center">${(l.loan.user.account)!''}</td> 
+							    <td class="align-center">${(l.userName)!''}</td> 
 		                        <td class="align-center">${(l.typeName)!''}</td> 
 		                       	<td class="align-center">${(l.datetime)!''}</td>
 		                       	<td class="align-center">${(l.amount)!''}</td>

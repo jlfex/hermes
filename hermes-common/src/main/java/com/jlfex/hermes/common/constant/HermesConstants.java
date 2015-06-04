@@ -246,4 +246,9 @@ public final class HermesConstants {
 	 * 默认每页页大小
 	 */
 	public static final String DEFAULT_PAGE_SIZE = "10";
+	
+	/**
+	 * crop的email
+	 */
+	public static final String CROP_EMAIL = "平台";
 }
