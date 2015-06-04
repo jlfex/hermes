@@ -137,15 +137,6 @@ public class UserLog extends Model {
 		@Element("注销")
 		public static final String LOGOUT = "09";
 
-		@Element("发布借款")
-		public static final String RELEASE = "10";
-
-		@Element("还款")
-		public static final String REPAY = "11";
-
-		@Element("投标")
-		public static final String INVEST = "30";
-
 		@Element("充值")
 		public static final String RECHARGE = "50";
 
