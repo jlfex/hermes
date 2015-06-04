@@ -4,7 +4,7 @@
 		<form id="searchForm" method="post" action="#">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="email">email账户</label>
+					<label for="email">账户</label>
 					<input id="email" name="email" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">

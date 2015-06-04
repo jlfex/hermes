@@ -1,16 +1,20 @@
 package com.jlfex.hermes.service.impl;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PostPersist;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Assert;
@@ -27,7 +31,6 @@ import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserAccount.Minus;
 import com.jlfex.hermes.model.UserAuth;
 import com.jlfex.hermes.model.UserImage;
-import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserLog.LogType;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.UserProperties.Auth;
@@ -39,6 +42,7 @@ import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserLogRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.security.PasswordEncoder;
 
@@ -76,6 +80,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	/** 系统属性仓库 */
 	@Autowired
 	private PropertiesRepository propertiesRepository;
+
+	@Autowired
+	private UserLogService userLogService;
 
 	/*
 	 * (non-Javadoc)
@@ -147,15 +154,13 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	}
 
 	/**
-	 * 校验手机号码是否可用
-	 * true 可用
-	 * false 不可用 
+	 * 校验手机号码是否可用 true 可用 false 不可用
 	 */
 	@Override
 	public boolean checkPhone(String phone) {
 		List<User> users = userRepository.findByCellphone(phone);
-		if (users!=null && users.size() > 0) {
-			//校验手机 是否已经通过认证
+		if (users != null && users.size() > 0) {
+			// 校验手机 是否已经通过认证
 			List<UserProperties> userPros = userPropertiesRepository.findByAuthCellphoneAndUserIn(Auth.PASS, users);
 			if (userPros.size() > 0) {
 				return false;
@@ -183,7 +188,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		Logger.info("用户成功 ID=" + user.getId());
 		saveUser(user);
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -266,52 +270,58 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		Result<String> result = new Result<String>();
 		User user = userRepository.findByEmail(signUser.getEmail());
 		// 账户不存在
-		if (user == null) {
-			result.addMessage(App.message("result.failure.email"));
-			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-		} else {
-			boolean matchRes = matches(signUser.getSignPassword(), user.getSignPassword());
-			if (matchRes) {
-				if (Status.INACTIVATE.equals(user.getStatus())) {
-					result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
-					result.addMessage(App.message("result.warning.email"));
-				} else if (Status.FROZEN.equals(user.getStatus())) {
-					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-					result.addMessage(App.message("账号已被冻结"));
-				} else if (Status.DISABLED.equals(user.getStatus())) {
-					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-					result.addMessage(App.message("账号已被注销"));
-				} else if (Status.ENABLED.equals(user.getStatus())) {
-					AppUser appUser = new AppUser();
-					appUser.setId(user.getId());
-					appUser.setAccount(user.getEmail());
-					UserProperties userPro = userPropertiesRepository.findByUser(user);
-					if (userPro != null) {
-						appUser.setName(user.getAccount());
-					} else {
-						appUser.setName(App.message("anonymous"));
-					}
-					App.current().setUser(appUser);
-					if(!userPro.getAuthCellphone().equals(Auth.PASS)){
-						result.setType(com.jlfex.hermes.common.Result.Type.CELLPHNOE_NOTAUTH);//判断手机是否认证
-					}else if(!userPro.getAuthName().equals(Auth.PASS)){
-						result.setType(com.jlfex.hermes.common.Result.Type.NAME_NOTAUTH);//判断实名是否认证
-					}else if(!StringUtils.isEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)){
-						result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);
-					}else if(StringUtils.isEmpty(userPro.getAuthBankcard())){						
-						result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);//判断银行卡是否认证
-					}else{
-					    result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-					}
-					// 用户日志记录
-					saveUserLog(user, LogType.LOGIN);
-				}
-			} else {
-				// 账户和密码不匹配
-				result.addMessage(App.message("result.failure.sign.in"));
+		try {
+			if (user == null) {
+				result.addMessage(App.message("result.failure.email"));
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+			} else {
+				boolean matchRes = matches(signUser.getSignPassword(), user.getSignPassword());
+				if (matchRes) {
+					if (Status.INACTIVATE.equals(user.getStatus())) {
+						result.setType(com.jlfex.hermes.common.Result.Type.WARNING);
+						result.addMessage(App.message("result.warning.email"));
+					} else if (Status.FROZEN.equals(user.getStatus())) {
+						result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+						result.addMessage(App.message("账号已被冻结"));
+					} else if (Status.DISABLED.equals(user.getStatus())) {
+						result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+						result.addMessage(App.message("账号已被注销"));
+					} else if (Status.ENABLED.equals(user.getStatus())) {
+						AppUser appUser = new AppUser();
+						appUser.setId(user.getId());
+						appUser.setAccount(user.getEmail());
+						UserProperties userPro = userPropertiesRepository.findByUser(user);
+						if (userPro != null) {
+							appUser.setName(user.getAccount());
+						} else {
+							appUser.setName(App.message("anonymous"));
+						}
+						App.current().setUser(appUser);
+						if (!userPro.getAuthCellphone().equals(Auth.PASS)) {
+							result.setType(com.jlfex.hermes.common.Result.Type.CELLPHNOE_NOTAUTH);// 判断手机是否认证
+						} else if (!userPro.getAuthName().equals(Auth.PASS)) {
+							result.setType(com.jlfex.hermes.common.Result.Type.NAME_NOTAUTH);// 判断实名是否认证
+						} else if (!StringUtils.isEmpty(userPro.getAuthBankcard()) && !userPro.getAuthBankcard().equals(Auth.PASS)) {
+							result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);
+						} else if (StringUtils.isEmpty(userPro.getAuthBankcard())) {
+							result.setType(com.jlfex.hermes.common.Result.Type.BANKCARD_NOTAUTH);// 判断银行卡是否认证
+						} else {
+							result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+						}
+					}
+				} else {
+					// 账户和密码不匹配
+					result.addMessage(App.message("result.failure.sign.in"));
+					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+				}
+				// 用户日志记录
+				userLogService.saveUserLog(user, LogType.LOGIN);
 			}
+		} catch (Exception e) {
+			result.addMessage("修改密码错误");
+			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
 		}
+
 		return result;
 	}
 
@@ -357,15 +367,16 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 
 	/**
 	 * 计算邮件失效时间
+	 * 
 	 * @return
 	 */
 	public String calcuEmailExpireHour() {
 		String expireHoure = App.config("auth.mail.expire");
-		if(App.config("auth.mail.expire").contains(HermesConstants.NICK_DAY)){
-			try{
-			expireHoure = ""+(Integer.parseInt(expireHoure.replace(HermesConstants.NICK_DAY, "").trim())*24);
-			}catch(Exception e){
-				Logger.error("计算邮件激活时间异常：请检查配置 是否正常 auth.mail.expire="+App.config("auth.mail.expire"), e);
+		if (App.config("auth.mail.expire").contains(HermesConstants.NICK_DAY)) {
+			try {
+				expireHoure = "" + (Integer.parseInt(expireHoure.replace(HermesConstants.NICK_DAY, "").trim()) * 24);
+			} catch (Exception e) {
+				Logger.error("计算邮件激活时间异常：请检查配置 是否正常 auth.mail.expire=" + App.config("auth.mail.expire"), e);
 			}
 		}
 		return expireHoure;
@@ -454,9 +465,13 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	@Override
 	public void signOut() {
 		AppUser appUser = App.current().getUser();
-		User user = userRepository.findOne(appUser.getId());
-		saveUserLog(user, LogType.LOGOUT);
-		App.current().setUser(null);
+		try {
+			User user = userRepository.findOne(appUser.getId());
+			userLogService.saveUserLog(user, LogType.LOGOUT);
+			App.current().setUser(null);
+		} catch (Exception e) {
+			Logger.error("注销用户：" + appUser.getAccount() + "失败");
+		}
 	}
 
 	/*
@@ -483,13 +498,16 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	 */
 	@Override
 	public void retrievePwd(String userId, String newPwd) {
-		Assert.notEmpty(userId, "user id is empty.");
-		User user = userRepository.findOne(userId);
-		String pwd = encode(newPwd);
-		user.setSignPassword(pwd);
-		userRepository.save(user);
-		saveUserLog(user, LogType.RETRIEVE);
-
+		try {
+			Assert.notEmpty(userId, "user id is empty.");
+			User user = userRepository.findOne(userId);
+			String pwd = encode(newPwd);
+			user.setSignPassword(pwd);
+			userRepository.save(user);
+			userLogService.saveUserLog(user, LogType.RETRIEVE);
+		} catch (Exception e) {
+			Logger.error("找回密码失败");
+		}
 	}
 
 	/*
@@ -513,21 +531,6 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		userAuthRepository.save(userAuth);
 		Logger.info("生成邮件激活授权码:" + userAuth.getCode());
 		return validateCode;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.jlfex.hermes.service.UserService#saveUserLog(User,java.lang.String)
-	 */
-	private void saveUserLog(User user, String type) {
-		Date curDate = new Date();
-		UserLog userLog = new UserLog();
-		userLog.setDatetime(curDate);
-		userLog.setType(type);
-		userLog.setUser(user);
-		userLogRepository.save(userLog);
 	}
 
 	/*

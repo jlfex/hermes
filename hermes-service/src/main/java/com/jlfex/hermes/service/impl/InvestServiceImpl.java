@@ -60,7 +60,6 @@ import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserImage;
-import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
 import com.jlfex.hermes.model.yltx.FinanceOrder;
@@ -673,21 +672,8 @@ public class InvestServiceImpl implements InvestService {
 		loanLog.setType(type);
 		loanLog.setAmount(investAmount);
 		loanLog.setRemark(remark);
+		loanLog.setUserName(investUser.getAccount());
 		loanLogRepository.save(loanLog);
-	}
-
-	/**
-	 * 插入用户日志表
-	 * 
-	 * @param investUser
-	 */
-	@Override
-	public void saveUserLog(User investUser,String logType) throws Exception {
-		UserLog userLog = new UserLog();
-		userLog.setUser(investUser);
-		userLog.setDatetime(new Date());
-		userLog.setType(logType);
-		userLogRepository.save(userLog);
 	}
 
 	/**

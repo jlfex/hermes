@@ -163,13 +163,6 @@ public interface InvestService {
 	public void saveLoanLog(User investUser, BigDecimal investAmount, Loan loan, String type, String remark) throws Exception;
 
 	/**
-	 * 保存 操作日志
-	 * 
-	 * @param investUser
-	 */
-	public void saveUserLog(User investUser,String logType) throws Exception;
-
-	/**
 	 * 获取订单 对应的 资产编号
 	 * 
 	 * @param orderCode

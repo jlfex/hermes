@@ -41,4 +41,11 @@ public interface UserLogService {
 	 * @return
 	 */
 	public UserLog findOne(String id);
+	
+	/**
+	 * 保存 操作日志
+	 * 
+	 * @param investUser
+	 */
+	public void saveUserLog(User investUser,String logType) throws Exception;
 }

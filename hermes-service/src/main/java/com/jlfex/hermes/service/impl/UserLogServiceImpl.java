@@ -84,4 +84,18 @@ public class UserLogServiceImpl implements UserLogService {
 	public UserLog findOne(String id) {
 		return userLogRepository.findOne(id);
 	}
+	
+	/**
+	 * 插入用户日志表
+	 * 
+	 * @param investUser
+	 */
+	@Override
+	public void saveUserLog(User investUser,String logType) throws Exception {
+		UserLog userLog = new UserLog();
+		userLog.setUser(investUser);
+		userLog.setDatetime(new Date());
+		userLog.setType(logType);
+		userLogRepository.save(userLog);
+	}
 }
