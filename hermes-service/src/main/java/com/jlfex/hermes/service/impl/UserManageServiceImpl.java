@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
@@ -28,6 +30,7 @@ import com.jlfex.hermes.model.UserEducation;
 import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserJob;
+import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.repository.BankAccountRepository;
 import com.jlfex.hermes.repository.CommonRepository;
@@ -42,6 +45,7 @@ import com.jlfex.hermes.repository.UserImageRepository;
 import com.jlfex.hermes.repository.UserJobRepository;
 import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.UserManageService;
 import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.pojo.UserBasic;
@@ -97,6 +101,10 @@ public class UserManageServiceImpl implements UserManageService {
 	/** 用户图片 */
 	@Autowired
 	private UserImageRepository userImageRepository;
+	
+	/** 用户日志接口 */
+	@Autowired
+	private UserLogService userLogService;
 
 	/*
 	 * (non-Javadoc)
@@ -352,25 +360,31 @@ public class UserManageServiceImpl implements UserManageService {
 	@Override
 	public Result<String> logOffUser(String userId) {
 		Result<String> result = new Result<String>();
-		if (Strings.empty(userId)) {
-			Logger.warn("注销用户: 用户id为空!");
-			result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-			result.addMessage("注销用户: 用户id为空!");
-			return result;
-		}
-		User user = userRepository.findOne(userId);
-		List<UserAccount> accounts = userAccountRepository.findByUser(user);
-		for (UserAccount acc : accounts) {
-			if (acc.getBalance().compareTo(BigDecimal.ZERO) == 1) {
+		try {
+			if (Strings.empty(userId)) {
+				Logger.warn("注销用户: 用户id为空!");
 				result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
-				result.addMessage("账户余额大于0,不能注销");
+				result.addMessage("注销用户: 用户id为空!");
 				return result;
 			}
+			User user = userRepository.findOne(userId);
+			List<UserAccount> accounts = userAccountRepository.findByUser(user);
+			for (UserAccount acc : accounts) {
+				if (acc.getBalance().compareTo(BigDecimal.ZERO) == 1) {
+					result.setType(com.jlfex.hermes.common.Result.Type.FAILURE);
+					result.addMessage("账户余额大于0,不能注销");
+					return result;
+				}
+			}
+			user.setStatus(com.jlfex.hermes.model.User.Status.DISABLED);
+			userRepository.save(user);
+			result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
+			result.addMessage("成功注销");
+			userLogService.saveUserLog(user, UserLog.LogType.LOGOUT);
+		} catch (Exception e) {
+			Logger.error("用户注销失败！");
 		}
-		user.setStatus(com.jlfex.hermes.model.User.Status.DISABLED);
-		userRepository.save(user);
-		result.setType(com.jlfex.hermes.common.Result.Type.SUCCESS);
-		result.addMessage("成功注销");
+		
 		return result;
 	}
 
