@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
-import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Numbers;

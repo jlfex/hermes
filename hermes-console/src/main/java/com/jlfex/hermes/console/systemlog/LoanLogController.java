@@ -1,5 +1,10 @@
 package com.jlfex.hermes.console.systemlog;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -38,7 +43,17 @@ public class LoanLogController {
 	 */
 	@RequestMapping("/index")
 	public String index(Model model) {
-		Object type =	Dicts.elements(LoanLog.Type.class).entrySet();
+		Set<Entry<Object, String>> type = Dicts.elements(LoanLog.Type.class).entrySet();
+		
+		Set<Entry<Object, String>> leaveEntries = new HashSet<Map.Entry<Object,String>>();
+		
+		for (Entry<Object, String> entry : type) {
+			String key = entry.getKey().toString();
+			if(key.equals(LoanLog.Type.ADVANCE) || key.equals(LoanLog.Type.MANUAL_FAILURE)) {
+				leaveEntries.add(entry);
+			}
+		}
+		type.removeAll(leaveEntries);
 		model.addAttribute("type", type);
 		return "systemlog/loanLogIndex";
 	}

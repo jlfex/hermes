@@ -6,16 +6,20 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import cfca.payment.api.tx.Tx1341Request;
 import cfca.payment.api.tx.Tx134xResponse;
+
 import com.alibaba.fastjson.JSON;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
@@ -37,6 +41,7 @@ import com.jlfex.hermes.model.Transaction;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserAccount;
 import com.jlfex.hermes.model.UserImage;
+import com.jlfex.hermes.model.UserLog;
 import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.model.Withdraw;
 import com.jlfex.hermes.model.cfca.CFCAOrder;
@@ -47,6 +52,7 @@ import com.jlfex.hermes.service.BankService;
 import com.jlfex.hermes.service.PaymentService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
+import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.cfca.CFCAOrderService;
 import com.jlfex.hermes.service.userAccount.UserAccountService;
@@ -91,6 +97,8 @@ public class AccountController {
 	private CFCAOrderService cFCAOrderService;
 	@Autowired
 	private UserAccountService userAccountService;
+	@Autowired
+	private UserLogService userLogService;
 	
 	/**
 	 * 索引
@@ -392,6 +400,8 @@ public class AccountController {
 		Result<String> result = new Result<String>();
 		// 保存数据
 		try {
+			User investUser = userService.loadById( App.user().getId());
+			userLogService.saveUserLog(investUser, UserLog.LogType.WITHDRAW);
 			if(amount == null || amount.compareTo(BigDecimal.ZERO) < 1){
 				throw new Exception("提现金额为空");
 			}
@@ -402,7 +412,7 @@ public class AccountController {
 				List<String> amountList = calcResult.getMessages();
 				sumAmount = new BigDecimal(amountList.get(1).replace(",", ""));
 			}
-			User investUser = userService.loadById( App.user().getId());
+			
 			boolean enoughFlag = userAccountService.checkEnoughCash(investUser, UserAccount.Type.CASH, sumAmount);
 			if(!enoughFlag && sumAmount.compareTo(amount) >= 0 ){
 			   throw new Exception("当前现金余额不足");
