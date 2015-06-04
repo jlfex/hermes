@@ -26,7 +26,7 @@ public class Rate extends Model {
 	private Product product;
 	
 	/** 费率 */
-	@Column(name = "rate")
+	@Column(name = "rate" ,precision= 16, scale=8, nullable= false)
 	private BigDecimal rate;
 	
 	/** 类型 */

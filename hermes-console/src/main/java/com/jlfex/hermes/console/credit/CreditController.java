@@ -578,7 +578,7 @@ public class CreditController {
 			entity.setRemark(vo.getRemark());
 			entity.setCreditKind(CrediteInfo.CreditKind.EXECEL_IMP);
 			if (CreditInfoVo.Status.VALID.equals(vo.getStatus())) {
-				entity.setRate(new BigDecimal(vo.getRate().trim().replace("%", "")).divide(new BigDecimal("100"), 2, RoundingMode.HALF_DOWN));
+				entity.setRate(new BigDecimal(vo.getRate().replace("%", "").trim()).divide(new BigDecimal("100"), 8, RoundingMode.HALF_DOWN));
 				entity.setPeriod(Integer.parseInt(Strings.empty(vo.getPeriod(), "0")));
 				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
 				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
@@ -599,7 +599,7 @@ public class CreditController {
 				entity.setDeadTime(Calendars.parse("yyyy-MM-dd", vo.getDeadTime()));
 				entity.setBusinessTime(Calendars.parse("yyyy-MM-dd", vo.getBusinessTime()));
 				try {
-					entity.setRate(new BigDecimal(vo.getRate().trim().replace("%", "")).divide(new BigDecimal("100"), 2, RoundingMode.HALF_DOWN));
+					entity.setRate(new BigDecimal(vo.getRate().trim().replace("%", "")).divide(new BigDecimal("100"), 8, RoundingMode.HALF_DOWN));
 				} catch (Exception e) {
 					entity.setRate(BigDecimal.ZERO);
 				}
