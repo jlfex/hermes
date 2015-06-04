@@ -634,9 +634,9 @@ public class LoanServiceImpl implements LoanService {
 		loanLog.setLoan(reloan);
 		loanLog.setDatetime(now);
 		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
-			loanLog.setType(Type.RELEASE);
-		}else {
 			loanLog.setType(Type.START_INVEST);
+		}else {
+			loanLog.setType(Type.SELL_CREDIT);
 		}
 		loanLog.setAmount(loan.getAmount());
 		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {

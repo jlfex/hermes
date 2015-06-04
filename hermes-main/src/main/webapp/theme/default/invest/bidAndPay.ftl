@@ -29,8 +29,8 @@
 jQuery(function($){
      var count = 1;
      $('#confirm').click(function(){
+        $('#confirm').addClass("bt_gray").removeClass("m_bg1");
         if(count > 1){
-	        $('#confirm').addClass("bt_gray").removeClass("m_bg1");
 	        return false;
 	    }
 	   count++;

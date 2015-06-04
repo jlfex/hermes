@@ -504,7 +504,7 @@ public class InvestServiceImpl implements InvestService {
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 			loan.setStatus(Loan.Status.FULL);
 			loanRepository.save(loan);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
+			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标满标");
 		}
 
 		return resultFlag;
@@ -653,7 +653,7 @@ public class InvestServiceImpl implements InvestService {
 		invest.setLoan(loan);
 		invest.setDatetime(new Date());
 		invest.setStatus(status);
-		return save(invest);
+		return investRepository.save(invest);
 	}
 	
 	/**
