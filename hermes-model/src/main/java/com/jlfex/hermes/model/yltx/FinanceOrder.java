@@ -26,7 +26,7 @@ public class FinanceOrder extends Model{
 	
 	@Column(name = "finance_name", length=200)
 	private String financeProductName ;          //理财产品名称
-	@Column(name = "interest_rate", precision=16, scale=6,nullable=false)
+	@Column(name = "interest_rate", precision=16, scale=8,nullable=false)
 	private BigDecimal interestRate;		     //年化利率 
 	@Column(name = "time_limit")
 	private String timeLimit;					 //期限

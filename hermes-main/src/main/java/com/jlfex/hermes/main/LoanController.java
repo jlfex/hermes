@@ -254,7 +254,7 @@ public class LoanController {
 		}
 		Logger.info("生成借款方案参数: amount:" + amount + ",period:" + period + ",rate :" + rate + ",productId :" + productId + ",productName :" + productName + ",purposeName :" + purposeName + ",purposeId :" + purposeId + ",repayName :" + repayName + ",repayId :" + repayId);
 		model.addAttribute("amount", Numbers.toCurrency(new Double(amount)));
-		model.addAttribute("rate", new BigDecimal(rate.trim()).setScale(2, RoundingMode.HALF_DOWN)+HermesConstants.SUFFIX_PERCENT);
+		model.addAttribute("rate", rate+HermesConstants.SUFFIX_PERCENT);
 		model.addAttribute("period", period);
 
 		model.addAttribute("productId", productId);
@@ -269,7 +269,7 @@ public class LoanController {
 		loan.setManageFeeType(product.getManageFeeType());
 		loan.setAmount(new BigDecimal(amount));
 		loan.setPeriod(period);
-		loan.setRate(new BigDecimal(rate).divide(new BigDecimal(100)));
+		loan.setRate(new BigDecimal(rate).divide(new BigDecimal(100)).setScale(8, RoundingMode.HALF_DOWN));
 		Repay repayInfo = repayService.loadById(repayId);
 		loan.setRepay(repayInfo);
 		List<LoanRepay> repayPlanList = loanService.getRepayPlan(loan);

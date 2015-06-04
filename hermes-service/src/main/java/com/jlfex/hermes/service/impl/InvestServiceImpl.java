@@ -329,7 +329,7 @@ public class InvestServiceImpl implements InvestService {
 			}
 			loanInfo.setPurpose(String.valueOf(object[1]));
 			loanInfo.setAmount(Numbers.toCurrency(new Double(String.valueOf(object[2]))));
-			loanInfo.setRate(Numbers.toPercent(new Double(String.valueOf(object[3]))));
+			loanInfo.setRate(Numbers.percentRateOfDecimal(String.valueOf(object[3])));
 			loanInfo.setPeriod(String.valueOf(object[4]));
 			loanInfo.setRemain(Numbers.toCurrency(new Double(String.valueOf(object[6]))));
 			loanInfo.setProgress(String.valueOf(object[7]));
@@ -758,7 +758,7 @@ public class InvestServiceImpl implements InvestService {
 				purpose = invest.getLoan().getPurpose();
 			}
 			investInfo.setPurpose(purpose);
-			investInfo.setRate(Numbers.toPercent(invest.getLoan().getRate().doubleValue()));
+			investInfo.setRate(invest.getLoan().getRateFormat());
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatus());
@@ -809,7 +809,7 @@ public class InvestServiceImpl implements InvestService {
 			investInfo.setId(invest.getId());
 			investInfo.setApplicationNo(invest.getLoan().getProduct().getCode() + "-" + invest.getLoan().getLoanNo());
 			investInfo.setPurpose(getDictionaryName(invest.getLoan().getPurpose()));
-			investInfo.setRate(Numbers.toPercent(invest.getLoan().getRate().doubleValue()));
+			investInfo.setRate(invest.getLoan().getRateFormat());
 			investInfo.setAmount(invest.getAmount());
 			investInfo.setPeriod(invest.getLoan().getPeriod());
 			investInfo.setStatus(invest.getStatusName());
@@ -913,7 +913,7 @@ public class InvestServiceImpl implements InvestService {
 			}
 			loanInfo.setPurpose(String.valueOf(object[1]));
 			loanInfo.setAmount(Numbers.toCurrency(new Double(String.valueOf(object[2]))));
-			loanInfo.setRate(Numbers.toPercent(new Double(String.valueOf(object[3]))));
+			loanInfo.setRate(Numbers.percentRateOfDecimal(String.valueOf(object[3])));
 			loanInfo.setPeriod(String.valueOf(object[4]));
 			loanInfo.setRemain(Numbers.toCurrency(new Double(String.valueOf(object[6]))));
 			loanInfo.setProgress(String.valueOf(object[7]));

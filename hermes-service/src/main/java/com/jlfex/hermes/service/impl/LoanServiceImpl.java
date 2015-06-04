@@ -669,7 +669,7 @@ public class LoanServiceImpl implements LoanService {
 			String purpose = loan.getPurpose();
 			info.setPurpose((purpose != null && purpose.length() > 4) ? (purpose.substring(0, 4) + "...") : purpose);
 		}
-		info.setRate(Numbers.toPercent(loan.getRate().doubleValue()));
+		info.setRate(loan.getRateFormat());
 		info.setAmount(Numbers.toCurrency(loan.getAmount().doubleValue()));
 		info.setPeriod(String.valueOf(loan.getPeriod()));
 		info.setRemain(loan.getRemain());
@@ -737,7 +737,7 @@ public class LoanServiceImpl implements LoanService {
 			loanInfo = new LoanInfo();
 			loanInfo.setId(loan.getId());
 			loanInfo.setPurpose(getDictionaryName(loan.getPurpose()));
-			loanInfo.setRate(Numbers.toPercent(loan.getRate().doubleValue()));
+			loanInfo.setRate(loan.getRateFormat());
 			loanInfo.setAmount(Numbers.toCurrency(loan.getAmount().doubleValue()));
 			loanInfo.setPeriod(loan.getPeriod().toString());
 			loanInfo.setStatus(loan.getStatus());
@@ -1043,7 +1043,7 @@ public class LoanServiceImpl implements LoanService {
 			loanInfo = new LoanInfo();
 			loanInfo.setId(loan.getId());
 			loanInfo.setPurpose(getDictionaryName(loan.getPurpose()));
-			loanInfo.setRate(Numbers.toPercent(loan.getRate().doubleValue()));
+			loanInfo.setRate(loan.getRateFormat());
 			loanInfo.setAmount(Numbers.toCurrency(loan.getAmount().doubleValue()));
 			loanInfo.setPeriod(loan.getPeriod().toString());
 			loanInfo.setStatus(loan.getStatusName());
@@ -1172,7 +1172,7 @@ public class LoanServiceImpl implements LoanService {
 			}
 			loanAuditInfo.setAmount(Numbers.parseCurrency(String.valueOf(object[2])));
 			loanAuditInfo.setCellphone(String.valueOf(object[6]));
-			loanAuditInfo.setRate(Numbers.toPercent(new Double(String.valueOf(object[8]))));
+			loanAuditInfo.setRate(Numbers.percentRateOfDecimal(String.valueOf(object[8])));
 			loanAuditInfo.setPeriod(Integer.valueOf(String.valueOf(object[7])));
 			try {
 				loanAuditInfo.setDatetime(Calendars.parseDateTime(String.valueOf(object[9])));
