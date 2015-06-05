@@ -32,7 +32,6 @@ import com.jlfex.hermes.model.UserHouse;
 import com.jlfex.hermes.model.UserImage;
 import com.jlfex.hermes.model.UserImage.Type;
 import com.jlfex.hermes.model.UserJob;
-import com.jlfex.hermes.model.UserProperties;
 import com.jlfex.hermes.service.DictionaryService;
 import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
