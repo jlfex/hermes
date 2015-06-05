@@ -1208,6 +1208,8 @@ public class LoanServiceImpl implements LoanService {
 		loanAudit.setAuditor(Model.getCurrentUserId());
 		loanAudit.setDatetime(now);
 		loanAudit.setRemark(remark);
+		loanAudit.setAuditBeforeamount(loan.getAmount());
+		loanAudit.setAuditAfteramount(amount);
 		// 等级初审
 		loanAudit.setType(LoanAudit.Type.FIRST_AUDIT);
 		// 审核通过
@@ -1257,6 +1259,8 @@ public class LoanServiceImpl implements LoanService {
 		loanAudit.setAuditor(Model.getCurrentUserId());
 		loanAudit.setDatetime(now);
 		loanAudit.setRemark(remark);
+		loanAudit.setAuditBeforeamount(loan.getAmount());
+		loanAudit.setAuditAfteramount(amount);
 
 		loanAudit.setType(LoanAudit.Type.FINALL_AUDIT);
 		// 审核通过

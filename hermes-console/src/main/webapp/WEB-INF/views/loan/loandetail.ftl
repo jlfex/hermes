@@ -58,6 +58,8 @@
 				<tr>
 						<th>状态</th>
 						<th>结果</th>
+						<th>审核前金额</th>
+						<th>审核后金额</th>
 						<th>理由</th>
 				</tr>
 			</thead>
@@ -70,6 +72,8 @@
 					<tr>
 						<td>${l.statusName!''}</td>
 						<td>${l.typeName!''}</td>
+						<td>${l.auditBeforeamount!''}</td>
+						<td>${l.auditAfteramount!''}</td>
 						<td>${l.remark}</td>
 					</tr>
 				</#list>
