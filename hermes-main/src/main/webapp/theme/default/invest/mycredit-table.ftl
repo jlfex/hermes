@@ -31,10 +31,14 @@
 					<td class="center">${(i.receivedPI)!}</td>
 					<td class="center">${(i.waitReceivePI)!}</td>
 					<td class="center">${(i.investStatusName)!}</td>
-					<#if i.loanKind == '03' && i.loanPdfId?? && i.guaranteePdfId??>									
-				        <td class="center">
-                            <span class="protocol" data-val="${app}/invest/queryFile/${i.loanPdfId!''}"><a href="#" class="m_a1">协议</a></span>
+					<#if i.loanKind == '03'>									
+				        <td >
+				            <#if (i.loanPdfId)?? && (i.loanPdfId)?length gt 0 >
+                            <span class="protocol" data-val="${app}/invest/queryFile/${i.loanPdfId!''}"><a href="#" class="m_a1">协议</a></span>&nbsp;&nbsp;
+                            </#if>	
+                            <#if (i.guaranteePdfId)?? && (i.guaranteePdfId)?length gt 0 >
                             <span class="protocol" data-val="${app}/invest/queryFile/${i.guaranteePdfId!''}"><a href="#" class="m_a1">担保函</a></span>
+                             </#if>	
 				        </td>
 				    <#elseif i.loanKind == '01'>		
 				    	<td><span class="view" data-val="${i.id}"><a href="#" class="m_a1">协议</a></span></td> 
