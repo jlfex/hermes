@@ -100,7 +100,7 @@ jQuery(function($) {
 	 });
 	 //易联协议
 	 $('.protocol').click(function(){
-	    var url = "${app}"+$(this).attr("data-val");
+	    var url = $(this).attr("data-val");
 		var win = openwindow(url,"",1000,800);
 	 });
 	 
