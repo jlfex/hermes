@@ -367,17 +367,19 @@ public class InvestServiceImpl implements InvestService {
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public Map<String, String> bid(String loanId, User investUser, BigDecimal investAmount, String otherRepay) throws Exception {
+		String type = LoanLog.Type.INVEST, remark = "投标成功";
 		Map<String, String> backMap = new HashMap<String, String>();
 		int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
 		Logger.info("投标操作：loanId=%s,投标金额=%s", loanId, investAmount.toString());
+		Loan loan = loanRepository.findOne(loanId);
 		if (updateRecord == 1) {
-			Loan loan = loanRepository.findOne(loanId);
 			// 判断假如借款金额与已筹金额相等，更新状态为满标
 			if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 				loan.setStatus(Loan.Status.FULL);
 				loanRepository.save(loan);
 				// 插入借款日志表(满标)
-				saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
+				type=LoanLog.Type.FULL;
+				remark = "投标满标";
 			}
 			// 投标：普通标 和 外部债权
 			if (Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind()) || Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals(loan.getLoanKind())) {
@@ -393,13 +395,14 @@ public class InvestServiceImpl implements InvestService {
 			}
 			// 保存理财信息
 			saveInvestRecord(investUser, investAmount, otherRepay, loan, Invest.Status.FREEZE);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
 		} else {
 			String var = "投标操作：剩余金额不足。loanId=" + loanId + ",投标金额=" + investAmount.toString();
 			Logger.info(var);
 			backMap.put("code", "99");
 			backMap.put("msg", var);
+			remark="投标失败,剩余金额不足";
 		}
+		saveLoanLog(investUser, investAmount, loan, type, remark);
 		return backMap;
 	}
 
@@ -418,12 +421,6 @@ public class InvestServiceImpl implements InvestService {
 		BigDecimal remain = Numbers.parseCurrency(loan.getRemain());
 		if (remain.compareTo(investAmount) < 0) {
 			throw new Exception("投标失败，标的可投金额不足，剩余金额：" + remain + " < 投标金额:" + investAmount);
-		}
-		// 判断假如借款金额与已筹金额相等，更新状态为满标
-		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
-			loan.setStatus(Loan.Status.FULL);
-			loanRepository.save(loan);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标成功");
 		}
 		BankAccount bankAccount = null;
 		FinanceOrder finaceOrder = financeOrderService.queryById(loan.getCreditIndex());
@@ -449,6 +446,8 @@ public class InvestServiceImpl implements InvestService {
 	@Override
 	public String jlfexBid(String loanId, User investUser, BigDecimal investAmount, OrderPayResponseVo responseVo) throws Exception {
 		String resultFlag = "99";
+		String type = LoanLog.Type.INVEST;
+		String remark = "";
 		Loan loan = loanRepository.findOne(loanId);
 		if (responseVo == null) {
 			saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.FAIL);
@@ -480,7 +479,7 @@ public class InvestServiceImpl implements InvestService {
 			transactionService.cropAccountToJlfexPay(Transaction.Type.CHARGE, investUser, UserAccount.Type.JLFEX_FEE, investAmount, investUser.getId(), "JLfex代扣充值成功");
 			transactionService.freeze(Transaction.Type.FREEZE, investUser.getId(), investAmount, loanId, "投标冻结");
 			// 保存操作日志
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标成功");
+			remark = "投标成功";
 			resultFlag = "00";
 			Logger.info("资金流水记录成功  理财ID investId=" + invest.getId());
 			int updateRecord = loanNativeRepository.updateProceeds(loanId, investAmount);
@@ -489,10 +488,9 @@ public class InvestServiceImpl implements InvestService {
 			}
 		} else {
 			// 3:处理中
-			// 保存理财信息
 			resultFlag = "01";
 			invest = saveInvestRecord(investUser, investAmount, null, loan, Invest.Status.WAIT);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.INVEST, "投标支付结果待确认中");
+			remark = "投标支付结果待确认中";
 			Logger.info("支付状态 待确认中   理财ID investId=" + invest.getId());
 		}
 		// 保存理财收益信息
@@ -503,9 +501,10 @@ public class InvestServiceImpl implements InvestService {
 		if (loan.getAmount().compareTo(loan.getProceeds()) == 0) {
 			loan.setStatus(Loan.Status.FULL);
 			loanRepository.save(loan);
-			saveLoanLog(investUser, investAmount, loan, LoanLog.Type.FULL, "投标满标");
+			type=LoanLog.Type.FULL;
+			remark = "投标满标";
 		}
-
+		saveLoanLog(investUser, investAmount, loan, type, remark);
 		return resultFlag;
 	}
 

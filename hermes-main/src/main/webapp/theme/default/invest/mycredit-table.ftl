@@ -33,8 +33,8 @@
 					<td class="center">${(i.investStatusName)!}</td>
 					<#if i.loanKind == '03' && i.loanPdfId?? && i.guaranteePdfId??>									
 				        <td class="center">
-				            <a href="${app}/invest/queryFile/${i.loanPdfId!''}" class="icon loan" target="_Blank">《债权转让协议》</br></a>
-                            <a href="${app}/invest/queryFile/${i.guaranteePdfId!''}" class="icon loan" target="_Blank">《担保函》</a>
+				            <a href="${app}/invest/queryFile/${i.loanPdfId!''}" class="icon loan" target="_Blank"><<债权转让协议>></a>
+                            <a href="${app}/invest/queryFile/${i.guaranteePdfId!''}" class="icon loan" target="_Blank"><<担保函>></a>
 				        </td>
 				    <#elseif i.loanKind == '01'>		
 				    	<td class="center" >

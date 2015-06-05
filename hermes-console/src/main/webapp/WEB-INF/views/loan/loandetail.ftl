@@ -9,7 +9,7 @@
 			</div>
 			<label class="col-xs-1 control-label"><@messages key="model.basic.realName" /></label>
 			<div class="col-xs-2">
-				<p class="form-control-static">${userProperties.realName!''}</p>
+				<p class="form-control-static">${realName!''}</p>
 			</div>
 			<label class="col-xs-1 control-label"><@messages key="model.loan.loanNo" /></label>
 			<div class="col-xs-2">

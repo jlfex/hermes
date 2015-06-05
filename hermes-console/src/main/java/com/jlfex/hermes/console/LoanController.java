@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.Result;
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.CreditRepayPlan;
@@ -100,8 +101,14 @@ public class LoanController {
 	public String loandetail(@PathVariable("id") String id, Model model,Integer page,Integer size) {
 		Loan loan = loanService.loadById(id);
 		Dictionary dictionary = dictionaryService.loadById(loan.getPurpose());
-		UserProperties userProperties = userInfoService.loadPropertiesByUserId(loan.getUser().getId());
-		model.addAttribute("userProperties", userProperties);
+		String realName = "";
+		if(Loan.LoanKinds.NORML_LOAN.equals( loan.getLoanKind()) || 
+		   Loan.LoanKinds.OUTSIDE_ASSIGN_LOAN.equals( loan.getLoanKind())	){
+			realName = userInfoService.loadPropertiesByUserId(loan.getUser().getId()).getRealName(); 
+		}else if(Loan.LoanKinds.YLTX_ASSIGN_LOAN.equals( loan.getLoanKind())){
+			realName = HermesConstants.YLXT;
+		}
+		model.addAttribute("realName", realName);
 		if (null == dictionary) {
 			model.addAttribute("purpose", loan.getPurpose());
 		} else {
