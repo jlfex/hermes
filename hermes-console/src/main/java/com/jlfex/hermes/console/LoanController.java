@@ -229,9 +229,9 @@ public class LoanController {
 		model.addAttribute("labels", labels);
 
 		model.addAttribute("loanUserId", loan.getUser().getId());
-		model.addAttribute("loanId", id);	List<LoanAudit> loanAuditList = loanService.findLoanAuditByLoan(loan);
+		model.addAttribute("loanId", id);	
+		List<LoanAudit> loanAuditList = loanService.findLoanAuditByLoan(loan);
 		model.addAttribute("loanaudits", loanAuditList);
-		
 		model.addAttribute("realLoanAmount", loanAuditList.get(0).getAuditBeforeamount());
 		
 		return "loan/finalauditdetail";
