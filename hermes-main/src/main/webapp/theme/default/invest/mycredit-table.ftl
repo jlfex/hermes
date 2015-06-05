@@ -33,13 +33,11 @@
 					<td class="center">${(i.investStatusName)!}</td>
 					<#if i.loanKind == '03' && i.loanPdfId?? && i.guaranteePdfId??>									
 				        <td class="center">
-				            <a href="${app}/invest/queryFile/${i.loanPdfId!''}" class="icon loan" target="_Blank"><<债权转让协议>></a>
-                            <a href="${app}/invest/queryFile/${i.guaranteePdfId!''}" class="icon loan" target="_Blank"><<担保函>></a>
+                            <span class="protocol" data-val="${app}/invest/queryFile/${i.loanPdfId!''}"><a href="#" class="m_a1">协议</a></span>
+                            <span class="protocol" data-val="${app}/invest/queryFile/${i.guaranteePdfId!''}"><a href="#" class="m_a1">担保函</a></span>
 				        </td>
 				    <#elseif i.loanKind == '01'>		
-				    	<td class="center" >
-				    	<a href="#" class="icon loan protocol" target="_Blank" pid=${i.id}>协议</a>
-				    	</td>
+				    	<td><span class="view" data-val="${i.id}"><a href="#" class="m_a1">协议</a></span></td> 
 				    <#else>
 				    	<td class="center"></td>				    
 				    </#if>	
@@ -58,7 +56,7 @@ jQuery(function($) {
 			window.location.href="${app}/account/index?type=investinfo&id="+investId;				
 		});
 	// 处理分页
-	$('.pagination').each(function() {                
+	$('.pagination').each(function(){                
 		// 初始化
 		var _elem = $(this).empty(),
 			_opts = $.extend({}, _elem.data()),
@@ -95,11 +93,17 @@ jQuery(function($) {
 			$('#searchForm').trigger('submit');
 		});
 	});
-	
-	 $('.protocol').click(function(){
-	    var pid = $(this).attr("pid");
+	 // 外部债权协议
+	 $('.view').click(function(){
+	    var pid = $(this).attr("data-val");
 		var win = openwindow("${app}/invest/assignProtocol?id="+pid,"",1000,800);
 	 });
+	 //易联协议
+	 $('.protocol').click(function(){
+	    var url = "${app}"+$(this).attr("data-val");
+		var win = openwindow(url,"",1000,800);
+	 });
+	 
      function openwindow(url,name,iWidth,iHeight){
 		var url; //转向网页的地址;
 		var name; //网页名称，可为空;

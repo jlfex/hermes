@@ -71,10 +71,10 @@ jQuery(function($) {
 				<tr>
 					<th>期数</th>
 					<th>预计还款日</th>
-					<th>应还本息(<@messages key="common.unit.cny" />)</th>
-					<th>管理费(<@messages key="common.unit.cny" />)</th>
-					<th>逾期管理费(<@messages key="common.unit.cny" />)</th>
-					<th>罚息(<@messages key="common.unit.cny" />)</th>
+					<th>应还本息/<@messages key="common.unit.cny" /></th>
+					<th>管理费/<@messages key="common.unit.cny" /></th>
+					<th>逾期违约费/<@messages key="common.unit.cny" /></th>
+					<th>逾期罚息/<@messages key="common.unit.cny" /></th>
 					<th>逾期天数</th>
 					<th>状态</th>
 					<th>操作</th>

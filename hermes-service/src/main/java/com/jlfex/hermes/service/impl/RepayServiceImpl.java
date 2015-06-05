@@ -328,7 +328,9 @@ public class RepayServiceImpl implements RepayService {
 			}
 		}
 		// 插入借款日志
-		saveLoanLog(loan.getUser().getId(), loanRepay.getLoan(), Type.REPAY, loanRepay.getAmount(), "借款还款");
+		saveLoanLog(loan.getUser().getId(), loanRepay.getLoan(), Type.REPAY, loanRepay.getAmount(), 
+		String.format("应还本息:%s ,管理费:%s ,逾期违约金:%s ,逾期罚息%s ,逾期天数%s ", 
+		loanRepay.getAmount(),loanRepay.getOtherAmount(),loanRepay.getOverduePenalty(),loanRepay.getOverdueInterest(),loanRepay.getOverdueDays()));
 		return true;
 	}
 	
