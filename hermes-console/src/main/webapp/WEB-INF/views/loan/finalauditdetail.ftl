@@ -1,4 +1,35 @@
 <#include "/loan/audittop.ftl" />
+<div class="panel panel-primary">
+	<div class="panel-heading">审核记录</div>
+	<div class="panel-body">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+						<th>状态</th>
+						<th>结果</th>
+						<th>审核前金额</th>
+						<th>审核后金额</th>
+						<th>理由</th>
+				</tr>
+			</thead>
+			<#if loanaudits?size == 0>
+				<tr>
+					<td colspan="3" class="align-center"><@messages key="common.table.empty" /></td>
+				</tr>
+			<#else>
+				<#list loanaudits as l>
+					<tr>
+						<td>${l.statusName!''}</td>
+						<td>${l.typeName!''}</td>
+						<td>${l.auditBeforeamount!''}</td>
+						<td>${l.auditAfteramount!''}</td>
+						<td>${l.remark}</td>
+					</tr>
+				</#list>
+			</#if>
+		</table>
+	</div>
+</div>
 <#include "/loan/auditmiddle.ftl" />
 <form id="dataForm" method="post" action="#" class="form-horizontal">
 			<div class="panel-group" id="accordion">
