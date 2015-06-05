@@ -1,6 +1,7 @@
 <meta charset="utf-8">
-<div class="panel panel-default">
-	<div class="panel-body">
+<div class="panel panel-primary">
+		<div class="panel-heading">申请信息</div>
+		<div class="panel-body">
 		<form id="dataTopForm" method="post" action="#" class="form-horizontal">
 			<div class="form-group">
 				<label class="col-xs-1 control-label"><@messages key="model.product.name" /></label>
@@ -13,7 +14,7 @@
 				</div>
 				<label class="col-xs-1 control-label"><@messages key="model.loan.amount" /></label>
 				<div class="col-xs-2">
-					<p class="form-control-static">${loan.amount!''}<@messages key="common.unit.cny" /></p>
+					<p class="form-control-static">${realLoanAmount!''}<@messages key="common.unit.cny" /></p>
 				</div>
 				<label class="col-xs-1 control-label"><@messages key="model.loan.purpose" /></label>
 				<div class="col-xs-2">

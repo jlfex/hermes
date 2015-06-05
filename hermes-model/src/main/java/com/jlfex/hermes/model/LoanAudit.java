@@ -1,5 +1,6 @@
 package com.jlfex.hermes.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,35 +18,42 @@ import com.jlfex.hermes.common.dict.Element;
 @Entity
 @Table(name = "hm_loan_audit")
 public class LoanAudit extends Model {
-	
+
 	private static final long serialVersionUID = 6837844941000452215L;
 
 	/** 借款 */
 	@ManyToOne
 	@JoinColumn(name = "loan")
 	private Loan loan;
-	
+
 	/** 审核人 */
 	@Column(name = "auditor")
 	private String auditor;
-	
+
 	/** 日期 */
 	@Column(name = "datetime")
 	private Date datetime;
-	
+
 	/** 备注 */
 	@Column(name = "remark")
 	private String remark;
-	
+
 	/** 状态 */
 	@Column(name = "status")
 	private String status;
-	
+
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
-	
-	
+
+	/** 审核前金额 */
+	@Column(name = "audit_before_amount")
+	private BigDecimal auditBeforeamount;
+
+	/** 审核后金额 */
+	@Column(name = "audit_after_amount")
+	private BigDecimal auditAfteramount;
+
 	/**
 	 * 读取借款
 	 * 
@@ -55,7 +63,7 @@ public class LoanAudit extends Model {
 	public Loan getLoan() {
 		return loan;
 	}
-	
+
 	/**
 	 * 设置借款
 	 * 
@@ -65,7 +73,7 @@ public class LoanAudit extends Model {
 	public void setLoan(Loan loan) {
 		this.loan = loan;
 	}
-	
+
 	/**
 	 * 读取审核人
 	 * 
@@ -75,7 +83,7 @@ public class LoanAudit extends Model {
 	public String getAuditor() {
 		return auditor;
 	}
-	
+
 	/**
 	 * 设置审核人
 	 * 
@@ -85,7 +93,7 @@ public class LoanAudit extends Model {
 	public void setAuditor(String auditor) {
 		this.auditor = auditor;
 	}
-	
+
 	/**
 	 * 读取日期
 	 * 
@@ -95,7 +103,7 @@ public class LoanAudit extends Model {
 	public Date getDatetime() {
 		return datetime;
 	}
-	
+
 	/**
 	 * 设置日期
 	 * 
@@ -105,7 +113,7 @@ public class LoanAudit extends Model {
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
 	}
-	
+
 	/**
 	 * 读取备注
 	 * 
@@ -115,7 +123,7 @@ public class LoanAudit extends Model {
 	public String getRemark() {
 		return remark;
 	}
-	
+
 	/**
 	 * 设置备注
 	 * 
@@ -125,7 +133,7 @@ public class LoanAudit extends Model {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+
 	/**
 	 * 读取状态
 	 * 
@@ -135,7 +143,7 @@ public class LoanAudit extends Model {
 	public String getStatus() {
 		return status;
 	}
-	
+
 	/**
 	 * 设置状态
 	 * 
@@ -145,7 +153,7 @@ public class LoanAudit extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * 读取类型
 	 * 
@@ -155,7 +163,7 @@ public class LoanAudit extends Model {
 	public String getType() {
 		return type;
 	}
-	
+
 	/**
 	 * 设置类型
 	 * 
@@ -165,7 +173,7 @@ public class LoanAudit extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * @return description:取得类型名称
 	 */
@@ -178,6 +186,22 @@ public class LoanAudit extends Model {
 	 */
 	public String getStatusName() {
 		return Dicts.name(status, status, Status.class);
+	}
+
+	public BigDecimal getAuditBeforeamount() {
+		return auditBeforeamount;
+	}
+
+	public void setAuditBeforeamount(BigDecimal auditBeforeamount) {
+		this.auditBeforeamount = auditBeforeamount;
+	}
+
+	public BigDecimal getAuditAfteramount() {
+		return auditAfteramount;
+	}
+
+	public void setAuditAfteramount(BigDecimal auditAfteramount) {
+		this.auditAfteramount = auditAfteramount;
 	}
 
 	/**

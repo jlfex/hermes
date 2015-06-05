@@ -203,6 +203,7 @@ public class LoanController {
 
 		model.addAttribute("loanUserId", loan.getUser().getId());
 		model.addAttribute("loanId", id);
+		model.addAttribute("realLoanAmount", loan.getAmount());
 		return "loan/firstauditdetail";
 	}
 
@@ -228,7 +229,11 @@ public class LoanController {
 		model.addAttribute("labels", labels);
 
 		model.addAttribute("loanUserId", loan.getUser().getId());
-		model.addAttribute("loanId", id);
+		model.addAttribute("loanId", id);	
+		List<LoanAudit> loanAuditList = loanService.findLoanAuditByLoan(loan);
+		model.addAttribute("loanaudits", loanAuditList);
+		model.addAttribute("realLoanAmount", loanAuditList.get(0).getAuditBeforeamount());
+		
 		return "loan/finalauditdetail";
 	}
 
@@ -368,7 +373,7 @@ public class LoanController {
 		List<String> labelList = Strings.split(labels, ",");
 
 		Loan loanResult = null;
-		// 初审通过
+		// 终审通过
 		if (Strings.equals(status, "00")) {
 			loanResult = loanService.finalAudit(loan, true, finalFixAmount, remark, labelList);
 			// 终审驳回
