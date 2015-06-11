@@ -28,6 +28,7 @@
 				<div class="col-xs-1 u-col">
 					<p class="form-control-static"><@messages key="common.unit.cny" /></p>
 				</div>
+				<p class="form-control-static" id="err_msg"></p>
 			</div>
 			<div class="form-group">
 				<label for="fee" class="col-xs-2 u-col control-label"><@messages key="account.fund.withdraw.fee" /></label>
@@ -72,7 +73,19 @@ jQuery(function($) {
 		});
 	});
 	
+	$("#amount").on('focus',function() {
+	 	$('#addChargeBtn').removeAttr("disabled");
+		$("#err_msg").html('');
+	});
+	
+	
 	$('#amount').on('blur', function() {
+		if(!((/^(([1-9]\d*)|\d)(\.\d{1,2})?$/)).test($("#amount").val().toString())) {
+		  $('#addChargeBtn').attr("disabled",true);
+		  $("#err_msg").css('color','red').html('请输入正确的金额格式!');
+		  return;
+		}
+		
 		var _elem = $(this),
 			_fee = $('#fee'),
 			_sum = $('#sum');
@@ -100,6 +113,12 @@ jQuery(function($) {
 	
 	// 添加提现记录
 	$('#addWithdrawBtn').on('click', function() {
+		if(!((/^(([1-9]\d*)|\d)(\.\d{1,2})?$/)).test($("#amount").val().toString())) {
+		  $('#addChargeBtn').attr("disabled",true);
+		  $("#err_msg").css('color','red').html('请输入正确的金额格式!');
+		  return;
+		} 
+		
 	    $('#addWithdrawBtn').attr("disabled",true);
 		$.ajax('${app}/account/withdraw/add', {
 			data: $('#withdrawForm').serialize(),
