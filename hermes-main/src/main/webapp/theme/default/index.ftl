@@ -21,6 +21,7 @@ table th{text-align:center;}
 <script type="text/javascript">
 $(function(){
 	$(".content .banner").css("background-image", "url(${(bannerPicture.image)!})");
+	$("#notice").roll();
 });
 </script>
 </head>
