@@ -26,7 +26,7 @@
 				<div class="col-xs-2">
 				    <select class="form-control" name="certType" id="certType">
 						<option value="00"  >身份证</option>
-						<option value="01"  >组织机构代码</option>
+						<!--<option value="01"  >组织机构代码</option>-->
 					</select>
 				</div>
 			</div>
