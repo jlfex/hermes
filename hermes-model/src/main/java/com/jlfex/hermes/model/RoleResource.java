@@ -19,11 +19,11 @@ public class RoleResource extends Model {
 
 	/** 角色 */
 	@ManyToOne
-	@JoinColumn(name = "role")
+	@JoinColumn(name = "role_id")
 	private Role role;
 	
 	/** 资源 */
-	@Column(name = "resource")
+	@Column(name = "resource_id")
 	private String resource;
 	
 	/** 类型 */

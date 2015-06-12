@@ -84,7 +84,7 @@ public class CFCAOrder extends Model {
 	 * 投资人
 	 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	public Invest getInvest() {

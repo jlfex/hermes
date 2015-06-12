@@ -20,7 +20,7 @@ public class UserContacter extends Model {
 
 	/** 用户 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	/** 姓名 */

@@ -1,4 +1,4 @@
-select hl.user,hd.name as purpose,
+select hl.user_id,hd.name as purpose,
 round(hl.amount) as amount,
 hl.rate as rate ,
 hl.period,round(hl.proceeds) as proceeds,

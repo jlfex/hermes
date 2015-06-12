@@ -2,6 +2,7 @@ package com.jlfex.hermes.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -29,7 +30,8 @@ public class PaymentChannel extends Model {
 	private String code;
 
 	/** 图片 */
-	@Column(name = "logo", length = 40000)
+	@Lob
+	@Column(name = "logo")
 	private String logo;
 
 	/** 顺序 */

@@ -58,7 +58,7 @@ public class Product extends Model {
 	private String description;
 
 	/** 视图 */
-	@Column(name = "view")
+	@Column(name = "view_data")
 	private String view;
 
 	/** 借款管理费 */

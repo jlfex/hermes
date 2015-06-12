@@ -1,1 +1,1 @@
-SELECT hu.id, hu.account, hu.cellphone, hp.real_name FROM hm_user hu INNER JOIN hm_user_properties hp ON hp.user = hu.id %s
+SELECT hu.id, hu.account, hu.cellphone, hp.real_name FROM hm_user hu INNER JOIN hm_user_properties hp ON hp.user_id = hu.id %s

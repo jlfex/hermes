@@ -16,12 +16,12 @@ public class UserRole extends Model {
 
 	/** 用户 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	/** 角色 */
 	@ManyToOne
-	@JoinColumn(name = "role")
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 	/**
