@@ -412,8 +412,8 @@ public class UserProperties extends Model {
 		@Element("身份证")
 		public static final String IDENTITY	= "00";
 		
-		@Element("护照")
-		public static final String PASSPORT	= "01";
+	/*	@Element("护照")
+		public static final String PASSPORT	= "01";*/
 	}
 	
 	/**
