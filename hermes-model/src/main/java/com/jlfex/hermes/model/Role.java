@@ -29,6 +29,10 @@ public class Role extends Model {
 	/** 状态 */
 	@Column(name = "status")
 	private String status = HermesConstants.VALID;
+	
+	/** 类型 */
+	@Column(name = "type")
+	private String type ;
 
 	/**
 	 * 读取名称
@@ -90,6 +94,14 @@ public class Role extends Model {
 		this.status = status;
 	}
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	/**
 	 * 读取状态名称
 	 * 
@@ -121,5 +133,15 @@ public class Role extends Model {
 		
 		@Element("无效")
 		public static final String DISABLED	= "99";
+	}
+	
+	/**
+	 * 角色类型
+	 */
+	public static final class Type {
+		@Element("软件模式")
+		public static final String ENABLED	= "00";
+		@Element("系统权限")
+		public static final String HIDDEN	= "01";
 	}
 }
