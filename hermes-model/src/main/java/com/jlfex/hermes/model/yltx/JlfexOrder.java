@@ -29,7 +29,7 @@ public class JlfexOrder extends Model{
 	@JoinColumn(name = "invest_id")
 	private  Invest   invest;		                //理财信息
 	@ManyToOne
-	@JoinColumn(name = "user")                      //投资人
+	@JoinColumn(name = "user_id")                   //投资人
 	private User user;
 	@JoinColumn(name = "order_amount")
 	private  BigDecimal  orderAmount;		        //订单金额

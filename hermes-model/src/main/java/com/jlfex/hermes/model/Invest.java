@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 理财信息模型
@@ -21,7 +22,7 @@ public class Invest extends Model {
 
 	/** 用户 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	/** 借款 */
@@ -219,7 +220,12 @@ public class Invest extends Model {
 	 * @return
 	 */
 	public String getStatusName() {
-		return Dicts.name(status, status, Status.class);
+		if(Strings.notEmpty(status)){
+			return Dicts.name(status, status, Status.class);
+		}else{
+			return "";
+		}
+		
 	}
 
 	/**

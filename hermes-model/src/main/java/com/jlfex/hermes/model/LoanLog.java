@@ -22,7 +22,7 @@ public class LoanLog extends Model {
 	private static final long serialVersionUID = -7794761102491258115L;
 
 	/** 用户 */
-	@Column(name = "user")
+	@Column(name = "user_id")
 	private String user;
 
 	/** 借款 */

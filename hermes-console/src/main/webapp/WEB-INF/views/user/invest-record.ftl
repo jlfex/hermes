@@ -24,7 +24,7 @@
 			<td>${invest.rate}</td>
 			<td>${invest.period}</td>
 			<td class="align-right">${invest.expectProfit}</td>
-			<td>${invest.status}</td>
+			<td>${invest.status!''}</td>
 		</tr>
 		</#list>
 		</#if>

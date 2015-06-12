@@ -127,5 +127,12 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.2.6</version>
 		</dependency>
+        <!--
+		<dependency>
+			<groupId>oracle</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>7</version>
+		</dependency>
+        -->
 	</dependencies>
 </project>

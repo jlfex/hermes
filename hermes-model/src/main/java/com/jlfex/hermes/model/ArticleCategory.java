@@ -48,7 +48,7 @@ public class ArticleCategory extends Model {
 
 	
 	/** 分类级别 */
-	@Column(name = "level")
+	@Column(name = "level_num")
 	private String level;
 
 	/**

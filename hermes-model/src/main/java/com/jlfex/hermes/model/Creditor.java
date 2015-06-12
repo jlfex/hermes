@@ -64,7 +64,7 @@ public class Creditor  extends Model {
 	private String assoureType ;
 	//现金账户
 	@OneToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	//状态
 	@Column(name = "status")

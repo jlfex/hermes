@@ -30,7 +30,7 @@ public class InvestProfit extends Model {
 	
 	/** 用户 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	/** 理财 */
@@ -44,7 +44,7 @@ public class InvestProfit extends Model {
 	private LoanRepay loanRepay;
 	
 	/** 日期 */
-	@Column(name = "date")
+	@Column(name = "date_time")
 	private Date date;
 	
 	/** 总金额 */

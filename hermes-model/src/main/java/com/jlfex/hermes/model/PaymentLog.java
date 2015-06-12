@@ -36,7 +36,7 @@ public class PaymentLog extends Model {
 	private String status;
 	
 	/** 原始数据 */
-	@Column(name = "raw")
+	@Column(name = "raw_data")
 	private String raw;
 
 	/**

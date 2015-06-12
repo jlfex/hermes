@@ -13,16 +13,8 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
-	<context:property-placeholder location="classpath:application.conf" ignore-unresolvable="true" />
-
+	<context:property-placeholder ignore-resource-not-found="true" location="classpath:application.conf" />
 	<jpa:repositories base-package="com.jlfex.hermes.repository" />
-
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${db.driver}" />
-		<property name="url" value="${db.url}" />
-		<property name="username" value="${db.username}" />
-		<property name="password" value="${db.password}" />
-	</bean>
 	
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -40,4 +32,29 @@
 	</bean>
 	
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	 <!-- quick start  环境 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+	</bean>	 
+	<!-- test or develop 环境 
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="defaultAutoCommit" value="${jdbc.pool.defaultAutoCommit}" />
+		<property name="maxActive" value="${jdbc.pool.maxActive}" />
+		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
+		<property name="initialSize" value="${jdbc.pool.initialSize}" />
+		<property name="minIdle" value="${jdbc.pool.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="5000" />
+		<property name="minEvictableIdleTimeMillis" value="6000" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="${jdbc.pool.testQuery}" />
+	 </bean> 
+	 -->
+	
 </beans>

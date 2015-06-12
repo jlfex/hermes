@@ -19,7 +19,7 @@ public class UserImage extends Model {
 
 	/** 用户 */
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	/** 标签 */
