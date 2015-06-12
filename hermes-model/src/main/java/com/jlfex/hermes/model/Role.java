@@ -139,7 +139,7 @@ public class Role extends Model {
 	 * 角色类型
 	 */
 	public static final class Type {
-		@Element("系统功能")
+		@Element("软件模式")
 		public static final String ENABLED	= "00";
 		@Element("系统权限")
 		public static final String HIDDEN	= "01";
