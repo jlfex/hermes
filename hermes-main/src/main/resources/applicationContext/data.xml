@@ -13,6 +13,7 @@
 		http://www.springframework.org/schema/tx 
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
+	<context:property-placeholder ignore-resource-not-found="true" location="classpath:application.conf" />
 	<jpa:repositories base-package="com.jlfex.hermes.repository" />
 	
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -31,16 +32,13 @@
 	</bean>
 	
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	
 	 <!-- quick start  环境 -->
-     <context:property-placeholder ignore-resource-not-found="true" 
-        location="classpath:application.conf,classpath:db/db.quick.conf" />	
-		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 			<property name="driverClassName" value="${jdbc.driver}" />
 			<property name="url" value="${jdbc.url}" />
 			<property name="username" value="${jdbc.username}" />
 			<property name="password" value="${jdbc.password}" />
-	    </bean> 
+	</bean>	 
 	<!-- test or develop 环境 
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />
