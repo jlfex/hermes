@@ -4,11 +4,15 @@
 		<form id="searchForm" method="post" action="">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="loanNo">债权人名称</label>
+					<label for="loanNo">名称</label>
 					<input id="creditorName" name="creditorName" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">
-					<label for="account">联系方式</label>
+					<label for="account">权限</label>
+					<input id="cellphone" name="cellphone" type="text" class="form-control">
+				</div>
+				<div class="col-xs-2 hm-col form-group">
+					<label for="account">备注</label>
 					<input id="cellphone" name="cellphone" type="text" class="form-control">
 				</div>
 				<div class="col-xs-1 hm-col form-group">
