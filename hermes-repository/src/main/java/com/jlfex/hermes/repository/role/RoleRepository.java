@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.jlfex.hermes.model.Role;
 
 /**
- * 借款认证仓库
+ * 角色
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String>, JpaSpecificationExecutor<Role> {
