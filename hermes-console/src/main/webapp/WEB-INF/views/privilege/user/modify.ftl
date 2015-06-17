@@ -106,6 +106,7 @@ jQuery(function($) {
 	    $("#modifyPwd").hide();
 	    $("#abandonModify").hide();
 	    $("#originalPwd").val('');
+	    $("#pwdCheckResult").hide();
 	});
 	// 校验原始密码是否合法
 	$("#originalPwd").blur(function(){
@@ -123,13 +124,15 @@ jQuery(function($) {
 				      $("#pwdCheckResult").html("原始密码正确");
 				      $("#pwdCheckResult").removeClass("alert-danger").addClass("alert-info");
 				   }else{
+				      $("#pwdCheckResult").removeClass("alert-info").addClass("alert-danger");
 				      $("#pwdCheckResult").show().html("原始密码有误");
 				   }
 				   return ;
 			  },
 			  error : function(data)
 			  {
-			       
+			       $("#pwdCheckResult").removeClass("alert-info").addClass("alert-danger");
+				   $("#pwdCheckResult").show().html("原始密码有误");
 				   return ;
 			  }
 	        });
@@ -167,6 +170,12 @@ jQuery(function($) {
 	
 	//点击添加按钮
 	$("#saveBtn").on("click",function(){
+	 var _show = $("#abandonModify").css("display");
+	 var _val = $("#abandonModify").val();
+	 if(_show != 'none' && $.trim(_val) == '' ){
+	    $("#pwdCheckResult").html("请输入原始密码");
+	    return  false;
+	 }
 	 if(checkAll()){
 		$.link.html(null, {
 			url: '${app}/privilege/saveUser',
