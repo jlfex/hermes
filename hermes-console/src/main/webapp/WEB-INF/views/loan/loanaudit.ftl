@@ -35,8 +35,9 @@
 <script type="text/javascript">
 <!--
 jQuery(function($) {
+        var type="${auditType!''}";
 		$.page.withdraw({
-		search: '${app}/loan/loanauditdata'
+		search: '${app}/loan/loanauditdata/'+type
 	});
 				
 });
