@@ -11,6 +11,7 @@ import com.jlfex.hermes.model.RoleResource;
 import com.jlfex.hermes.model.UserRole;
 import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.repository.UserRoleRepository;
+import com.jlfex.hermes.repository.role.RoleRepository;
 import com.jlfex.hermes.service.RoleService;
 
 /**
@@ -27,6 +28,9 @@ public class RoleServiceImpl implements RoleService {
 	/** 用户角色仓库 */
 	@Autowired
 	private UserRoleRepository userRoleRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	/* (non-Javadoc)
 	 * @see com.jlfex.hermes.service.RoleService#findByUserId(java.lang.String)
@@ -100,4 +104,27 @@ public class RoleServiceImpl implements RoleService {
 		for (UserRole userRole: userRoles) map.put(userRole.getRole().getId(), userRole.getRole());
 		return new ArrayList<Role>(map.values());
 	}
+	
+	/**
+	 * 根据类型+状态  获取角色列表
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public  List<Role>  findByTypeAndStatus(String type,String status) {
+		return roleRepository.findByTypeAndStatus(type,status);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public  List<Role>  findByTypeAndStatusAndCreator(String type,String status,String creator) {
+		return roleRepository.findByTypeAndStatusAndCreator(type,status,creator);
+	}
+    /**
+     * 根据Id获取角色
+     */
+	@Override
+	public Role findById(String id) {
+		return roleRepository.findOne(id);
+	}
+	
 }

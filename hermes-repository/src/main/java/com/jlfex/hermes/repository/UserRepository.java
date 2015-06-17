@@ -12,7 +12,7 @@ import com.jlfex.hermes.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
 
-	/**
+	/** 
 	 * 根据email查询用户
 	 * 
 	 * @param email
@@ -35,4 +35,10 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
 	 * @return
 	 */
 	User findByAccount(String account);
+	/**
+	 * 根据创建者获取用户
+	 * @param creator
+	 * @return
+	 */
+	List<User> findByCreator(String creator);
 }
