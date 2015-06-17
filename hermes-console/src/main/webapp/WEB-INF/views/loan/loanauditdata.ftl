@@ -9,7 +9,8 @@
 			<th width="10%" class="align-center"></th>
 		</tr>
 	</thead>
-	<#if loanaudit.numberOfElements == 0>
+	<#if loanaudit??>
+	  <#if loanaudit.numberOfElements == 0>
 		<tr>
 			<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
 		</tr>
@@ -31,10 +32,15 @@
 		</tr>
 		</#list>
 		</#if>
+    <#else>
+        <tr>
+			<td colspan="6" class="align-center"><@messages key="common.table.empty" /></td>
+		</tr>
+    </#if>
 	<tbody>
 </table>
 
-<ul class="pagination" data-number="${loanaudit.number}" data-total-pages="${loanaudit.totalPages}"></ul>
+<ul class="pagination" data-number="${(loanaudit.number)!'0'}" data-total-pages="${(loanaudit.totalPages)!'0'}"></ul>
 
 <script type="text/javascript">
 <!--

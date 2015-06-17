@@ -91,7 +91,8 @@ public class LoanStatusCount {
 	public static Map<String, LoanStatusCount> getHomeCount(List<LoanStatusCount> data) {
 		// 初始化
 		Map<String, LoanStatusCount> map = new HashMap<String, LoanStatusCount>();
-		map.put(HomeStatus.AUDIT, new LoanStatusCount(HomeStatus.AUDIT));
+		map.put(HomeStatus.AUDIT_FIRST, new LoanStatusCount(HomeStatus.AUDIT_FIRST));
+		map.put(HomeStatus.AUDIT_FINAL, new LoanStatusCount(HomeStatus.AUDIT_FINAL));
 		map.put(HomeStatus.LOAN_OUT, new LoanStatusCount(HomeStatus.LOAN_OUT));
 		map.put(HomeStatus.DEMAND, new LoanStatusCount(HomeStatus.DEMAND));
 		
@@ -100,9 +101,9 @@ public class LoanStatusCount {
 			// 根据状态读取统计对象
 			LoanStatusCount count = null;
 			if (Strings.equals(lsc.getStatus(), Loan.Status.AUDIT_FIRST)) {
-				count = map.get(HomeStatus.AUDIT);
+				count = map.get(HomeStatus.AUDIT_FIRST);
 			} else if (Strings.equals(lsc.getStatus(), Loan.Status.AUDIT_FINAL)) {
-				count = map.get(HomeStatus.AUDIT);
+				count = map.get(HomeStatus.AUDIT_FINAL);
 			} else if (Strings.equals(lsc.getStatus(), Loan.Status.FULL)) {
 				count = map.get(HomeStatus.LOAN_OUT);
 			} else if (Strings.equals(lsc.getStatus(), Loan.Status.REPAYING)) {
@@ -130,5 +131,11 @@ public class LoanStatusCount {
 		
 		@Element("催款")
 		public static final String DEMAND	= "02";
+		
+		@Element("等待初审")
+		public static final String AUDIT_FIRST	= "03";
+		
+		@Element("等待终审")
+		public static final String AUDIT_FINAL	= "04";
 	}
 }

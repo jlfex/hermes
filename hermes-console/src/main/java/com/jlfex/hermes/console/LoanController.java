@@ -40,6 +40,7 @@ import com.jlfex.hermes.service.RepayService;
 import com.jlfex.hermes.service.TransactionService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.UserManageService;
+import com.jlfex.hermes.service.pojo.LoanStatusCount;
 import com.jlfex.hermes.service.pojo.LoanUserBasic;
 
 @Controller
@@ -132,9 +133,9 @@ public class LoanController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/loanaudit")
-	public String loanaudit() {
-
+	@RequestMapping("/loanaudit/{auditType}")
+	public String loanaudit(Model model, @PathVariable String auditType) {
+        model.addAttribute("auditType", auditType);
 		return "loan/loanaudit";
 	}
 
@@ -161,9 +162,17 @@ public class LoanController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/loanauditdata")
-	public String loanauditdata(String loanNo, String account, BigDecimal startAmount, BigDecimal endAmount, Integer page, Integer size, Model model) {
-		model.addAttribute("loanaudit", loanService.findByLoanNoAndAccountAndAmountBetweenAndStatus(loanNo, account, startAmount, endAmount, page, size, Loan.Status.AUDIT_FIRST, Loan.Status.AUDIT_FINAL));
+	@RequestMapping("/loanauditdata/{type}")
+	public String loanAuditFirstData(String loanNo, String account, BigDecimal startAmount, BigDecimal endAmount, Integer page, Integer size, Model model, @PathVariable String type) {
+		String kind = null;
+		if(LoanStatusCount.HomeStatus.AUDIT_FIRST.equals(type)){
+			kind = Loan.Status.AUDIT_FIRST;
+		}else if(LoanStatusCount.HomeStatus.AUDIT_FINAL.equals(type)){
+			kind = Loan.Status.AUDIT_FINAL;
+		}
+		if(kind !=null){
+			model.addAttribute("loanaudit", loanService.findByLoanNoAndAccountAndAmountBetweenAndStatus(loanNo, account, startAmount, endAmount, page, size, kind));
+		}
 		return "loan/loanauditdata";
 	}
 
