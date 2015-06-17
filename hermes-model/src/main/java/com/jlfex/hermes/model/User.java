@@ -44,9 +44,11 @@ public class User extends Model {
 	private String status;
 
 	/** 类型 */
-	
 	@Column(name = "type")
 	private String type;
+	//备注
+	@Column(name = "remark")
+	private String remark;
 
 	/** 角色列表 */
 	@Transient
@@ -256,14 +258,18 @@ public class User extends Model {
 		@Element("客户")
 		public static final String CLIENT = "00";
 
-		@Element("管理员")
+		@Element("超级管理员")
 		public static final String ADMIN = "10";
+		
+		@Element("普通管理员")
+		public static final String NORMAL_ADMIN = "11";
 
 		@Element("根")
 		public static final String ROOT = "99";
 
 		@Element("债权人")
 		public static final String CREDIT = "20";
+		
 	}
 
 	public String getVerificationCode() {
@@ -280,6 +286,18 @@ public class User extends Model {
 
 	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	/**

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserProperties;
+import com.jlfex.hermes.service.pojo.privilege.user.UserRoleVo;
 
 /**
  * 用户业务接口
@@ -170,4 +171,37 @@ public interface UserService {
 	 * @return
 	 */
 	public UserProperties loadPropertiesByUserId(String userId);
+
+	/**
+	 * 根据创建者 获取用户列表
+	 * @param creator
+	 * @return
+	 */
+	public List<User> getUserByCreator(String creator);
+
+	/**
+	 * 添加后台管理人员
+	 * @param userRoleVo
+	 * @return
+	 */
+	public Map<String,String> saveConsoleManager(UserRoleVo userRoleVo);
+    /**
+     * 后台管理员删除
+     * @param userId
+     */
+	public  void delUser(String userId);
+    /**
+     * 后台用户更新
+     * @param user
+     * @return
+     * @throws Exception
+     */
+	public  User updateUser(User user) throws Exception;
+    /**
+     * 验证输入密码是否和原始密码相同
+     * @param id
+     * @param inputPwd
+     * @return
+     */
+	public boolean checkCorrectOfUserPwd(String id, String inputPwd);
 }
