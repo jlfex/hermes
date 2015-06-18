@@ -50,7 +50,7 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 					p.add(cb.like(root.<String> get("name"), "%" + name + "%"));
 				}
 
-				p.add(cb.equal(root.<String> get("status"), HermesConstants.VALID));
+				p.add(cb.equal(root.<String> get("status"), Role.Status.ENABLED));
 				p.add(cb.equal(root.<String> get("type"), Role.Type.SYS_AUTH));
 				return cb.and(p.toArray(new Predicate[p.size()]));
 			}
