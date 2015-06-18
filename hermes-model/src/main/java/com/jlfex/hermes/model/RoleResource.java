@@ -145,7 +145,7 @@ public class RoleResource extends Model {
 	
 
 	/**
-	 * 接口状态
+	 * 状态
 	 *
 	 */
 	public static final class Status {
