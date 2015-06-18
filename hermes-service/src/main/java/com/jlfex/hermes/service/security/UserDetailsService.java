@@ -1,9 +1,11 @@
 package com.jlfex.hermes.service.security;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.service.RoleService;
 import com.jlfex.hermes.service.UserService;
@@ -31,14 +33,20 @@ public class UserDetailsService implements org.springframework.security.core.use
 		if (user == null){
 			user = userService.loadByAccount(username);
 		}
-		if (user != null && !"admin".equals(username)) {
+		if (user == null) {
+			Logger.info("找不到后台用户信息: %s",username);
 			throw new UsernameNotFoundException("cannot find user " + username + ".");
 		}
-		
+		//判断 用户是类型 及状态 是否是状态正常的后台用户
+		if(!(User.Type.ADMIN.equals(user.getType()) || 
+		    User.Type.NORMAL_ADMIN.equals(user.getType())) &&
+			User.Status.ENABLED.equals(user.getStatus())){
+			Logger.info("无效的后台用户: %s,类型：%s,状态：%s",username,user.getTypeName(),user.getStatusName() );
+			throw new UsernameNotFoundException("无效的用户: " + username + ".");
+		}
 		// 设置当前用户
 		user.getRoles().addAll(roleService.findByUserId(user.getId()));
 		App.current().setUser(new AppUser(user.getId(), user.getEmail(), user.getAccount()));
-		
 		// 返回结果
 		return new com.jlfex.hermes.service.security.UserDetails(user);
 	}

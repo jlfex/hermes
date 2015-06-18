@@ -117,7 +117,15 @@ public class RoleResource extends Model {
 	 * @return
 	 */
 	public String getTypeName() {
-		return Dicts.name(type, Type.class);
+		return Dicts.name(type, type,Type.class);
+	}
+	
+	/**
+	 * 读取状态名称
+	 * 
+	 */
+	public String getStatusName() {
+		return Dicts.name(status, status, Status.class);
 	}
 	
 	/**
@@ -135,4 +143,17 @@ public class RoleResource extends Model {
 		public static final String BACK_PRIVILEGE = "01";
 	}
 	
+
+	/**
+	 * 状态
+	 *
+	 */
+	public static final class Status {
+		@Element("有效")
+		public static final String  VALID = "0";
+		@Element("无效")
+		public static final String  INVALID = "1";
+
+	}
+
 }

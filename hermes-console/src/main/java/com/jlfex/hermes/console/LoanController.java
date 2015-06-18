@@ -276,7 +276,7 @@ public class LoanController {
 		String[] labelNames = labelStr.split(",");
 		List<Label> labels = labelService.findByNames(labelNames);
 		model.addAttribute("labels", labels);
-
+		model.addAttribute("realLoanAmount", loan.getAmount());
 		model.addAttribute("loanUserId", loan.getUser().getId());
 		model.addAttribute("loanId", id);
 		return "loan/fullauditdetail";
