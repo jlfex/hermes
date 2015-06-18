@@ -99,7 +99,8 @@ public class IndexController {
 	@RequestMapping("/home")
 	public String home(Model model) {
 		Map<String, LoanStatusCount> map = LoanStatusCount.getHomeCount(loanService.countByStatus());
-		model.addAttribute("audit", map.get(LoanStatusCount.HomeStatus.AUDIT));
+		model.addAttribute("auditFirst", map.get(LoanStatusCount.HomeStatus.AUDIT_FIRST));
+		model.addAttribute("auditFinal", map.get(LoanStatusCount.HomeStatus.AUDIT_FINAL));
 		model.addAttribute("out", map.get(LoanStatusCount.HomeStatus.LOAN_OUT));
 		model.addAttribute("demand", map.get(LoanStatusCount.HomeStatus.DEMAND));
 		return "home";

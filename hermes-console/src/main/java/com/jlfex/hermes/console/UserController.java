@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.dict.Dicts;
@@ -29,6 +31,7 @@ import com.jlfex.hermes.service.InvestService;
 import com.jlfex.hermes.service.LabelService;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.UserManageService;
+import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.UserBasic;
 import com.jlfex.hermes.service.pojo.UserInfo;
 
@@ -45,6 +48,8 @@ public class UserController {
 	private InvestService investService;
 	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private  UserService  userService;
 
 	/**
 	 * 客户管理首页
@@ -352,5 +357,40 @@ public class UserController {
 	@ResponseBody
 	public Result<String> logOffUser(@PathVariable("id")String id){
 	return userManageService.logOffUser(id);
+	}
+	
+	/**
+	 * 查看昵称是否被占用
+	 * 
+	 * @param account
+	 * @return
+	 */
+	@RequestMapping("checkAccount")
+	@ResponseBody
+	public JSONObject checkAccount(String account) {
+		User user = userService.getUserByAccount(account);
+		JSONObject jsonObj = new JSONObject();
+		if (user != null) {
+			jsonObj.put("account", false);
+		} else {
+			jsonObj.put("account", true);
+		}
+
+		return jsonObj;
+	}
+	
+	/**
+	 * 查看原始密码是否正确
+	 * 
+	 * @param account
+	 * @return
+	 */
+	@RequestMapping("checkOriginalPwd")
+	@ResponseBody
+	public JSONObject checkOriginalPwd(String id, String pwd) {
+		boolean correctFlag = userService.checkCorrectOfUserPwd(id,pwd);
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("correctFlag", correctFlag);
+		return jsonObj;
 	}
 }

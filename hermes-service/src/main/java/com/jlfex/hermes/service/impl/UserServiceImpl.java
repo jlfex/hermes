@@ -44,6 +44,7 @@ import com.jlfex.hermes.repository.UserPropertiesRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.service.UserLogService;
 import com.jlfex.hermes.service.UserService;
+import com.jlfex.hermes.service.pojo.privilege.user.UserRoleVo;
 import com.jlfex.hermes.service.security.PasswordEncoder;
 
 /**
@@ -559,5 +560,87 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 	private String getPath(HttpServletRequest req) {
 		String ip = req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
 		return ip;
+	}
+	
+	@Override
+	public List<User> getUserByCreator(String creator) {
+		return userRepository.findByCreator(creator);
+	}
+	/**
+	 * 权限：添加后台管理人员
+	 * @param userRoleVo
+	 * @return
+	 */
+	@Override
+	public Map<String,String>  saveConsoleManager(UserRoleVo userRoleVo){
+		Map<String,String>  resultMap = new  HashMap<String,String>();
+		String code="99", msg="保存失败"; 
+		if(userRoleVo==null ){
+			msg = "保存失败，信息为空";
+		}else if(Strings.empty(userRoleVo.getId())){
+			//保存
+			User user = new User();
+			user.setAccount(userRoleVo.getUserName().trim());
+			user.setType(Type.NORMAL_ADMIN);
+			user.setStatus(Status.ENABLED);
+			user.setSignPassword(encode(userRoleVo.getUserPwd()));// 密码加密
+			user.setRemark(userRoleVo.getRemark());
+			if(userRepository.save(user) !=null){
+				code = "00";
+			}
+		}else if(Strings.notEmpty(userRoleVo.getId())){
+			//编辑
+			User user = loadById(userRoleVo.getId().trim());
+			user.setRemark(userRoleVo.getRemark());
+			if(Strings.notEmpty(userRoleVo.getOriginalPwd())){
+				//修改密码
+				String encryptOldPwd = encode(userRoleVo.getOriginalPwd());
+				if(encryptOldPwd.equals(user.getSignPassword())){
+					user.setSignPassword(encode(userRoleVo.getUserPwd()));// 密码加密
+					userRepository.save(user);
+					code = "00";
+				}else{
+					msg = "保存失败，原始密码有误!";
+				}
+			}else{
+				//不修改密码
+				userRepository.save(user);
+				code = "00";
+			}
+		}
+		resultMap.put("code", code);
+		resultMap.put("msg", msg);
+	    return resultMap;
+	}
+	/**
+	 * 后台用户删除
+	 */
+	@Override
+	public void delUser(String userId) {
+		 userRepository.delete(userId);
+	}
+	/**
+	 *  后台用户更新
+	 */
+	@Override
+	public User updateUser(User user) {
+		 return userRepository.save(user);
+	}
+	/**
+	 * 验证输入密码是否和原始密码相同
+	 * @param id
+	 * @param inputPwd
+	 * @return
+	 */
+	@Override
+	public boolean  checkCorrectOfUserPwd(String id,String inputPwd) {
+		User user = userRepository.findOne(id);
+		if(user !=null){
+			String originalPwd = user.getSignPassword();
+			if(Strings.notEmpty(inputPwd) && originalPwd.equals(encode(inputPwd.trim()))){
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -66,4 +66,24 @@ public interface RoleService {
 	 * @return
 	 */
 	public Role findByCode(String code);
+	/**
+	 * 根据类型+状态 获取角色列表
+	 * @param type
+	 * @return
+	 */
+	public  List<Role> findByTypeAndStatus(String type, String status);
+    /**
+     * 根据类型+状态+创建者  获取角色列表
+     * @param type
+     * @param status
+     * @param creator
+     * @return
+     */
+	public  List<Role> findByTypeAndStatusAndCreator(String type, String status, String creator);
+	/**
+	 * 根据id 获取角色
+	 * @param id
+	 * @return
+	 */
+	public Role findById(String id);
 }

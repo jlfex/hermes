@@ -39,6 +39,12 @@ public class RoleServiceImpl implements RoleService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	
+	@Autowired
+	private RoleRepository roleRepository;
+	
+	/* (non-Javadoc)
+>>>>>>> refs/heads/master
 	 * @see com.jlfex.hermes.service.RoleService#findByUserId(java.lang.String)
 	 */
 	@Override
@@ -147,5 +153,27 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public Role findByCode(String code) {
 		return roleRepository.findOneByCode(code);
+	}
+	
+	/**
+	 * 根据类型+状态  获取角色列表
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public  List<Role>  findByTypeAndStatus(String type,String status) {
+		return roleRepository.findByTypeAndStatus(type,status);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public  List<Role>  findByTypeAndStatusAndCreator(String type,String status,String creator) {
+		return roleRepository.findByTypeAndStatusAndCreator(type,status,creator);
+	}
+    /**
+     * 根据Id获取角色
+     */
+	@Override
+	public Role findById(String id) {
+		return roleRepository.findOne(id);
 	}
 }

@@ -3,10 +3,12 @@ package com.jlfex.hermes.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
+import com.jlfex.hermes.common.utils.Strings;
 
 /**
  * 角色信息模型
@@ -33,6 +35,12 @@ public class Role extends Model {
 	/** 类型 */
 	@Column(name = "type")
 	private String type ;
+	/** 创建者名称 */
+	@Transient
+	private String creatorName; 
+	/** 所属用户角色id */
+	@Transient
+	private String belongUserRoleId;
 
 	/**
 	 * 读取名称
@@ -102,13 +110,43 @@ public class Role extends Model {
 		this.type = type;
 	}
 	
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+	
+
+	public String getBelongUserRoleId() {
+		return belongUserRoleId;
+	}
+
+	public void setBelongUserRoleId(String belongUserRoleId) {
+		this.belongUserRoleId = belongUserRoleId;
+	}
+
 	/**
 	 * 读取状态名称
 	 * 
 	 * @return
 	 */
 	public String getStatusName() {
-		return Dicts.name(status, Status.class);
+		if(Strings.notEmpty(status)){
+			return Dicts.name(status, Status.class);
+		}else{
+			return null;
+		}
+		
+	}
+	
+	public String getTypeName() {
+		if(Strings.notEmpty(type)){
+			return Dicts.name(type, Type.class);
+		}else{
+			return null;
+		}
 	}
 	
 	/**
@@ -140,8 +178,8 @@ public class Role extends Model {
 	 */
 	public static final class Type {
 		@Element("软件模式")
-		public static final String ENABLED	= "00";
+		public static final String SOFT_MODEL= "00";
 		@Element("系统权限")
-		public static final String HIDDEN	= "01";
+		public static final String SYS_AUTH	 = "01";
 	}
 }
