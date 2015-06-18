@@ -251,4 +251,14 @@ public final class HermesConstants {
 	 * crop的email
 	 */
 	public static final String CROP_EMAIL = "平台";
+
+	/**
+	 * 表示对象不存在
+	 */
+	public static final String OBJECT_NOT_EXIST = "-1";
+	
+	/**
+	 * Navigation根节点
+	 */
+	public static final String ROOT = "ROOT";
 }

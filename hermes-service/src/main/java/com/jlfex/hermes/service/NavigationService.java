@@ -41,10 +41,4 @@ public interface NavigationService {
 	 * @return
 	 */
 	public List<Navigation> findByParentId(String parentId);
-
-	/**
-	 * 获取后台菜单
-	 * @return
-	 */
-	public List<Navigation> findConsoleNavigations();
 }

@@ -225,6 +225,30 @@
 						_date_begin.datepicker('option', 'maxDate', date);
 					}
 				}).datepicker('option', 'maxDate', opts.today);
+			},
+			
+			// 角色查询
+			roleMng: function(opts) {
+				// 初始化
+				var _form_search = $('#searchForm'),
+					_btn_search = $('#searchBtn'),
+					_hide_page = $('#page');
+				
+				// 绑定表单提交事件
+				_form_search.on('submit', function() {
+					$.link.html(null, {
+						url: opts.search,
+						data: _form_search.serialize(),
+						target: 'data'
+					});
+					return false;
+				});
+				
+				// 绑定查询事件
+				_btn_search.on('click', function() {
+					_hide_page.val(0);
+					_form_search.trigger('submit');
+				}).trigger('click');
 			}
 		}
 	});

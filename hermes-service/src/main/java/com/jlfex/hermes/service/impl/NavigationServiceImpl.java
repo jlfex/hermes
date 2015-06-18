@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
-import com.jlfex.hermes.model.DictionaryType;
 import com.jlfex.hermes.model.Navigation;
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.RoleResource;
@@ -24,6 +25,7 @@ import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.repository.UserRoleRepository;
 import com.jlfex.hermes.service.NavigationService;
+import com.jlfex.hermes.service.UserInfoService;
 
 /**
  * 导航业务实现
@@ -54,6 +56,9 @@ public class NavigationServiceImpl implements NavigationService {
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 
+	@Autowired
+	private UserInfoService userInfoService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,9 +82,40 @@ public class NavigationServiceImpl implements NavigationService {
 		if (Strings.empty(typeCode)) {
 			throw new ServiceException("导航类型码：typeCode为空");
 		}
-		Dictionary type = dictionaryRepository.findByTypeCodeAndCode(CODE_DICTIONARY_NAVIGATION, typeCode);
-		List<Navigation> navigations = navigationRepository.findByRootAndType(type);
-		return navigations;
+		AppUser curUser = App.current().getUser();
+		List<Navigation> secNavigations = new ArrayList<Navigation>();
+		if (curUser != null) {
+			User user = userInfoService.findByUserId(curUser.getId());
+			List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+			List<Role> roles = new ArrayList<Role>();
+			for (UserRole userRole : userRoles) {
+				roles.add(userRole.getRole());
+			}
+			
+			List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+			Dictionary type = dictionaryRepository.findByTypeCodeAndCode(CODE_DICTIONARY_NAVIGATION, typeCode);
+			Navigation navigation = navigationRepository.findOneByCode(HermesConstants.ROOT);
+			List<Navigation> navigations = navigationRepository.findByParentAndTypeOrderByOrderAsc(navigation, type);
+			
+			if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+				for (Navigation navigation2 : navigations) {
+					secNavigations.add(navigation2);
+				}
+
+			} else {
+				for (Navigation navigation2 : navigations) {
+					for (RoleResource resource : roleResources) {
+						if (resource.getResource().equals(navigation2.getId())) {
+							secNavigations.add(navigation2);
+						}
+
+						secNavigations.add(navigation2);
+					}
+				}
+			}
+		}
+
+		return secNavigations;
 	}
 
 	/*
@@ -112,34 +148,5 @@ public class NavigationServiceImpl implements NavigationService {
 		}
 		Navigation parent = navigationRepository.findOne(parentId);
 		return findByParent(parent);
-	}
-
-	/**
-	 * 获取后台菜单
-	 */
-	@Override
-	public List<Navigation> findConsoleNavigations() {
-		User user = userRepository.findByAccount(HermesConstants.PLAT_MANAGER);
-		List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
-
-		List<Role> roles = new ArrayList<Role>();
-		for (UserRole userRole : userRoles) {
-			roles.add(userRole.getRole());
-		}
-
-		List<Navigation> navigations = new ArrayList<Navigation>();
-		if (roles != null) {
-			DictionaryType dictionaryType = dictionaryTypeRepository.findByCode(HermesConstants.DIC_NAV);
-			Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE,Dictionary.Status.VALID);
-			List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, dictionaryType.getId(), HermesConstants.VALID);
-			for (RoleResource roleResource : roleResources) {
-				Navigation navigation = navigationRepository.findOne(roleResource.getResource());
-				if (navigation.getType().equals(dictionary)) {
-					navigations.add(navigation);
-				}
-			}
-		}
-
-		return navigations;
 	}
 }

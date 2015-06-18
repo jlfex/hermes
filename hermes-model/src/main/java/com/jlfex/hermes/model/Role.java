@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Strings;
@@ -17,27 +16,27 @@ import com.jlfex.hermes.common.utils.Strings;
 @Table(name = "hm_role")
 public class Role extends Model {
 
-	private static final long serialVersionUID 	= 1212385232176773526L;
-	private static final String PREFIX			= "ROLE_";
-	
+	private static final long serialVersionUID = 1212385232176773526L;
+	private static final String PREFIX = "ROLE_";
+
 	/** 名称 */
 	@Column(name = "name")
 	private String name;
-	
+
 	/** 代码 */
 	@Column(name = "code")
 	private String code;
-	
+
 	/** 状态 */
 	@Column(name = "status")
-	private String status = HermesConstants.VALID;
-	
+	private String status = Role.Status.ENABLED;
+
 	/** 类型 */
 	@Column(name = "type")
-	private String type ;
+	private String type;
 	/** 创建者名称 */
 	@Transient
-	private String creatorName; 
+	private String creatorName;
 	/** 所属用户角色id */
 	@Transient
 	private String belongUserRoleId;
@@ -101,7 +100,7 @@ public class Role extends Model {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
@@ -109,7 +108,7 @@ public class Role extends Model {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getCreatorName() {
 		return creatorName;
 	}
@@ -117,7 +116,6 @@ public class Role extends Model {
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
 	}
-	
 
 	public String getBelongUserRoleId() {
 		return belongUserRoleId;
@@ -133,22 +131,22 @@ public class Role extends Model {
 	 * @return
 	 */
 	public String getStatusName() {
-		if(Strings.notEmpty(status)){
+		if (Strings.notEmpty(status)) {
 			return Dicts.name(status, Status.class);
-		}else{
+		} else {
 			return null;
 		}
-		
+
 	}
-	
+
 	public String getTypeName() {
-		if(Strings.notEmpty(type)){
+		if (Strings.notEmpty(type)) {
 			return Dicts.name(type, Type.class);
-		}else{
+		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 读取授权代码
 	 * 
@@ -157,29 +155,29 @@ public class Role extends Model {
 	public String getAuthCode() {
 		return PREFIX + code.toUpperCase();
 	}
-	
+
 	/**
 	 * 状态
 	 */
 	public static final class Status {
-		
+
 		@Element("正常")
-		public static final String ENABLED	= "00";
-		
+		public static final String ENABLED = "00";
+
 		@Element("隐藏")
-		public static final String HIDDEN	= "88";
-		
+		public static final String HIDDEN = "88";
+
 		@Element("无效")
-		public static final String DISABLED	= "99";
+		public static final String DISABLED = "99";
 	}
-	
+
 	/**
 	 * 角色类型
 	 */
 	public static final class Type {
 		@Element("软件模式")
-		public static final String SOFT_MODEL= "00";
+		public static final String SOFT_MODEL = "00";
 		@Element("系统权限")
-		public static final String SYS_AUTH	 = "01";
+		public static final String SYS_AUTH = "01";
 	}
 }
