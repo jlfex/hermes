@@ -22,7 +22,7 @@ public interface NavigationRepository extends JpaRepository<Navigation, String>,
 	 */
 	@Query("from Navigation n where n.type = ?1 and n.parent is null order by n.order")
 	public List<Navigation> findByRootAndType(Dictionary type);
-	
+
 	/**
 	 * 通过上级查询导航列表
 	 * 
@@ -31,6 +31,37 @@ public interface NavigationRepository extends JpaRepository<Navigation, String>,
 	 */
 	@Query("from Navigation n where n.parent = ?1 order by n.order")
 	public List<Navigation> findByParent(Navigation parent);
-	
+
 	public Navigation findOneByCode(String code);
+
+	/**
+	 * 根据父节点查找一级子节点
+	 * 
+	 * @param navigation
+	 * @param type
+	 * @return
+	 */
+	public List<Navigation> findByParentAndTypeOrderByOrderAsc(Navigation navigation, Dictionary type);
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public List<Navigation> findByType(Dictionary type);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public List<Navigation> findByParentIdAndType(String id,Dictionary dictionary);
+	
+	/**
+	 * 
+	 * @param code
+	 * @param type
+	 * @return
+	 */
+	public Navigation findOneByCodeAndType(String code,Dictionary type);
 }

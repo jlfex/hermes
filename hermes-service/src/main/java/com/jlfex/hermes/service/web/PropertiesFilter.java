@@ -35,17 +35,17 @@ import com.jlfex.hermes.service.role.RoleResourceService;
 @Component
 public class PropertiesFilter implements Filter {
 	private static final String companyIntroductionCode = "company_introduction";
-	private static final String SITE_SERVICE_TEL	= "site.service.tel";
-	private static final String SITE_SERVICE_TIME	= "site.service.time";
-	private static final String App_OPERATION_NICKNAME	= "app.operation.nickname";
-	private static final String App_COPYRIGHT	= "app.copyright";
-	private static final String App_LOGO	= "app.logo";
-	private static String appLogoBase64 ;
-	private static ArticleCategory  articleCategory;
-	private static List<ArticleCategory> articleCategoryList ;
-	private static List<FriendLink>  friendLinkList;
+	private static final String SITE_SERVICE_TEL = "site.service.tel";
+	private static final String SITE_SERVICE_TIME = "site.service.time";
+	private static final String App_OPERATION_NICKNAME = "app.operation.nickname";
+	private static final String App_COPYRIGHT = "app.copyright";
+	private static final String App_LOGO = "app.logo";
+	private static String appLogoBase64;
+	private static ArticleCategory articleCategory;
+	private static List<ArticleCategory> articleCategoryList;
+	private static List<FriendLink> friendLinkList;
 	public static List<String> roleResourceList;
-	
+	public static List<String> backRoleResourceList;
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -107,25 +107,31 @@ public class PropertiesFilter implements Filter {
 		if (roleResourceList == null) {
 			roleResourceList = roleResourceService.getFrontIndexRoleResource();
 		}
+
+		if (backRoleResourceList == null) {
+			backRoleResourceList = roleResourceService.getBackRoleResource();
+		}
+
 		req.setAttribute("friendlinkData", friendLinkList);
 		req.setAttribute("companyIntroductions", articleCategoryList);
 		req.setAttribute("roleResourceList", roleResourceList);
+		req.setAttribute("backRoleResourceList", backRoleResourceList);
 		req.setAttribute("siteServiceTel", App.config(SITE_SERVICE_TEL));
-		req.setAttribute("siteServiceTime",App.config(SITE_SERVICE_TIME));
-		req.setAttribute("appCopyright",  App.config(App_COPYRIGHT) );
+		req.setAttribute("siteServiceTime", App.config(SITE_SERVICE_TIME));
+		req.setAttribute("appCopyright", App.config(App_COPYRIGHT));
 		req.setAttribute("appOperationNickname", App.config(App_OPERATION_NICKNAME));
-		if(appLogoBase64 == null){
+		if (appLogoBase64 == null) {
 			Text text = textService.loadById(App.config(App_LOGO).trim());
-			if(text!= null){
+			if (text != null) {
 				appLogoBase64 = text.getText();
-			}else{
-				appLogoBase64 ="";
+			} else {
+				appLogoBase64 = "";
 			}
 		}
-		req.setAttribute("appLogo",appLogoBase64);   
+		req.setAttribute("appLogo", appLogoBase64);
 		chain.doFilter(req, resp);
 		HttpServletRequest request = HttpServletRequest.class.cast(req);
-		Logger.info("请求信息：RemoteAddr=%s,RemotePort=%s,RequestURL=%s",request.getRemoteAddr(),request.getRemotePort(), request.getRequestURL());
+		Logger.info("请求信息：RemoteAddr=%s,RemotePort=%s,RequestURL=%s", request.getRemoteAddr(), request.getRemotePort(), request.getRequestURL());
 	}
 
 	/*

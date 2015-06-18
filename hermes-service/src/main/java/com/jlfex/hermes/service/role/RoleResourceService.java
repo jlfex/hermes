@@ -14,4 +14,11 @@ public interface RoleResourceService {
 	 * @return
 	 */
 	public List<String> getFrontIndexRoleResource();
+
+	/**
+	 * 获取后台权限
+	 * 
+	 * @return
+	 */
+	public List<String> getBackRoleResource();
 }

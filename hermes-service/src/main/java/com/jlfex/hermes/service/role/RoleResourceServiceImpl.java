@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.model.DictionaryType;
 import com.jlfex.hermes.model.Navigation;
@@ -19,10 +21,11 @@ import com.jlfex.hermes.repository.NavigationRepository;
 import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.repository.UserRepository;
 import com.jlfex.hermes.repository.UserRoleRepository;
+import com.jlfex.hermes.service.UserInfoService;
 
 @Service
 @Transactional
-public class RoleResourceServiceImpl implements RoleResourceService{
+public class RoleResourceServiceImpl implements RoleResourceService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -33,7 +36,9 @@ public class RoleResourceServiceImpl implements RoleResourceService{
 	private RoleResourceRepository roleResourceRepository;
 	@Autowired
 	private NavigationRepository navigationRepository;
-	
+	@Autowired
+	private UserInfoService userInfoService;
+
 	/**
 	 * 获取RoleResource
 	 * 
@@ -61,5 +66,34 @@ public class RoleResourceServiceImpl implements RoleResourceService{
 		}
 
 		return indexRoleResource;
+	}
+
+	@Override
+	public List<String> getBackRoleResource() {
+		AppUser curUser = App.current().getUser();
+		List<String> backRoleResources = new ArrayList<String>();
+		if (curUser != null) {
+			User user = userInfoService.findByUserId(curUser.getId());
+			if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+
+			} else {
+				List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+				List<Role> roles = new ArrayList<Role>();
+				for (UserRole userRole : userRoles) {
+					roles.add(userRole.getRole());
+				}
+				if (roles != null && roles.size() > 0) {
+					List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+					for (RoleResource roleResource : roleResources) {
+						Navigation navigation = navigationRepository.findOne(roleResource.getResource());
+						if (navigation != null) {
+							backRoleResources.add(navigation.getCode());
+						}
+					}
+				}
+			}
+		}
+
+		return backRoleResources;
 	}
 }
