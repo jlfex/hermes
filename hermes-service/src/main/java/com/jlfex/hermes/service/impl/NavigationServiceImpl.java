@@ -108,8 +108,6 @@ public class NavigationServiceImpl implements NavigationService {
 						if (resource.getResource().equals(navigation2.getId())) {
 							secNavigations.add(navigation2);
 						}
-
-						secNavigations.add(navigation2);
 					}
 				}
 			}
