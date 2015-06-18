@@ -62,7 +62,6 @@ $(function(){
 		});
 		
 		$("#pushIn").on("click",function() {
-			debugger;
 			var privileges = "";
 			var cbs = $("input");
 			$.each(cbs,function(n,value) {
@@ -108,7 +107,6 @@ $(function(){
 });
 
 function setcbUp(cb,flag) {
-	debugger;
 	var p = $(cb.parent().parent().parent().parent().parent().children().eq(0).children().eq(0).children().eq(0));
 	if(flag) {
 		$(cb).iCheck('check');	
@@ -169,7 +167,6 @@ function showall(menu_list, parent) {
 			if(menu_list[menu].typeCode == "console") {
 				//如果有子节点，则遍历该子节点
 				if (menu_list[menu].children && menu_list[menu].children.length > 0) {
-					debugger;
 					//创建一个子节点li
 					var li = $("<li></li>");
 					//将li的文本设置好，并马上添加一个空白的ul子节点，并且将这个li添加到父亲节点中
