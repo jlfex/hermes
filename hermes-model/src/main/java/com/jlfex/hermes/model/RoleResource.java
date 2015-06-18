@@ -115,7 +115,15 @@ public class RoleResource extends Model {
 	 * @return
 	 */
 	public String getTypeName() {
-		return Dicts.name(type, Type.class);
+		return Dicts.name(type, type,Type.class);
+	}
+	
+	/**
+	 * 读取状态名称
+	 * 
+	 */
+	public String getStatusName() {
+		return Dicts.name(status, status, Status.class);
 	}
 	
 	/**
@@ -128,5 +136,17 @@ public class RoleResource extends Model {
 		
 		@Element("借款状态")
 		public static final String LOAN_STATUS	= "loanStatusResource";
+	}
+	
+	/**
+	 * 接口状态
+	 *
+	 */
+	public static final class Status {
+		@Element("有效")
+		public static final String INVALID = "0";
+		@Element("无效")
+		public static final String EFFECTIVE = "1";
+
 	}
 }
