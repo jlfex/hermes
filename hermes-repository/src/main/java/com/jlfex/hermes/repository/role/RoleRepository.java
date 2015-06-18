@@ -12,4 +12,5 @@ import com.jlfex.hermes.model.Role;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String>, JpaSpecificationExecutor<Role> {
+	public Role findOneByCode(String code);
 }

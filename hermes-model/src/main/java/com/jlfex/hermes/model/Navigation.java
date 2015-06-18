@@ -5,12 +5,16 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jlfex.hermes.common.web.WebApp;
 
 /**
@@ -26,11 +30,13 @@ public class Navigation extends Model {
 	/** 父级 */
 	@ManyToOne
 	@JoinColumn(name = "parent")
+	@JsonIgnore
 	private Navigation parent;
 
 	/** 类型 */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type")
+	@JsonIgnore
 	private Dictionary type;
 
 	/** 名称 */
@@ -58,8 +64,15 @@ public class Navigation extends Model {
 	private Integer order;
 
 	/** 子集 */
-	@OneToMany(mappedBy = "parent")
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+	@OrderBy(value = " order asc")
 	private List<Navigation> children = new LinkedList<Navigation>();
+
+	/**
+	 * 某一角色是否含有该权限
+	 */
+	@Transient
+	private boolean isHavingByRole = false;
 
 	/**
 	 * 读取父级
@@ -256,5 +269,22 @@ public class Navigation extends Model {
 	 */
 	public String getTruePath() {
 		return isAppPath() ? path.substring(PREFIX.length()) : path;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transient
+	public String getTypeCode() {
+		return this.getType() != null ? this.getType().getCode() : "";
+	}
+
+	public boolean isHavingByRole() {
+		return isHavingByRole;
+	}
+
+	public void setHavingByRole(boolean isHavingByRole) {
+		this.isHavingByRole = isHavingByRole;
 	}
 }

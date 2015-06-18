@@ -1,6 +1,6 @@
 <h3><@messages key="home.loan" /></h3>
 <div id="shortcut" class="data row">
-	<#if roleResourceList?seq_contains("back_home_audit")>
+	<#if backRoleResourceList?seq_contains("back_home_audit")>
 		<div class="col-xs-4">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanaudit" data-target="main"><div class="icon audit pull-left"></div></a>
@@ -9,7 +9,7 @@
 		</div>
 	</div>		
 	</#if>
-	<#if roleResourceList?seq_contains("back_home_full")>
+	<#if backRoleResourceList?seq_contains("back_home_full")>
 		<div class="col-xs-4">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanfullaudit" data-target="main"><div class="icon out pull-left"></div></a>
@@ -18,7 +18,7 @@
 		</div>
 	</div>		
 	</#if>
-	<#if roleResourceList?seq_contains("back_home_debt")>
+	<#if backRoleResourceList?seq_contains("back_home_debt")>
 		<div class="col-xs-4">
 		<div class="flow">
 			<div class="icon collection pull-left"></div>

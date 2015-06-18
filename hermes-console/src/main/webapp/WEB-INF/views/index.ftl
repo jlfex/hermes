@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="${app.css}/style.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui.css">
 <link rel="stylesheet" href="${app.css}/jquery-ui-timepicker-addon.css">
+<link rel="stylesheet" href="${app.css}/jquery-confirm.css">
+<link rel="stylesheet" href="${app.css}/css/style-tree.css">
+<link rel="stylesheet" href="${app.css}/css/blue.css">
 </head>
 <body>
 
@@ -44,6 +47,8 @@
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.modal.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/sco.confirm.js"></script>
 <script type="text/javascript" charset="utf-8" src="${app.js}/i18n/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/jquery-confirm.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${app.js}/icheck.js"></script>
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {

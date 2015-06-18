@@ -4,16 +4,12 @@
 		<form id="searchForm" method="post" action="">
 			<div class="row hm-row">
 				<div class="col-xs-2 hm-col form-group">
-					<label for="loanNo">名称</label>
-					<input id="creditorName" name="creditorName" type="text" class="form-control">
+					<label for="code">代码</label>
+					<input id="code" name="code" type="text" class="form-control">
 				</div>
 				<div class="col-xs-2 hm-col form-group">
-					<label for="account">权限</label>
-					<input id="cellphone" name="cellphone" type="text" class="form-control">
-				</div>
-				<div class="col-xs-2 hm-col form-group">
-					<label for="account">备注</label>
-					<input id="cellphone" name="cellphone" type="text" class="form-control">
+					<label for="name">名称</label>
+					<input id="name" name="name" type="text" class="form-control">
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
@@ -34,17 +30,15 @@
 <!--
 jQuery(function($) {
 	$.page.withdraw({
-		search: '${app}/credit/list'
+		search: '${app}/privilege/list'
 	});
 	
 	$("#addBtn").on("click",function(){
 		$.link.html(null, {
-			url: '${app}/credit/goAdd',
+			url: '${app}/privilege/addOrEdit/-1',
 			target: 'main'
 		});
-	});
-	
-				
+	});				
 });
 //-->
 </script>

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 
@@ -31,7 +33,7 @@ public class RoleResource extends Model {
 	private String type;
 	
 	@Column(name = "status")
-	private String status;
+	private String status = HermesConstants.VALID;
 
 	/**
 	 * 读取角色
@@ -128,5 +130,9 @@ public class RoleResource extends Model {
 		
 		@Element("借款状态")
 		public static final String LOAN_STATUS	= "loanStatusResource";
+		
+		@Element("后台权限")
+		public static final String BACK_PRIVILEGE = "01";
 	}
+	
 }
