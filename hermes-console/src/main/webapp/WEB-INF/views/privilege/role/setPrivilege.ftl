@@ -191,4 +191,11 @@ function showall(menu_list, parent) {
 			}
 	}
 }
+
+$("#retreat").on("click",function(){
+		$.link.html(null, {
+			url: '${app}/privilege/roleIndex',
+			target: 'main'
+		});
+	});	
 </script>
