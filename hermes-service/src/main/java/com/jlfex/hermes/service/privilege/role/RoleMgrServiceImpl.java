@@ -51,6 +51,7 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 				}
 
 				p.add(cb.equal(root.<String> get("status"), HermesConstants.VALID));
+				p.add(cb.equal(root.<String> get("type"), Role.Type.SYS_AUTH));
 				return cb.and(p.toArray(new Predicate[p.size()]));
 			}
 		}, pageable);
