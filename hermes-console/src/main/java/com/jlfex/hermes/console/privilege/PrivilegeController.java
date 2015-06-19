@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jlfex.hermes.common.Result;
 import com.jlfex.hermes.common.Result.Type;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.Navigation;
 import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.RoleResource;
@@ -36,6 +39,7 @@ import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserRole;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.privilege.user.UserRoleVo;
+import com.jlfex.hermes.service.role.RoleResourceService;
 import com.jlfex.hermes.service.userRole.UserRoleService;
 
 /**
@@ -68,6 +72,8 @@ public class PrivilegeController {
 	private UserService userService;
 	@Autowired
 	private UserRoleService userRoleService;
+	@Autowired
+	private RoleResourceService roleResourceService;
 
 	/**
 	 * 角色管理页面
@@ -254,12 +260,43 @@ public class PrivilegeController {
 		Navigation navigation = navigationRepository.findOneByCode(HermesConstants.ROOT);
 		Role role = roleService.findOne(id);
 		List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+		Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
+		// 获取后台软件模式
+		List<String> consoneSoftModel = roleResourceService.getSoftModelRoleResource(dictionary);
+		this.setSoftModelNavigation(navigation.getChildren(), consoneSoftModel);
+		
 		navigation.setHavingByRole(true);
 		if (roleResources != null && roleResources.size() > 0) {
 			this.setSomeRolePrivilege(navigation.getChildren(), roleResources);
 		}
 
 		return navigation;
+	}
+	
+	/**
+	 * 某一软件模式下所有菜单
+	 * 
+	 * @param children
+	 * @param consoneSoftModel
+	 */
+	private void setSoftModelNavigation(List<Navigation> children, List<String> consoneSoftModel) {
+		for (Navigation navigation : children) {
+			// 是否含有该软件模式
+			boolean flag = false;
+			for (String softModel : consoneSoftModel) {
+				if (navigation.getCode().equals(softModel)) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				navigation.setHavingBySoftModel(false);
+			}
+
+			if (navigation.getChildren() != null && navigation.getChildren().size() > 0) {
+				setSoftModelNavigation(navigation.getChildren(), consoneSoftModel);
+			}
+		}
 	}
 
 	/**

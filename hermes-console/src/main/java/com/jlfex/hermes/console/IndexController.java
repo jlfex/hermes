@@ -19,7 +19,7 @@ import com.jlfex.hermes.repository.NavigationRepository;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.NavigationService;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
-import com.jlfex.hermes.service.web.PropertiesFilter;
+import com.jlfex.hermes.service.role.RoleResourceService;
 
 /**
  * 索引控制器
@@ -39,6 +39,9 @@ public class IndexController {
 
 	@Autowired
 	private NavigationRepository navigationRepository;
+	
+	@Autowired
+	private RoleResourceService roleResourceService;
 
 
 	/**
@@ -64,7 +67,7 @@ public class IndexController {
 	@RequestMapping("/menu")
 	@ResponseBody
 	public List<Tree> menu(String id) {
-		List<String> roleResourceList = PropertiesFilter.roleResourceList;
+		List<String> roleResourceList = roleResourceService.getBackRoleResource();
 		List<Navigation> navigations = navigationService.findByParentId(id);
 		List<Navigation> subMenu = new ArrayList<Navigation>();
 
