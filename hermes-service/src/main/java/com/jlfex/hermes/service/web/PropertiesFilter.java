@@ -136,7 +136,7 @@ public class PropertiesFilter implements Filter {
 				User user = userInfoService.findByUserId(curUser.getId());
 				if (HermesConstants.PLAT_MANAGER.equals(user.getAccount())) {
 					if (backRoleResourceMap.get(HermesConstants.PLAT_MANAGER) == null) {
-						backRoleResourceList.clear();
+						backRoleResourceList = new ArrayList<String>();
 						backRoleResourceList = roleResourceService.getBackRoleResource();
 						backRoleResourceMap.put(HermesConstants.PLAT_MANAGER, backRoleResourceList);
 					} else {
@@ -152,7 +152,7 @@ public class PropertiesFilter implements Filter {
 					if (roles != null && roles.size() == 1) {
 						Role role = roles.get(0);
 						if (backRoleResourceMap.get(role.getCode()) == null) {
-							backRoleResourceList.clear();
+							backRoleResourceList = new ArrayList<String>();
 							backRoleResourceList = roleResourceService.getBackRoleResource();
 							backRoleResourceMap.put(role.getCode(), backRoleResourceList);
 						} else {
