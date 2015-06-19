@@ -227,6 +227,11 @@ public final class HermesConstants {
 	 * 后台菜单code
 	 */
 	public static final String DIC_CONSOLE = "console";
+	
+	/**
+	 * 前台菜单
+	 */
+	public static final String DIC_FTONT_NAV = "ftont_nav";
 	/**
 	 * 等额本息
 	 */

@@ -167,25 +167,30 @@ function showall(menu_list, parent) {
 			if(menu_list[menu].typeCode == "console") {
 				//如果有子节点，则遍历该子节点
 				if (menu_list[menu].children && menu_list[menu].children.length > 0) {
-					//创建一个子节点li
-					var li = $("<li></li>");
-					//将li的文本设置好，并马上添加一个空白的ul子节点，并且将这个li添加到父亲节点中
-					if(menu_list[menu].havingByRole) {
-						$(li).append("<span><input type='checkbox' checked='checked' id='"+menu_list[menu].id+"'  />&nbsp;&nbsp;<i class='icon-minus-sign'></i>"+menu_list[menu].name+"</span>").appendTo(parent);	
-					} else {
-						$(li).append("<span><input type='checkbox' id='"+menu_list[menu].id+"'  />&nbsp;&nbsp;<i class='icon-minus-sign'></i>"+menu_list[menu].name+"</span>").appendTo(parent);
-					}
+					if(menu_list[menu].havingBySoftModel) {
+						//创建一个子节点li
+						var li = $("<li></li>");
+						//将li的文本设置好，并马上添加一个空白的ul子节点，并且将这个li添加到父亲节点中
+						if(menu_list[menu].havingByRole) {
+							$(li).append("<span><input type='checkbox' checked='checked' id='"+menu_list[menu].id+"'  />&nbsp;&nbsp;<i class='icon-minus-sign'></i>"+menu_list[menu].name+"</span>").appendTo(parent);	
+						} else {
+							$(li).append("<span><input type='checkbox' id='"+menu_list[menu].id+"'  />&nbsp;&nbsp;<i class='icon-minus-sign'></i>"+menu_list[menu].name+"</span>").appendTo(parent);
+						}
+						$(li).append("<ul></ul>").appendTo(parent);
+					 }
 					
-					$(li).append("<ul></ul>").appendTo(parent);
+					
 					//将空白的ul作为下一个递归遍历的父亲节点传入
 					showall(menu_list[menu].children, $(li).children().eq(1));
 				}
 				//如果该节点没有子节点，则直接将该节点li以及文本创建好直接添加到父亲节点中
 				else {
-					if(menu_list[menu].havingByRole) {
-						$("<li><span><input type='checkbox' checked='checked' id='"+menu_list[menu].id+"' />&nbsp;&nbsp;<i class='icon-leaf'></i>"+menu_list[menu].name+"</span></li>").appendTo(parent);
-					} else {
-						$("<li><span><input type='checkbox' id='"+menu_list[menu].id+"' />&nbsp;&nbsp;<i class='icon-leaf'></i>"+menu_list[menu].name+"</span></li>").appendTo(parent);
+					if(menu_list[menu].havingBySoftModel) {
+						if(menu_list[menu].havingByRole) {
+							$("<li><span><input type='checkbox' checked='checked' id='"+menu_list[menu].id+"' />&nbsp;&nbsp;<i class='icon-leaf'></i>"+menu_list[menu].name+"</span></li>").appendTo(parent);
+						} else {
+							$("<li><span><input type='checkbox' id='"+menu_list[menu].id+"' />&nbsp;&nbsp;<i class='icon-leaf'></i>"+menu_list[menu].name+"</span></li>").appendTo(parent);
+						}
 					}
 				}
 			}
