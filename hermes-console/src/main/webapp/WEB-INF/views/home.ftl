@@ -3,9 +3,10 @@
 </style>
  <div class="panel panel-primary" >
         <div class="panel-heading"><@messages key="home.loan" /></div>
+<div class="panel-body">
 <div id="shortcut" class="data row">
-	<#if backRoleResourceList?seq_contains("back_home_audit")>
-		<div class="col-xs-4">
+	<#if roleResourceList?seq_contains("back_home_audit_first")>
+		<div class="col-xs-4 _df-mg-top"">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanaudit/${auditFirst.status}" data-target="main"><div class="icon audit pull-left"></div></a>
 			<span class="number"><a href="#" data-url="${app}/loan/loanaudit/${auditFirst.status}" data-target="main">${auditFirst.count}</a></span><br>
@@ -13,7 +14,7 @@
 		</div>
 	    </div>		
 	</#if>
-	<#if roleResourceList?seq_contains("back_home_audit")>
+	<#if roleResourceList?seq_contains("back_home_audit_final")>
 		<div class="col-xs-4 _df-mg-top">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanaudit/${auditFinal.status}" data-target="main"><div class="icon audit pull-left"></div></a>
@@ -22,8 +23,8 @@
 		</div>
 	    </div>		
 	</#if>
-	<#if backRoleResourceList?seq_contains("back_home_full")>
-		<div class="col-xs-4">
+	<#if roleResourceList?seq_contains("back_home_full")>
+		<div class="col-xs-4 _df-mg-top"">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanfullaudit" data-target="main"><div class="icon out pull-left"></div></a>
 			<span class="number"><a href="#" data-url="${app}/loan/loanfullaudit" data-target="main">${out.count}</a></span><br>
@@ -31,8 +32,8 @@
 		</div>
 	</div>		
 	</#if>
-	<#if backRoleResourceList?seq_contains("back_home_debt")>
-		<div class="col-xs-4">
+	<#if roleResourceList?seq_contains("back_home_debt")>
+		<div class="col-xs-4 _df-mg-top"">
 		<div class="flow">
 			<div class="icon collection pull-left"></div>
 			<span class="number">${demand.count}</span><br>
@@ -41,7 +42,7 @@
 	</div>		
 	</#if>
 </div>
-
+</div>
 <script type="text/javascript">
 <!--
 jQuery(function($) {
