@@ -93,7 +93,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 					roles.add(userRole.getRole());
 				}
 				if (roles != null && roles.size() > 0) {
-					List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+					List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, RoleResource.Status.VALID);
 					for (RoleResource roleResource : roleResources) {
 						Navigation navigation = navigationRepository.findOne(roleResource.getResource());
 						if (navigation != null) {
