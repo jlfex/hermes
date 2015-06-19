@@ -171,7 +171,7 @@ jQuery(function($) {
 	//点击添加按钮
 	$("#saveBtn").on("click",function(){
 	 var _show = $("#abandonModify").css("display");
-	 var _val = $("#abandonModify").val();
+	 var _val = $("#originalPwd").val(); 
 	 if(_show != 'none' && $.trim(_val) == '' ){
 	    $("#pwdCheckResult").html("请输入原始密码");
 	    return  false;
