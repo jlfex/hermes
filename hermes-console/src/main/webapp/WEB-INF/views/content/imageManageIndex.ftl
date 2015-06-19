@@ -37,8 +37,12 @@
             <td class="align-center"><img alt="" src="${l.image}" style="height:100px;" /></td>            
             <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
+                <#if backRoleResourceList?seq_contains("back_image_edit")>
                 <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
+                </#if>
+                <#if backRoleResourceList?seq_contains("back_image_del")>
                 <button type="button" class="btn btn-link hm-col deleteBtn"  cid="${l.id}">删除</button>
+                </#if>
             </td>
         </tr>
             </#list>

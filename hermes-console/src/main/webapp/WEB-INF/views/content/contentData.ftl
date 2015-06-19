@@ -42,8 +42,10 @@
     </table>
     <div class="mr_15px clearfix">
         <div class="pull-right">
+            <#if backRoleResourceList?seq_contains("back_publish_del")>
             <span class="vlight"><button type="button" class="btn btn-default batch" >批量删除</button></span>
             <span class="vlight hm-col">&nbsp;&nbsp;&nbsp;&nbsp; 全选 <input type="checkbox" class="all" name="artchbox"> </span>
+            </#if>
         </div>
     </div>
 </div>

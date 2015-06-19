@@ -28,9 +28,15 @@
 		                        <td class="align-center">${(l.remark)!''}</td> 	
 		                        <td class="align-center">${(l.createTime)!''}</td> 		                         
 								<td class="align-center">
-									<button type="button" class="btn btn-link addRole"  pid="${l.id}">角色管理</button>&nbsp;&nbsp;
+								    <#if backRoleResourceList?seq_contains("back_privi_user_impower")>
+									<button type="button" class="btn btn-link addRole"  pid="${l.id}">角色分配</button>&nbsp;&nbsp;
+									</#if>
+									<#if backRoleResourceList?seq_contains("back_privi_user_edit")>
 									<button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>&nbsp;&nbsp;
+									</#if>
+									<#if backRoleResourceList?seq_contains("back_privi_user_del")>
                                     <button type="button" class="btn btn-link hm-col deleteBtn"  pid="${l.id}">删除</button>		
+                                    </#if>
 								</td>
 							</tr>
 						</#list>

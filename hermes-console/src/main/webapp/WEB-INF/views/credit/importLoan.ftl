@@ -36,15 +36,19 @@
                             <label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
                            <a href="#" style="display:block;margin-top:10px; margin-left:20px;" id="downloadModelFile">模板下载</a>
                         </div>
-                        <div class="col-xs-1 hm-col form-group">
-                            <label>&nbsp;</label>
-                            <input id="file" name="file" type="file" multiple="multiple" class="hidden" />
-                            <button id="uploadBtn" type="button" class="btn  btn-default btn-block">导入新债权</button>&nbsp;
-                        </div>
+                        <#if backRoleResourceList?seq_contains("back_impLoan_excel")>
+	                        <div class="col-xs-1 hm-col form-group">
+	                            <label>&nbsp;</label>
+	                            <input id="file" name="file" type="file" multiple="multiple" class="hidden" />
+	                            <button id="uploadBtn" type="button" class="btn  btn-default btn-block">导入新债权</button>&nbsp;
+	                        </div>
+	                    </#if>
+	                    <#if backRoleResourceList?seq_contains("back_impLoan_jlfex")>
                         <div class="col-xs-1 hm-col form-group">
                             <label>&nbsp;</label>
                             <button id="synchYLTXCredit" type="button" class="btn  btn-default btn-block">同步易联天下债权</button>&nbsp;
                         </div>
+                         </#if>
                 </div>
             </form>
         </div>

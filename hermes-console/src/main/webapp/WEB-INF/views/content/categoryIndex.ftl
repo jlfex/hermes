@@ -7,7 +7,9 @@
 
 <div class="row panel-body">
 	<div class="col-xs-2">
-		<button class="btn btn-primary btn-block" type="button" id="addBtn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增分类</button>
+	    <#if backRoleResourceList?seq_contains("back_class_add")>
+		  <button class="btn btn-primary btn-block" type="button" id="addBtn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增分类</button>
+		</#if>
 		<input id="page" name="page" type="hidden" value="0"/>		
     </div>
 </div>

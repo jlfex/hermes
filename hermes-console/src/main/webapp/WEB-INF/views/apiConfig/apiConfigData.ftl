@@ -30,8 +30,12 @@
 		                        <td class="align-center">${(l.apiUrl)!''}</td>
 		                        <td class="align-center">${(l.statusName)!''}</td> 		                         
 								<td class="align-center">
+								    <#if backRoleResourceList?seq_contains("back_api_edit")>
 									<button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>&nbsp;&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-link hm-col deleteBtn"  cid="${l.id}">删除</button>									
+									</#if>
+									<#if backRoleResourceList?seq_contains("back_api_del")>
+                                    <button type="button" class="btn btn-link hm-col deleteBtn"  cid="${l.id}">删除</button>		
+                                    </#if>							
 								</td>
 							</tr>
 						</#list>

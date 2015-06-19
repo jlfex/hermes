@@ -30,7 +30,6 @@
 <script type="text/javascript" charset="utf-8">
 <!--
 jQuery(function($) {
-	// 鍒濆鍖�
 	$('#tabContent .col-xs-1 .fa').on('click', function() {
 		if ($(this).hasClass('fa-plus-circle')) {
 			$(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');

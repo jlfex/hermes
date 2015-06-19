@@ -26,11 +26,13 @@
                         <label>&nbsp;</label>
                         <button id="searchBtn" type="button" class="btn btn-primary btn-block">查询</button>
                     </div>  
+                    <#if backRoleResourceList?seq_contains("back_api_add")>
                     <div class="col-xs-1 hm-col form-group">
                         <label>&nbsp;</label>
                         <button id="addBtn" type="button" class="btn btn-primary btn-block">新增</button>
                         <input id="page" name="page" value="0" type="hidden">
-                    </div>    		                     		
+                    </div> 
+                    </#if>   		                     		
                 </div>               
             </form>
         </div>
