@@ -21,11 +21,13 @@
 					<label>&nbsp;</label>
 					<button id="searchBtn" type="button" class="btn btn-primary btn-block">查询</button>
 				</div>
+				<#if backRoleResourceList?seq_contains("back_dict_add")>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
 					<button id="addTypeBtn" type="button" class="btn btn-primary btn-block">新增</button>
 					<input id="page" name="page" type="hidden" value="0">					
-				</div>	
+				</div>
+				</#if>	
 			</div>
 		</form>
 	</div>

@@ -2,10 +2,10 @@
 <div>
 	<!--Nav Tabs-->
 	<ul  id="navTab" class="nav nav-tabs">
-	<#if roleResourceList?seq_contains("back_inveter_mgr")>
+	<#if backRoleResourceList?seq_contains("back_inveter_mgr")>
 		<li><a href="#finance" data-toggle="tab"><@messages key="user.finance.manage"/></a></li>
 	</#if>
-	<#if roleResourceList?seq_contains("back_loaner_mgr")>
+	<#if backRoleResourceList?seq_contains("back_loaner_mgr")>
 		<li><a href="#loan" data-toggle="tab"><@messages key="user.loan.manage"/></a></li>
 	</#if>
 	</ul>
@@ -33,7 +33,7 @@ function init(_url,_content){
 		$.ajax({
 		     url: _url,
 		     success:function(data) {
-		       $("#"+_content).html(data) // 鍐呭瑁呭叆div涓�
+		       $("#"+_content).html(data) ;
 			 }
 	   })
 }

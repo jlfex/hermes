@@ -46,7 +46,9 @@
            		</div>
            		<div class="col-xs-2 hm-col form-group">
            			<label>&nbsp;</label>
-	            	<button id="publishContent"  type="button" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布内容</button>			            
+           			<#if backRoleResourceList?seq_contains("back_publish_add")>
+	            	  <button id="publishContent"  type="button" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布内容</button>			            
+                	</#if>
                 	<input id="page" name="page" value="0" type="hidden">
                 </div>
         </div>

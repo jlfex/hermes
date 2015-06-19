@@ -19,8 +19,12 @@
 			<td class="align-center">${(d.createTime)!''}</td>
 			<td class="align-center">	
                    <button type="button" class="btn btn-link hm-col detailBtn"  pid="${(d.id)!''}">查看详情</button>
+                   <#if backRoleResourceList?seq_contains("back_dict_edit")>
                    <button type="button" class="btn btn-link hm-col delBtn"     oid="${(d.id)!''}">删除</button>
-                   <button type="button" class="btn btn-link hm-col editBtn"    tid="${(d.id)!''}">编辑</button>                   
+                   </#if>
+                   <#if backRoleResourceList?seq_contains("back_dict_del")>
+                   <button type="button" class="btn btn-link hm-col editBtn"    tid="${(d.id)!''}">编辑</button>   
+                   </#if>                
 			</td>
 		</tr>
 		</#list>

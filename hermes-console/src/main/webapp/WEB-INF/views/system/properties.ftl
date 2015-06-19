@@ -121,7 +121,9 @@
                 <input type="hidden" name="cellphoneSwitch" id="imgHeight" value="0">
                 <input type="hidden" name=""  value="0">
                 <input type="hidden" name=""  value="0">
-                <button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
+                <#if backRoleResourceList?seq_contains("back_platform_save")>
+                 <button id="submit" type="submit" class="btn btn-primary btn-block">提交</button></div>
+                </#if>
             </div>
           </div>
         </div>

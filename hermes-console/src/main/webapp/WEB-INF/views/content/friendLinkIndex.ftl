@@ -7,7 +7,9 @@
 
 <div class="row panel-body">
 	<div class="col-xs-2">
-		<button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加链接</button>
+	    <#if backRoleResourceList?seq_contains("back_flink_add")>
+		  <button  id="addBtn" class="btn btn-primary btn-block" type="button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加链接</button>
+		</#if>
 		<input id="page" name="page" type="hidden" value="0"/>
     </div>
 </div>
@@ -36,8 +38,12 @@
             <td class="align-center">${l.link!}</td>
             <td class="align-center">${(l.type)!}</td>
             <td class="align-center">
+                <#if backRoleResourceList?seq_contains("back_flink_edit")>
                 <button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
+                </#if>
+                <#if backRoleResourceList?seq_contains("back_flink_del")>
                 <button type="button" class="btn btn-link hm-col deleteBtn"  cid="${l.id}">删除</button>
+                </#if>
             </td>
         </tr>
             </#list>

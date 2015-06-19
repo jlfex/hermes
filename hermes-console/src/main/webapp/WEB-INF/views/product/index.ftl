@@ -38,11 +38,13 @@
 					<label>&nbsp;</label>
 					<button id="searchBtn" type="button" class="btn btn-primary btn-block"><@messages key="common.op.search" /></button>
 				</div>
-				<div class="col-xs-1 hm-col form-group">
-					<label>&nbsp;</label>
-					<button id="addBtn" type="button" class="btn btn-primary btn-block"><@messages key="common.op.add" /></button>
-					<input id="page" name="page" type="hidden" value="0">
-				</div>
+				<#if backRoleResourceList?seq_contains("back_product_mgr_add")>
+					<div class="col-xs-1 hm-col form-group">
+						<label>&nbsp;</label>
+						<button id="addBtn" type="button" class="btn btn-primary btn-block"><@messages key="common.op.add" /></button>
+						<input id="page" name="page" type="hidden" value="0">
+					</div>
+				</#if>
 			</div>
 		</form>
 	</div>

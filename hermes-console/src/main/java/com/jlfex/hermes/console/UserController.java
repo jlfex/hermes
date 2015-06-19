@@ -88,11 +88,14 @@ public class UserController {
 
 	@RequestMapping("/table")
 	public String table(UserInfo userInfo, Integer page, Model model) {
+		String _url = "/user/loadLoanDetail/";
+		String flag = "loan";
 		if (userInfo.getType().equals("finance")) {
-			model.addAttribute("_url", "/user/loadFinanceDetail/");
-		} else {
-			model.addAttribute("_url", "/user/loadLoanDetail/");
-		}
+			_url = "/user/loadFinanceDetail/";
+			flag = "finance";
+		} 
+		model.addAttribute("_url", _url);
+		model.addAttribute("flag", flag);
 		model.addAttribute("users", userManageService.findByCondition(userInfo, page, null));
 		return "user/table";
 
