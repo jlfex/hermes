@@ -263,9 +263,8 @@ public class PrivilegeController {
 		Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
 		// 获取后台软件模式
 		List<String> consoneSoftModel = roleResourceService.getSoftModelRoleResource(dictionary);
-
 		this.setSoftModelNavigation(navigation.getChildren(), consoneSoftModel);
-
+		
 		navigation.setHavingByRole(true);
 		if (roleResources != null && roleResources.size() > 0) {
 			this.setSomeRolePrivilege(navigation.getChildren(), roleResources);
@@ -273,7 +272,7 @@ public class PrivilegeController {
 
 		return navigation;
 	}
-
+	
 	/**
 	 * 某一软件模式下所有菜单
 	 * 
@@ -315,13 +314,6 @@ public class PrivilegeController {
 		return roleResources;
 	}
 
-	/**
-	 * 设置某一个角色下的菜单权限，对应前端是否被选中
-	 * 
-	 * @param navigations
-	 * @param roleResources
-	 * @param consoneSoftModel
-	 */
 	public void setSomeRolePrivilege(List<Navigation> navigations, List<RoleResource> roleResources) {
 		for (Navigation navigation : navigations) {
 			for (RoleResource roleResource : roleResources) {
