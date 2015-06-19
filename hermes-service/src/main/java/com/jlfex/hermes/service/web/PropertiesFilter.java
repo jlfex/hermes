@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -57,7 +58,8 @@ public class PropertiesFilter implements Filter {
 	private static List<FriendLink> friendLinkList;
 	public static List<String> roleResourceList;
 	public static List<String> backRoleResourceList;
-	public static Map<String, List<String>> backRoleResourceMap = new HashMap<String, List<String>>();
+	
+	public static Map<String, List<String>> backRoleResourceMap = new ConcurrentHashMap<String, List<String>>();
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -128,13 +130,13 @@ public class PropertiesFilter implements Filter {
 			Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_FTONT_NAV,Dictionary.Status.VALID);
 			roleResourceList = roleResourceService.getSoftModelRoleResource(dictionary);
 		}
-
 		try {
 			AppUser curUser = App.current().getUser();
 			if (curUser != null) {
 				User user = userInfoService.findByUserId(curUser.getId());
-				if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+				if (HermesConstants.PLAT_MANAGER.equals(user.getAccount())) {
 					if (backRoleResourceMap.get(HermesConstants.PLAT_MANAGER) == null) {
+						backRoleResourceList = new ArrayList<String>();
 						backRoleResourceList = roleResourceService.getBackRoleResource();
 						backRoleResourceMap.put(HermesConstants.PLAT_MANAGER, backRoleResourceList);
 					} else {
@@ -150,10 +152,11 @@ public class PropertiesFilter implements Filter {
 					if (roles != null && roles.size() == 1) {
 						Role role = roles.get(0);
 						if (backRoleResourceMap.get(role.getCode()) == null) {
+							backRoleResourceList = new ArrayList<String>();
 							backRoleResourceList = roleResourceService.getBackRoleResource();
+							backRoleResourceMap.put(role.getCode(), backRoleResourceList);
 						} else {
 							backRoleResourceList = backRoleResourceMap.get(role.getCode());
-							backRoleResourceMap.put(role.getCode(), backRoleResourceList);
 						}
 					}
 				}
@@ -203,4 +206,17 @@ public class PropertiesFilter implements Filter {
 		App.config(values);
 		Logger.info("properties 缓存已经重新加载.");
 	}
+	
+	/**
+	 * 清除后台角色权限集合缓存
+	 */
+	public static void clearBackRoleResourceMap(String roleCode) {
+		if(Strings.notEmpty(roleCode)){
+			if(backRoleResourceMap.containsKey(roleCode.trim())){
+				backRoleResourceMap.remove(roleCode.trim());
+				Logger.info("后台角色权限集合缓存Filter已经清理完毕");
+			}
+		}
+	}
+	
 }
