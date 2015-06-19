@@ -1,9 +1,11 @@
 package com.jlfex.hermes.service.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -14,19 +16,28 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.common.web.WebApp;
 import com.jlfex.hermes.model.ArticleCategory;
+import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.FriendLink;
+import com.jlfex.hermes.model.Role;
 import com.jlfex.hermes.model.Text;
+import com.jlfex.hermes.model.User;
+import com.jlfex.hermes.model.UserRole;
 import com.jlfex.hermes.repository.ArticleCategoryRepository;
+import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.PropertiesRepository;
+import com.jlfex.hermes.repository.UserRoleRepository;
 import com.jlfex.hermes.service.FriendLinkService;
 import com.jlfex.hermes.service.PropertiesService;
 import com.jlfex.hermes.service.TextService;
+import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.role.RoleResourceService;
 
 /**
@@ -46,6 +57,7 @@ public class PropertiesFilter implements Filter {
 	private static List<FriendLink> friendLinkList;
 	public static List<String> roleResourceList;
 	public static List<String> backRoleResourceList;
+	public static Map<String, List<String>> backRoleResourceMap = new HashMap<String, List<String>>();
 
 	/** 系统属性业务接口 */
 	@Autowired
@@ -66,6 +78,14 @@ public class PropertiesFilter implements Filter {
 	@Autowired
 	private RoleResourceService roleResourceService;
 
+	@Autowired
+	private UserInfoService userInfoService;
+
+	@Autowired
+	private UserRoleRepository userRoleRepository;
+	
+	@Autowired
+	private DictionaryRepository dictionaryRepository;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -105,11 +125,41 @@ public class PropertiesFilter implements Filter {
 			friendLinkList = friendLinkService.findTop10();
 		}
 		if (roleResourceList == null) {
-			roleResourceList = roleResourceService.getFrontIndexRoleResource();
+			Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_FTONT_NAV,Dictionary.Status.VALID);
+			roleResourceList = roleResourceService.getSoftModelRoleResource(dictionary);
 		}
 
-		if (backRoleResourceList == null) {
-			backRoleResourceList = roleResourceService.getBackRoleResource();
+		try {
+			AppUser curUser = App.current().getUser();
+			if (curUser != null) {
+				User user = userInfoService.findByUserId(curUser.getId());
+				if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+					if (backRoleResourceMap.get(HermesConstants.PLAT_MANAGER) == null) {
+						backRoleResourceList = roleResourceService.getBackRoleResource();
+						backRoleResourceMap.put(HermesConstants.PLAT_MANAGER, backRoleResourceList);
+					} else {
+						backRoleResourceList = backRoleResourceMap.get(HermesConstants.PLAT_MANAGER);
+					}
+				} else {
+					List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+					List<Role> roles = new ArrayList<Role>();
+					for (UserRole userRole : userRoles) {
+						roles.add(userRole.getRole());
+					}
+
+					if (roles != null && roles.size() == 1) {
+						Role role = roles.get(0);
+						if (backRoleResourceMap.get(role.getCode()) == null) {
+							backRoleResourceList = roleResourceService.getBackRoleResource();
+						} else {
+							backRoleResourceList = backRoleResourceMap.get(role.getCode());
+							backRoleResourceMap.put(role.getCode(), backRoleResourceList);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			Logger.error("获取用户出现异常:" + e.getMessage());
 		}
 
 		req.setAttribute("friendlinkData", friendLinkList);

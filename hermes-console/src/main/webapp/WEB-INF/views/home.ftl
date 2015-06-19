@@ -13,7 +13,7 @@
 		</div>
 	    </div>		
 	</#if>
-	<#if roleResourceList?seq_contains("back_home_audit")>
+	<#if backRoleResourceList?seq_contains("back_home_audit")>
 		<div class="col-xs-4 _df-mg-top">
 		<div class="flow">
 			<a href="#" data-url="${app}/loan/loanaudit/${auditFinal.status}" data-target="main"><div class="icon audit pull-left"></div></a>

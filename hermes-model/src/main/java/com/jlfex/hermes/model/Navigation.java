@@ -75,6 +75,12 @@ public class Navigation extends Model {
 	private boolean isHavingByRole = false;
 
 	/**
+	 * 某一软件模式是否还有该权限
+	 */
+	@Transient
+	private boolean isHavingBySoftModel = true;
+
+	/**
 	 * 读取父级
 	 * 
 	 * @return
@@ -286,5 +292,13 @@ public class Navigation extends Model {
 
 	public void setHavingByRole(boolean isHavingByRole) {
 		this.isHavingByRole = isHavingByRole;
+	}
+
+	public boolean isHavingBySoftModel() {
+		return isHavingBySoftModel;
+	}
+
+	public void setHavingBySoftModel(boolean isHavingBySoftModel) {
+		this.isHavingBySoftModel = isHavingBySoftModel;
 	}
 }
