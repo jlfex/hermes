@@ -16,10 +16,8 @@ import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.console.pojo.Tree;
 import com.jlfex.hermes.model.Navigation;
 import com.jlfex.hermes.repository.NavigationRepository;
-import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.service.LoanService;
 import com.jlfex.hermes.service.NavigationService;
-import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.pojo.LoanStatusCount;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
@@ -42,11 +40,6 @@ public class IndexController {
 	@Autowired
 	private NavigationRepository navigationRepository;
 
-	@Autowired
-	private UserInfoService userInfoService;
-	
-	@Autowired
-	private RoleResourceRepository roleResourceRepository;
 
 	/**
 	 * 索引
