@@ -41,6 +41,7 @@ import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.privilege.user.UserRoleVo;
 import com.jlfex.hermes.service.role.RoleResourceService;
 import com.jlfex.hermes.service.userRole.UserRoleService;
+import com.jlfex.hermes.service.web.PropertiesFilter;
 
 /**
  * 权限管理
@@ -145,6 +146,7 @@ public class PrivilegeController {
 				roleService.save(role);
 				result.addMessage("新增成功");
 			}
+			
 			result.setType(Type.SUCCESS);
 
 		} catch (Exception e) {
@@ -218,9 +220,9 @@ public class PrivilegeController {
 	@ResponseBody
 	public Result setPrivilege(@RequestParam("privileges") String privileges, @RequestParam("roleId") String roleId) {
 		Result result = new Result();
-
+		Role role = roleService.findOne(roleId);
 		try {
-			Role role = roleService.findOne(roleId);
+		
 			List<RoleResource> roleResources = new ArrayList<RoleResource>();
 
 			List<RoleResource> havingRoleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
@@ -240,6 +242,7 @@ public class PrivilegeController {
 			}
 			roleResourceRepository.save(roleResources);
 			result.setType(Type.SUCCESS);
+			PropertiesFilter.clearBackRoleResourceMap(role.getCode());
 			result.addMessage("设置权限成功");
 		} catch (Exception e) {
 			result.setType(Type.FAILURE);
