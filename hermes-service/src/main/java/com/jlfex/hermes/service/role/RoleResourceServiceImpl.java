@@ -2,6 +2,8 @@ package com.jlfex.hermes.service.role;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Dictionary;
 import com.jlfex.hermes.model.DictionaryType;
 import com.jlfex.hermes.model.Navigation;
@@ -42,6 +46,8 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 	private UserInfoService userInfoService;
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
+	
+	public static Map<String, List<String>> backRoleResourceMap = new ConcurrentHashMap<String, List<String>>();
 
 	/**
 	 * 获取软件模式(对应Role的软件模式)的权限
@@ -84,26 +90,53 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 		if (curUser != null) {
 			User user = userInfoService.findByUserId(curUser.getId());
 			if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
-				Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE,Dictionary.Status.VALID);
-				backRoleResources = this.getSoftModelRoleResource(dictionary);
+				if(backRoleResourceMap.containsKey(HermesConstants.PLAT_MANAGER)) {
+					return backRoleResourceMap.get(HermesConstants.PLAT_MANAGER);
+				} else {
+					Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE,Dictionary.Status.VALID);
+					backRoleResources = this.getSoftModelRoleResource(dictionary);
+					backRoleResourceMap.put(HermesConstants.PLAT_MANAGER, backRoleResources);
+				}
 			} else {
 				List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
 				List<Role> roles = new ArrayList<Role>();
 				for (UserRole userRole : userRoles) {
 					roles.add(userRole.getRole());
 				}
-				if (roles != null && roles.size() > 0) {
-					List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, RoleResource.Status.VALID);
-					for (RoleResource roleResource : roleResources) {
-						Navigation navigation = navigationRepository.findOne(roleResource.getResource());
-						if (navigation != null) {
-							backRoleResources.add(navigation.getCode());
+				
+				if(backRoleResourceMap.containsKey(roles.get(0).getCode())) {
+					return backRoleResourceMap.get(roles.get(0).getCode());
+				} else {
+					if (roles != null && roles.size() > 0) {
+						List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, RoleResource.Status.VALID);
+						for (RoleResource roleResource : roleResources) {
+							Navigation navigation = navigationRepository.findOne(roleResource.getResource());
+							if (navigation != null) {
+								backRoleResources.add(navigation.getCode());
+							}
 						}
 					}
+					
+					backRoleResourceMap.put(roles.get(0).getCode(), backRoleResources);
+					
 				}
 			}
 		}
-
+		
 		return backRoleResources;
+	}
+	
+	/**
+	 * 清除后台角色权限库
+	 * 
+	 * @param roleCode
+	 */
+	public static void clearBackRoleResourceMap(String roleCode) {
+		if(Strings.notEmpty(roleCode)){
+			if(backRoleResourceMap.containsKey(roleCode.trim())){
+				backRoleResourceMap.remove(roleCode.trim());
+				Logger.info("后台角色权限集合缓存Filter已经清理完毕");
+			}
+		}
 	}
 }
