@@ -40,6 +40,7 @@ import com.jlfex.hermes.model.UserRole;
 import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.pojo.privilege.user.UserRoleVo;
 import com.jlfex.hermes.service.role.RoleResourceService;
+import com.jlfex.hermes.service.role.RoleResourceServiceImpl;
 import com.jlfex.hermes.service.userRole.UserRoleService;
 import com.jlfex.hermes.service.web.PropertiesFilter;
 
@@ -243,6 +244,7 @@ public class PrivilegeController {
 			roleResourceRepository.save(roleResources);
 			result.setType(Type.SUCCESS);
 			PropertiesFilter.clearBackRoleResourceMap(role.getCode());
+			RoleResourceServiceImpl.clearBackRoleResourceMap(role.getCode());
 			result.addMessage("设置权限成功");
 		} catch (Exception e) {
 			result.setType(Type.FAILURE);
