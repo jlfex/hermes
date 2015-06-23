@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jlfex.hermes.common.App;
-import com.jlfex.hermes.common.constant.HermesEnum.NavigationEnum;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.console.pojo.Tree;
 import com.jlfex.hermes.model.Navigation;
@@ -39,10 +38,9 @@ public class IndexController {
 
 	@Autowired
 	private NavigationRepository navigationRepository;
-	
+
 	@Autowired
 	private RoleResourceService roleResourceService;
-
 
 	/**
 	 * 索引
@@ -71,16 +69,10 @@ public class IndexController {
 		List<Navigation> navigations = navigationService.findByParentId(id);
 		List<Navigation> subMenu = new ArrayList<Navigation>();
 
-		Navigation navigation = navigationRepository.findOne(id);
-		if (navigation.getCode().equals(NavigationEnum.back_search.name()) || navigation.getCode().equals(NavigationEnum.back_interface_mng.name())) {
-			for (Navigation nav : navigations) {
-				if (roleResourceList.contains(nav.getCode())) {
-					subMenu.add(nav);
-				}
+		for (Navigation nav : navigations) {
+			if (roleResourceList.contains(nav.getCode())) {
+				subMenu.add(nav);
 			}
-
-		} else {
-			subMenu.addAll(navigations);
 		}
 
 		return Tree.fromNavigation(subMenu);
