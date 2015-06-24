@@ -268,6 +268,7 @@ public class PrivilegeController {
 		Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
 		// 获取后台软件模式
 		List<String> consoneSoftModel = roleResourceService.getSoftModelRoleResource(dictionary);
+		
 		this.setSoftModelNavigation(navigation.getChildren(), consoneSoftModel);
 		
 		navigation.setHavingByRole(true);
@@ -319,6 +320,11 @@ public class PrivilegeController {
 		return roleResources;
 	}
 
+	/**
+	 * 设置某一角色 
+	 * @param navigations
+	 * @param roleResources
+	 */
 	public void setSomeRolePrivilege(List<Navigation> navigations, List<RoleResource> roleResources) {
 		for (Navigation navigation : navigations) {
 			for (RoleResource roleResource : roleResources) {
