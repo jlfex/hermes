@@ -262,7 +262,7 @@ public class PrivilegeController {
 	@RequestMapping("/getPrivileges/{id}")
 	@ResponseBody
 	public Navigation getPrivileges(@PathVariable("id") String id) {
-		Navigation navigation = navigationRepository.findOneByCode(HermesConstants.ROOT);
+		Navigation navigation = navigationService.findOneByCode(HermesConstants.ROOT);
 		Role role = roleService.findOne(id);
 		List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
 		Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
@@ -274,7 +274,7 @@ public class PrivilegeController {
 		if (roleResources != null && roleResources.size() > 0) {
 			this.setSomeRolePrivilege(navigation.getChildren(), roleResources);
 		}
-
+		
 		return navigation;
 	}
 	

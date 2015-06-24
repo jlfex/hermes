@@ -41,4 +41,11 @@ public interface NavigationService {
 	 * @return
 	 */
 	public List<Navigation> findByParentId(String parentId);
+     /**
+      * 获取navigation root树全部结构
+      * @param code
+      * @return
+      */
+	public Navigation findOneByCode(String code);
+    
 }
