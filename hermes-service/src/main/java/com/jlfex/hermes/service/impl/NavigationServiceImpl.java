@@ -2,11 +2,9 @@ package com.jlfex.hermes.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -58,6 +56,7 @@ public class NavigationServiceImpl implements NavigationService {
 
 	@Autowired
 	private UserInfoService userInfoService;
+
 
 	/*
 	 * (non-Javadoc)
@@ -146,5 +145,62 @@ public class NavigationServiceImpl implements NavigationService {
 		}
 		Navigation parent = navigationRepository.findOne(parentId);
 		return findByParent(parent);
+	}
+	/**
+	 * 获取navigation root树全部结构
+	 */
+	@Override
+	@Transactional(readOnly= true)
+	public Navigation findOneByCode(String code) {
+		if (Strings.empty(code)) {
+			throw new ServiceException("导航：parentId为空");
+		}
+		Navigation parent = navigationRepository.findOneByCode(code);
+		initLaziedNavigation(parent);
+		return parent;
+	}
+	
+	/**
+	 * 强制初始化  navigation懒加载对象
+	 * 使用范围： 在service层使用 session没有关闭
+	 * @param parent
+	 */
+	public void initLaziedNavigation(Navigation parent) {
+		if(parent!=null && parent.getChildren()!=null){
+			for(Navigation level1: parent.getChildren()){
+				level1.getId();
+				level1.getType().getId();
+				if(level1.getChildren() !=null && level1.getChildren().size() > 0){
+					for(Navigation level2 : level1.getChildren()){
+						level2.getId();
+						level2.getType().getId();
+						if(level2.getChildren() !=null && level2.getChildren().size() > 0){
+							for(Navigation level3 : level2.getChildren()){
+								level3.getId();
+								level3.getType().getId();
+								if(level3.getChildren() !=null && level3.getChildren().size() > 0){
+									for(Navigation level4 : level3.getChildren()){
+										level4.getId();
+										level4.getType().getId();
+										if(level4.getChildren() !=null && level4.getChildren().size() > 0){
+											for(Navigation level5 : level4.getChildren()){
+												level5.getId();
+												level5.getType().getId();
+												if(level5.getChildren()!=null && level5.getChildren().size() > 0){
+													for(Navigation level6 : level5.getChildren()){
+														level6.getId();
+														level6.getType().getId();
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
