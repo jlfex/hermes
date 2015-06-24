@@ -46,12 +46,14 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 	private UserInfoService userInfoService;
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
-	
+
 	public static Map<String, List<String>> backRoleResourceMap = new ConcurrentHashMap<String, List<String>>();
 
 	/**
 	 * 获取软件模式(对应Role的软件模式)的权限
-	 * @param type console(后台菜单权限)、ftont_nav(前台菜单权限)
+	 * 
+	 * @param type
+	 *            console(后台菜单权限)、ftont_nav(前台菜单权限)
 	 * @return
 	 */
 	@Override
@@ -60,18 +62,60 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 		List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
 		List<String> indexRoleResource = new ArrayList<String>();
 
+		// 平台用户角色
 		List<Role> roles = new ArrayList<Role>();
 		for (UserRole userRole : userRoles) {
 			roles.add(userRole.getRole());
 		}
 
+		// 当前用户角色资源
+		List<RoleResource> nowUserResources = new ArrayList<RoleResource>();
+		AppUser curUser = App.current().getUser();
+		User nowUser = null;
+		if (curUser != null) {
+			nowUser = userInfoService.findByUserId(curUser.getId());
+		}
+
 		if (userRoles != null) {
 			DictionaryType dictionaryType = dictionaryTypeRepository.findByCode(HermesConstants.DIC_NAV);
 			List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, dictionaryType.getId(), HermesConstants.VALID);
+			// 当前用户是否是平台用户
+			boolean flag = false;
+			if (nowUser == null || nowUser.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+				flag = true;
+			}
 
-			for (RoleResource roleResource : roleResources) {
+			// 平台和当前用户角色资源的交集
+			List<RoleResource> platAndCurUserRoleResources = new ArrayList<RoleResource>();
+
+			if (flag) {
+				platAndCurUserRoleResources = roleResources;
+			} else {
+				List<UserRole> nowUserRoles = userRoleRepository.findByUserId(nowUser.getId());
+				// 当前用户角色
+				List<Role> nowRoles = new ArrayList<Role>();
+				for (UserRole userRole : nowUserRoles) {
+					nowRoles.add(userRole.getRole());
+				}
+
+				if (nowRoles != null && nowRoles.size() == 1) {
+					nowUserResources = roleResourceRepository.findByRoleInAndTypeAndStatus(nowRoles, RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+				}
+
+				for (RoleResource roleResource : roleResources) {
+					for (RoleResource nowResource : nowUserResources) {
+						if (nowResource.getResource().equals(roleResource.getResource())) {
+							platAndCurUserRoleResources.add(roleResource);
+							break;
+						}
+					}
+				}
+
+			}
+
+			for (RoleResource roleResource : platAndCurUserRoleResources) {
 				Navigation navigation = navigationRepository.findOne(roleResource.getResource());
-				if(navigation.getType().getId().equals(type.getId())) {
+				if (navigation.getType().getId().equals(type.getId())) {
 					indexRoleResource.add(navigation.getCode());
 				}
 			}
@@ -90,10 +134,10 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 		if (curUser != null) {
 			User user = userInfoService.findByUserId(curUser.getId());
 			if (user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
-				if(backRoleResourceMap.containsKey(HermesConstants.PLAT_MANAGER)) {
+				if (backRoleResourceMap.containsKey(HermesConstants.PLAT_MANAGER)) {
 					return backRoleResourceMap.get(HermesConstants.PLAT_MANAGER);
 				} else {
-					Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE,Dictionary.Status.VALID);
+					Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
 					backRoleResources = this.getSoftModelRoleResource(dictionary);
 					backRoleResourceMap.put(HermesConstants.PLAT_MANAGER, backRoleResources);
 				}
@@ -103,8 +147,8 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 				for (UserRole userRole : userRoles) {
 					roles.add(userRole.getRole());
 				}
-				
-				if(backRoleResourceMap.containsKey(roles.get(0).getCode())) {
+
+				if (backRoleResourceMap.containsKey(roles.get(0).getCode())) {
 					return backRoleResourceMap.get(roles.get(0).getCode());
 				} else {
 					if (roles != null && roles.size() > 0) {
@@ -116,24 +160,24 @@ public class RoleResourceServiceImpl implements RoleResourceService {
 							}
 						}
 					}
-					
+
 					backRoleResourceMap.put(roles.get(0).getCode(), backRoleResources);
-					
+
 				}
 			}
 		}
-		
+
 		return backRoleResources;
 	}
-	
+
 	/**
 	 * 清除后台角色权限库
 	 * 
 	 * @param roleCode
 	 */
 	public static void clearBackRoleResourceMap(String roleCode) {
-		if(Strings.notEmpty(roleCode)){
-			if(backRoleResourceMap.containsKey(roleCode.trim())){
+		if (Strings.notEmpty(roleCode)) {
+			if (backRoleResourceMap.containsKey(roleCode.trim())) {
 				backRoleResourceMap.remove(roleCode.trim());
 				Logger.info("后台角色权限集合缓存Filter已经清理完毕");
 			}
