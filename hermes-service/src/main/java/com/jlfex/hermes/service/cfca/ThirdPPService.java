@@ -18,7 +18,7 @@ public interface ThirdPPService {
 	 * @param request
 	 * @return
 	 */
-	public Tx1361Response invokeTx1361(Tx1361Request request);
+	public Tx1361Response invokeTx1361(Tx1361Request request) throws Exception;
 
 	/**
 	 * 单笔代收查询
@@ -27,4 +27,5 @@ public interface ThirdPPService {
 	 * @return
 	 */
 	public Tx1362Response invokeTx1362(Tx1362Request request);
+  
 }

@@ -1,17 +1,12 @@
 package com.jlfex.hermes.service.impl;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Assert;
 import com.jlfex.hermes.common.Logger;
@@ -22,7 +17,6 @@ import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.support.spring.SpringWebApp;
 import com.jlfex.hermes.common.utils.Numbers;
-import com.jlfex.hermes.model.ApiLog;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
@@ -314,17 +308,15 @@ public class BankAccountServiceImpl implements BankAccountService {
 		User user = userRepository.findOne(App.user().getId());
 		BankAccount bankAccount = this.findOneByUserIdAndStatus(user.getId(), BankAccount.Status.ENABLED);
 		UserProperties userProperties = userPropertiesRepository.findByUser(user);
-		// 请求日志
-		Map<String, String> recodeMap = new HashMap<String, String>();
 		Tx1361Response response = null;
 		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		CFCAOrder cfcaOrder = null;
 		try {
 			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, serialNo);
-			recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
-			recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
-			ApiLog apiLog = cFCAOrderService.recordApiLog(recodeMap);
 			response = thirdPPService.invokeTx1361(tx1361Request);
+			if(response == null){
+				throw new ServiceException("中金接口通信失败");
+			}
 			cfcaOrder = cFCAOrderService.genCFCAOrder(response, user, amount, serialNo, CFCAOrder.Type.RECHARGE, fee);
 			userLogService.saveUserLog(user,UserLog.LogType.RECHARGE);
 			if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
@@ -346,10 +338,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 				result.setType(Type.FAILURE);
 				result.addMessage(0, "充值失败");
 			}
-			apiLog.setResponseMessage(response.getResponsePlainText());
-			apiLog.setResponseTime(new Date());
-			apiLogService.saveApiLog(apiLog);
-		} catch (Exception e) {
+		}catch(ServiceException  se){
+			Logger.error("中金充值失败", se);
+			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
+			result.setType(Type.FAILURE);
+			result.addMessage(0, "充值失败：中金接口通信异常");
+		}catch (Exception e) {
 			Logger.error("中金充值失败", e);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);

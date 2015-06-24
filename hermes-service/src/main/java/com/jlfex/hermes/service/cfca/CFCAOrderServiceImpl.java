@@ -2,7 +2,6 @@ package com.jlfex.hermes.service.cfca;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import cfca.payment.api.tx.Tx1350Response;
 import cfca.payment.api.tx.Tx1361Request;
 import cfca.payment.api.tx.Tx1361Response;
 import cfca.util.GUID;
-
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.constant.HermesConstants;
@@ -57,7 +55,7 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	@Autowired
 	private ApiConfigRepository apiConfigRepository;
 	//接口配置
-	public static ApiConfig  apiConfig = null;
+	public static ApiConfig   zjApiCfg = null;
 	
 	/**
 	 * 中金请求流水号：
@@ -202,37 +200,37 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	@Override
 	public Tx134xResponse invokeTx1341(Tx1341Request request) throws Exception{
 		String var = "调用中金1341结算接口：";
-		ApiLog apiLog = null;
+		ApiLog apiLog = new ApiLog();
 		Tx134xResponse response = null ;
-		Map<String,String>  logMap = new  HashMap<String,String>();
-		logMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1341);
 		try {
+			apiLog.setInterfaceName(HermesConstants.ZJ_INTERFACE_TX1341);
+			apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+			apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+			apiLog.setSerialNo(request.getSerialNumber());
 			request.process();
 			String requestXml = new String(Base64.decodeBase64(request.getRequestMessage()),HermesConstants.CHARSET_UTF8);
 			Logger.info(var+"请求报文：%s", requestXml);
-			//保存接口日志
-			logMap.put("requestMsg", requestXml);
-			logMap.put("serialNo", request.getSerialNumber());
-			apiLog = recordApiLog(logMap);
+			apiLog.setRequestMessage(requestXml);
+			apiLog.setRequestTime(new Date());
 			//发送请求
 			TxMessenger txMessenger = new TxMessenger();
 			String[] respMsg = txMessenger.send(request.getRequestMessage(), request.getRequestSignature());
 			response = new Tx134xResponse(respMsg[0], respMsg[1]);
 			Logger.info(var+"响应报文:%s ", response.getResponsePlainText());
-			apiLog.setResponseMessage(response.getResponsePlainText());
 			apiLog.setResponseTime(new Date());
+			apiLog.setResponseMessage(response.getResponsePlainText());
 			apiLog.setDealFlag(ApiLog.DealResult.SUC);
 		} catch (Exception e) {
 			Logger.error("调用中金接口异常：", e);
-			logMap.put("exception", e.getMessage());
+			apiLog.setResponseTime(new Date());
+			apiLog.setException("接口异常："+e.getMessage());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 		}
-		if(apiLog!=null){
-			if(apiConfig==null){
-				apiConfig = getApiConfig();
-			}
-			apiLog.setApiConfig(apiConfig);
-			apiLogService.saveApiLog(apiLog);
+		if(zjApiCfg == null){
+			zjApiCfg =  getApiConfig();
 		}
+		apiLog.setApiConfig(zjApiCfg);
+		apiLogService.saveApiLog(apiLog);
 	    return response;
 	}
 	
@@ -291,10 +289,10 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 			apiLog.setException(e.getMessage());
 			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 		}
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(zjApiCfg==null){
+			zjApiCfg = getApiConfig();
 		}
-		apiLog.setApiConfig(apiConfig);
+		apiLog.setApiConfig(zjApiCfg);
 		apiLogService.saveApiLog(apiLog);
 		return response;
 	}

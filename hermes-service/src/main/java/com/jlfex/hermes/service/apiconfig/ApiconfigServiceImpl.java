@@ -20,6 +20,7 @@ import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.repository.apiconfig.ApiConfigRepository;
 import com.jlfex.hermes.service.CreditorService;
+import com.jlfex.hermes.service.api.yltx.JlfexService;
 import com.jlfex.hermes.service.pojo.yltx.ApiConfigVo;
 
 /**
@@ -36,6 +37,8 @@ public class ApiconfigServiceImpl implements ApiConfigService {
 	private  ApiConfigRepository  apiConfigRepository;
 	@Autowired
 	private  CreditorService  creditorService;
+	@Autowired
+	private  JlfexService jlfexService;
 	
 	@Override
 	public ApiConfig  queryByPlatCodeAndStatus(String platCode, String status) throws Exception {
@@ -72,6 +75,7 @@ public class ApiconfigServiceImpl implements ApiConfigService {
 		}else{
 			apiConfig = apiConfigRepository.findOne(apiConfigVo.getId());
 			apiConfig.setPlatCode(apiConfig.getPlatCode());
+			jlfexService.clearJlfexApiCfg(apiConfig.getPlatCode());
 		}
 		apiConfig.setPlatName(apiConfigVo.getPlatName());
 		apiConfig.setClientStoreName(apiConfigVo.getClientStoreName());
