@@ -34,7 +34,7 @@ public class Navigation extends Model {
 	private Navigation parent;
 
 	/** 类型 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type")
 	@JsonIgnore
 	private Dictionary type;
@@ -64,7 +64,7 @@ public class Navigation extends Model {
 	private Integer order;
 
 	/** 子集 */
-	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
 	@OrderBy(value = " order asc")
 	private List<Navigation> children = new LinkedList<Navigation>();
 
