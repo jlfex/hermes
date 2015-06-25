@@ -11,7 +11,7 @@ import com.jlfex.hermes.model.Role;
  *
  */
 public interface RoleMgrService {
-	public Page<Role> findRoleList(final String code, final String name, String page, String size);
+	public Page<Role> findRoleList(final String code, final String name, String page, String size,String creatorId);
 
 	/**
 	 * 是否是合法的code

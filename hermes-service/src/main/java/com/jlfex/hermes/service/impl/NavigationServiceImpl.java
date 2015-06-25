@@ -91,6 +91,10 @@ public class NavigationServiceImpl implements NavigationService {
 				roles.add(userRole.getRole());
 			}
 			
+			if(roles.size() < 1) {
+				return secNavigations;
+			}
+			
 			List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(roles, RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
 			Dictionary type = dictionaryRepository.findByTypeCodeAndCode(CODE_DICTIONARY_NAVIGATION, typeCode);
 			Navigation navigation = navigationRepository.findOneByCode(HermesConstants.ROOT);

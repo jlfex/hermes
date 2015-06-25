@@ -32,6 +32,7 @@ import com.jlfex.hermes.service.RoleService;
 import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.privilege.role.RoleMgrService;
 import com.jlfex.hermes.common.App;
+import com.jlfex.hermes.common.AppUser;
 import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.utils.BeanUtilsExtended;
 import com.jlfex.hermes.common.utils.Strings;
@@ -184,7 +185,21 @@ public class PrivilegeController {
 	 */
 	@RequestMapping("/list")
 	public String loandata(String code, String name, String page, String size, Model model) {
-		model.addAttribute("lists", roleMgrService.findRoleList(code, name, page, size));
+		AppUser curUser = App.current().getUser();
+		String creatorId = "";
+		if (curUser != null) {
+			User user = userInfoService.findByUserId(curUser.getId());
+			
+			if(user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+				creatorId = HermesConstants.PLAT_MANAGER;
+			} else {
+				creatorId =com.jlfex.hermes.model.Model.getCurrentUserId();
+			}
+		} 
+		
+		model.addAttribute("lists", roleMgrService.findRoleList(code, name, page, size,creatorId));
+		
+		
 		return "privilege/role/data";
 	}
 
