@@ -115,6 +115,11 @@ public interface JlfexService {
      * @throws Exception
      */
 	public String generateOrderSn() throws Exception;
+    /**
+     * 清理jlfex Apiconfig 缓存
+     * @param code
+     */
+	public void clearJlfexApiCfg(String code);
 	
 
 }

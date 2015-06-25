@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -131,15 +133,16 @@ public class JlfexServiceImpl implements JlfexService {
 	@Autowired
 	private  UserAccountRepository userAccountRepository;
 	//接口配置
-	public static ApiConfig  apiConfig = null;
+	public static Map<String, ApiConfig>  apiCfgMap = new ConcurrentHashMap<String, ApiConfig>();
 	
 	@Override
 	public String queryFinanceOrder(String financeProductStatus,String createDate, int pageSize, int pageNum) throws Exception {
 		String result = null ;
 		String var = "查询理财产品接口:";
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
 		}
+		ApiConfig  apiConfig =  apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		String serialNo = generateSerialNo() ;
 	    StringBuffer reqUrlBuffer = new StringBuffer();
 	    reqUrlBuffer.append(apiConfig.getApiUrl().trim());
@@ -154,11 +157,14 @@ public class JlfexServiceImpl implements JlfexService {
 	    reqUrlBuffer.append("pageNum=").append(pageNum);
 	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
 	    //保存请求日志
-	  	Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_FINANCE_FRODUCT_GET);
-	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+	    ApiLog apiLog = new ApiLog();
+	  	apiLog.setInterfaceName(HermesConstants.JL_FINANCE_FRODUCT_GET);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestMessage(reqUrlBuffer.toString().trim());
+		apiLog.setRequestTime(new Date());
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    result = HttpClientUtil.doGetHttps(reqUrlBuffer.toString().trim());
@@ -168,9 +174,11 @@ public class JlfexServiceImpl implements JlfexService {
 		    apiLog.setDealFlag(ApiLog.DealResult.SUC);
 	  	}catch(Exception e){
 	  		Logger.error(var+"请求异常：", e);
-	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setException("接口异常："+e.getMessage());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  	}
-	  	apiLogService.saveApiLog(apiLog);
+		apiLogService.saveApiLog(apiLog);
 	  	if(result!=null && result.contains("status") && result.contains("memo")){
 			Logger.info(var+" 接口返回结果="+result);
 			result = null;
@@ -194,20 +202,23 @@ public class JlfexServiceImpl implements JlfexService {
 			resultMap.put("err_msg",   "下单并支付接口 请求报文实体为空");
 			return resultMap;
 		}
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
 		}
+		ApiConfig apiConfig = apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		vo.setOrderSn(generateOrderSn());
 		String serialNo = generateSerialNo();
 		Map<String,String>  commonMap = HttpClientUtil.buildPostCommonParam(HermesConstants.JL_ORDER_DO2PAY, serialNo);
 		commonMap.putAll(Bean2Map.getValueMap(vo));
 		//请求日志
-		Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_ORDER_DO2PAY);
-	  	recodeMap.put("requestMsg",commonMap.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	recodeMap.put("orderSn",serialNo );
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+		ApiLog apiLog = new  ApiLog();
+		apiLog.setInterfaceName(HermesConstants.JL_ORDER_DO2PAY);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setRequestMessage(commonMap.toString());
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestTime(new Date());
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    result = HttpClientUtil.doPostHttps(apiConfig.getApiUrl().trim(), commonMap);
@@ -218,10 +229,14 @@ public class JlfexServiceImpl implements JlfexService {
 	  	}catch(SocketTimeoutException se){
 	  		Logger.error(var+"请求异常：", se);
 	  		apiLog.setException(se.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  		exception ="接口数据读取超时";
 	  	}catch(Exception e){
 	  		Logger.error(var+"请求异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  		exception = e.getMessage();
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
@@ -249,18 +264,22 @@ public class JlfexServiceImpl implements JlfexService {
 	public String revokeOrder(String orderCode) throws Exception {
 		String var = "撤销订单接口:";
 		Logger.info("订单: orderCode =" +orderCode+",开始进行撤单");
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
 		}
+		ApiConfig apiConfig = apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		String serialNo = generateSerialNo() ;
 		Map<String,String>  commonMap = HttpClientUtil.buildPostCommonParam(HermesConstants.JL_ORDER_CANCEL, serialNo);
 		commonMap.put("orderCode", orderCode.trim());
 		//请求日志
-		Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_ORDER_CANCEL);
-	  	recodeMap.put("requestMsg",commonMap.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+		ApiLog apiLog = new  ApiLog();
+		apiLog.setInterfaceName(HermesConstants.JL_ORDER_CANCEL);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setRequestMessage(commonMap.toString());
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestTime(new Date());
 	  	String result = null;
 	  	try{
 	  		if(Strings.empty(orderCode)){
@@ -276,6 +295,8 @@ public class JlfexServiceImpl implements JlfexService {
 	  	}catch(Exception e){
 	  		Logger.error(var+"异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
 	  	if(result.contains("status") && result.contains("memo")){
@@ -292,9 +313,10 @@ public class JlfexServiceImpl implements JlfexService {
 		if(Strings.empty(orderCodes)){
 			return null;
 		}
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
 		}
+		ApiConfig apiConfig = apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		String serialNo = generateSerialNo();
 		StringBuffer reqUrlBuffer = new StringBuffer();
 		reqUrlBuffer.append(apiConfig.getApiUrl().trim());
@@ -304,11 +326,14 @@ public class JlfexServiceImpl implements JlfexService {
 	    }
 	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
 	    //保存请求日志
-	  	Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_ORDER_GET);
-	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+	    ApiLog apiLog = new  ApiLog();
+		apiLog.setInterfaceName(HermesConstants.JL_ORDER_GET);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setRequestMessage(reqUrlBuffer.toString());
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestTime(new Date());
 	  	String result = null;
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
@@ -320,6 +345,8 @@ public class JlfexServiceImpl implements JlfexService {
 	  	}catch(Exception e){
 	  		Logger.error(var+"请求异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
 	  	if(result!=null && result.contains("status") && result.contains("memo")){
@@ -335,9 +362,10 @@ public class JlfexServiceImpl implements JlfexService {
 	@Override
 	public ByteArrayOutputStream queryProtocolFile(String fileId) throws Exception {
 		String var = "查询文件协议接口:";
-		if(apiConfig==null){
-			apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
 		}
+		ApiConfig apiConfig = apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		String serialNo = generateSerialNo();
 		StringBuffer reqUrlBuffer = new StringBuffer();
 		reqUrlBuffer.append(apiConfig.getApiUrl().trim());
@@ -347,24 +375,29 @@ public class JlfexServiceImpl implements JlfexService {
 	    }
 	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
 	    //保存请求日志
-	  	Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod",HermesConstants.JL_FILE_GET);
-	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+	    ApiLog apiLog = new  ApiLog();
+		apiLog.setInterfaceName(HermesConstants.JL_FILE_GET);
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setRequestMessage(reqUrlBuffer.toString());
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestTime(new Date());
 	  	ByteArrayOutputStream inputSM = null;
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    inputSM = HttpClientUtil.doFileGetHttps(reqUrlBuffer.toString().trim());
-		    apiLog.setResponseMessage("");
+		    apiLog.setResponseMessage("文件获取成功");
 		    apiLog.setResponseTime(new Date());
 		    apiLog.setDealFlag(ApiLog.DealResult.SUC);
 	  	}catch(Exception e){
 	  		Logger.error(var+"请求异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
-	  	 return inputSM;
+	    return inputSM;
 	}
 	
 	/**
@@ -448,7 +481,10 @@ public class JlfexServiceImpl implements JlfexService {
 	public String  queryRepayPlan(String code, String type) throws Exception {
 		String result = null ;
 		String var = "查询还款计划表接口:";
-		ApiConfig apiConfig = getApiConfig();
+		if(apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE) == null){
+			apiCfgMap.put(HermesConstants.PLAT_JLFEX_CODE, getApiConfig());
+		}
+		ApiConfig apiConfig = apiCfgMap.get(HermesConstants.PLAT_JLFEX_CODE);
 		String serialNo = generateSerialNo() ;
 	    StringBuffer reqUrlBuffer = new  StringBuffer();
 	    reqUrlBuffer.append(apiConfig.getApiUrl().trim());
@@ -457,11 +493,14 @@ public class JlfexServiceImpl implements JlfexService {
 	    reqUrlBuffer.append("type=").append(type.trim());
 	    Logger.info(var+"请求地址:"+reqUrlBuffer.toString());
 	    //保存请求日志
-	  	Map<String,String>  recodeMap = new HashMap<String,String>();
-	  	recodeMap.put("interfaceMethod", HermesConstants.JL_FINPRO_REPSCH);
-	  	recodeMap.put("requestMsg",reqUrlBuffer.toString());
-	  	recodeMap.put("serialNo", serialNo);
-	  	ApiLog apiLog = recordApiLog(apiConfig, recodeMap);
+	    ApiLog apiLog = new  ApiLog();
+		apiLog.setInterfaceName( HermesConstants.JL_FINPRO_REPSCH );
+		apiLog.setCreator(HermesConstants.PLAT_MANAGER);
+		apiLog.setUpdater(HermesConstants.PLAT_MANAGER);
+		apiLog.setSerialNo(serialNo);
+		apiLog.setRequestMessage(reqUrlBuffer.toString());
+		apiLog.setApiConfig(apiConfig);
+		apiLog.setRequestTime(new Date());
 	  	try{
 		    HttpClientUtil.initHttps(apiConfig.getClientStoreName(), apiConfig.getClientStorePwd(), apiConfig.getTruestStoreName(), apiConfig.getTruststorePwd());
 		    result = HttpClientUtil.doGetHttps(reqUrlBuffer.toString().trim());
@@ -472,6 +511,8 @@ public class JlfexServiceImpl implements JlfexService {
 	  	}catch(Exception e){
 	  		Logger.error(var+"请求异常：", e);
 	  		apiLog.setException(e.getMessage());
+	  		apiLog.setResponseTime(new Date());
+			apiLog.setDealFlag(ApiLog.DealResult.FAIL);
 	  	}
 	  	apiLogService.saveApiLog(apiLog);
 	  	if(result.contains("status") && result.contains("memo")){
@@ -1157,6 +1198,17 @@ public class JlfexServiceImpl implements JlfexService {
 			Logger.error("更新jlfexLoan发售金额异常：", e);
 			return null;
 		}
+	}
+	/**
+	 *  清理jlfex Apiconfig 缓存
+	 * @param code
+	 */
+	@Override
+	public void clearJlfexApiCfg(String code){
+		    if(HermesConstants.PLAT_JLFEX_CODE.equals(code.trim())){
+		    	apiCfgMap.remove(HermesConstants.PLAT_JLFEX_CODE);
+		    	Logger.info("成功清理jlfex Apiconfig 缓存");
+		    }
 	}
 	
 }

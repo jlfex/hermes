@@ -956,9 +956,6 @@ public class InvestServiceImpl implements InvestService {
 		Tx1361Response response = null;
 		Invest invest = null;
 		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
-		// 请求日志
-		Map<String, String> recodeMap = new HashMap<String, String>();
-		ApiLog apiLog = null;
 		try {
 			if (updateRecord == 1) {
 				BankAccount bankAccount = bankAccountService.findOneByUserIdAndStatus(investUser.getId(), BankAccount.Status.ENABLED);
@@ -966,10 +963,10 @@ public class InvestServiceImpl implements InvestService {
 				UserAccount cashAccount = userAccountRepository.findByUserAndType(investUser, UserAccount.Type.CASH);
 
 				Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(investUser, investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance()), bankAccount, userProperties, serialNo);
-				recodeMap.put("interfaceMethod", HermesConstants.ZJ_INTERFACE_TX1361);
 				response = thirdPPService.invokeTx1361(tx1361Request);
-				recodeMap.put("requestMsg", tx1361Request.getRequestPlainText());
-				apiLog = cFCAOrderService.recordApiLog(recodeMap);
+				if(response == null){
+					throw new ServiceException("中金接口通信异常");
+				}
 				BigDecimal addAmount = investAmount.subtract(cashAccount == null ? BigDecimal.ZERO : cashAccount.getBalance());
 				if (response.getCode().equals(HermesConstants.CFCA_SUCCESS_CODE)) {
 					if (response.getStatus() == Tx1361Status.IN_PROCESSING.getStatus()) {
@@ -1018,15 +1015,9 @@ public class InvestServiceImpl implements InvestService {
 				backMap.put("msg", var);
 				loanNativeRepository.updateProceeds(loanId, investAmount.multiply(new BigDecimal(-1)));
 			}
-			apiLog.setDealFlag(ApiLog.DealResult.SUC);
 		} catch (Exception e) {
 			Logger.error("投标并支付出现异常"+e.getMessage());
 		}
-
-		apiLog.setResponseMessage(response.getResponsePlainText());
-		apiLog.setResponseTime(new Date());
-		apiLogService.saveApiLog(apiLog);
-
 		return backMap;
 	}
 
