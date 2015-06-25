@@ -49,7 +49,7 @@ public interface CFCAOrderService {
 	 *            订单流水
 	 * @return
 	 */
-	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties,String serialNo);
+	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties,String serialNo) throws Exception;
 
 	/**
 	 * 生成中金订单

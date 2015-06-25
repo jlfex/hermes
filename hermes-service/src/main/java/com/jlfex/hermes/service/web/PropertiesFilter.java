@@ -13,7 +13,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -183,8 +182,6 @@ public class PropertiesFilter implements Filter {
 		}
 		req.setAttribute("appLogo", appLogoBase64);
 		chain.doFilter(req, resp);
-		HttpServletRequest request = HttpServletRequest.class.cast(req);
-		Logger.info("请求信息：RemoteAddr=%s,RemotePort=%s,RequestURL=%s", request.getRemoteAddr(), request.getRemotePort(), request.getRequestURL());
 	}
 
 	/*

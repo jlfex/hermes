@@ -19,6 +19,7 @@
                     </div>
                     <div class="col-xs-1 hm-col form-group">
                         <label>&nbsp;</label>
+                         <input id="page" name="page" value="0" type="hidden">
                         <button id="backBtn" type="button" class="btn btn-default btn-block backBtn">返回</button>
                     </div>
                 </div>               
