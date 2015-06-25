@@ -37,7 +37,7 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 	private RoleService roleService;
 
 	@Override
-	public Page<Role> findRoleList(final String code, final String name, String page, String size) {
+	public Page<Role> findRoleList(final String code, final String name, String page, String size, final String creatorId) {
 		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, HermesConstants.DEFAULT_PAGE_SIZE)));
 		Page<Role> roleList = roleRepository.findAll(new Specification<Role>() {
 			@Override
@@ -48,6 +48,12 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 				}
 				if (StringUtils.isNotEmpty(name)) {
 					p.add(cb.like(root.<String> get("name"), "%" + name + "%"));
+				}
+
+				if (!creatorId.equals(HermesConstants.PLAT_MANAGER)) {
+					if (StringUtils.isNotEmpty(creatorId)) {
+						p.add(cb.equal(root.<String> get("creator"), creatorId));
+					}
 				}
 
 				p.add(cb.equal(root.<String> get("status"), Role.Status.ENABLED));
