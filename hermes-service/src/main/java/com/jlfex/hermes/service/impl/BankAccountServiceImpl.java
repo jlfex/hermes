@@ -17,6 +17,7 @@ import com.jlfex.hermes.common.constant.HermesEnum.Tx1361Status;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.support.spring.SpringWebApp;
 import com.jlfex.hermes.common.utils.Numbers;
+import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Area;
 import com.jlfex.hermes.model.Bank;
 import com.jlfex.hermes.model.BankAccount;
@@ -312,6 +313,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 		String serialNo = cFCAOrderService.genSerialNo(HermesConstants.PRE_IN);
 		CFCAOrder cfcaOrder = null;
 		try {
+			if(bankAccount == null || bankAccount.getBank() == null){
+				throw new ServiceException("请进行银行卡绑定");
+			}else if(userProperties == null || Strings.empty(userProperties.getIdNumber())){
+				throw new ServiceException("请进行实名制认证 ");
+			}
 			Tx1361Request tx1361Request = cFCAOrderService.buildTx1361Request(user, amount.add(fee), bankAccount, userProperties, serialNo);
 			response = thirdPPService.invokeTx1361(tx1361Request);
 			if(response == null){
@@ -342,7 +348,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			Logger.error("中金充值失败", se);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);
-			result.addMessage(0, "充值失败：中金接口通信异常");
+			result.addMessage(0, "充值失败: "+se.getMessage());
 		}catch (Exception e) {
 			Logger.error("中金充值失败", e);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);

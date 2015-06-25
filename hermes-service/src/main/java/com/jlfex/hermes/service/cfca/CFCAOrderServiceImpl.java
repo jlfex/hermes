@@ -21,6 +21,7 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJBank;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
 import com.jlfex.hermes.common.dict.Dicts;
+import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
@@ -109,8 +110,10 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 	/**
 	 * 生成1361报文
 	 */
+	
 	@Override
-	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String serialNo) {
+	@Transactional(readOnly=true)
+	public Tx1361Request buildTx1361Request(User investUser, BigDecimal investAmount, BankAccount bankAccount, UserProperties userProperties, String serialNo) throws Exception {
 		Tx1361Request tx1361Request = new Tx1361Request();
 		tx1361Request.setInstitutionID(App.config(HermesConstants.CFCA_INSTITUTION_ID_CODE));
 		tx1361Request.setTxSN(serialNo);
@@ -127,7 +130,6 @@ public class CFCAOrderServiceImpl implements CFCAOrderService {
 		tx1361Request.setEmail(investUser.getEmail());
 		tx1361Request.setIdentificationNumber(userProperties.getIdNumber());
 		tx1361Request.setIdentificationType(Dicts.name(userProperties.getIdType(), P2ZJIdType.class));
-
 		return tx1361Request;
 	}
 
