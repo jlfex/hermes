@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -34,6 +33,7 @@ import com.jlfex.hermes.service.UserInfoService;
 import com.jlfex.hermes.service.privilege.role.RoleMgrService;
 import com.jlfex.hermes.common.App;
 import com.jlfex.hermes.common.Logger;
+import com.jlfex.hermes.common.utils.BeanUtilsExtended;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.model.UserRole;
@@ -112,9 +112,24 @@ public class PrivilegeController {
 		Result result = new Result();
 		Role role = roleService.findOne(id);
 		role.setStatus(HermesConstants.INVALID);
+		
+		List<UserRole> userRoles = userRoleRepository.findByRole(role);
+		if(userRoles != null && userRoles.size() > 0) {
+			result.setType(Type.FAILURE);
+			result.addMessage("该角色已经被使用，不能删除！");
+			
+			return result;
+		}
 
+		List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+		for (RoleResource roleResource : roleResources) {
+			roleResource.setStatus(HermesConstants.INVALID);
+		}
+		roleResourceRepository.save(roleResources);
+		
 		Role role2 = roleService.save(role);
 		if (role2 != null) {
+			
 			result.setType(Type.SUCCESS);
 			result.addMessage("删除成功");
 		} else {
@@ -138,7 +153,7 @@ public class PrivilegeController {
 		try {
 			if (role.getId() != null) {
 				Role older = roleService.findOne(role.getId());
-				BeanUtils.copyProperties(older, role);
+				BeanUtilsExtended.copyProperties(older, role);
 				older.setType(Role.Type.SYS_AUTH);
 				roleService.save(older);
 				result.addMessage("编辑成功");
