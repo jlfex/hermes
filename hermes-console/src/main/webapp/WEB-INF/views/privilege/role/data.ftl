@@ -71,7 +71,7 @@ jQuery(function($) {
      						$.alert({
 							    title: '结果',
 							    icon: 'fa fa-warning',
-							    content: '删除失败'
+							    content: data.firstMessage
 							});
      					}
      				}
