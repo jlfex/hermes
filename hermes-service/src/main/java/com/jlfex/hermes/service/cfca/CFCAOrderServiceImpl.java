@@ -21,7 +21,6 @@ import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJBank;
 import com.jlfex.hermes.common.constant.HermesEnum.P2ZJIdType;
 import com.jlfex.hermes.common.dict.Dicts;
-import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.ApiConfig;
 import com.jlfex.hermes.model.ApiLog;
