@@ -105,8 +105,8 @@ public class AccountPersonalController {
 		AppUser curUser = App.current().getUser();
 		// 用户属性信息
 		UserBasic userBasic = userInfoService.findUserInfoByUserId(curUser.getId());
-		if (userBasic.getProvince() != null && userBasic.getCity() != null && userBasic.getCounty() != null) {
-			String addressPerson = areaService.getAddress(userBasic.getAddress(), userBasic.getProvince(), userBasic.getCity(), userBasic.getCounty());
+		if (userBasic.getProvince() != null && userBasic.getCity() != null) {
+			String addressPerson = areaService.getAddress(userBasic.getAddress(), userBasic.getProvince(), userBasic.getCity());
 			model.addAttribute("addressPerson", addressPerson);
 		}
 		model.addAttribute("userBasic", userBasic);
@@ -253,18 +253,18 @@ public class AccountPersonalController {
 
 		for (UserHouse house : houses) {
 			int i = 0;
-			String[] areaStr = new String[3];
+			String[] areaStr = new String[2];
 			if (house.getProvince() != null) {
 				areaStr[i] = house.getProvince();
 				i++;
 			}
-			if (house.getProvince() != null) {
+			if (house.getCity() != null) {
 				areaStr[i] = house.getCity();
 				i++;
 			}
-			if (house.getProvince() != null) {
+		/*	if (house.getCounty() != null) {
 				areaStr[i] = house.getCounty();
-			}
+			}*/
 			String areas = areaService.getAddress(house.getAddress(), areaStr);
 			house.setAddressDetail(areas);
 		}
@@ -304,7 +304,7 @@ public class AccountPersonalController {
 		List<UserHouse> houses = userInfoService.findHouseByUserId(user);
 		for (UserHouse house : houses) {
 			int i = 0;
-			String[] areaStr = new String[3];
+			String[] areaStr = new String[2];
 			if (house.getProvince() != null) {
 				areaStr[i] = house.getProvince();
 				i++;
@@ -313,9 +313,9 @@ public class AccountPersonalController {
 				areaStr[i] = house.getCity();
 				i++;
 			}
-			if (house.getProvince() != null) {
+		/*	if (house.getProvince() != null) {
 				areaStr[i] = house.getCounty();
-			}
+			}*/
 			String areas = areaService.getAddress(house.getAddress(), areaStr);
 			house.setAddressDetail(areas);
 		}

@@ -17,10 +17,10 @@
 							<select id="city_h" name="city"  class="form-control" data-val="<#if house.city?exists>${house.city}</#if>">
 							</select>
 						</div>
-						<div  class="col-xs-2 u-col">
+					<!-- 	<div  class="col-xs-2 u-col">
 							<select id="county_h" name="county"  class="form-control" data-val="<#if house.county?exists>${house.county}</#if>" >
 							</select>
-						</div>
+						</div> -->
 				</div>
 				<div class="form-group">
 					 <label  class="col-sm-2 control-label"></label>
@@ -73,9 +73,8 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
-<!--
 jQuery(function($) {
-	$.area({ data: ${area}, bind: [$('#province_h'), $('#city_h'), $('#county_h')] });
+	$.area({ data: ${area}, bind: [$('#province_h'), $('#city_h')] });
 	$("#cancelHouse").on('click',function(){
 		$.ajax({
 		      url: '${app}/account/getUserHouse',
@@ -97,5 +96,5 @@ function saveHouse(){
 		        }
 		    })
 }
-//-->
+//
 </script>

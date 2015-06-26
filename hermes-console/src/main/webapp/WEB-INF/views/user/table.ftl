@@ -27,7 +27,6 @@
 			<td class="align-right">${user.freeze!''}</td>
 			<td class="align-right">${user.free!''}</td>
 			<td class="align-center">
-			flag
 			<#if flag == 'finance'>
 				<#if backRoleResourceList?seq_contains("back_inveter_mgr_deal")>
 				 <a href="#"  class="user-table" data-url="${app}${_url}${user.id}" data-target="main"><@messages key="common.op.deal" /></a>
