@@ -32,7 +32,7 @@
 		</div>
 	</div>		
 	</#if>
-	<#if backRoleResourceList?seq_contains("back_home_debt")>
+<!-- 	<#if backRoleResourceList?seq_contains("back_home_debt")>
 		<div class="col-xs-4 _df-mg-top"">
 		<div class="flow">
 			<div class="icon collection pull-left"></div>
@@ -40,7 +40,7 @@
 			<span class="status">${demand.homeStatusName}</span>
 		</div>
 	</div>		
-	</#if>
+	</#if> -->
 </div>
 </div>
 <script type="text/javascript">

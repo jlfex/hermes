@@ -9,7 +9,7 @@
         <div class="panel-heading">用户管理</div>  </div>
     	<div class="panel-body">
             <form id="searchForm" method="post" action="#">
-                <div class="row">
+                <div class="row hm-row">
                     <div class="col-xs-2 hm-col form-group">
                         <label for="platCode">用户名称</label>
                         <input id="userName" name="userName" value="" class="form-control" type="text">

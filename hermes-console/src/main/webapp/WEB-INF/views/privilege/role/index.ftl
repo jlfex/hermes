@@ -1,5 +1,5 @@
 <div class="panel panel-primary">
-	<div class="panel-heading">角色管理</div>
+	<div class="panel-heading">角色管理</div></div>
 	<div class="panel-body">
 		<form id="searchForm" method="post" action="">
 			<div class="row hm-row">
@@ -18,14 +18,14 @@
 				</div>
 				<div class="col-xs-1 hm-col form-group">
 					<label>&nbsp;</label>
-					<button id="addBtn" type="button" class="btn btn-primary btn-block">新增</button>
+					<#if backRoleResourceList?seq_contains("back_role_user_add")>
+						<button id="addBtn" type="button" class="btn btn-primary btn-block">新增</button>
+					</#if>
 				</div>
 			</div>
 		</form>
 	</div>
-</div>
 <div id="data"></div>
-
 <script type="text/javascript">
 <!--
 jQuery(function($) {
@@ -35,7 +35,8 @@ jQuery(function($) {
 	
 	$("#addBtn").on("click",function(){
 		$.link.html(null, {
-			url: '${app}/privilege/addOrEdit/-1',
+			url: '${app}/privilege/addOrEdit',
+			data:'id=-1',
 			target: 'main'
 		});
 	});				
