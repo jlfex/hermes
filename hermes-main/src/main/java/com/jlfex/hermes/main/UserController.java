@@ -230,15 +230,13 @@ public class UserController {
 	@RequestMapping("/signOut")
 	public String signOut() {
 		AppUser curUser = App.current().getUser();
-		User user = userInfoService.findByUserId(curUser.getId());
 		try {
+			User user = userInfoService.findByUserId(curUser.getId());
 			userLogService.saveUserLog(user, UserLog.LogType.SIGNOUT);
-			App.current().setUser(null);
-
 		} catch (Exception e) {
 			Logger.error("用户：" + curUser.getAccount() + "登出失败");
 		}
-
+		App.current().setUser(null);
 		return "redirect:/index";
 	}
 
