@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +43,8 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 	private UserService userService;
 
 	@Override
-	public Page<Role> findRoleList(final String code, final String name, String page, String size, final String creatorId) {
-		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, HermesConstants.DEFAULT_PAGE_SIZE)));
+	public Page<Role> findRoleList(final String code, final String name, String page, String size, final User creator) {
+		Pageable pageable = Pageables.pageable(Integer.valueOf(Strings.empty(page, "0")), Integer.valueOf(Strings.empty(size, HermesConstants.DEFAULT_PAGE_SIZE)),new Sort(Direction.ASC,"createTime"));
 		Page<Role> roleList = roleRepository.findAll(new Specification<Role>() {
 			@Override
 			public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -54,12 +56,12 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 					p.add(cb.like(root.<String> get("name"), "%" + name + "%"));
 				}
 
-				if (!creatorId.equals(HermesConstants.PLAT_MANAGER)) {
-					if (StringUtils.isNotEmpty(creatorId)) {
-						p.add(cb.equal(root.<String> get("creator"), creatorId));
+				if(creator != null) {
+					if(!creator.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
+						p.add(cb.equal(root.<String> get("creator"), creator.getId()));
 					}
 				}
-
+			
 				p.add(cb.equal(root.<String> get("status"), Role.Status.ENABLED));
 				p.add(cb.equal(root.<String> get("type"), Role.Type.SYS_AUTH));
 				return cb.and(p.toArray(new Predicate[p.size()]));
