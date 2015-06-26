@@ -230,22 +230,24 @@ public class UserController {
 	@RequestMapping("/loadHouse/{id}")
 	public String loadHouse(@PathVariable("id") String id, Integer page, Model model) {
 		List<UserHouse> houses = userManageService.findHouseByUser(id);
-		for (UserHouse house : houses) {
-			int i = 0;
-			String[] areaStr = new String[3];
-			if (house.getProvince() != null) {
-				areaStr[i] = house.getProvince();
-				i++;
+		if(houses!=null){
+			for (UserHouse house : houses) {
+				int i = 0;
+				String[] areaStr = new String[3];
+				if (house.getProvince() != null) {
+					areaStr[i] = house.getProvince();
+					i++;
+				}
+				if (house.getProvince() != null) {
+					areaStr[i] = house.getCity();
+					i++;
+				}
+				if (house.getProvince() != null) {
+					areaStr[i] = house.getCounty();
+				}
+				String areas = areaService.getAddress(house.getAddress(), areaStr);
+				house.setAddressDetail(areas);
 			}
-			if (house.getProvince() != null) {
-				areaStr[i] = house.getCity();
-				i++;
-			}
-			if (house.getProvince() != null) {
-				areaStr[i] = house.getCounty();
-			}
-			String areas = areaService.getAddress(house.getAddress(), areaStr);
-			house.setAddressDetail(areas);
 		}
 		model.addAttribute("houses", houses);
 		Map<Object, String> mortgageMap = Dicts.elements(Mortgage.class);
