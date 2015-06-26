@@ -1,5 +1,7 @@
 package com.jlfex.hermes.service.security;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,9 +31,13 @@ public class UserDetailsService implements org.springframework.security.core.use
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 查询并判断用户是否有效
-		User user = userService.loadByEmail(username);
-		if (user == null){
-			user = userService.loadByAccount(username);
+		User  user = null;
+		List<User> userList = userService.loadByAccountAndStatus(username, User.Status.ENABLED);
+		if(userList !=null && userList.size() ==1){
+			user = userList.get(0);
+		}else{
+			Logger.info("用户登录失败：当前用户状态异常或不存在：username="+username);
+			throw new UsernameNotFoundException("用户状态异常");
 		}
 		if (user == null) {
 			Logger.info("找不到后台用户信息: %s",username);

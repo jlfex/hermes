@@ -643,4 +643,9 @@ public class UserServiceImpl extends PasswordEncoder implements UserService {
 		}
 		return false;
 	}
+	
+	@Override
+	public List<User> loadByAccountAndStatus(String account,String status) {
+		return userRepository.findByAccountAndStatus(account,status);
+	}
 }
