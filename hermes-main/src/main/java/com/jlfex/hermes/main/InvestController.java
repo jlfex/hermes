@@ -234,7 +234,7 @@ public class InvestController {
 	 */
 	@RequestMapping("/bid")
 	@ResponseBody
-	public Result<String> bid(String loanid, String investamount, String otherrepayselect) throws Exception {
+	public Result<String> bid(String loanid, String investamount, String otherrepay) throws Exception {
 		Result<String> result = new Result<String>();
 		try {
 			App.checkUser();
@@ -244,7 +244,7 @@ public class InvestController {
 		}
 		AppUser curUser = App.current().getUser();
 		User user = userInfoService.findByUserId(curUser.getId());
-		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepayselect);
+		Logger.info("投标操作: loanid:" + loanid + ",investamount:" + investamount + ",otherrepayselect :" + otherrepay);
 		// 自己发布的借款 不能自己投标
 		boolean bidAuthentication = investService.bidAuthentication(loanid, user);
 		if (!bidAuthentication) {
@@ -252,7 +252,7 @@ public class InvestController {
 			result.setData("自己发布的借款 不能自己投标");
 			return result;
 		}
-		Map<String, String> bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepayselect);
+		Map<String, String> bidResult = investService.bid(loanid, user, new BigDecimal(investamount), otherrepay);
 		if (bidResult!=null && HermesConstants.CODE_00.equals(bidResult.get("code"))) {
 			result.setType(Type.SUCCESS);
 		} else {
