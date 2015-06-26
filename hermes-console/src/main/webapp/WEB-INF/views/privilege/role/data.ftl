@@ -3,6 +3,8 @@
 		<tr>
 				<th class="align-center">代码</th>
 				<th class="align-center">名称</th>
+				<th class="align-center">创建者</th>
+				<th class="align-center">创建时间</th>
 				<th class="align-center">操作</th>
 		</tr>
 	</thead>
@@ -15,6 +17,8 @@
 			<tr>
 			    <td class="align-center">${l.code!''}</td>
 				<td class="align-center">${l.name!''}</td>
+				<td class="align-center">${l.creator!''}</td>
+				<td class="align-center">${l.createTime!''}</td>
 				<td class="align-center">
 					<#if backRoleResourceList?seq_contains("back_role_user_setprivi")>
 						<button type="button" class="btn btn-link setPrivilege"  pid="${l.id}">设置权限</button>

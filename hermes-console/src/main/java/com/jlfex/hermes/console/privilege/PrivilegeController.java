@@ -508,7 +508,7 @@ public class PrivilegeController {
 					if (Strings.notEmpty(role.getCreator())) {
 						User user = userService.loadById(role.getCreator().trim());
 						if (user != null) {
-							role.setCreatorName(user.getAccount());
+							role.setCreator(user.getAccount());
 						}
 					}
 				}
@@ -540,7 +540,7 @@ public class PrivilegeController {
 				if (Strings.notEmpty(role.getCreator())) {
 					User user = userService.loadById(role.getCreator().trim());
 					if (user != null) {
-						role.setCreatorName(user.getAccount());
+						role.setCreator(user.getAccount());
 					}
 				}
 				role.setBelongUserRoleId(obj.getId());

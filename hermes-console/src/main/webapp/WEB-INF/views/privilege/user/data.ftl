@@ -4,6 +4,7 @@
 		                <th class="align-center">用户名称</th>
 		                <th class="align-center">角色名称</th>
 				        <th class="align-center">备注</th>
+				        <th class="align-center">创建者</th>
 				        <th class="align-center">创建时间</th>
                         <th class="align-center">操作</th>
 		</tr>
@@ -25,7 +26,8 @@
 									  暂无角色
 								  </#if>
 							    </td> 
-		                        <td class="align-center">${(l.remark)!''}</td> 	
+		                        <td class="align-center">${(l.remark)!''}</td>
+		                        <td class="align-center">${(l.creator)!''}</td> 	 	
 		                        <td class="align-center">${(l.createTime)!''}</td> 		                         
 								<td class="align-center">
 								    <#if backRoleResourceList?seq_contains("back_privi_user_impower")>
