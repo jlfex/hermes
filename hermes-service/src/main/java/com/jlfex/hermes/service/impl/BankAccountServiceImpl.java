@@ -344,18 +344,27 @@ public class BankAccountServiceImpl implements BankAccountService {
 				result.setType(Type.FAILURE);
 				result.addMessage(0, "充值失败");
 			}
+			result.addMessage(1, amount.toString());
+			result.addMessage(2, "suc");
 		}catch(ServiceException  se){
 			Logger.error("中金充值失败", se);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "充值失败: "+se.getMessage());
+			result.addMessage(1, amount.toString());
+			if(se.getMessage().contains("银行卡")){
+				result.addMessage(2, "bindCard");
+			}else if(se.getMessage().contains("实名制")){
+				result.addMessage(2, "authentic");
+			}
 		}catch (Exception e) {
 			Logger.error("中金充值失败", e);
 			transactionService.cropAccountToZJPay(Transaction.Type.CHARGE, user, UserAccount.Type.ZHONGJIN_FEE, amount, "", Transaction.Status.RECHARGE_FAIL);
 			result.setType(Type.FAILURE);
 			result.addMessage(0, "充值失败");
+			result.addMessage(1, amount.toString());
+			result.addMessage(2, "fail");
 		}
-		result.addMessage(1, amount.toString());
 		return result;
 	}
 }
