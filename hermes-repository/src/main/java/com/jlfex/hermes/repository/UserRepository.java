@@ -41,4 +41,11 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
 	 * @return
 	 */
 	List<User> findByCreator(String creator);
+	/**
+	 * 根据用户和状态
+	 * @param account
+	 * @param status
+	 * @return
+	 */
+	List<User> findByAccountAndStatus(String account,String status);
 }

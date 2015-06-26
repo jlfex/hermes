@@ -204,4 +204,11 @@ public interface UserService {
      * @return
      */
 	public boolean checkCorrectOfUserPwd(String id, String inputPwd);
+    /**
+     * 根据账户+状态 获取用户
+     * @param account
+     * @param status
+     * @return
+     */
+	public List<User> loadByAccountAndStatus(String account, String status);
 }
