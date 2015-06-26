@@ -22,7 +22,15 @@
 		<div class="m_fp_box">
 		<div class="m_fp_s2">
 			<img src="${app.theme}/public/other/images/m/icon1/${type}" />
-			 ${message}&nbsp;&nbsp;<span class="lightyellow">${amount}元!</span>&nbsp;&nbsp;<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle">继续充值</a>
+			 <#if naviFlag == 'bindCard'>
+			    ${message!''}&nbsp;&nbsp;<a href="${app}/account/index?type=auth1"  class="m_btn3 m_bg1 a_middle">银行卡管理</a>
+			 <#elseif naviFlag=='authentic'>
+			    ${message!''}&nbsp;&nbsp;<a href="${app}/account/index?type=auth" class="m_btn3 m_bg1 a_middle">认证中心</a>
+			 <#else>
+			    ${message!''}&nbsp;&nbsp;<span class="lightyellow">${amount}元!</span>&nbsp;&nbsp;<a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle">继续充值</a>
+			 </#if>
+			 
+			 
 		</div>
 	</div>
 	<p class="a_pa_lt"><a href="javascript:history.go(-1)" class="q_btn1 q_bg1">返回</a></p>

@@ -1,10 +1,11 @@
 <table id="table" class="table table-striped table-hover">
 	<thead>
 		<tr>
-				<th >代码</th>
-				<th >名称</th>
-				<th >权限</th>
-				<th >操作</th>
+				<th class="align-center">代码</th>
+				<th class="align-center">名称</th>
+				<th class="align-center">创建者</th>
+				<th class="align-center">创建时间</th>
+				<th class="align-center">操作</th>
 		</tr>
 	</thead>
 		<#if lists.numberOfElements == 0>
@@ -14,13 +15,20 @@
 		<#else>
 		<#list lists.content?reverse as l>      
 			<tr>
-			    <td>${l.code!''}</td>
-				<td>${l.name!''}</td>
-				<td >${l.cellphone!''}</td>
-				<td>
-					<a href="#" data-url="${app}/privilege/goPrivilege/${l.id}" data-target="main">设置权限</a>
-					<a href="#" data-url="${app}/privilege/addOrEdit/${l.id}" data-target="main">编辑</a>
-					<a href="#" onclick="deleteRole('${l.id}')">删除</a>
+			    <td class="align-center">${l.code!''}</td>
+				<td class="align-center">${l.name!''}</td>
+				<td class="align-center">${l.creator!''}</td>
+				<td class="align-center">${l.createTime!''}</td>
+				<td class="align-center">
+					<#if backRoleResourceList?seq_contains("back_role_user_setprivi")>
+						<button type="button" class="btn btn-link setPrivilege"  pid="${l.id}">设置权限</button>
+					</#if>
+					<#if backRoleResourceList?seq_contains("back_role_user_edit")>
+						<button type="button" class="btn btn-link editBtn"  pid="${l.id}">编辑</button>
+					</#if>
+					<#if backRoleResourceList?seq_contains("back_role_user_del")>
+					 	<button type="button" onclick="deleteRole('${l.id}')" class="btn btn-link hm-col deleteBtn"  pid="${l.id}">删除</button>	
+					</#if>
 				</td>
 			</tr>
 		</#list>
@@ -40,6 +48,25 @@ jQuery(function($) {
 			$('#searchForm').trigger('submit');
 		}
 	});
+	
+	$(".setPrivilege").on("click",function(){
+		var pid = $(this).attr("pid");
+		$.link.html(null, {
+			url: '${app}/privilege/goPrivilege',
+			data: 'id='+pid,
+			target: 'main'
+		});
+	});
+	
+	$(".editBtn").on("click",function(){
+		var pid = $(this).attr("pid");
+		$.link.html(null, {
+			url: '${app}/privilege/addOrEdit',
+			data: 'id='+pid,
+			target: 'main'
+		});
+	});
+	
 });
 	// 删除角色
 	function deleteRole(id) {

@@ -96,8 +96,8 @@ public class PrivilegeController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/addOrEdit/{id}")
-	public String addOrEdit(@PathVariable("id") String id, Model model) {
+	@RequestMapping("/addOrEdit")
+	public String addOrEdit(String id, Model model) {
 		if (!id.equals(HermesConstants.OBJECT_NOT_EXIST)) {
 			Role role = roleService.findOne(id);
 			model.addAttribute("role", role);
@@ -231,8 +231,8 @@ public class PrivilegeController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/goPrivilege/{id}")
-	public String goPrivilege(@PathVariable("id") String id, Model model) {
+	@RequestMapping("/goPrivilege")
+	public String goPrivilege(String id, Model model) {
 		Role role = roleService.findOne(id);
 		model.addAttribute("role", role);
 
@@ -508,7 +508,7 @@ public class PrivilegeController {
 					if (Strings.notEmpty(role.getCreator())) {
 						User user = userService.loadById(role.getCreator().trim());
 						if (user != null) {
-							role.setCreatorName(user.getAccount());
+							role.setCreator(user.getAccount());
 						}
 					}
 				}
@@ -540,7 +540,7 @@ public class PrivilegeController {
 				if (Strings.notEmpty(role.getCreator())) {
 					User user = userService.loadById(role.getCreator().trim());
 					if (user != null) {
-						role.setCreatorName(user.getAccount());
+						role.setCreator(user.getAccount());
 					}
 				}
 				role.setBelongUserRoleId(obj.getId());

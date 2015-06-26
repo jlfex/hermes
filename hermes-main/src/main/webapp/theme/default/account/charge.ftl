@@ -46,7 +46,8 @@
 <form id="rform" action="${app}/account/charge/chargeResult" method="post">
 	<input id="message" name="message" type="hidden"></input>	
 	<input id="type" name="type" type="hidden"></input>	
-	<input id="pAmount" name="pAmount" type="hidden"></input>	
+	<input id="pAmount" name="pAmount" type="hidden"></input>
+	<input id="naviFlag" name="naviFlag" type="hidden"></input>	
 </form>
 
 <script type="text/javascript" charset="utf-8">
@@ -130,6 +131,13 @@ jQuery(function($) {
 				$("#message").val(data.messages[0]);
      			$("#type").val(data.type);
      			$("#pAmount").val(data.messages[1]);
+     			$("#naviFlag").val(data.messages[2]);
+     			$("#rform").submit();
+			},error: function(data) {
+				$("#message").val(data.messages[0]); 
+     			$("#type").val(data.type);
+     			$("#pAmount").val(data.messages[1]);
+     			$("#naviFlag").val(data.messages[2]);
      			$("#rform").submit();
 			}
 		});
