@@ -96,7 +96,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 					 if(Strings.notEmpty(user.getCreator())){
 						 User creatorUser = userService.loadById(user.getCreator());
 						 if(creatorUser!=null){
-							 user.setCreator(creatorUser.getAccount());
+							 user.setCreatorName(creatorUser.getAccount());
 						 }
 					 }
 					}catch(Exception e){

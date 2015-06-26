@@ -59,6 +59,8 @@ public class User extends Model {
 	/** 真实姓名 **/
 	@Transient
 	private String realName;
+	@Transient
+	private String creatorName;
 
 	/**
 	 * 读取帐号
@@ -298,6 +300,15 @@ public class User extends Model {
 	
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
 
 	/**

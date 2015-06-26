@@ -38,6 +38,10 @@ public class Role extends Model {
 	/** 所属用户角色id */
 	@Transient
 	private String belongUserRoleId;
+	
+	@Transient
+	private String creatorName;
+	
 
 	/**
 	 * 读取名称
@@ -113,6 +117,14 @@ public class Role extends Model {
 
 	public void setBelongUserRoleId(String belongUserRoleId) {
 		this.belongUserRoleId = belongUserRoleId;
+	}
+
+	public String getCreatorName() {
+		return creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
 
 	/**

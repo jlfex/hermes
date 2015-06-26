@@ -27,7 +27,7 @@
 								  </#if>
 							    </td> 
 		                        <td class="align-center">${(l.remark)!''}</td>
-		                        <td class="align-center">${(l.creator)!''}</td> 	 	
+		                        <td class="align-center">${(l.creatorName)!''}</td> 	 	
 		                        <td class="align-center">${(l.createTime)!''}</td> 		                         
 								<td class="align-center">
 								    <#if backRoleResourceList?seq_contains("back_privi_user_impower")>
