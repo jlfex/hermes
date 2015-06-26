@@ -22,7 +22,7 @@
 							    <td class="align-center">${(l.name)!''}</td> 
 							    <td class="align-center">${(l.statusName)!''}</td> 
 		                        <td class="align-center">${(l.typeName)!''}</td> 
-		                        <td class="align-center">${(l.creator)!''}</td> 		
+		                        <td class="align-center">${(l.creatorName)!''}</td> 		
 		                        <td class="align-center">${(l.createTime)!''}</td> 		                         
 								<td class="align-center">
 									<button type="button" class="btn btn-link impower"  pid="${l.id}">授权</button>

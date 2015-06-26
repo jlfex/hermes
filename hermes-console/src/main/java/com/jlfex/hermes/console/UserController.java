@@ -373,7 +373,7 @@ public class UserController {
 	public JSONObject checkAccount(String account) {
 		User user = userService.getUserByAccount(account);
 		JSONObject jsonObj = new JSONObject();
-		if (user != null) {
+		if (user != null && User.Status.ENABLED.equals(user.getStatus())) {
 			jsonObj.put("account", false);
 		} else {
 			jsonObj.put("account", true);

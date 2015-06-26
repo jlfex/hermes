@@ -17,7 +17,7 @@
 			<tr>
 			    <td class="align-center">${l.code!''}</td>
 				<td class="align-center">${l.name!''}</td>
-				<td class="align-center">${l.creator!''}</td>
+				<td class="align-center">${l.creatorName!''}</td>
 				<td class="align-center">${l.createTime!''}</td>
 				<td class="align-center">
 					<#if backRoleResourceList?seq_contains("back_role_user_setprivi")>

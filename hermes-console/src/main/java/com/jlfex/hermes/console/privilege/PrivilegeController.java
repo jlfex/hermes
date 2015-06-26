@@ -508,7 +508,7 @@ public class PrivilegeController {
 					if (Strings.notEmpty(role.getCreator())) {
 						User user = userService.loadById(role.getCreator().trim());
 						if (user != null) {
-							role.setCreator(user.getAccount());
+							role.setCreatorName(user.getAccount());
 						}
 					}
 				}

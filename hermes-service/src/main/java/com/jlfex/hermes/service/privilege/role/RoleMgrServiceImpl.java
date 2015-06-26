@@ -70,7 +70,7 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 				if(Strings.notEmpty(role.getCreator())){
 					 User creatorUser = userService.loadById(role.getCreator());
 					 if(creatorUser!=null){
-						 role.setCreator(creatorUser.getAccount());
+						 role.setCreatorName(creatorUser.getAccount());
 					 }
 				}
 			}
