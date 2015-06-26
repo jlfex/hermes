@@ -34,9 +34,7 @@ public class Role extends Model {
 	/** 类型 */
 	@Column(name = "type")
 	private String type;
-	/** 创建者名称 */
-	@Transient
-	private String creatorName;
+	
 	/** 所属用户角色id */
 	@Transient
 	private String belongUserRoleId;
@@ -107,14 +105,6 @@ public class Role extends Model {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getCreatorName() {
-		return creatorName;
-	}
-
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
 	}
 
 	public String getBelongUserRoleId() {

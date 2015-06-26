@@ -93,6 +93,12 @@ public class UserRoleServiceImpl implements UserRoleService {
 				if(user!=null){
 					try{
 					 user.setRoles(getRoles(userRoleRepository.findByUserId(user.getId())));
+					 if(Strings.notEmpty(user.getCreator())){
+						 User creatorUser = userService.loadById(user.getCreator());
+						 if(creatorUser!=null){
+							 user.setCreator(creatorUser.getAccount());
+						 }
+					 }
 					}catch(Exception e){
 						Logger.error("根据userId=%s 获取角色信息异常",user.getId()  ,e);
 						continue;

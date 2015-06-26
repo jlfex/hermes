@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jlfex.hermes.common.constant.HermesConstants;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.Role;
+import com.jlfex.hermes.model.User;
 import com.jlfex.hermes.repository.role.RoleRepository;
 import com.jlfex.hermes.service.RoleService;
+import com.jlfex.hermes.service.UserService;
 import com.jlfex.hermes.service.common.Pageables;
 
 /**
@@ -35,6 +37,8 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 	private RoleRepository roleRepository;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public Page<Role> findRoleList(final String code, final String name, String page, String size, final String creatorId) {
@@ -61,6 +65,16 @@ public class RoleMgrServiceImpl implements RoleMgrService {
 				return cb.and(p.toArray(new Predicate[p.size()]));
 			}
 		}, pageable);
+		if(roleList!=null && roleList.getContent() !=null && roleList.getContent().size() > 0){
+			for(Role role :roleList){
+				if(Strings.notEmpty(role.getCreator())){
+					 User creatorUser = userService.loadById(role.getCreator());
+					 if(creatorUser!=null){
+						 role.setCreator(creatorUser.getAccount());
+					 }
+				}
+			}
+		}
 		return roleList;
 	}
 
