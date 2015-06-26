@@ -27,6 +27,7 @@ import com.jlfex.hermes.repository.DictionaryRepository;
 import com.jlfex.hermes.repository.NavigationRepository;
 import com.jlfex.hermes.repository.RoleResourceRepository;
 import com.jlfex.hermes.repository.UserRoleRepository;
+import com.jlfex.hermes.repository.role.RoleRepository;
 import com.jlfex.hermes.service.NavigationService;
 import com.jlfex.hermes.service.RoleService;
 import com.jlfex.hermes.service.UserInfoService;
@@ -77,6 +78,8 @@ public class PrivilegeController {
 	private UserRoleService userRoleService;
 	@Autowired
 	private RoleResourceService roleResourceService;
+	@Autowired
+	private RoleRepository roleRepository;
 
 	/**
 	 * 角色管理页面
@@ -113,27 +116,22 @@ public class PrivilegeController {
 		Result result = new Result();
 		Role role = roleService.findOne(id);
 		role.setStatus(HermesConstants.INVALID);
-		
+
 		List<UserRole> userRoles = userRoleRepository.findByRole(role);
-		if(userRoles != null && userRoles.size() > 0) {
+		if (userRoles != null && userRoles.size() > 0) {
 			result.setType(Type.FAILURE);
 			result.addMessage("该角色已经被使用，不能删除！");
-			
+
 			return result;
 		}
 
-		List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
-		for (RoleResource roleResource : roleResources) {
-			roleResource.setStatus(HermesConstants.INVALID);
-		}
-		roleResourceRepository.save(roleResources);
-		
-		Role role2 = roleService.save(role);
-		if (role2 != null) {
-			
+		try {
+			List<RoleResource> roleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
+			roleResourceRepository.delete(roleResources);
+			roleRepository.delete(role);
 			result.setType(Type.SUCCESS);
 			result.addMessage("删除成功");
-		} else {
+		} catch (Exception e) {
 			result.setType(Type.FAILURE);
 			result.addMessage("删除失败");
 		}
@@ -163,7 +161,7 @@ public class PrivilegeController {
 				roleService.save(role);
 				result.addMessage("新增成功");
 			}
-			
+
 			result.setType(Type.SUCCESS);
 
 		} catch (Exception e) {
@@ -186,20 +184,13 @@ public class PrivilegeController {
 	@RequestMapping("/list")
 	public String loandata(String code, String name, String page, String size, Model model) {
 		AppUser curUser = App.current().getUser();
-		String creatorId = "";
+		User user = null;
 		if (curUser != null) {
-			User user = userInfoService.findByUserId(curUser.getId());
-			
-			if(user.getAccount().equals(HermesConstants.PLAT_MANAGER)) {
-				creatorId = HermesConstants.PLAT_MANAGER;
-			} else {
-				creatorId =com.jlfex.hermes.model.Model.getCurrentUserId();
-			}
-		} 
-		
-		model.addAttribute("lists", roleMgrService.findRoleList(code, name, page, size,creatorId));
-		
-		
+			user = userInfoService.findByUserId(curUser.getId());
+		}
+
+		model.addAttribute("lists", roleMgrService.findRoleList(code, name, page, size, user));
+
 		return "privilege/role/data";
 	}
 
@@ -253,7 +244,7 @@ public class PrivilegeController {
 		Result result = new Result();
 		Role role = roleService.findOne(roleId);
 		try {
-		
+
 			List<RoleResource> roleResources = new ArrayList<RoleResource>();
 
 			List<RoleResource> havingRoleResources = roleResourceRepository.findByRoleInAndTypeAndStatus(Arrays.asList(role), RoleResource.Type.BACK_PRIVILEGE, HermesConstants.VALID);
@@ -298,17 +289,17 @@ public class PrivilegeController {
 		Dictionary dictionary = dictionaryRepository.findByCodeAndStatus(HermesConstants.DIC_CONSOLE, Dictionary.Status.VALID);
 		// 获取后台软件模式
 		List<String> consoneSoftModel = roleResourceService.getSoftModelRoleResource(dictionary);
-		
+
 		this.setSoftModelNavigation(navigation.getChildren(), consoneSoftModel);
-		
+
 		navigation.setHavingByRole(true);
 		if (roleResources != null && roleResources.size() > 0) {
 			this.setSomeRolePrivilege(navigation.getChildren(), roleResources);
 		}
-		
+
 		return navigation;
 	}
-	
+
 	/**
 	 * 某一软件模式下所有菜单
 	 * 
@@ -351,7 +342,8 @@ public class PrivilegeController {
 	}
 
 	/**
-	 * 设置某一角色 
+	 * 设置某一角色
+	 * 
 	 * @param navigations
 	 * @param roleResources
 	 */

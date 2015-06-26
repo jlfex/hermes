@@ -102,7 +102,6 @@
   <div class="form-group">
     <label for="address" class="col-sm-2 control-label">*<@messages key="model.basic.address"/></label>
     <label for="address" class="form-control-static">
-    	
 		<#if addressPerson?exists>${addressPerson}</#if>   
     </label>
     	<div  class="col-xs-2 u-col eidt-group edit-input">
@@ -113,10 +112,10 @@
 			<select id="city" name="city"  class="form-control" data-val="${userBasic.city!''}">
 			</select>
 		</div>
-		<div  class="col-xs-2 u-col eidt-group edit-input">
+		<!-- <div  class="col-xs-2 u-col eidt-group edit-input">
 			<select id="county" name="county"  class="form-control" data-val="${userBasic.county!''}" >
 			</select>
-		</div>
+		</div> -->
 		
   </div>
   <div class="form-group">
@@ -171,7 +170,6 @@
 </form>
 </div>
 <script type="text/javascript" charset="utf-8">
-<!--
 jQuery(function($) {
 	$("#userBasic").find('input').each(function() {
 		if ($(this).data().auth == '10') {
@@ -183,7 +181,7 @@ jQuery(function($) {
 		  $(this).attr("disabled",true);
 		}
 	});
-	$.area({ data: ${area}, bind: [$('#province'), $('#city'), $('#county')] });
+	$.area({ data: ${area}, bind: [$('#province'), $('#city')] });
 	$("#modifyBasic").on('click', function(){
 		$("#navTab").find('li').each(function() {
 			if($(this).attr("class")=="active"){
@@ -235,5 +233,5 @@ function initSelect(){
 	}
 }
 
-//-->
+//
 </script>
