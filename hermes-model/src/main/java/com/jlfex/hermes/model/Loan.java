@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
@@ -20,7 +21,7 @@ import com.jlfex.hermes.common.utils.Numbers;
  * 借款信息模型
  */
 @Entity
-@Table(name = "hm_loan")
+@Table(name = "hm_loan" , uniqueConstraints={@UniqueConstraint(columnNames = {"loan_no" })})
 public class Loan extends Model {
 	
 	

@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Strings;
@@ -14,7 +16,7 @@ import com.jlfex.hermes.common.utils.Strings;
  * 用户模型
  */
 @Entity
-@Table(name = "hm_user")
+@Table(name = "hm_user", uniqueConstraints={@UniqueConstraint(columnNames = {"email" })} )
 public class User extends Model {
 
 	private static final long serialVersionUID = -72297788360323888L;

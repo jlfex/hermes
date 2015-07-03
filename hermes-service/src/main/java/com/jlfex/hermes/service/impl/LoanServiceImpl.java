@@ -32,6 +32,7 @@ import com.jlfex.hermes.common.dict.Bool;
 import com.jlfex.hermes.common.exception.ServiceException;
 import com.jlfex.hermes.common.utils.Calendars;
 import com.jlfex.hermes.common.utils.Numbers;
+import com.jlfex.hermes.common.utils.SerialUtil;
 import com.jlfex.hermes.common.utils.Strings;
 import com.jlfex.hermes.model.CreditRepayPlan;
 import com.jlfex.hermes.model.CrediteInfo;
@@ -595,7 +596,7 @@ public class LoanServiceImpl implements LoanService {
 	public Loan save(Loan loan) throws Exception {
 		Date now = new Date();
 		// 借款编号生成策略
-		loan.setLoanNo(generateLoanNo());
+		loan.setLoanNo(SerialUtil.getTxNo20());
 		if(Loan.LoanKinds.NORML_LOAN.equals(loan.getLoanKind())) {
 			// 普通标
 			loan.setStatus(Loan.Status.AUDIT_FIRST);
