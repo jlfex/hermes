@@ -35,9 +35,8 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
     
     <!-- quick start  环境 -->
-     <context:property-placeholder ignore-resource-not-found="true" 
-        location="classpath:application.conf,classpath:db/db.quick.conf" />	
-		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 			<property name="driverClassName" value="${jdbc.driver}" />
 			<property name="url" value="${jdbc.url}" />
 			<property name="username" value="${jdbc.username}" />

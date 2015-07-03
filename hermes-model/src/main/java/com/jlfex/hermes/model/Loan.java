@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Index;
+
 import com.jlfex.hermes.common.dict.Dicts;
 import com.jlfex.hermes.common.dict.Element;
 import com.jlfex.hermes.common.utils.Numbers;
@@ -93,6 +95,7 @@ public class Loan extends Model {
 	
 	/** 状态 */
 	@Column(name = "status")
+	@Index(name="IDX_LOAN_STATUA")
 	private String status;
 	
 	/** 标 类型 :*/
