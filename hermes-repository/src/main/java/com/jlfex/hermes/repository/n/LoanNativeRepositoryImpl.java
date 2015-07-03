@@ -30,8 +30,8 @@ public class LoanNativeRepositoryImpl implements LoanNativeRepository {
 
 	@Override
 	public int updateProceeds(String id, BigDecimal amount) {
-		String sql = "update hm_loan l set l.proceeds = l.proceeds +  ? where l.id= ? and l.status = " + Loan.Status.BID + " and l.amount - l.proceeds >= ?";
-		return em.createNativeQuery(sql).setParameter(1, amount).setParameter(2, id).setParameter(3, amount).executeUpdate();
+		String sql = "update hm_loan l set l.proceeds = l.proceeds +  ? where l.amount - l.proceeds >= ? and l.status = " + Loan.Status.BID + " and l.id= ? ";
+		return em.createNativeQuery(sql).setParameter(1, amount).setParameter(2, amount).setParameter(3, id).executeUpdate();
 
 	}
 
