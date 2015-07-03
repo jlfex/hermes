@@ -6,7 +6,7 @@
 			<thead>
 				<tr>
 					<th>借款编号</th>
-					<th><@messages key="model.loan.purpose" /></th>
+					<!-- <th><@messages key="model.loan.purpose" /></th> -->
 					<th><@messages key="model.loan.amount" />/<@messages key="common.unit.cny" /></th>
 					<th><@messages key="model.loan.rate" /></th>
 					<th><@messages key="model.loan.period" /></th>
@@ -21,7 +21,7 @@
 			  	<#list loans.content as l>  
 				<tr>
 					<td><a href="#" class="icon loan loaninfo" data-id="${l.id}">${l.applicationNo!''}</a></td>
-					<td>${l.purpose!''}</td>
+					<!-- <td>${l.purpose!''}</td>  -->
 					<td class="right">${l.amount!''}</td>
 					<td class="right">${l.rate!''}</td>
 					<td class="right">${l.period!''}<@messages key="common.unit.month" /></td>
