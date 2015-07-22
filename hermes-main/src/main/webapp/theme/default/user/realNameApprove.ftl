@@ -181,8 +181,11 @@
 		        timeout: 10000,
 		        success: function(data) {
 		      	   if(data.type=="SUCCESS"){
+		      	       $("#mv_idNumber").html("");
                        window.location.href="${app}/userIndex/authBankCard?email=" + $('#email').val();
-					}
+				   }else if(data.type=="FAILURE"){
+					   $("#mv_idNumber").html(data.firstMessage);	
+				   }
 		        }
 		    });
 	}
