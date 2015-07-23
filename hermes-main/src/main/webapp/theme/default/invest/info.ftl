@@ -277,7 +277,8 @@ jQuery(function() {
 							<span class="mv_msg"></span></td><td><span id="limitValidResult"></span></td>
                 		<tr>
                 		<tr><td class="td_height"><@messages key="invest.yield.to.maturity" />：<span id="maturegain"></span></td><td colspan="2">&nbsp;</td></tr>
-                		<td colspan="3" class="td_ht1"><span class="lighrgray"><@messages key="account.info.user.cash" />：</span><span class="yellow">
+                		<#if loan.loanKind != '03'>
+                		   <td colspan="3" class="td_ht1"><span class="lighrgray"><@messages key="account.info.user.cash" />：</span><span class="yellow">
                 			<#if (loanUserInfo.balance)??>
 								${loanUserInfo.balance}
 							<#else> 
@@ -285,6 +286,9 @@ jQuery(function() {
 							</#if>
 							<@messages key="common.unit.cny" /></span><a href="${app}/account/index?type=charge" class="m_btn3 m_bg1 a_middle"><@messages key="common.op.charge" /></a></td>
                 		</tr>
+                		<#else>
+                		     <td colspan="3" class="td_ht1"></td>
+                		</#if>
                 		<tr class="mv_checked"><td colspan="3" class="td_height">担保方式：
                 		<input type="radio"name="otherrepay" value="00" /> 
                 		  <#if guaranteeType??>${guaranteeType!''} <#else>  <@messages key="invest.occurred.late.advance" /></#if>

@@ -150,15 +150,15 @@
 			  		},
 			  		mv_money_loan: {
 			  			initText: '',
-			  			initMsg: '最低投标金额为'+$("#investBidMultiple").val()+'元',
+			  			initMsg: '起投金额为'+$("#investBidMultiple").val()+'元',
 			  			methods: [{
-			  				errorMsg: '输入数字应大于起投金额:'+$("#investBidMultiple").val()+',并且最多两位小数',
+			  				errorMsg: '起投金额:'+$("#investBidMultiple").val()+',最多两位小数',
 			  				rule: function(val) {
 			  					var len = val.indexOf(".");
 			  					if(len>0){
 			  						len = val.substring(len).length;
 			  					}
-			  					return /^\d+(\.{0,1}\d+){0,1}$/.test(val) && val > parseInt($("#investBidMultiple").val()) && len<=3 ;
+			  					return /^\d+(\.{0,1}\d+){0,1}$/.test(val) && val >= parseInt($("#investBidMultiple").val()) && len<=3 ;
 			  				}
 			    		},{
 			  				errorMsg: '投标金额必须≤当前可投金额',

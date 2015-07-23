@@ -227,7 +227,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 		}catch(Exception e){ existsFlag = false; }
 		if(!existsFlag){
 			virtualProcut.setRepay(repay);
-			virtualProcut.setName("债权标虚拟产品");
+			virtualProcut.setName("债权转让产品");
 			virtualProcut.setCode("00");
 			virtualProcut.setAmount("0");
 			virtualProcut.setPeriod("0");
@@ -236,7 +236,7 @@ public class CreditInfoServiceImpl  implements CreditInfoService {
 			virtualProcut.setManageFee(BigDecimal.ZERO);
 			virtualProcut.setManageFeeType("");
 			virtualProcut.setStatus(Product.Status.VIRTUAL_CREDIT_PROCD);
-			virtualProcut.setStartingAmt(new BigDecimal("0"));
+			virtualProcut.setStartingAmt(new BigDecimal("1"));
 			virtualProcut.setDescription("债权标虚拟产品配置初始化");
 			Product savedProduct=  productService.save(virtualProcut);
 			if(savedProduct !=null){
