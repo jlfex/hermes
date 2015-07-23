@@ -161,7 +161,6 @@ public class PropertiesFilter implements Filter {
 				}
 			}
 		} catch (Exception e) {
-			Logger.error("获取用户出现异常:" + e.getMessage());
 		}
 
 		req.setAttribute("friendlinkData", friendLinkList);

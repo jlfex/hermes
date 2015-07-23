@@ -700,7 +700,7 @@ public class JlfexServiceImpl implements JlfexService {
 		}catch(Exception e){ existsFlag = false; }
 		if(!existsFlag){
 			virtualProcut.setRepay(repay);
-			virtualProcut.setName("易联标虚拟产品");
+			virtualProcut.setName("债权转让产品");
 			virtualProcut.setCode("00");
 			virtualProcut.setAmount("0");
 			virtualProcut.setPeriod("0");
@@ -709,7 +709,7 @@ public class JlfexServiceImpl implements JlfexService {
 			virtualProcut.setManageFee(BigDecimal.ZERO);
 			virtualProcut.setManageFeeType("");
 			virtualProcut.setStatus(Product.Status.YLTX_CREDIT_PROCD);
-			virtualProcut.setStartingAmt(new BigDecimal("0"));
+			virtualProcut.setStartingAmt(new BigDecimal("1"));
 			virtualProcut.setDescription("易联标虚拟产品配置初始化");
 			Product savedProduct=  productService.save(virtualProcut);
 			if(savedProduct !=null){
