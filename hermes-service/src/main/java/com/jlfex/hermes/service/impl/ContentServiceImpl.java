@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.jlfex.hermes.common.Logger;
@@ -35,7 +36,6 @@ import com.jlfex.hermes.repository.FriendLinkRepository;
 import com.jlfex.hermes.repository.ImageManageRepository;
 import com.jlfex.hermes.repository.TmpNoticeRepository;
 import com.jlfex.hermes.service.ContentService;
-import com.jlfex.hermes.service.common.Pageables;
 import com.jlfex.hermes.service.pojo.ContentCategory;
 import com.jlfex.hermes.service.pojo.FriendLinkVo;
 import com.jlfex.hermes.service.pojo.PublishContentVo;
@@ -225,7 +225,10 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public Page<Article> find(final String levelOne, final String levelTwo, final String levelThree, final String inputName, int page, int size) {
 		// 初始化
-		Pageable pageable = Pageables.pageable(page, size, new Sort(Direction.DESC, "createTime"));
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(new Order(Direction.ASC, "order"));
+		orders.add(new Order(Direction.DESC, "updateTime"));
+		Pageable pageable = new PageRequest(page, size, new Sort(orders));
 		Page<Article> articleList = articleRepository.findAll(new Specification<Article>() {
 			@Override
 			public Predicate toPredicate(Root<Article> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -259,13 +262,11 @@ public class ContentServiceImpl implements ContentService {
 	public Article addPublish(PublishContentVo pcVo, int maxWidth) throws Exception {
 		Article article = new Article();
 		article.setArticleTitle(pcVo.getArticleTitle());
-		article.setAuthor("admin");
-		String newContent = new String(pcVo.getContent(), "UTF-8");
-		StringBuffer contentBuffer = new StringBuffer(newContent);
-		String contentStr = new String(pcVo.getContent(), "UTF-8");
+		article.setAuthor(HermesConstants.PLAT_MANAGER);
+		StringBuffer contentBuffer = new StringBuffer(pcVo.getContent());
 		// 判断图文内容中是否含有图片
-		if (contentStr.contains(IMG_FLAG)) {
-			String[] strGaps = contentStr.split(IMG_FLAG);
+		if (pcVo.getContent().contains(IMG_FLAG)) {
+			String[] strGaps = pcVo.getContent().split(IMG_FLAG);
 			for (int i = 0; i < strGaps.length; i++) {
 				try {
 					String element = strGaps[i];
@@ -289,7 +290,7 @@ public class ContentServiceImpl implements ContentService {
 			}
 			article.setContent(contentBuffer.toString().getBytes("UTF-8"));
 		} else {
-			article.setContent(pcVo.getContent());
+			article.setContent(pcVo.getContent().getBytes("UTF-8"));
 		}
 		article.setKeywords(pcVo.getKeywords());
 		article.setDescription(pcVo.getDescription());
@@ -321,13 +322,11 @@ public class ContentServiceImpl implements ContentService {
 	public Article updateContent(PublishContentVo pcVo, int maxWidth) throws Exception {
 		Article article = articleRepository.findOne(pcVo.getId());
 		article.setArticleTitle(pcVo.getArticleTitle());
-		article.setAuthor("admin");
-		String newContent = new String(pcVo.getContent(), "UTF-8");
-		StringBuffer contentBuffer = new StringBuffer(newContent);
-		String contentStr = new String(pcVo.getContent(), "UTF-8");
+		article.setAuthor(HermesConstants.PLAT_MANAGER);
+		StringBuffer contentBuffer = new StringBuffer(pcVo.getContent());
 		// 判断图文内容中是否含有图片
-		if (contentStr.contains(IMG_FLAG)) {
-			String[] strGaps = contentStr.split(IMG_FLAG);
+		if (pcVo.getContent().contains(IMG_FLAG)) {
+			String[] strGaps = pcVo.getContent().split(IMG_FLAG);
 			for (int i = 0; i < strGaps.length; i++) {
 				try {
 					String element = strGaps[i];
@@ -351,7 +350,7 @@ public class ContentServiceImpl implements ContentService {
 			}
 			article.setContent(contentBuffer.toString().getBytes("UTF-8"));
 		} else {
-			article.setContent(pcVo.getContent());
+			article.setContent(pcVo.getContent().getBytes("UTF-8"));
 		}
 		article.setKeywords(pcVo.getKeywords());
 		article.setDescription(pcVo.getDescription());

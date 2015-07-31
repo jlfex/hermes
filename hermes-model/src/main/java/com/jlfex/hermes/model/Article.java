@@ -1,11 +1,15 @@
 package com.jlfex.hermes.model;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.jlfex.hermes.common.Logger;
 import com.jlfex.hermes.common.dict.Element;
 
 /**
@@ -51,32 +55,6 @@ public class Article extends Model {
 	/** 唯一标识 */
 	@Column(name = "code")
 	private String code;
-
-	// /** 日期 */
-	// @Column(name = "datetime")
-	// private Date datetime;
-	//
-	// /** 摘要 */
-	// @Column(name = "summary")
-	// private String summary;
-	//
-	// /** 内容 */
-	// @Transient
-	// private String text;
-	//
-	// /** 标志 */
-	// @Column(name = "mark")
-	// private String mark;
-
-	// /**
-	// * 读取标题
-	// *
-	// * @return
-	// * @see #articleTitle
-	// */
-	// public String getTitle() {
-	// return articleTitle;
-	// }
 
 	/**
 	 * 设置标题
@@ -188,29 +166,13 @@ public class Article extends Model {
 		this.status = status;
 	}
 
-	/**
-	 * 读取内容
-	 * 
-	 * @return
-	 * @see #text
-	 */
-	// public String getText() {
-	// return text;
-	// }
-	//
-	// /**
-	// * 设置内容
-	// *
-	// * @param text
-	// * @see #text
-	// */
-	// public void setText(String text) {
-	// this.text = text;
-	// }
-
-	@Lob
 	public String getContent() {
-		return new String(content);
+		try {
+			return new String(content, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			Logger.error("内容编码异常", e);
+			return "";
+		}
 	}
 
 	public void setContent(byte[] content) {
