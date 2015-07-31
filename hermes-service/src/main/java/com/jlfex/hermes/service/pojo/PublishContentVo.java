@@ -7,11 +7,11 @@ public class PublishContentVo implements Serializable {
 
 	private String id;
 	private String articleTitle;// 文章标题
-	private String author;// 发布人
-	private Integer order;// 排序
-	private String keywords;// 关键字
-	private String description;// 文章描述
-	private byte[] content;// 文章内容
+	private String author;      // 发布人
+	private Integer order;      // 排序
+	private String keywords;    // 关键字
+	private String description; // 文章描述
+	private String content;     // 文章内容
 	private String levelOne;
 	private String levelTwo;
 	private String levelThree;
@@ -88,12 +88,11 @@ public class PublishContentVo implements Serializable {
 		this.description = description;
 	}
 
-	public byte[] getContent() {
+	public String getContent() {
 		return content;
 	}
 
-	public void setContent(byte[] content) {
+	public void setContent(String content) {
 		this.content = content;
 	}
-
 }

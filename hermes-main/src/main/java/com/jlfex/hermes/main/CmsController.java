@@ -1,5 +1,6 @@
 package com.jlfex.hermes.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +48,10 @@ public class CmsController {
 
 	@RequestMapping("help-center/{cid}")
 	public String helpCenterArticleCategory(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, @PathVariable String cid, Model model) {
-		Pageable pageable = new PageRequest(page, size, new Sort(Direction.DESC, "order", "updateTime"));
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(new Order(Direction.ASC, "order"));
+		orders.add(new Order(Direction.DESC, "updateTime"));
+		Pageable pageable = new PageRequest(page, size, new Sort(orders));
 		Page<Article> dataBox = articleService.find(cid, pageable);
 		if (dataBox.getContent().size() == 1) {
 			return "redirect:/help-center/" + cid + "/" + dataBox.getContent().get(0).getId();
