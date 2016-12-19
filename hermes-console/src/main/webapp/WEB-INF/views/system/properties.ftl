@@ -78,7 +78,7 @@
         <div class="form-group">
           <label for="companyName" class="col-sm-2 control-label">公司名称</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="companyName" name="companyName" placeholder="如上海金鹿金融信息服务有限公司" value="<@config key="app.company.name"/>" check-type="required" required-message="不能为空">
+            <input type="text" class="form-control" id="companyName" name="companyName" placeholder="如上海XXXX信息服务有限公司" value="<@config key="app.company.name"/>" check-type="required" required-message="不能为空">
             <p class="help-block"></p>
           </div>
         </div>
