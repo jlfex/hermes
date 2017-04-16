@@ -124,6 +124,25 @@ public class CreditRepayPlan  extends Model {
 		public static final String  ALREADY_PAY  		= "01";
 		
 	}
+	/**
+	 * 还款失效时间
+	 * @return
+	 */
+	public Boolean getOutOfDate() {
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(repayPlanTime);
+		c1.set(Calendar.MINUTE, 0);
+		c1.set(Calendar.SECOND, 0);
+		c1.set(Calendar.HOUR_OF_DAY, 0);
+		c1.set(Calendar.MILLISECOND, 0);
+		Calendar c2 = Calendar.getInstance();
+		c2.set(Calendar.MINUTE, 0);
+		c2.set(Calendar.SECOND, 0);
+		c2.set(Calendar.HOUR_OF_DAY, 0);
+		c2.set(Calendar.MILLISECOND, 0);
+		return c1.getTimeInMillis() < c2.getTimeInMillis();
+
+	}
 	
 	public Boolean getOutOfDate() {
 		Calendar c1 = Calendar.getInstance();

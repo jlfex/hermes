@@ -440,7 +440,7 @@ public class CrediteInfo extends Model {
 		@Element("已过期")
 		public static final String FAIL_ASSIGNING = "05";
 	}
-	
+	// 类型
 	public static final class CreditKind {
 		@Element("导入标")
 		public static final String EXECEL_IMP = "00";
